@@ -15,7 +15,7 @@ import org.xtest.results.XTestSuiteResult;
 import org.xtest.xTest.XAssertExpression;
 
 /**
- * Entry point for external xtest runner program
+ * Entry point for external xtest runner program.
  */
 @SuppressWarnings("restriction")
 public class Main {
