@@ -7,6 +7,8 @@ import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 
 /**
  * Custom Outline view node that stores failure state.
+ * 
+ * @author Michael Barry
  */
 public class XTestEObjectNode extends EObjectNode {
     private boolean failed = false;
@@ -27,7 +29,7 @@ public class XTestEObjectNode extends EObjectNode {
      *            True if leaf, false if has children
      */
     public XTestEObjectNode(EObject eObject, IOutlineNode parent, Image image,
-        Object text, boolean isLeaf) {
+            Object text, boolean isLeaf) {
         super(eObject, parent, image, text, isLeaf);
     }
 

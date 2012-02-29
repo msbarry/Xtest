@@ -1,11 +1,12 @@
 package org.xtest.results;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.xtest.XTestAssertException;
 
 /**
  * Xtest case result
+ * 
+ * @author Michael Barry
  */
 public class XTestCaseResult extends AbstractXTestResult {
     private XTestAssertException exception;

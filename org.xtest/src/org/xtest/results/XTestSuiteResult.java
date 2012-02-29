@@ -3,15 +3,16 @@ package org.xtest.results;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-
-import com.google.common.collect.Lists;
-
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XTestCase;
 import org.xtest.xTest.XTestSuite;
 
+import com.google.common.collect.Lists;
+
 /**
  * Xtest suite result
+ * 
+ * @author Michael Barry
  */
 public class XTestSuiteResult extends AbstractXTestResult {
     private final List<XTestCaseResult> cases = Lists.newArrayList();

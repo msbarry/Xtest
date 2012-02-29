@@ -27,6 +27,8 @@ import com.google.inject.Provider;
  * Custom implementation of XTestRunner for use in the UI that overrides the
  * classloader of the xtest interpreter with one that recognizes classes in the
  * runtime java project
+ * 
+ * @author Michael Barry
  */
 public class UiXTestRunner extends XTestRunner {
     @Inject
@@ -44,57 +46,55 @@ public class UiXTestRunner extends XTestRunner {
             ResourceSet set = resource.getResourceSet();
             ClassLoader cl = getClass().getClassLoader();
             if (set instanceof XtextResourceSet) {
-                Object context =
-                    ((XtextResourceSet) set).getClasspathURIContext();
+                Object context = ((XtextResourceSet) set)
+                        .getClasspathURIContext();
                 if (context instanceof IJavaProject) {
                     try {
                         final IJavaProject jp = (IJavaProject) context;
-                        IClasspathEntry[] classpath =
-                            jp.getResolvedClasspath(true);
-                        final IWorkspaceRoot root =
-                            jp.getProject().getWorkspace().getRoot();
+                        IClasspathEntry[] classpath = jp
+                                .getResolvedClasspath(true);
+                        final IWorkspaceRoot root = jp.getProject()
+                                .getWorkspace().getRoot();
                         Set<URL> urls = newHashSet();
                         for (int i = 0; i < classpath.length; i++) {
                             final IClasspathEntry entry = classpath[i];
                             if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-                                IPath outputLocation =
-                                    entry.getOutputLocation();
+                                IPath outputLocation = entry
+                                        .getOutputLocation();
                                 if (outputLocation == null) {
                                     outputLocation = jp.getOutputLocation();
                                 }
                                 IFolder folder = root.getFolder(outputLocation);
                                 if (folder.exists()) {
                                     urls.add(new URL(folder.getRawLocationURI()
-                                        .toASCIIString() + "/"));
+                                            .toASCIIString() + "/"));
                                 }
                             } else if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-                                IPath outputLocation =
-                                    entry.getOutputLocation();
+                                IPath outputLocation = entry
+                                        .getOutputLocation();
                                 if (outputLocation == null) {
-                                    IProject project =
-                                        (IProject) jp
+                                    IProject project = (IProject) jp
                                             .getProject()
                                             .getWorkspace()
                                             .getRoot()
                                             .getContainerForLocation(
-                                                entry.getPath());
-                                    IJavaProject javaProject =
-                                        JavaCore.create(project);
-                                    outputLocation =
-                                        javaProject.getOutputLocation();
+                                                    entry.getPath());
+                                    IJavaProject javaProject = JavaCore
+                                            .create(project);
+                                    outputLocation = javaProject
+                                            .getOutputLocation();
                                 }
                                 IFolder folder = root.getFolder(outputLocation);
                                 if (folder.exists()) {
                                     urls.add(new URL(folder.getRawLocationURI()
-                                        .toASCIIString() + "/"));
+                                            .toASCIIString() + "/"));
                                 }
                             } else {
                                 urls.add(entry.getPath().toFile().toURL());
                             }
                         }
-                        cl =
-                            new URLClassLoader(
-                                urls.toArray(new URL[urls.size()]));
+                        cl = new URLClassLoader(urls.toArray(new URL[urls
+                                .size()]));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

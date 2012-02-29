@@ -4,16 +4,17 @@ import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
-
-import com.google.inject.Singleton;
-
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestCase;
 import org.xtest.xTest.XTestSuite;
 
+import com.google.inject.Singleton;
+
 /**
  * Provide the type of each Xtest expression. Each xtest expression returns null
  * so has a void return type.
+ * 
+ * @author Michael Barry
  */
 @Singleton
 @SuppressWarnings("restriction")

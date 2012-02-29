@@ -1,11 +1,12 @@
 package org.xtest.results;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.xtest.XTestEvaluationException;
 
 /**
  * Abstract superclass for xtest suite and case results
+ * 
+ * @author Michael Barry
  */
 public class AbstractXTestResult {
     private final EObject eObject;

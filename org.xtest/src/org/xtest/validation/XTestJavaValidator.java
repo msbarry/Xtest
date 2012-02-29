@@ -32,6 +32,8 @@ import com.google.inject.Singleton;
  * <li>assert expressions have boolean return type
  * <li>assert/throws types are subclasses are throwable
  * <li><b>All unit tests pass</b> </ol>
+ * 
+ * @author Michael Barry
  */
 @Singleton
 @SuppressWarnings("restriction")

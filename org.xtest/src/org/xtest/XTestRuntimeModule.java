@@ -7,6 +7,8 @@ import org.xtest.types.XTestTypeProvider;
 
 /**
  * Set up Guice bindings
+ * 
+ * @author Michael Barry
  */
 @SuppressWarnings("restriction")
 public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {

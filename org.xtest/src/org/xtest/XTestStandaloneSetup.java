@@ -3,6 +3,8 @@ package org.xtest;
 /**
  * Initialization support for running Xtext languages without equinox extension
  * registry
+ * 
+ * @author Michael Barry
  */
 public class XTestStandaloneSetup extends XTestStandaloneSetupGenerated {
 

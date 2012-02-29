@@ -3,17 +3,18 @@ package org.xtest.tests;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
-
 import org.xtest.results.AbstractXTestResult;
 import org.xtest.results.XTestCaseResult;
 import org.xtest.results.XTestState;
 import org.xtest.results.XTestSuiteResult;
 
+import com.google.common.collect.Lists;
+
 /**
  * Container for unit tests of the non-EMF xtest result model
  * (org.xtest.results.*)
+ * 
+ * @author Michael Barry
  */
 public class XTestResultUnitTests {
 

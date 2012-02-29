@@ -7,15 +7,17 @@ import java.util.List;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.xbase.XExpression;
-
-import com.google.inject.Injector;
-
 import org.xtest.results.XTestCaseResult;
 import org.xtest.results.XTestSuiteResult;
 import org.xtest.xTest.XAssertExpression;
 
+import com.google.inject.Injector;
+
 /**
+ * 
  * Entry point for external xtest runner program
+ * 
+ * @author Michael Barry
  */
 @SuppressWarnings("restriction")
 public class Main {

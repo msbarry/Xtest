@@ -9,19 +9,20 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+import org.xtest.interpreter.XTestInterpreter;
+import org.xtest.results.XTestState;
+import org.xtest.results.XTestSuiteResult;
+import org.xtest.xTest.Body;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import org.xtest.interpreter.XTestInterpreter;
-import org.xtest.results.XTestState;
-import org.xtest.results.XTestSuiteResult;
-import org.xtest.xTest.Body;
-
 /**
  * Entry point for running an xtest script
+ * 
+ * @author Michael Barry
  */
 @Singleton
 @SuppressWarnings("restriction")

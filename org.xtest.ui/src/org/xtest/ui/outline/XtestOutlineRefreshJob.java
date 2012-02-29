@@ -11,38 +11,34 @@ import org.eclipse.xtext.ui.editor.outline.impl.OutlineTreeState;
 /**
  * Custom outline refresh job to grey-out the outline view while tests are
  * running and automatically expand failed tests.
+ * 
+ * @author Michael Barry
  */
 public class XtestOutlineRefreshJob extends OutlineRefreshJob {
     private OutlinePage outlinePage;
 
     @Override
-    public void setOutlinePage(OutlinePage outlinePage) {
-        this.outlinePage = outlinePage;
-        super.setOutlinePage(outlinePage);
-    }
-
-    @Override
     protected IOutlineNode refreshOutlineModel(IProgressMonitor monitor,
-        OutlineTreeState formerState, OutlineTreeState newState) {
+            OutlineTreeState formerState, OutlineTreeState newState) {
         setControlEnabled(false);
-        IOutlineNode refreshOutlineModel =
-            super.refreshOutlineModel(monitor, formerState, newState);
+        IOutlineNode refreshOutlineModel = super.refreshOutlineModel(monitor,
+                formerState, newState);
         setControlEnabled(true);
         return refreshOutlineModel;
     }
 
     @Override
     protected void restoreChildrenSelectionAndExpansion(IOutlineNode parent,
-        Resource resource, OutlineTreeState formerState,
-        OutlineTreeState newState) {
+            Resource resource, OutlineTreeState formerState,
+            OutlineTreeState newState) {
         for (IOutlineNode child : parent.getChildren()) {
             if (child instanceof XTestEObjectNode
-                && ((XTestEObjectNode) child).getFailed()) {
+                    && ((XTestEObjectNode) child).getFailed()) {
                 newState.getExpandedNodes().add(child);
             }
         }
         super.restoreChildrenSelectionAndExpansion(parent, resource,
-            formerState, newState);
+                formerState, newState);
     }
 
     /**
@@ -58,5 +54,11 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
                 outlinePage.getTreeViewer().getControl().setEnabled(b);
             }
         });
+    }
+
+    @Override
+    public void setOutlinePage(OutlinePage outlinePage) {
+        this.outlinePage = outlinePage;
+        super.setOutlinePage(outlinePage);
     }
 }

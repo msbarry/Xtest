@@ -5,6 +5,8 @@ import org.xtest.xTest.XAssertExpression;
 /**
  * Special exception that stores the expression that caused the assertion
  * failure
+ * 
+ * @author Michael Barry
  */
 public class XTestAssertException extends RuntimeException {
     private static final long serialVersionUID = -2412965647239842905L;

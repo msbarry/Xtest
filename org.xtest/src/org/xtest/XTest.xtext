@@ -1,3 +1,4 @@
+// Michael Barry
 grammar org.xtest.XTest with org.eclipse.xtext.xbase.Xbase
 
 generate xTest "http://www.xtest.org/"

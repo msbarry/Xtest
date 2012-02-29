@@ -7,6 +7,8 @@ import org.xtest.ui.outline.XtestOutlineRefreshJob;
 
 /**
  * Set up Guice bindings for running xtest plugin in eclipse
+ * 
+ * @author Michael Barry
  */
 public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
 

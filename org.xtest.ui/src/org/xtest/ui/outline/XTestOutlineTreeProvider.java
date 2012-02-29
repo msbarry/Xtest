@@ -21,6 +21,8 @@ import com.google.inject.Inject;
 /**
  * Customize the tree outline to display the the results of running the tests
  * graphically
+ * 
+ * @author Michael Barry
  */
 public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     private static Image SUITE_FAILED;
@@ -36,6 +38,11 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     private XTestRunner runner;
 
     @Override
+    protected boolean _isLeaf(EObject feature) {
+        return feature instanceof XTestCase;
+    }
+
+    @Override
     public void createChildren(IOutlineNode parentNode, EObject body) {
         if (body instanceof Body) {
             // TODO This runs tests twice, one for validation, one for building
@@ -49,28 +56,6 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         }
     }
 
-    @Override
-    protected boolean _isLeaf(EObject feature) {
-        return feature instanceof XTestCase;
-    }
-
-    @Override
-    protected EObjectNode createEObjectNode(IOutlineNode parentNode,
-        EObject modelElement, Image image, Object text, boolean isLeaf) {
-        EObjectNode eObjectNode =
-            new XTestEObjectNode(modelElement, parentNode, image, text, isLeaf);
-        ICompositeNode parserNode = NodeModelUtils.getNode(modelElement);
-        if (parserNode != null) {
-            eObjectNode.setTextRegion(new TextRegion(parserNode.getOffset(),
-                parserNode.getLength()));
-        }
-        if (isLocalElement(parentNode, modelElement)) {
-            eObjectNode.setShortTextRegion(locationInFileProvider
-                .getSignificantTextRegion(modelElement));
-        }
-        return eObjectNode;
-    }
-
     /**
      * Creates a new node for the suite or case result, setting the name and
      * icon appropriately given the pass/fail/not run state of the test
@@ -82,9 +67,9 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      * @return The new tree node
      */
     private EObjectNode createEObjectNode(IOutlineNode parentNode,
-        AbstractXTestResult result) {
-        EObjectNode createEObjectNode =
-            createEObjectNode(parentNode, result.getEObject());
+            AbstractXTestResult result) {
+        EObjectNode createEObjectNode = createEObjectNode(parentNode,
+                result.getEObject());
         createEObjectNode.setText(result.getName());
         Image image;
         // Get the appropriate icon for the state and type of test
@@ -118,6 +103,23 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         }
         createEObjectNode.setImage(image);
         return createEObjectNode;
+    }
+
+    @Override
+    protected EObjectNode createEObjectNode(IOutlineNode parentNode,
+            EObject modelElement, Image image, Object text, boolean isLeaf) {
+        EObjectNode eObjectNode = new XTestEObjectNode(modelElement,
+                parentNode, image, text, isLeaf);
+        ICompositeNode parserNode = NodeModelUtils.getNode(modelElement);
+        if (parserNode != null) {
+            eObjectNode.setTextRegion(new TextRegion(parserNode.getOffset(),
+                    parserNode.getLength()));
+        }
+        if (isLocalElement(parentNode, modelElement)) {
+            eObjectNode.setShortTextRegion(locationInFileProvider
+                    .getSignificantTextRegion(modelElement));
+        }
+        return eObjectNode;
     }
 
     /**

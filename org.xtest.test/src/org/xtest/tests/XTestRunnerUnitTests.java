@@ -12,9 +12,10 @@ import org.xtest.results.XTestSuiteResult;
 
 import com.google.inject.Injector;
 
-
 /**
  * Container for unit tests of xtest string to result model runner
+ * 
+ * @author Michael Barry
  */
 public class XTestRunnerUnitTests {
     private static Injector injector = new XTestInjectorProvider()

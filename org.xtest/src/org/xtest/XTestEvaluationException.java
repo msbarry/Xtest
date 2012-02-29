@@ -5,6 +5,8 @@ import org.eclipse.xtext.xbase.XExpression;
 /**
  * Special exception that stores the expression that caused the evaluation
  * exception
+ * 
+ * @author Michael Barry
  */
 @SuppressWarnings("restriction")
 public class XTestEvaluationException extends RuntimeException {
@@ -12,8 +14,7 @@ public class XTestEvaluationException extends RuntimeException {
     private final XExpression expression;
 
     /**
-     * Constructs a new evaluation exception wrapping the expression
-     * provided
+     * Constructs a new evaluation exception wrapping the expression provided
      * 
      * @param cause
      *            The original exception

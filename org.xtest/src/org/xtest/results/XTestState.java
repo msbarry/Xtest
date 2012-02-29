@@ -2,6 +2,8 @@ package org.xtest.results;
 
 /**
  * XTest suite or case state
+ * 
+ * @author Michael Barry
  */
 public enum XTestState {
     /** Test failed or at least one subtest failed */

@@ -10,9 +10,6 @@ import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
 import org.eclipse.xtext.xbase.interpreter.impl.EvaluationException;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
-
-import com.google.inject.Inject;
-
 import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
 import org.xtest.results.XTestCaseResult;
@@ -23,10 +20,14 @@ import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestCase;
 import org.xtest.xTest.XTestSuite;
 
+import com.google.inject.Inject;
+
 /**
  * Xtest interpreter, inherits behavior from Xbase, but adds handling for test
  * cases and suites and keeps track of the test suite being run, returning the
  * final root test suite result
+ * 
+ * @author Michael Barry
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {

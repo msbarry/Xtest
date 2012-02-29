@@ -8,9 +8,10 @@ import org.xtest.xTest.Body;
 
 import com.google.inject.Injector;
 
-
 /**
  * Container for testing bugs found running xtest to prevent regression
+ * 
+ * @author Michael Barry
  */
 @SuppressWarnings("restriction")
 public class XTestRegressionTests {

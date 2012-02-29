@@ -7,10 +7,11 @@ import org.eclipse.xtext.xbase.validation.XbaseJavaValidator;
 import org.xtest.XTestInjectorProvider;
 import org.xtest.xTest.Body;
 
-
 /**
  * Container for regression tests provided with xbase to verify I haven't broken
  * any xbase functionality
+ * 
+ * @author Michael Barry
  */
 @SuppressWarnings("restriction")
 public class XTestXBaseRegressionTests extends AbstractXbaseEvaluationTest {
