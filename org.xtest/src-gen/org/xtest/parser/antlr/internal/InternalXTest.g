@@ -288,9 +288,9 @@ ruleXTestSuite returns [EObject current=null]
             grammarAccess.getXTestSuiteAccess().getXTestSuiteAction_0(),
             $current);
     }
-)	otherlv_1='testSuite' 
+)	otherlv_1='xsuite' 
     {
-    	newLeafNode(otherlv_1, grammarAccess.getXTestSuiteAccess().getTestSuiteKeyword_1());
+    	newLeafNode(otherlv_1, grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1());
     }
 (
 (
@@ -355,9 +355,9 @@ ruleXTestCase returns [EObject current=null]
             grammarAccess.getXTestCaseAccess().getXTestCaseAction_0(),
             $current);
     }
-)	otherlv_1='testCase' 
+)	otherlv_1='xtest' 
     {
-    	newLeafNode(otherlv_1, grammarAccess.getXTestCaseAccess().getTestCaseKeyword_1());
+    	newLeafNode(otherlv_1, grammarAccess.getXTestCaseAccess().getXtestKeyword_1());
     }
 (
 (

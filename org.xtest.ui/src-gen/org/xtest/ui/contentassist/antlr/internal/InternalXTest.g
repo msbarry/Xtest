@@ -3139,11 +3139,11 @@ rule__XTestSuite__Group__1__Impl
     }
 :
 (
-{ before(grammarAccess.getXTestSuiteAccess().getTestSuiteKeyword_1()); }
+{ before(grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1()); }
 
-	'testSuite' 
+	'xsuite' 
 
-{ after(grammarAccess.getXTestSuiteAccess().getTestSuiteKeyword_1()); }
+{ after(grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1()); }
 )
 
 ;
@@ -3266,11 +3266,11 @@ rule__XTestCase__Group__1__Impl
     }
 :
 (
-{ before(grammarAccess.getXTestCaseAccess().getTestCaseKeyword_1()); }
+{ before(grammarAccess.getXTestCaseAccess().getXtestKeyword_1()); }
 
-	'testCase' 
+	'xtest' 
 
-{ after(grammarAccess.getXTestCaseAccess().getTestCaseKeyword_1()); }
+{ after(grammarAccess.getXTestCaseAccess().getXtestKeyword_1()); }
 )
 
 ;

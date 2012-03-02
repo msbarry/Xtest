@@ -20,10 +20,10 @@ UniqueName:
 
 XTestSuite returns XExpression:
 	{XTestSuite}
-	'testSuite' name=UniqueName (expression=XBlockExpression);
+	'xsuite' name=UniqueName (expression=XBlockExpression);
 XTestCase returns XExpression:
 	{XTestCase}
-	'testCase' name=UniqueName (expression=XBlockExpression);
+	'xtest' name=UniqueName (expression=XBlockExpression);
 	
 XAssertExpression returns XExpression:
 	{XAssertExpression}

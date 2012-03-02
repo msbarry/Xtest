@@ -7,7 +7,6 @@ import org.eclipse.xtext.junit4.GlobalRegistries;
 import org.eclipse.xtext.junit4.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.junit4.IInjectorProvider;
 import org.eclipse.xtext.junit4.IRegistryConfigurator;
-import org.xtest.XTestStandaloneSetup;
 
 import com.google.inject.Injector;
 

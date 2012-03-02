@@ -1,4 +1,4 @@
-package org.xtest.tests;
+package org.xtest.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -22,9 +22,9 @@ public class XTestRunnerUnitTests {
             .getInjector();
 
     @Test
-    public void testCaseInSuiteInSuite() {
+    public void xtestInSuiteInSuite() {
         XTestSuiteResult result = XTestRunner.run(
-                "testSuite suite {testCase tcase {1}}", injector);
+                "xsuite suite {xtest tcase {1}}", injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.PASS, result.getState());
@@ -46,7 +46,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void testCustomValidation() {
         XTestSuiteResult result = XTestRunner.run(
-                "testSuite suite1 {\nassert 1==1\n}", injector);
+                "xsuite suite1 {\nassert 1==1\n}", injector);
         assertTrue(null == result.getEvaluationException());
         assertEquals(1, result.getErrorMessages().size());
         assertEquals(XTestState.FAIL, result.getState());
@@ -68,7 +68,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void testExceptionInCaseInSuiteInSuite() {
         XTestSuiteResult result = XTestRunner.run(
-                "testSuite suite {testCase tcase {print(1/0)}}", injector);
+                "xsuite suite {xtest tcase {print(1/0)}}", injector);
         assertTrue(null == result.getEvaluationException());
         assertEquals("[]", result.getErrorMessages().toString());
         assertEquals(XTestState.FAIL, result.getState());
@@ -92,7 +92,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void testFalseAssertInCaseInSuiteInSuite() {
         XTestSuiteResult result = XTestRunner.run(
-                "testSuite suite {testCase tcase {assert 0==1}}", injector);
+                "xsuite suite {xtest tcase {assert 0==1}}", injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.FAIL, result.getState());
@@ -121,8 +121,8 @@ public class XTestRunnerUnitTests {
     }
 
     @Test
-    public void testSuiteInSuite() {
-        XTestSuiteResult result = XTestRunner.run("testSuite suite {1}",
+    public void xsuiteInSuite() {
+        XTestSuiteResult result = XTestRunner.run("xsuite suite {1}",
                 injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
@@ -139,7 +139,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void testThrowDivByZeroException() {
         XTestSuiteResult result = XTestRunner
-                .run("testSuite suite {testCase tcase {assert 1/0 throws Exception}}",
+                .run("xsuite suite {xtest tcase {assert 1/0 throws Exception}}",
                         injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
@@ -163,7 +163,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void testThrowException() {
         XTestSuiteResult result = XTestRunner
-                .run("testSuite suite {testCase tcase {assert throw new InterruptedException() throws InterruptedException}}",
+                .run("xsuite suite {xtest tcase {assert throw new InterruptedException() throws InterruptedException}}",
                         injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
@@ -186,7 +186,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void testThrowsWrongException() {
         XTestSuiteResult result = XTestRunner
-                .run("testSuite suite {testCase tcase {assert throw new InterruptedException() throws IllegalArgumentException}}",
+                .run("xsuite suite {xtest tcase {assert throw new InterruptedException() throws IllegalArgumentException}}",
                         injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
@@ -209,7 +209,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void testTrueAssertInCaseInSuiteInSuite() {
         XTestSuiteResult result = XTestRunner.run(
-                "testSuite suite {testCase tcase {assert 1==1}}", injector);
+                "xsuite suite {xtest tcase {assert 1==1}}", injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.PASS, result.getState());
@@ -234,7 +234,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void throwExceptionBeforeTestSuite() {
         XTestSuiteResult result = XTestRunner
-                .run("println(1/0); testSuite suite {testCase tcase {assert 1/0 throws Exception}}",
+                .run("println(1/0); xsuite suite {xtest tcase {assert 1/0 throws Exception}}",
                         injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null != result.getEvaluationException());
@@ -247,7 +247,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void throwExceptionInsideTestSuite() {
         XTestSuiteResult result = XTestRunner
-                .run("testSuite suite {println(1/0); testCase tcase {assert 1/0 throws Exception}}",
+                .run("xsuite suite {println(1/0); xtest tcase {assert 1/0 throws Exception}}",
                         injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
@@ -271,7 +271,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void useSUT() {
         XTestSuiteResult result = XTestRunner
-                .run("testSuite suite {testCase tcase {assert new helpers.SUT().get2 == 2}}",
+                .run("xsuite suite {xtest tcase {assert new helpers.SUT().get2 == 2}}",
                         injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
@@ -300,7 +300,7 @@ public class XTestRunnerUnitTests {
     @Test
     public void useSUTFail() {
         XTestSuiteResult result = XTestRunner
-                .run("testSuite suite {testCase tcase {assert new helpers.SUT().get2 == 3}}",
+                .run("xsuite suite {xtest tcase {assert new helpers.SUT().get2 == 3}}",
                         injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());

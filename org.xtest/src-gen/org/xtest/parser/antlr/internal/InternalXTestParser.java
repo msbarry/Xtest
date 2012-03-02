@@ -22,7 +22,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalXTestParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_INT", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "';'", "'import'", "'.*'", "'testSuite'", "'testCase'", "'assert'", "'throws'", "'='", "'+='", "'||'", "'&&'", "'=='", "'!='", "'instanceof'", "'>='", "'<='", "'>'", "'<'", "'->'", "'..'", "'+'", "'-'", "'*'", "'**'", "'/'", "'%'", "'!'", "'as'", "'.'", "'?.'", "'*.'", "','", "'('", "')'", "'['", "'|'", "']'", "'if'", "'else'", "'switch'", "':'", "'{'", "'default'", "'}'", "'case'", "'for'", "'while'", "'do'", "'var'", "'val'", "'super'", "'::'", "'new'", "'false'", "'true'", "'null'", "'typeof'", "'throw'", "'return'", "'try'", "'finally'", "'catch'", "'=>'", "'?'", "'extends'", "'&'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_INT", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "';'", "'import'", "'.*'", "'xsuite'", "'xtest'", "'assert'", "'throws'", "'='", "'+='", "'||'", "'&&'", "'=='", "'!='", "'instanceof'", "'>='", "'<='", "'>'", "'<'", "'->'", "'..'", "'+'", "'-'", "'*'", "'**'", "'/'", "'%'", "'!'", "'as'", "'.'", "'?.'", "'*.'", "','", "'('", "')'", "'['", "'|'", "']'", "'if'", "'else'", "'switch'", "':'", "'{'", "'default'", "'}'", "'case'", "'for'", "'while'", "'do'", "'var'", "'val'", "'super'", "'::'", "'new'", "'false'", "'true'", "'null'", "'typeof'", "'throw'", "'return'", "'try'", "'finally'", "'catch'", "'=>'", "'?'", "'extends'", "'&'"
     };
     public static final int T__68=68;
     public static final int T__69=69;
@@ -809,7 +809,7 @@ public class InternalXTestParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleXTestSuite"
-    // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:281:1: ruleXTestSuite returns [EObject current=null] : ( () otherlv_1= 'testSuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) ) ;
+    // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:281:1: ruleXTestSuite returns [EObject current=null] : ( () otherlv_1= 'xsuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) ) ;
     public final EObject ruleXTestSuite() throws RecognitionException {
         EObject current = null;
 
@@ -822,11 +822,11 @@ public class InternalXTestParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:284:28: ( ( () otherlv_1= 'testSuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) ) )
-            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:285:1: ( () otherlv_1= 'testSuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) )
+            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:284:28: ( ( () otherlv_1= 'xsuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) ) )
+            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:285:1: ( () otherlv_1= 'xsuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) )
             {
-            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:285:1: ( () otherlv_1= 'testSuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) )
-            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:285:2: () otherlv_1= 'testSuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) )
+            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:285:1: ( () otherlv_1= 'xsuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) )
+            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:285:2: () otherlv_1= 'xsuite' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) )
             {
             // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:285:2: ()
             // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:286:5: 
@@ -844,7 +844,7 @@ public class InternalXTestParser extends AbstractInternalAntlrParser {
             otherlv_1=(Token)match(input,14,FOLLOW_14_in_ruleXTestSuite611); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-                  	newLeafNode(otherlv_1, grammarAccess.getXTestSuiteAccess().getTestSuiteKeyword_1());
+                  	newLeafNode(otherlv_1, grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1());
                   
             }
             // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:295:1: ( (lv_name_2_0= ruleUniqueName ) )
@@ -980,7 +980,7 @@ public class InternalXTestParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleXTestCase"
-    // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:348:1: ruleXTestCase returns [EObject current=null] : ( () otherlv_1= 'testCase' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) ) ;
+    // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:348:1: ruleXTestCase returns [EObject current=null] : ( () otherlv_1= 'xtest' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) ) ;
     public final EObject ruleXTestCase() throws RecognitionException {
         EObject current = null;
 
@@ -993,11 +993,11 @@ public class InternalXTestParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:351:28: ( ( () otherlv_1= 'testCase' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) ) )
-            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:352:1: ( () otherlv_1= 'testCase' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) )
+            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:351:28: ( ( () otherlv_1= 'xtest' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) ) )
+            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:352:1: ( () otherlv_1= 'xtest' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) )
             {
-            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:352:1: ( () otherlv_1= 'testCase' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) )
-            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:352:2: () otherlv_1= 'testCase' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) )
+            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:352:1: ( () otherlv_1= 'xtest' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) ) )
+            // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:352:2: () otherlv_1= 'xtest' ( (lv_name_2_0= ruleUniqueName ) ) ( (lv_expression_3_0= ruleXBlockExpression ) )
             {
             // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:352:2: ()
             // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:353:5: 
@@ -1015,7 +1015,7 @@ public class InternalXTestParser extends AbstractInternalAntlrParser {
             otherlv_1=(Token)match(input,15,FOLLOW_15_in_ruleXTestCase745); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-                  	newLeafNode(otherlv_1, grammarAccess.getXTestCaseAccess().getTestCaseKeyword_1());
+                  	newLeafNode(otherlv_1, grammarAccess.getXTestCaseAccess().getXtestKeyword_1());
                   
             }
             // ../org.xtest/src-gen/org/xtest/parser/antlr/internal/InternalXTest.g:362:1: ( (lv_name_2_0= ruleUniqueName ) )

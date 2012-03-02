@@ -71,7 +71,7 @@
             <classifier xsi:type="ecore:EClass" href="http://www.xtest.org/#//XTestSuite"/>
           </type>
         </elements>
-        <elements xsi:type="xtext:Keyword" value="testSuite"/>
+        <elements xsi:type="xtext:Keyword" value="xsuite"/>
         <elements xsi:type="xtext:Assignment" feature="name" operator="=">
           <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.3"/>
         </elements>
@@ -90,7 +90,7 @@
             <classifier xsi:type="ecore:EClass" href="http://www.xtest.org/#//XTestCase"/>
           </type>
         </elements>
-        <elements xsi:type="xtext:Keyword" value="testCase"/>
+        <elements xsi:type="xtext:Keyword" value="xtest"/>
         <elements xsi:type="xtext:Assignment" feature="name" operator="=">
           <terminal xsi:type="xtext:RuleCall" rule="/0/@rules.3"/>
         </elements>

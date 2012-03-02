@@ -1,4 +1,4 @@
-package org.xtest.tests;
+package org.xtest.test;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

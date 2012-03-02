@@ -1,4 +1,4 @@
-package org.xtest.tests;
+package org.xtest.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,29 +21,29 @@ public class XTestResultUnitTests {
     @Test
     public void test2CasesInSuiteFailPass() {
         XTestSuiteResult suite = new XTestSuiteResult(null);
-        XTestCaseResult testCase = suite.subCase("test", null);
-        XTestCaseResult testCase2 = suite.subCase("test2", null);
-        testCase.fail();
-        testCase2.pass();
-        assertEquals(XTestState.FAIL, testCase.getState());
-        assertEquals(XTestState.PASS, testCase2.getState());
+        XTestCaseResult xtest = suite.subCase("test", null);
+        XTestCaseResult xtest2 = suite.subCase("test2", null);
+        xtest.fail();
+        xtest2.pass();
+        assertEquals(XTestState.FAIL, xtest.getState());
+        assertEquals(XTestState.PASS, xtest2.getState());
         assertEquals(XTestState.FAIL, suite.getState());
     }
 
     @Test
     public void test2CasesInSuitePassFail() {
         XTestSuiteResult suite = new XTestSuiteResult(null);
-        XTestCaseResult testCase = suite.subCase("test", null);
-        XTestCaseResult testCase2 = suite.subCase("test2", null);
-        testCase.pass();
-        testCase2.fail();
-        assertEquals(XTestState.PASS, testCase.getState());
-        assertEquals(XTestState.FAIL, testCase2.getState());
+        XTestCaseResult xtest = suite.subCase("test", null);
+        XTestCaseResult xtest2 = suite.subCase("test2", null);
+        xtest.pass();
+        xtest2.fail();
+        assertEquals(XTestState.PASS, xtest.getState());
+        assertEquals(XTestState.FAIL, xtest2.getState());
         assertEquals(XTestState.FAIL, suite.getState());
     }
 
     @Test
-    public void testCaseInSuite() {
+    public void xtestInSuite() {
         XTestSuiteResult parent = new XTestSuiteResult(null);
         XTestCaseResult child = parent.subCase("test", null);
         assertEquals("test", child.getName());
@@ -55,16 +55,16 @@ public class XTestResultUnitTests {
     }
 
     @Test
-    public void testCaseInSuiteFail() {
+    public void xtestInSuiteFail() {
         XTestSuiteResult suite = new XTestSuiteResult(null);
-        XTestCaseResult testCase = suite.subCase("test", null);
-        testCase.fail();
-        assertEquals(XTestState.FAIL, testCase.getState());
+        XTestCaseResult xtest = suite.subCase("test", null);
+        xtest.fail();
+        assertEquals(XTestState.FAIL, xtest.getState());
         assertEquals(XTestState.FAIL, suite.getState());
     }
 
     @Test
-    public void testCaseInSuiteInSuite() {
+    public void xtestInSuiteInSuite() {
         XTestSuiteResult parent = new XTestSuiteResult(null);
         XTestSuiteResult child = parent.subSuite("test", null);
         XTestCaseResult grandChild = child.subCase("test2", null);
@@ -80,7 +80,7 @@ public class XTestResultUnitTests {
     }
 
     @Test
-    public void testCaseInSuiteInSuiteFail() {
+    public void xtestInSuiteInSuiteFail() {
         XTestSuiteResult parent = new XTestSuiteResult(null);
         XTestSuiteResult child = parent.subSuite("test", null);
         XTestCaseResult grandChild = child.subCase("test2", null);
@@ -91,7 +91,7 @@ public class XTestResultUnitTests {
     }
 
     @Test
-    public void testCaseInSuiteInSuitePass() {
+    public void xtestInSuiteInSuitePass() {
         XTestSuiteResult parent = new XTestSuiteResult(null);
         XTestSuiteResult child = parent.subSuite("test", null);
         XTestCaseResult grandChild = child.subCase("test2", null);
@@ -102,11 +102,11 @@ public class XTestResultUnitTests {
     }
 
     @Test
-    public void testCaseInSuitePass() {
+    public void xtestInSuitePass() {
         XTestSuiteResult suite = new XTestSuiteResult(null);
-        XTestCaseResult testCase = suite.subCase("test", null);
-        testCase.pass();
-        assertEquals(XTestState.PASS, testCase.getState());
+        XTestCaseResult xtest = suite.subCase("test", null);
+        xtest.pass();
+        assertEquals(XTestState.PASS, xtest.getState());
         assertEquals(XTestState.PASS, suite.getState());
     }
 
@@ -135,7 +135,7 @@ public class XTestResultUnitTests {
     }
 
     @Test
-    public void testSuiteInSuite() {
+    public void xsuiteInSuite() {
         XTestSuiteResult parent = new XTestSuiteResult(null);
         XTestSuiteResult child = parent.subSuite("test", null);
         assertEquals("test", child.getName());

@@ -23,7 +23,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalXTestParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_INT", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'='", "'+='", "'||'", "'&&'", "'=='", "'!='", "'>='", "'<='", "'>'", "'<'", "'->'", "'..'", "'+'", "'-'", "'*'", "'**'", "'/'", "'%'", "'!'", "'.'", "'val'", "'super'", "'false'", "';'", "'import'", "'.*'", "'testSuite'", "'testCase'", "'assert'", "'throws'", "'instanceof'", "'as'", "','", "')'", "'['", "']'", "'('", "'if'", "'else'", "'switch'", "'{'", "'}'", "':'", "'default'", "'case'", "'for'", "'while'", "'do'", "'::'", "'new'", "'null'", "'typeof'", "'throw'", "'return'", "'try'", "'finally'", "'catch'", "'=>'", "'?'", "'extends'", "'&'", "'?.'", "'*.'", "'|'", "'var'", "'true'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_INT", "RULE_STRING", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'='", "'+='", "'||'", "'&&'", "'=='", "'!='", "'>='", "'<='", "'>'", "'<'", "'->'", "'..'", "'+'", "'-'", "'*'", "'**'", "'/'", "'%'", "'!'", "'.'", "'val'", "'super'", "'false'", "';'", "'import'", "'.*'", "'xsuite'", "'xtest'", "'assert'", "'throws'", "'instanceof'", "'as'", "','", "')'", "'['", "']'", "'('", "'if'", "'else'", "'switch'", "'{'", "'}'", "':'", "'default'", "'case'", "'for'", "'while'", "'do'", "'::'", "'new'", "'null'", "'typeof'", "'throw'", "'return'", "'try'", "'finally'", "'catch'", "'=>'", "'?'", "'extends'", "'&'", "'?.'", "'*.'", "'|'", "'var'", "'true'"
     };
     public static final int T__68=68;
     public static final int T__69=69;
@@ -10085,24 +10085,24 @@ public class InternalXTestParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__XTestSuite__Group__1__Impl"
-    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3136:1: rule__XTestSuite__Group__1__Impl : ( 'testSuite' ) ;
+    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3136:1: rule__XTestSuite__Group__1__Impl : ( 'xsuite' ) ;
     public final void rule__XTestSuite__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3140:1: ( ( 'testSuite' ) )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3141:1: ( 'testSuite' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3140:1: ( ( 'xsuite' ) )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3141:1: ( 'xsuite' )
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3141:1: ( 'testSuite' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3142:1: 'testSuite'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3141:1: ( 'xsuite' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3142:1: 'xsuite'
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getXTestSuiteAccess().getTestSuiteKeyword_1()); 
+               before(grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1()); 
             }
             match(input,37,FOLLOW_37_in_rule__XTestSuite__Group__1__Impl6734); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getXTestSuiteAccess().getTestSuiteKeyword_1()); 
+               after(grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1()); 
             }
 
             }
@@ -10416,24 +10416,24 @@ public class InternalXTestParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__XTestCase__Group__1__Impl"
-    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3263:1: rule__XTestCase__Group__1__Impl : ( 'testCase' ) ;
+    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3263:1: rule__XTestCase__Group__1__Impl : ( 'xtest' ) ;
     public final void rule__XTestCase__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3267:1: ( ( 'testCase' ) )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3268:1: ( 'testCase' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3267:1: ( ( 'xtest' ) )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3268:1: ( 'xtest' )
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3268:1: ( 'testCase' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3269:1: 'testCase'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3268:1: ( 'xtest' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:3269:1: 'xtest'
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getXTestCaseAccess().getTestCaseKeyword_1()); 
+               before(grammarAccess.getXTestCaseAccess().getXtestKeyword_1()); 
             }
             match(input,38,FOLLOW_38_in_rule__XTestCase__Group__1__Impl6982); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getXTestCaseAccess().getTestCaseKeyword_1()); 
+               after(grammarAccess.getXTestCaseAccess().getXtestKeyword_1()); 
             }
 
             }

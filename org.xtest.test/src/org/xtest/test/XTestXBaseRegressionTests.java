@@ -1,4 +1,4 @@
-package org.xtest.tests;
+package org.xtest.test;
 
 import org.eclipse.xtext.junit.util.ParseHelper;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;

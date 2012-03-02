@@ -1,4 +1,4 @@
-package org.xtest.tests;
+package org.xtest.test;
 
 import org.junit.Test;
 import org.xtest.XTestInjectorProvider;
@@ -22,8 +22,8 @@ public class XTestRegressionTests {
 
     @Test
     public void testBug1() throws Exception {
-        Body result = XTestRunner.parse("testSuite \"test\": {\n"
-                + "    testCase \"case\": {\n" + "        assert 1 == 1\n"
+        Body result = XTestRunner.parse("xsuite \"test\": {\n"
+                + "    xtest \"case\": {\n" + "        assert 1 == 1\n"
                 + "      assert 2 ==\n" + "        assert 3 == 3\n"
                 + "    }}  ", injector);
         typeProvider.getCommonReturnType(result, true);
