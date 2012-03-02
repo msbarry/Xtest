@@ -18,6 +18,11 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     }
 
     @Override
+    public Class<? extends org.eclipse.xtext.resource.IResourceDescription.Manager> bindIResourceDescription$Manager() {
+        return XtestResourceDescriptionManager.class;
+    }
+
+    @Override
     public Class<? extends ITypeProvider> bindITypeProvider() {
         return XTestTypeProvider.class;
     }
