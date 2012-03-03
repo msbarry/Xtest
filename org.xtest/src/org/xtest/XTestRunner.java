@@ -10,6 +10,8 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
+import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestState;
 import org.xtest.results.XTestSuiteResult;
@@ -28,19 +30,6 @@ import com.google.inject.Singleton;
 @Singleton
 @SuppressWarnings("restriction")
 public class XTestRunner {
-    /**
-     * CheckMode for validating the xtest script only without running the test cases
-     */
-    public static class DontRunCheck extends CheckMode {
-        CheckMode mode = CheckMode.FAST_ONLY;
-
-        @Override
-        public boolean shouldCheck(CheckType type) {
-            return mode.shouldCheck(type);
-        }
-
-    }
-
     private static final CheckMode CHECK_BUT_DONT_RUN = new DontRunCheck();
 
     /**
@@ -81,7 +70,8 @@ public class XTestRunner {
                 }
             }
             if (result.getState() != XTestState.FAIL) {
-                result = injector.getInstance(XTestRunner.class).run(parse);
+                result = injector.getInstance(XTestRunner.class).run(parse,
+                        CancelIndicator.NullImpl);
             }
         } catch (Exception e) {
             result = new XTestSuiteResult(null);
@@ -92,7 +82,31 @@ public class XTestRunner {
     }
 
     @Inject
+    private Provider<IEvaluationContext> contextProvider;
+
+    @Inject
     private Provider<XTestInterpreter> interpreterProvider;
+
+    /**
+     * Interprets an already linked xtest object model
+     * 
+     * @param main
+     *            The linked xtest object model
+     * @param monitor
+     *            The progress monitor to tell if canceled
+     * @return The xtest suite result
+     */
+    public XTestSuiteResult run(Body main, CancelIndicator monitor) {
+        XTestSuiteResult result;
+        result = new XTestSuiteResult(main);
+        XTestInterpreter interpreter = getInterpreter(main.eResource());
+        try {
+            interpreter.evaluate(main, contextProvider.get(), monitor);
+        } catch (InterpreterCanceledException e) {
+        }
+        result = interpreter.getTestResult();
+        return result;
+    }
 
     /**
      * Gets the xtest interpreter to use so that subclasses can change this behavior
@@ -107,18 +121,15 @@ public class XTestRunner {
     }
 
     /**
-     * Interprets an already linked xtest object model
-     * 
-     * @param main
-     *            The linked xtest object model
-     * @return The xtest suite result
+     * CheckMode for validating the xtest script only without running the test cases
      */
-    public XTestSuiteResult run(Body main) {
-        XTestSuiteResult result;
-        result = new XTestSuiteResult(main);
-        XTestInterpreter interpreter = getInterpreter(main.eResource());
-        interpreter.evaluate(main);
-        result = interpreter.getTestResult();
-        return result;
+    public static class DontRunCheck extends CheckMode {
+        CheckMode mode = CheckMode.FAST_ONLY;
+
+        @Override
+        public boolean shouldCheck(CheckType type) {
+            return mode.shouldCheck(type);
+        }
+
     }
 }
