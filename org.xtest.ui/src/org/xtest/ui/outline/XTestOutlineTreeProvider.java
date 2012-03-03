@@ -9,6 +9,7 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.TextRegion;
+import org.eclipse.xtext.validation.IResourceValidator;
 import org.xtest.XTestRunner;
 import org.xtest.results.AbstractXTestResult;
 import org.xtest.results.XTestCaseResult;
@@ -19,8 +20,7 @@ import org.xtest.xTest.XTestCase;
 import com.google.inject.Inject;
 
 /**
- * Customize the tree outline to display the the results of running the tests
- * graphically
+ * Customize the tree outline to display the the results of running the tests graphically
  * 
  * @author Michael Barry
  */
@@ -33,9 +33,11 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     private static Image TEST_PASSED;
     @Inject
     private PluginImageHelper imageHelper;
-
     @Inject
     private XTestRunner runner;
+
+    @Inject
+    IResourceValidator validator;
 
     @Override
     protected boolean _isLeaf(EObject feature) {
@@ -47,7 +49,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         if (body instanceof Body) {
             // TODO This runs tests twice, one for validation, one for building
             // the outline. It would be better to only run them once.
-            XTestSuiteResult result = runner.run((Body) body);
+            XTestSuiteResult result = runner.validateAndRun((Body) body);
             if (result != null) {
                 for (XTestSuiteResult subSuite : result.getSubSuites()) {
                     createNode(parentNode, subSuite);
@@ -57,8 +59,8 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     /**
-     * Creates a new node for the suite or case result, setting the name and
-     * icon appropriately given the pass/fail/not run state of the test
+     * Creates a new node for the suite or case result, setting the name and icon appropriately
+     * given the pass/fail/not run state of the test
      * 
      * @param parentNode
      *            The parent node
@@ -66,10 +68,8 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            The test or suite result
      * @return The new tree node
      */
-    private EObjectNode createEObjectNode(IOutlineNode parentNode,
-            AbstractXTestResult result) {
-        EObjectNode createEObjectNode = createEObjectNode(parentNode,
-                result.getEObject());
+    private EObjectNode createEObjectNode(IOutlineNode parentNode, AbstractXTestResult result) {
+        EObjectNode createEObjectNode = createEObjectNode(parentNode, result.getEObject());
         createEObjectNode.setText(result.getName());
         Image image;
         // Get the appropriate icon for the state and type of test
@@ -106,14 +106,14 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     @Override
-    protected EObjectNode createEObjectNode(IOutlineNode parentNode,
-            EObject modelElement, Image image, Object text, boolean isLeaf) {
-        EObjectNode eObjectNode = new XTestEObjectNode(modelElement,
-                parentNode, image, text, isLeaf);
+    protected EObjectNode createEObjectNode(IOutlineNode parentNode, EObject modelElement,
+            Image image, Object text, boolean isLeaf) {
+        EObjectNode eObjectNode = new XTestEObjectNode(modelElement, parentNode, image, text,
+                isLeaf);
         ICompositeNode parserNode = NodeModelUtils.getNode(modelElement);
         if (parserNode != null) {
-            eObjectNode.setTextRegion(new TextRegion(parserNode.getOffset(),
-                    parserNode.getLength()));
+            eObjectNode
+                    .setTextRegion(new TextRegion(parserNode.getOffset(), parserNode.getLength()));
         }
         if (isLocalElement(parentNode, modelElement)) {
             eObjectNode.setShortTextRegion(locationInFileProvider

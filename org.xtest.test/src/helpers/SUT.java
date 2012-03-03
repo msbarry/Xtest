@@ -20,6 +20,8 @@ public class SUT {
         }
     }
 
+    private static int privateMember = 1;
+
     public static int staticField = 3;
 
     public static int getStatic() {

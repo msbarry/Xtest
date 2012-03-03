@@ -9,6 +9,7 @@ import org.xtest.XTestRunner;
 import org.xtest.results.XTestCaseResult;
 import org.xtest.results.XTestState;
 import org.xtest.results.XTestSuiteResult;
+import org.xtest.xTest.Body;
 
 import com.google.inject.Injector;
 
@@ -163,6 +164,18 @@ public class XTestRunnerUnitTests {
         assertEquals(XTestState.FAIL, result.getState());
         assertEquals(0, result.getSubSuites().size());
         assertEquals(0, result.getCases().size());
+    }
+
+    @Test
+    public void testPrivateMemberAccess() throws Exception {
+        Body body = XTestRunner.parse(
+                "import helpers.SUT\nxsuite suite {xtest tcase {assert SUT::privateMember==1}}",
+                injector);
+        XTestRunner instance = injector.getInstance(XTestRunner.class);
+        XTestSuiteResult result = instance.validateAndRun(body);
+        System.err.println(result.getErrorMessages());
+        assertTrue(!"[]".equals(result.getErrorMessages().toString()));
+        assertEquals(XTestState.FAIL, result.getState());
     }
 
     @Test
