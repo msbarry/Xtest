@@ -3,6 +3,7 @@ package org.xtest;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.junit.util.ParseHelper;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
@@ -28,8 +29,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 public class XTestRunner {
     /**
-     * CheckMode for validating the xtest script only without running the test
-     * cases
+     * CheckMode for validating the xtest script only without running the test cases
      */
     public static class DontRunCheck extends CheckMode {
         CheckMode mode = CheckMode.FAST_ONLY;
@@ -55,8 +55,7 @@ public class XTestRunner {
      *             if an error occurs parsing the string
      */
     public static Body parse(String string, Injector injector) throws Exception {
-        Body parse = (Body) injector.getInstance(ParseHelper.class).parse(
-                string);
+        Body parse = (Body) injector.getInstance(ParseHelper.class).parse(string);
         return parse;
     }
 
@@ -74,12 +73,12 @@ public class XTestRunner {
         try {
             Body parse = parse(string, injector);
             result = new XTestSuiteResult(parse);
-            List<Issue> validate = injector.getInstance(
-                    IResourceValidator.class).validate(parse.eResource(),
-                    CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
+            List<Issue> validate = injector.getInstance(IResourceValidator.class).validate(
+                    parse.eResource(), CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
             for (Issue issue : validate) {
-                result.addSyntaxError(issue.getLineNumber() + ": "
-                        + issue.getMessage());
+                if (issue.getSeverity() == Severity.ERROR) {
+                    result.addSyntaxError(issue.getLineNumber() + ": " + issue.getMessage());
+                }
             }
             if (result.getState() != XTestState.FAIL) {
                 result = injector.getInstance(XTestRunner.class).run(parse);
@@ -96,8 +95,7 @@ public class XTestRunner {
     private Provider<XTestInterpreter> interpreterProvider;
 
     /**
-     * Gets the xtest interpreter to use so that subclasses can change this
-     * behavior
+     * Gets the xtest interpreter to use so that subclasses can change this behavior
      * 
      * @param resource
      *            The resource

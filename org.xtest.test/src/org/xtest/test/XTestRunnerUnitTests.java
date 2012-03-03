@@ -260,6 +260,13 @@ public class XTestRunnerUnitTests {
     }
 
     @Test
+    public void testWarningIsOk() {
+        XTestSuiteResult result = XTestRunner.run("val a = 1", injector);
+        assertEquals("[]", result.getErrorMessages().toString());
+        assertEquals(XTestState.NOT_RUN, result.getState());
+    }
+
+    @Test
     public void throwExceptionBeforeTestSuite() {
         XTestSuiteResult result = XTestRunner.run(
                 "println(1/0); xsuite suite {xtest tcase {assert 1/0 throws Exception}}", injector);
