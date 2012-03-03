@@ -72,7 +72,17 @@ public class XTestRunner {
         XTestSuiteResult result;
         try {
             Body parse = parse(string, injector);
-            result = injector.getInstance(XTestRunner.class).validateAndRun(parse);
+            result = new XTestSuiteResult(parse);
+            List<Issue> validate = injector.getInstance(IResourceValidator.class).validate(
+                    parse.eResource(), CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
+            for (Issue issue : validate) {
+                if (issue.getSeverity() == Severity.ERROR) {
+                    result.addSyntaxError(issue.getLineNumber() + ": " + issue.getMessage());
+                }
+            }
+            if (result.getState() != XTestState.FAIL) {
+                result = injector.getInstance(XTestRunner.class).run(parse);
+            }
         } catch (Exception e) {
             result = new XTestSuiteResult(null);
             result.fail();
@@ -83,9 +93,6 @@ public class XTestRunner {
 
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
-
-    @Inject
-    private IResourceValidator validator;
 
     /**
      * Gets the xtest interpreter to use so that subclasses can change this behavior
@@ -112,28 +119,6 @@ public class XTestRunner {
         XTestInterpreter interpreter = getInterpreter(main.eResource());
         interpreter.evaluate(main);
         result = interpreter.getTestResult();
-        return result;
-    }
-
-    /**
-     * Validate an xtest test first and then run it, for when not running from the validator itself.
-     * 
-     * @param body
-     *            The body of the test
-     * @return The result of the tests.
-     */
-    public XTestSuiteResult validateAndRun(Body body) {
-        XTestSuiteResult result = new XTestSuiteResult(body);
-        List<Issue> validate = validator.validate(body.eResource(), CHECK_BUT_DONT_RUN,
-                CancelIndicator.NullImpl);
-        for (Issue issue : validate) {
-            if (issue.getSeverity() == Severity.ERROR) {
-                result.addSyntaxError(issue.getLineNumber() + ": " + issue.getMessage());
-            }
-        }
-        if (result.getState() != XTestState.FAIL) {
-            result = run(body);
-        }
         return result;
     }
 }
