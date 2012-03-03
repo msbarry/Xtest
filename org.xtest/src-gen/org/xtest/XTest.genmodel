@@ -9,6 +9,7 @@
   <genPackages prefix="XTest" basePackage="org.xtest" disposableProviderFactory="true"
       ecorePackage="XTest.ecore#/">
     <genClasses ecoreClass="XTest.ecore#//Import">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//Import/static"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//Import/importedNamespace"/>
     </genClasses>
     <genClasses ecoreClass="XTest.ecore#//UniqueName">

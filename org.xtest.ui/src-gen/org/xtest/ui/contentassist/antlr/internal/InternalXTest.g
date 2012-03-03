@@ -2940,6 +2940,7 @@ rule__Import__Group__1
     }
 :
 	rule__Import__Group__1__Impl
+	rule__Import__Group__2
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -2951,15 +2952,45 @@ rule__Import__Group__1__Impl
     }
 :
 (
-{ before(grammarAccess.getImportAccess().getImportedNamespaceAssignment_1()); }
-(rule__Import__ImportedNamespaceAssignment_1)
-{ after(grammarAccess.getImportAccess().getImportedNamespaceAssignment_1()); }
+{ before(grammarAccess.getImportAccess().getStaticAssignment_1()); }
+(rule__Import__StaticAssignment_1)?
+{ after(grammarAccess.getImportAccess().getStaticAssignment_1()); }
 )
 
 ;
 finally {
 	restoreStackSize(stackSize);
 }
+
+
+rule__Import__Group__2
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__Import__Group__2__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Import__Group__2__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getImportAccess().getImportedNamespaceAssignment_2()); }
+(rule__Import__ImportedNamespaceAssignment_2)
+{ after(grammarAccess.getImportAccess().getImportedNamespaceAssignment_2()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 
 
 
@@ -13393,14 +13424,37 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__Import__ImportedNamespaceAssignment_1
+rule__Import__StaticAssignment_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getImportAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_1_0()); }
-	ruleQualifiedNameWithWildcard{ after(grammarAccess.getImportAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_1_0()); }
+{ before(grammarAccess.getImportAccess().getStaticStaticKeyword_1_0()); }
+(
+{ before(grammarAccess.getImportAccess().getStaticStaticKeyword_1_0()); }
+
+	'static' 
+
+{ after(grammarAccess.getImportAccess().getStaticStaticKeyword_1_0()); }
+)
+
+{ after(grammarAccess.getImportAccess().getStaticStaticKeyword_1_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Import__ImportedNamespaceAssignment_2
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getImportAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_2_0()); }
+	ruleQualifiedNameWithWildcard{ after(grammarAccess.getImportAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_2_0()); }
 )
 
 ;

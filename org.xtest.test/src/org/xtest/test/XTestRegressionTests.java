@@ -15,16 +15,14 @@ import com.google.inject.Injector;
  */
 @SuppressWarnings("restriction")
 public class XTestRegressionTests {
-    private static Injector injector = new XTestInjectorProvider()
-            .getInjector();
-    private static XTestTypeProvider typeProvider = new XTestInjectorProvider()
-            .getInjector().getInstance(XTestTypeProvider.class);
+    private static Injector injector = new XTestInjectorProvider().getInjector();
+    private static XTestTypeProvider typeProvider = new XTestInjectorProvider().getInjector()
+            .getInstance(XTestTypeProvider.class);
 
     @Test
     public void testBug1() throws Exception {
-        Body result = XTestRunner.parse("xsuite \"test\": {\n"
-                + "    xtest \"case\": {\n" + "        assert 1 == 1\n"
-                + "      assert 2 ==\n" + "        assert 3 == 3\n"
+        Body result = XTestRunner.parse("xsuite \"test\": {\n" + "    xtest \"case\": {\n"
+                + "        assert 1 == 1\n" + "      assert 2 ==\n" + "        assert 3 == 3\n"
                 + "    }}  ", injector);
         typeProvider.getCommonReturnType(result, true);
     }

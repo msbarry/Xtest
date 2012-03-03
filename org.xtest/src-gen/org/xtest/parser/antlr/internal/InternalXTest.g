@@ -150,17 +150,32 @@ ruleImport returns [EObject current=null]
     }
 (
 (
-		{ 
-	        newCompositeNode(grammarAccess.getImportAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_1_0()); 
+		lv_static_1_0=	'static' 
+    {
+        newLeafNode(lv_static_1_0, grammarAccess.getImportAccess().getStaticStaticKeyword_1_0());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getImportRule());
+	        }
+       		setWithLastConsumed($current, "static", true, "static");
 	    }
-		lv_importedNamespace_1_0=ruleQualifiedNameWithWildcard		{
+
+)
+)?(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getImportAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_2_0()); 
+	    }
+		lv_importedNamespace_2_0=ruleQualifiedNameWithWildcard		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getImportRule());
 	        }
        		set(
        			$current, 
        			"importedNamespace",
-        		lv_importedNamespace_1_0, 
+        		lv_importedNamespace_2_0, 
         		"QualifiedNameWithWildcard");
 	        afterParserOrEnumRuleCall();
 	    }

@@ -201,7 +201,8 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getJvmTypeParameterAccess().getGroup_1_0(), "rule__JvmTypeParameter__Group_1_0__0");
 					put(grammarAccess.getBodyAccess().getImportsAssignment_1(), "rule__Body__ImportsAssignment_1");
 					put(grammarAccess.getBodyAccess().getExpressionsAssignment_2_0(), "rule__Body__ExpressionsAssignment_2_0");
-					put(grammarAccess.getImportAccess().getImportedNamespaceAssignment_1(), "rule__Import__ImportedNamespaceAssignment_1");
+					put(grammarAccess.getImportAccess().getStaticAssignment_1(), "rule__Import__StaticAssignment_1");
+					put(grammarAccess.getImportAccess().getImportedNamespaceAssignment_2(), "rule__Import__ImportedNamespaceAssignment_2");
 					put(grammarAccess.getUniqueNameAccess().getNameAssignment_0(), "rule__UniqueName__NameAssignment_0");
 					put(grammarAccess.getUniqueNameAccess().getIdentifierAssignment_1(), "rule__UniqueName__IdentifierAssignment_1");
 					put(grammarAccess.getXTestSuiteAccess().getNameAssignment_2(), "rule__XTestSuite__NameAssignment_2");

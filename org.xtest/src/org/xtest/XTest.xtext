@@ -11,7 +11,8 @@ Body returns XBlockExpression:
 	(imports+=Import)*
 	(expressions+=XExpressionInsideBlock ';'?)*;
 
-Import: 'import' importedNamespace = QualifiedNameWithWildcard;
+Import: 'import' (static?='static')? importedNamespace = QualifiedNameWithWildcard;
+
 QualifiedNameWithWildcard: QualifiedName '.*'?;
 
 UniqueName:

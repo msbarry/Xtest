@@ -157,9 +157,19 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getImport_ImportedNamespace()
+  public EAttribute getImport_Static()
   {
     return (EAttribute)importEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getImport_ImportedNamespace()
+  {
+    return (EAttribute)importEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -333,6 +343,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 
     // Create classes and their features
     importEClass = createEClass(IMPORT);
+    createEAttribute(importEClass, IMPORT__STATIC);
     createEAttribute(importEClass, IMPORT__IMPORTED_NAMESPACE);
 
     uniqueNameEClass = createEClass(UNIQUE_NAME);
@@ -395,6 +406,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 
     // Initialize classes and features; add operations and parameters
     initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getImport_Static(), ecorePackage.getEBoolean(), "static", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getImport_ImportedNamespace(), ecorePackage.getEString(), "importedNamespace", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(uniqueNameEClass, UniqueName.class, "UniqueName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

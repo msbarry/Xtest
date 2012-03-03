@@ -1091,17 +1091,10 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     importedNamespace=QualifiedNameWithWildcard
+	 *     (static?='static'? importedNamespace=QualifiedNameWithWildcard)
 	 */
 	protected void sequence_Import(EObject context, Import semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.IMPORT__IMPORTED_NAMESPACE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.IMPORT__IMPORTED_NAMESPACE));
-		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getImportAccess().getImportedNamespaceQualifiedNameWithWildcardParserRuleCall_1_0(), semanticObject.getImportedNamespace());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

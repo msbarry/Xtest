@@ -23,6 +23,7 @@ import org.xtest.xTest.XTestPackage;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.xtest.xTest.impl.ImportImpl#isStatic <em>Static</em>}</li>
  *   <li>{@link org.xtest.xTest.impl.ImportImpl#getImportedNamespace <em>Imported Namespace</em>}</li>
  * </ul>
  * </p>
@@ -31,6 +32,26 @@ import org.xtest.xTest.XTestPackage;
  */
 public class ImportImpl extends MinimalEObjectImpl.Container implements Import
 {
+  /**
+   * The default value of the '{@link #isStatic() <em>Static</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isStatic()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean STATIC_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isStatic() <em>Static</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isStatic()
+   * @generated
+   * @ordered
+   */
+  protected boolean static_ = STATIC_EDEFAULT;
+
   /**
    * The default value of the '{@link #getImportedNamespace() <em>Imported Namespace</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -77,6 +98,29 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import
    * <!-- end-user-doc -->
    * @generated
    */
+  public boolean isStatic()
+  {
+    return static_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setStatic(boolean newStatic)
+  {
+    boolean oldStatic = static_;
+    static_ = newStatic;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, XTestPackage.IMPORT__STATIC, oldStatic, static_));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public String getImportedNamespace()
   {
     return importedNamespace;
@@ -105,6 +149,8 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import
   {
     switch (featureID)
     {
+      case XTestPackage.IMPORT__STATIC:
+        return isStatic();
       case XTestPackage.IMPORT__IMPORTED_NAMESPACE:
         return getImportedNamespace();
     }
@@ -121,6 +167,9 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import
   {
     switch (featureID)
     {
+      case XTestPackage.IMPORT__STATIC:
+        setStatic((Boolean)newValue);
+        return;
       case XTestPackage.IMPORT__IMPORTED_NAMESPACE:
         setImportedNamespace((String)newValue);
         return;
@@ -138,6 +187,9 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import
   {
     switch (featureID)
     {
+      case XTestPackage.IMPORT__STATIC:
+        setStatic(STATIC_EDEFAULT);
+        return;
       case XTestPackage.IMPORT__IMPORTED_NAMESPACE:
         setImportedNamespace(IMPORTED_NAMESPACE_EDEFAULT);
         return;
@@ -155,6 +207,8 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import
   {
     switch (featureID)
     {
+      case XTestPackage.IMPORT__STATIC:
+        return static_ != STATIC_EDEFAULT;
       case XTestPackage.IMPORT__IMPORTED_NAMESPACE:
         return IMPORTED_NAMESPACE_EDEFAULT == null ? importedNamespace != null : !IMPORTED_NAMESPACE_EDEFAULT.equals(importedNamespace);
     }
@@ -172,7 +226,9 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (importedNamespace: ");
+    result.append(" (static: ");
+    result.append(static_);
+    result.append(", importedNamespace: ");
     result.append(importedNamespace);
     result.append(')');
     return result.toString();

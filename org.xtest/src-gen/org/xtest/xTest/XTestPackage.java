@@ -73,13 +73,22 @@ public interface XTestPackage extends EPackage
   int IMPORT = 0;
 
   /**
+   * The feature id for the '<em><b>Static</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int IMPORT__STATIC = 0;
+
+  /**
    * The feature id for the '<em><b>Imported Namespace</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int IMPORT__IMPORTED_NAMESPACE = 0;
+  int IMPORT__IMPORTED_NAMESPACE = 1;
 
   /**
    * The number of structural features of the '<em>Import</em>' class.
@@ -88,7 +97,7 @@ public interface XTestPackage extends EPackage
    * @generated
    * @ordered
    */
-  int IMPORT_FEATURE_COUNT = 1;
+  int IMPORT_FEATURE_COUNT = 2;
 
   /**
    * The meta object id for the '{@link org.xtest.xTest.impl.UniqueNameImpl <em>Unique Name</em>}' class.
@@ -287,6 +296,17 @@ public interface XTestPackage extends EPackage
   EClass getImport();
 
   /**
+   * Returns the meta object for the attribute '{@link org.xtest.xTest.Import#isStatic <em>Static</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Static</em>'.
+   * @see org.xtest.xTest.Import#isStatic()
+   * @see #getImport()
+   * @generated
+   */
+  EAttribute getImport_Static();
+
+  /**
    * Returns the meta object for the attribute '{@link org.xtest.xTest.Import#getImportedNamespace <em>Imported Namespace</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -478,6 +498,14 @@ public interface XTestPackage extends EPackage
      * @generated
      */
     EClass IMPORT = eINSTANCE.getImport();
+
+    /**
+     * The meta object literal for the '<em><b>Static</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute IMPORT__STATIC = eINSTANCE.getImport_Static();
 
     /**
      * The meta object literal for the '<em><b>Imported Namespace</b></em>' attribute feature.
