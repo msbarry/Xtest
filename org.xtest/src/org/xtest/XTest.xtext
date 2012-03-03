@@ -4,6 +4,7 @@ grammar org.xtest.XTest with org.eclipse.xtext.xbase.Xbase
 generate xTest "http://www.xtest.org/"
 	
 import "http://www.eclipse.org/xtext/xbase/Xbase"
+import "http://www.eclipse.org/xtext/common/JavaVMTypes"
 
 // Top-level expression
 Body returns XBlockExpression:
@@ -11,9 +12,11 @@ Body returns XBlockExpression:
 	(imports+=Import)*
 	(expressions+=XExpressionInsideBlock ';'?)*;
 
-Import: 'import' (static?='static')? importedNamespace = QualifiedNameWithWildcard;
-
-QualifiedNameWithWildcard: QualifiedName '.*'?;
+Import: 'import' (static?='static' staticImport = [JvmType|QualifiedName] '.' '*' |
+                  typeImport = [JvmType|QualifiedName] |
+	              importedNamespace = QualifiedNamespaceWithWildcard);
+	              
+QualifiedNamespaceWithWildcard: QualifiedName '.' '*';
 
 UniqueName:
 	name=ID (identifier=XParenthesizedExpression)?

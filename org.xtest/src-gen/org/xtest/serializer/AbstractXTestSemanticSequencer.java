@@ -1091,7 +1091,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (static?='static'? importedNamespace=QualifiedNameWithWildcard)
+	 *     ((static?='static' staticImport=[JvmType|QualifiedName]) | typeImport=[JvmType|QualifiedName] | importedNamespace=QualifiedNamespaceWithWildcard)
 	 */
 	protected void sequence_Import(EObject context, Import semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

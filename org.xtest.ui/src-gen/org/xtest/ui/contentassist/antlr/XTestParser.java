@@ -37,6 +37,7 @@ public class XTestParser extends AbstractContentAssistParser {
 			nameMappings = new HashMap<AbstractElement, String>() {
 				private static final long serialVersionUID = 1L;
 				{
+					put(grammarAccess.getImportAccess().getAlternatives_1(), "rule__Import__Alternatives_1");
 					put(grammarAccess.getXPrimaryExpressionAccess().getAlternatives(), "rule__XPrimaryExpression__Alternatives");
 					put(grammarAccess.getXAssignmentAccess().getAlternatives(), "rule__XAssignment__Alternatives");
 					put(grammarAccess.getOpEqualityAccess().getAlternatives(), "rule__OpEquality__Alternatives");
@@ -66,7 +67,8 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getBodyAccess().getGroup(), "rule__Body__Group__0");
 					put(grammarAccess.getBodyAccess().getGroup_2(), "rule__Body__Group_2__0");
 					put(grammarAccess.getImportAccess().getGroup(), "rule__Import__Group__0");
-					put(grammarAccess.getQualifiedNameWithWildcardAccess().getGroup(), "rule__QualifiedNameWithWildcard__Group__0");
+					put(grammarAccess.getImportAccess().getGroup_1_0(), "rule__Import__Group_1_0__0");
+					put(grammarAccess.getQualifiedNamespaceWithWildcardAccess().getGroup(), "rule__QualifiedNamespaceWithWildcard__Group__0");
 					put(grammarAccess.getUniqueNameAccess().getGroup(), "rule__UniqueName__Group__0");
 					put(grammarAccess.getXTestSuiteAccess().getGroup(), "rule__XTestSuite__Group__0");
 					put(grammarAccess.getXTestCaseAccess().getGroup(), "rule__XTestCase__Group__0");
@@ -201,8 +203,10 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getJvmTypeParameterAccess().getGroup_1_0(), "rule__JvmTypeParameter__Group_1_0__0");
 					put(grammarAccess.getBodyAccess().getImportsAssignment_1(), "rule__Body__ImportsAssignment_1");
 					put(grammarAccess.getBodyAccess().getExpressionsAssignment_2_0(), "rule__Body__ExpressionsAssignment_2_0");
-					put(grammarAccess.getImportAccess().getStaticAssignment_1(), "rule__Import__StaticAssignment_1");
-					put(grammarAccess.getImportAccess().getImportedNamespaceAssignment_2(), "rule__Import__ImportedNamespaceAssignment_2");
+					put(grammarAccess.getImportAccess().getStaticAssignment_1_0_0(), "rule__Import__StaticAssignment_1_0_0");
+					put(grammarAccess.getImportAccess().getStaticImportAssignment_1_0_1(), "rule__Import__StaticImportAssignment_1_0_1");
+					put(grammarAccess.getImportAccess().getTypeImportAssignment_1_1(), "rule__Import__TypeImportAssignment_1_1");
+					put(grammarAccess.getImportAccess().getImportedNamespaceAssignment_1_2(), "rule__Import__ImportedNamespaceAssignment_1_2");
 					put(grammarAccess.getUniqueNameAccess().getNameAssignment_0(), "rule__UniqueName__NameAssignment_0");
 					put(grammarAccess.getUniqueNameAccess().getIdentifierAssignment_1(), "rule__UniqueName__IdentifierAssignment_1");
 					put(grammarAccess.getXTestSuiteAccess().getNameAssignment_2(), "rule__XTestSuite__NameAssignment_2");

@@ -10,6 +10,8 @@
       ecorePackage="XTest.ecore#/">
     <genClasses ecoreClass="XTest.ecore#//Import">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//Import/static"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference XTest.ecore#//Import/staticImport"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference XTest.ecore#//Import/typeImport"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//Import/importedNamespace"/>
     </genClasses>
     <genClasses ecoreClass="XTest.ecore#//UniqueName">

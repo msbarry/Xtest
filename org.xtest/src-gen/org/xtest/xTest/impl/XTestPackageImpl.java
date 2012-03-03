@@ -167,9 +167,29 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getImport_StaticImport()
+  {
+    return (EReference)importEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getImport_TypeImport()
+  {
+    return (EReference)importEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EAttribute getImport_ImportedNamespace()
   {
-    return (EAttribute)importEClass.getEStructuralFeatures().get(1);
+    return (EAttribute)importEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -344,6 +364,8 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
     // Create classes and their features
     importEClass = createEClass(IMPORT);
     createEAttribute(importEClass, IMPORT__STATIC);
+    createEReference(importEClass, IMPORT__STATIC_IMPORT);
+    createEReference(importEClass, IMPORT__TYPE_IMPORT);
     createEAttribute(importEClass, IMPORT__IMPORTED_NAMESPACE);
 
     uniqueNameEClass = createEClass(UNIQUE_NAME);
@@ -391,8 +413,8 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
     setNsURI(eNS_URI);
 
     // Obtain other dependent packages
-    XbasePackage theXbasePackage = (XbasePackage)EPackage.Registry.INSTANCE.getEPackage(XbasePackage.eNS_URI);
     TypesPackage theTypesPackage = (TypesPackage)EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
+    XbasePackage theXbasePackage = (XbasePackage)EPackage.Registry.INSTANCE.getEPackage(XbasePackage.eNS_URI);
 
     // Create type parameters
 
@@ -407,6 +429,8 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
     // Initialize classes and features; add operations and parameters
     initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getImport_Static(), ecorePackage.getEBoolean(), "static", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getImport_StaticImport(), theTypesPackage.getJvmType(), null, "staticImport", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getImport_TypeImport(), theTypesPackage.getJvmType(), null, "typeImport", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getImport_ImportedNamespace(), ecorePackage.getEString(), "importedNamespace", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(uniqueNameEClass, UniqueName.class, "UniqueName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

@@ -111,11 +111,6 @@ public class XTestRunnerUnitTests {
     }
 
     @Test
-    public void testImportStatic_field_shouldPass() {
-        assertXtestPasses("import static helpers.SUT.getStatic\nxsuite suite {xtest tcase {assert getStatic==2}}");
-    }
-
-    @Test
     public void testImportStatic_innerClassMembers_shouldFail() {
         assertXtestPreEvalFailure("import static helpers.SUT$InnerClass.nonStaticField\nxsuite suite {xtest tcase {assert nonStaticField==1}}");
         assertXtestPreEvalFailure("import static helpers.SUT$InnerClass.getNonStatic\nxsuite suite {xtest tcase {assert getNonStatic==1}}");
@@ -129,31 +124,12 @@ public class XTestRunnerUnitTests {
     }
 
     @Test
-    public void testImportStatic_innerStaticClassMembers() {
-        assertXtestPasses("import static helpers.SUT$InnerClass.innerField\nxsuite suite {xtest tcase {assert innerField==1}}");
-        assertXtestPasses("import static helpers.SUT$InnerClass.getStatic\nxsuite suite {xtest tcase {assert getStatic==1}}");
-        // Import/used mismatch
-        assertXtestPreEvalFailure("import static helpers.SUT$InnerClass.getStatic\nxsuite suite {xtest tcase {assert innerField==1}}");
-        assertXtestPreEvalFailure("import static helpers$SUT.InnerClass.innerField\nxsuite suite {xtest tcase {assert getStatic==1}}");
-    }
-
-    @Test
     public void testImportStatic_innerStaticClassWildcard() {
         assertXtestPasses("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert innerField==1}}");
         assertXtestPasses("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert getStatic==1}}");
         // Try to use nonstatic
         assertXtestPreEvalFailure("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert getNonStatic==1}}");
         assertXtestPreEvalFailure("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert nonStaticField==1}}");
-    }
-
-    @Test
-    public void testImportStatic_namedFunc_shouldPass() {
-        XTestSuiteResult result = XTestRunner
-                .run("import static helpers.SUT.getStatic\nxsuite suite {xtest tcase {assert getStatic==2}}",
-                        injector);
-        assertEquals("[]", result.getErrorMessages().toString());
-        assertTrue(null == result.getEvaluationException());
-        assertEquals(XTestState.PASS, result.getState());
     }
 
     @Test

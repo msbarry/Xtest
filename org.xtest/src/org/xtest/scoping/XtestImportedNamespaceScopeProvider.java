@@ -3,6 +3,7 @@ package org.xtest.scoping;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.common.types.JvmType;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.xtest.xTest.Body;
@@ -27,9 +28,16 @@ public class XtestImportedNamespaceScopeProvider extends XbaseImportedNamespaceS
             for (Import imported : ((Body) context).getImports()) {
                 if (!imported.isStatic()) {
                     String value = imported.getImportedNamespace();
-                    ImportNormalizer resolver = createImportedNamespaceResolver(value, ignoreCase);
-                    if (resolver != null) {
-                        importedNamespaceResolvers.add(resolver);
+                    JvmType typeImport = imported.getTypeImport();
+                    if (value == null && typeImport != null) {
+                        value = typeImport.getQualifiedName();
+                    }
+                    if (value != null) {
+                        ImportNormalizer resolver = createImportedNamespaceResolver(value,
+                                ignoreCase);
+                        if (resolver != null) {
+                            importedNamespaceResolvers.add(resolver);
+                        }
                     }
                 }
             }

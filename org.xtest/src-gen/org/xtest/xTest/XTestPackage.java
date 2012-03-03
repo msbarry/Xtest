@@ -82,13 +82,31 @@ public interface XTestPackage extends EPackage
   int IMPORT__STATIC = 0;
 
   /**
+   * The feature id for the '<em><b>Static Import</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int IMPORT__STATIC_IMPORT = 1;
+
+  /**
+   * The feature id for the '<em><b>Type Import</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int IMPORT__TYPE_IMPORT = 2;
+
+  /**
    * The feature id for the '<em><b>Imported Namespace</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int IMPORT__IMPORTED_NAMESPACE = 1;
+  int IMPORT__IMPORTED_NAMESPACE = 3;
 
   /**
    * The number of structural features of the '<em>Import</em>' class.
@@ -97,7 +115,7 @@ public interface XTestPackage extends EPackage
    * @generated
    * @ordered
    */
-  int IMPORT_FEATURE_COUNT = 2;
+  int IMPORT_FEATURE_COUNT = 4;
 
   /**
    * The meta object id for the '{@link org.xtest.xTest.impl.UniqueNameImpl <em>Unique Name</em>}' class.
@@ -307,6 +325,28 @@ public interface XTestPackage extends EPackage
   EAttribute getImport_Static();
 
   /**
+   * Returns the meta object for the reference '{@link org.xtest.xTest.Import#getStaticImport <em>Static Import</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Static Import</em>'.
+   * @see org.xtest.xTest.Import#getStaticImport()
+   * @see #getImport()
+   * @generated
+   */
+  EReference getImport_StaticImport();
+
+  /**
+   * Returns the meta object for the reference '{@link org.xtest.xTest.Import#getTypeImport <em>Type Import</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Type Import</em>'.
+   * @see org.xtest.xTest.Import#getTypeImport()
+   * @see #getImport()
+   * @generated
+   */
+  EReference getImport_TypeImport();
+
+  /**
    * Returns the meta object for the attribute '{@link org.xtest.xTest.Import#getImportedNamespace <em>Imported Namespace</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -506,6 +546,22 @@ public interface XTestPackage extends EPackage
      * @generated
      */
     EAttribute IMPORT__STATIC = eINSTANCE.getImport_Static();
+
+    /**
+     * The meta object literal for the '<em><b>Static Import</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference IMPORT__STATIC_IMPORT = eINSTANCE.getImport_StaticImport();
+
+    /**
+     * The meta object literal for the '<em><b>Type Import</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference IMPORT__TYPE_IMPORT = eINSTANCE.getImport_TypeImport();
 
     /**
      * The meta object literal for the '<em><b>Imported Namespace</b></em>' attribute feature.
