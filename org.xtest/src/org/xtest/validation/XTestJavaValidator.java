@@ -191,15 +191,17 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      *            The test suite result
      */
     private void markErrorsFromSuite(XTestSuiteResult run) {
-        for (String error : run.getErrorMessages()) {
-            error(run.getQualifiedName() + ": " + error, run.getEObject(), null, -1);
-        }
-        markEvaluationExceptions(run);
-        for (XTestSuiteResult suite : run.getSubSuites()) {
-            markErrorsFromSuite(suite);
-        }
-        for (XTestCaseResult suite : run.getCases()) {
-            markErrorsFromCase(suite);
+        if (run != null) {
+            for (String error : run.getErrorMessages()) {
+                error(run.getQualifiedName() + ": " + error, run.getEObject(), null, -1);
+            }
+            markEvaluationExceptions(run);
+            for (XTestSuiteResult suite : run.getSubSuites()) {
+                markErrorsFromSuite(suite);
+            }
+            for (XTestCaseResult suite : run.getCases()) {
+                markErrorsFromCase(suite);
+            }
         }
     }
 
