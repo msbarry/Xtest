@@ -9,6 +9,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
 import org.eclipse.xtext.xbase.interpreter.impl.EvaluationException;
+import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
@@ -23,9 +24,8 @@ import org.xtest.xTest.XTestSuite;
 import com.google.inject.Inject;
 
 /**
- * Xtest interpreter, inherits behavior from Xbase, but adds handling for test
- * cases and suites and keeps track of the test suite being run, returning the
- * final root test suite result
+ * Xtest interpreter, inherits behavior from Xbase, but adds handling for test cases and suites and
+ * keeps track of the test suite being run, returning the final root test suite result
  * 
  * @author Michael Barry
  */
@@ -39,8 +39,17 @@ public class XTestInterpreter extends XbaseInterpreter {
     private TypeReferences typeReferences;
 
     /**
-     * Evaluates an assert expression. Throws an {@link XTestAssertException} if
-     * the assert does not succeed
+     * Returns the test suite result after the tests have run
+     * 
+     * @return The test suite result
+     */
+    public XTestSuiteResult getTestResult() {
+        return result;
+    }
+
+    /**
+     * Evaluates an assert expression. Throws an {@link XTestAssertException} if the assert does not
+     * succeed
      * 
      * @param assertExpression
      *            The expression to evaluate
@@ -50,9 +59,8 @@ public class XTestInterpreter extends XbaseInterpreter {
      *            The cancel indicator
      * @return null
      */
-    protected Object _evaluateAssertExpression(
-            XAssertExpression assertExpression, IEvaluationContext context,
-            CancelIndicator indicator) {
+    protected Object _evaluateAssertExpression(XAssertExpression assertExpression,
+            IEvaluationContext context, CancelIndicator indicator) {
         XExpression resultExp = assertExpression.getActual();
         JvmTypeReference expected = assertExpression.getThrows();
         if (expected == null) {
@@ -69,11 +77,10 @@ public class XTestInterpreter extends XbaseInterpreter {
             } catch (Throwable throwable) {
                 while (throwable instanceof XTestEvaluationException) {
                     // This is a wrapped exception, unwrap it
-                    throwable = ((XTestEvaluationException) throwable)
-                            .getCause();
+                    throwable = ((XTestEvaluationException) throwable).getCause();
                 }
-                JvmTypeReference actual = typeReferences.getTypeForName(
-                        throwable.getClass(), assertExpression);
+                JvmTypeReference actual = typeReferences.getTypeForName(throwable.getClass(),
+                        assertExpression);
                 if (!typeConformanceComputer.isConformant(expected, actual)) {
                     throw new XTestAssertException(assertExpression);
                 }
@@ -94,8 +101,7 @@ public class XTestInterpreter extends XbaseInterpreter {
      *            The cancel indicator
      * @return null
      */
-    protected Object _evaluateBody(Body main, IEvaluationContext context,
-            CancelIndicator indicator) {
+    protected Object _evaluateBody(Body main, IEvaluationContext context, CancelIndicator indicator) {
         result = new XTestSuiteResult(main);
         stack.push(result);
         try {
@@ -107,9 +113,8 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Evaluates the xtest test case. Catches any evaluation exceptions or
-     * assertion exceptions thrown and adds them to the test suite. If the end
-     * is reached, the test passes
+     * Evaluates the xtest test case. Catches any evaluation exceptions or assertion exceptions
+     * thrown and adds them to the test suite. If the end is reached, the test passes
      * 
      * @param testCase
      *            The test case to evaluate
@@ -119,8 +124,8 @@ public class XTestInterpreter extends XbaseInterpreter {
      *            The cancel indicator
      * @return null
      */
-    protected Object _evaluateTestCase(XTestCase testCase,
-            IEvaluationContext context, CancelIndicator indicator) {
+    protected Object _evaluateTestCase(XTestCase testCase, IEvaluationContext context,
+            CancelIndicator indicator) {
         UniqueName name = testCase.getName();
         String nameStr = getName(name, context, indicator);
         XExpression expression = testCase.getExpression();
@@ -140,8 +145,8 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Evaluates the xtest test suite. Catches any evaluation exceptions thrown
-     * and adds them to the test suite.
+     * Evaluates the xtest test suite. Catches any evaluation exceptions thrown and adds them to the
+     * test suite.
      * 
      * @param suite
      *            The test suite to evaluate
@@ -151,8 +156,8 @@ public class XTestInterpreter extends XbaseInterpreter {
      *            The cancel indicator
      * @return null
      */
-    protected Object _evaluateTestSuite(XTestSuite suite,
-            IEvaluationContext context, CancelIndicator indicator) {
+    protected Object _evaluateTestSuite(XTestSuite suite, IEvaluationContext context,
+            CancelIndicator indicator) {
         UniqueName name = suite.getName();
         String nameStr = getName(name, context, indicator);
         XExpression expression = suite.getExpression();
@@ -166,6 +171,32 @@ public class XTestInterpreter extends XbaseInterpreter {
         }
         stack.pop();
         return null;
+    }
+
+    /*
+     * Override default expression evaluator to wrap thrown exceptions with an xtest evaluation
+     * exception wrapper that contains the expression that threw the exception
+     */
+    @Override
+    protected Object internalEvaluate(XExpression expression, IEvaluationContext context,
+            CancelIndicator indicator) throws EvaluationException {
+        Object internalEvaluate;
+        try {
+            internalEvaluate = super.internalEvaluate(expression, context, indicator);
+        } catch (InterpreterCanceledException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            if (e instanceof XTestAssertException || e instanceof XTestEvaluationException) {
+                throw e;
+            } else {
+                Throwable cause = e;
+                while (cause instanceof RuntimeException && cause.getCause() != null) {
+                    cause = cause.getCause();
+                }
+                throw new XTestEvaluationException(cause, expression);
+            }
+        }
+        return internalEvaluate;
     }
 
     /**
@@ -190,43 +221,5 @@ public class XTestInterpreter extends XbaseInterpreter {
             }
         }
         return name;
-    }
-
-    /**
-     * Returns the test suite result after the tests have run
-     * 
-     * @return The test suite result
-     */
-    public XTestSuiteResult getTestResult() {
-        return result;
-    }
-
-    /*
-     * Override default expression evaluator to wrap thrown exceptions with an
-     * xtest evaluation exception wrapper that contains the expression that
-     * threw the exception
-     */
-    @Override
-    protected Object internalEvaluate(XExpression expression,
-            IEvaluationContext context, CancelIndicator indicator)
-            throws EvaluationException {
-        Object internalEvaluate;
-        try {
-            internalEvaluate = super.internalEvaluate(expression, context,
-                    indicator);
-        } catch (RuntimeException e) {
-            if (e instanceof XTestAssertException
-                    || e instanceof XTestEvaluationException) {
-                throw e;
-            } else {
-                Throwable cause = e;
-                while (cause instanceof RuntimeException
-                        && cause.getCause() != null) {
-                    cause = cause.getCause();
-                }
-                throw new XTestEvaluationException(cause, expression);
-            }
-        }
-        return internalEvaluate;
     }
 }

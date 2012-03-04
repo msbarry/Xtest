@@ -1,5 +1,6 @@
 package org.xtest;
 
+import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.xbase.interpreter.IExpressionInterpreter;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
@@ -7,6 +8,7 @@ import org.eclipse.xtext.xbase.typing.ITypeProvider;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
 import org.xtest.scoping.XtestStaticMethodsFeatureForTypeProvider;
+import org.xtest.scoping.XtestVisibilityService;
 import org.xtest.types.XTestTypeProvider;
 
 /**
@@ -16,6 +18,7 @@ import org.xtest.types.XTestTypeProvider;
  */
 @SuppressWarnings("restriction")
 public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
+
     @Override
     public Class<? extends IExpressionInterpreter> bindIExpressionInterpreter() {
         return XTestInterpreter.class;
@@ -39,6 +42,16 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends StaticImplicitMethodsFeatureForTypeProvider> bindStaticImplicitMethodsFeatureForTypeProvider() {
         return XtestStaticMethodsFeatureForTypeProvider.class;
+    }
+
+    /**
+     * Bind {@link VisibilityService} to a custom implementation that makes all members visible,
+     * public and private.
+     * 
+     * @return {@link XtestVisibilityService}
+     */
+    public Class<? extends VisibilityService> bindVisibilityService() {
+        return XtestVisibilityService.class;
     }
 
     /**

@@ -20,19 +20,6 @@ import com.google.inject.Injector;
 public class XTestRunnerUnitTests {
     private static Injector injector = new XTestInjectorProvider().getInjector();
 
-    protected void assertXtestPasses(String test) {
-        XTestSuiteResult result = XTestRunner.run(test, injector);
-        assertEquals("[]", result.getErrorMessages().toString());
-        assertTrue(null == result.getEvaluationException());
-        assertEquals(XTestState.PASS, result.getState());
-    }
-
-    protected void assertXtestPreEvalFailure(String test) {
-        XTestSuiteResult result = XTestRunner.run(test, injector);
-        assertTrue(!"[]".equals(result.getErrorMessages().toString()));
-        assertEquals(XTestState.FAIL, result.getState());
-    }
-
     @Test
     public void testCustomValidation() {
         XTestSuiteResult result = XTestRunner.run("xsuite suite1 {\nassert 1==1\n}", injector);
@@ -163,6 +150,24 @@ public class XTestRunnerUnitTests {
         assertEquals(XTestState.FAIL, result.getState());
         assertEquals(0, result.getSubSuites().size());
         assertEquals(0, result.getCases().size());
+    }
+
+    @Test
+    public void testPrivateFieldAccessible() {
+        assertXtestPasses("import helpers.*\nxsuite suite {val a = new PrivateMembers()\n"
+                + "xtest tcase {a.i = 2\nassert a.i == 2}}");
+    }
+
+    @Test
+    public void testPrivateInnerClassAccessible() {
+        assertXtestPasses("import helpers.*\nxsuite suite {val a = new PrivateMembers$Inner()\n"
+                + "xtest tcase {assert a.c == 9}}");
+    }
+
+    @Test
+    public void testPrivateMethodSugared() {
+        assertXtestPasses("import helpers.*\nxsuite suite {val a = new PrivateMembers()\n"
+                + "xtest tcase {a.c = 2\nassert a.c == 1}}");
     }
 
     @Test
@@ -391,5 +396,18 @@ public class XTestRunnerUnitTests {
         XTestCaseResult xTestCaseResult = xTestSuiteResult.getCases().get(0);
         assertEquals(XTestState.PASS, xTestCaseResult.getState());
         assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
+    }
+
+    protected void assertXtestPasses(String test) {
+        XTestSuiteResult result = XTestRunner.run(test, injector);
+        assertEquals("[]", result.getErrorMessages().toString());
+        assertTrue(null == result.getEvaluationException());
+        assertEquals(XTestState.PASS, result.getState());
+    }
+
+    protected void assertXtestPreEvalFailure(String test) {
+        XTestSuiteResult result = XTestRunner.run(test, injector);
+        assertTrue(!"[]".equals(result.getErrorMessages().toString()));
+        assertEquals(XTestState.FAIL, result.getState());
     }
 }
