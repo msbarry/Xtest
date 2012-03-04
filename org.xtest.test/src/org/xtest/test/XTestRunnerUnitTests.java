@@ -171,6 +171,24 @@ public class XTestRunnerUnitTests {
     }
 
     @Test
+    public void testStaticMemberImportedWrite() {
+        assertXtestPasses("import helpers.*\nxsuite suite {StaticMembers::pub := 10\n"
+                + "xtest tcase {assert StaticMembers::pub == 10}}");
+    }
+
+    @Test
+    public void testStaticMemberTypeImportedWrite() {
+        assertXtestPasses("import static helpers.StaticMembers.*\nxsuite suite {pub := 11\n"
+                + "xtest tcase {assert pub == 11}}");
+    }
+
+    @Test
+    public void testStaticMemberWrite() {
+        assertXtestPasses("xsuite suite {helpers::StaticMembers::pub := 12\n"
+                + "xtest tcase {assert helpers::StaticMembers::pub == 12}}");
+    }
+
+    @Test
     public void testThrowDivByZeroException() {
         XTestSuiteResult result = XTestRunner.run(
                 "xsuite suite {xtest tcase {assert 1/0 throws Exception}}", injector);

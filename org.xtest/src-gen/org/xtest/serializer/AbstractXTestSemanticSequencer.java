@@ -272,18 +272,26 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 			}
 		else if(semanticObject.eClass().getEPackage() == XbasePackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
 			case XbasePackage.XASSIGNMENT:
-				if(context == grammarAccess.getXAdditiveExpressionRule() ||
+				if(context == grammarAccess.getXFeatureCallRule()) {
+					sequence_XFeatureCall(context, (XAssignment) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getXAssignmentRule() ||
+				   context == grammarAccess.getXExpressionRule() ||
+				   context == grammarAccess.getXExpressionInsideBlockRule() ||
+				   context == grammarAccess.getXParenthesizedExpressionRule()) {
+					sequence_XMemberFeatureCall(context, (XAssignment) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getXAdditiveExpressionRule() ||
 				   context == grammarAccess.getXAdditiveExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
 				   context == grammarAccess.getXAndExpressionRule() ||
 				   context == grammarAccess.getXAndExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXAssignmentRule() ||
 				   context == grammarAccess.getXAssignmentAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
 				   context == grammarAccess.getXCastedExpressionRule() ||
 				   context == grammarAccess.getXCastedExpressionAccess().getXCastedExpressionTargetAction_1_0_0_0() ||
 				   context == grammarAccess.getXEqualityExpressionRule() ||
 				   context == grammarAccess.getXEqualityExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXExpressionRule() ||
-				   context == grammarAccess.getXExpressionInsideBlockRule() ||
 				   context == grammarAccess.getXMemberFeatureCallRule() ||
 				   context == grammarAccess.getXMemberFeatureCallAccess().getXAssignmentAssignableAction_1_0_0_0_0() ||
 				   context == grammarAccess.getXMemberFeatureCallAccess().getXMemberFeatureCallMemberCallTargetAction_1_1_0_0_0() ||
@@ -293,13 +301,12 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				   context == grammarAccess.getXOrExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
 				   context == grammarAccess.getXOtherOperatorExpressionRule() ||
 				   context == grammarAccess.getXOtherOperatorExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXParenthesizedExpressionRule() ||
 				   context == grammarAccess.getXPrimaryExpressionRule() ||
 				   context == grammarAccess.getXRelationalExpressionRule() ||
 				   context == grammarAccess.getXRelationalExpressionAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
 				   context == grammarAccess.getXRelationalExpressionAccess().getXInstanceOfExpressionExpressionAction_1_0_0_0_0() ||
 				   context == grammarAccess.getXUnaryOperationRule()) {
-					sequence_XAssignment(context, (XAssignment) semanticObject); 
+					sequence_XPrimaryExpression(context, (XAssignment) semanticObject); 
 					return; 
 				}
 				else break;
@@ -568,6 +575,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				   context == grammarAccess.getXExpressionRule() ||
 				   context == grammarAccess.getXExpressionInsideBlockRule() ||
 				   context == grammarAccess.getXFeatureCallRule() ||
+				   context == grammarAccess.getXFeatureCallAccess().getXAssignmentAssignableAction_6_0() ||
 				   context == grammarAccess.getXMemberFeatureCallRule() ||
 				   context == grammarAccess.getXMemberFeatureCallAccess().getXAssignmentAssignableAction_1_0_0_0_0() ||
 				   context == grammarAccess.getXMemberFeatureCallAccess().getXMemberFeatureCallMemberCallTargetAction_1_1_0_0_0() ||
@@ -1208,18 +1216,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (
-	 *         (feature=[JvmIdentifiableElement|ValidID] value=XAssignment) | 
-	 *         (assignable=XMemberFeatureCall_XAssignment_1_0_0_0_0 feature=[JvmIdentifiableElement|ValidID] value=XAssignment)
-	 *     )
-	 */
-	protected void sequence_XAssignment(EObject context, XAssignment semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
 	 *     (expressions+=XExpressionInsideBlock*)
 	 */
 	protected void sequence_XBlockExpression(EObject context, XBlockExpression semanticObject) {
@@ -1309,8 +1305,17 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
+	 *     (assignable=XFeatureCall_XAssignment_6_0 value=XAssignment)
+	 */
+	protected void sequence_XFeatureCall(EObject context, XAssignment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (
-	 *         declaringType=[JvmDeclaredType|StaticQualifier]? 
+	 *         declaringType=[JvmDeclaredType|StaticQualifier] 
 	 *         (typeArguments+=JvmArgumentTypeReference typeArguments+=JvmArgumentTypeReference*)? 
 	 *         feature=[JvmIdentifiableElement|IdOrSuper] 
 	 *         (explicitOperationCall?='(' (featureCallArguments+=XShortClosure | (featureCallArguments+=XExpression featureCallArguments+=XExpression*))?)? 
@@ -1318,7 +1323,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_XFeatureCall(EObject context, XFeatureCall semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1361,6 +1366,19 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	/**
 	 * Constraint:
 	 *     (
+	 *         (assignable=XMemberFeatureCall_XAssignment_1_0_0_0_0 feature=[JvmIdentifiableElement|ValidID] value=XAssignment) | 
+	 *         (assignable=XFeatureCall_XAssignment_6_0 value=XAssignment) | 
+	 *         (feature=[JvmIdentifiableElement|ValidID] value=XAssignment)
+	 *     )
+	 */
+	protected void sequence_XMemberFeatureCall(EObject context, XAssignment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
 	 *         memberCallTarget=XMemberFeatureCall_XMemberFeatureCall_1_1_0_0_0 
 	 *         (nullSafe?='?.' | spreading?='*.')? 
 	 *         (typeArguments+=JvmArgumentTypeReference typeArguments+=JvmArgumentTypeReference*)? 
@@ -1371,6 +1389,19 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	 */
 	protected void sequence_XMemberFeatureCall(EObject context, XMemberFeatureCall semanticObject) {
 		superSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (assignable=XFeatureCall_XAssignment_6_0 value=XAssignment) | 
+	 *         (feature=[JvmIdentifiableElement|ValidID] value=XAssignment) | 
+	 *         (assignable=XMemberFeatureCall_XAssignment_1_0_0_0_0 feature=[JvmIdentifiableElement|ValidID] value=XAssignment)
+	 *     )
+	 */
+	protected void sequence_XPrimaryExpression(EObject context, XAssignment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

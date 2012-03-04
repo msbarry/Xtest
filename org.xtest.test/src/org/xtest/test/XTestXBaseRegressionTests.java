@@ -3,7 +3,6 @@ package org.xtest.test;
 import org.eclipse.xtext.junit.util.ParseHelper;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.junit.evaluation.AbstractXbaseEvaluationTest;
-import org.eclipse.xtext.xbase.validation.XbaseJavaValidator;
 import org.junit.Test;
 import org.xtest.XTestInjectorProvider;
 import org.xtest.xTest.Body;
@@ -18,10 +17,9 @@ import org.xtest.xTest.Body;
 public class XTestXBaseRegressionTests extends AbstractXbaseEvaluationTest {
     private static XbaseInterpreter interpreter = new XTestInjectorProvider().getInjector()
             .getInstance(XbaseInterpreter.class);
+    @SuppressWarnings("unchecked")
     private static ParseHelper<Body> parseHelper = new XTestInjectorProvider().getInjector()
             .getInstance(ParseHelper.class);
-    private static XbaseJavaValidator validator = new XTestInjectorProvider().getInjector()
-            .getInstance(XbaseJavaValidator.class);
 
     @Override
     @Test

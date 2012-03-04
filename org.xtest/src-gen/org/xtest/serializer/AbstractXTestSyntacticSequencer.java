@@ -40,6 +40,8 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if(ruleCall.getRule() == grammarAccess.getOpSingleAssignRule())
 			return getOpSingleAssignToken(semanticObject, ruleCall, node);
+		else if(ruleCall.getRule() == grammarAccess.getStaticEqualsRule())
+			return getStaticEqualsToken(semanticObject, ruleCall, node);
 		return "";
 	}
 	
@@ -47,6 +49,11 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 		if (node != null)
 			return getTokenText(node);
 		return "=";
+	}
+	protected String getStaticEqualsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return ":=";
 	}
 	
 	@Override

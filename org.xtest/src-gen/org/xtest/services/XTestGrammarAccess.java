@@ -395,6 +395,196 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//XAssertExpression
 		public RuleCall getXAssertExpressionParserRuleCall_15() { return cXAssertExpressionParserRuleCall_15; }
 	}
+
+	public class StaticEqualsElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "StaticEquals");
+		private final Keyword cColonEqualsSignKeyword = (Keyword)rule.eContents().get(1);
+		
+		//// Add static member setting support to Xbase
+		//
+		//StaticEquals:
+		//	":=";
+		public ParserRule getRule() { return rule; }
+
+		//":="
+		public Keyword getColonEqualsSignKeyword() { return cColonEqualsSignKeyword; }
+	}
+
+	public class XFeatureCallElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XFeatureCall");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cXFeatureCallAction_0 = (Action)cGroup.eContents().get(0);
+		private final Assignment cDeclaringTypeAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final CrossReference cDeclaringTypeJvmDeclaredTypeCrossReference_1_0 = (CrossReference)cDeclaringTypeAssignment_1.eContents().get(0);
+		private final RuleCall cDeclaringTypeJvmDeclaredTypeStaticQualifierParserRuleCall_1_0_1 = (RuleCall)cDeclaringTypeJvmDeclaredTypeCrossReference_1_0.eContents().get(1);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cLessThanSignKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final Assignment cTypeArgumentsAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_2_1_0 = (RuleCall)cTypeArgumentsAssignment_2_1.eContents().get(0);
+		private final Group cGroup_2_2 = (Group)cGroup_2.eContents().get(2);
+		private final Keyword cCommaKeyword_2_2_0 = (Keyword)cGroup_2_2.eContents().get(0);
+		private final Assignment cTypeArgumentsAssignment_2_2_1 = (Assignment)cGroup_2_2.eContents().get(1);
+		private final RuleCall cTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_2_2_1_0 = (RuleCall)cTypeArgumentsAssignment_2_2_1.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_2_3 = (Keyword)cGroup_2.eContents().get(3);
+		private final Assignment cFeatureAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final CrossReference cFeatureJvmIdentifiableElementCrossReference_3_0 = (CrossReference)cFeatureAssignment_3.eContents().get(0);
+		private final RuleCall cFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_1 = (RuleCall)cFeatureJvmIdentifiableElementCrossReference_3_0.eContents().get(1);
+		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
+		private final Assignment cExplicitOperationCallAssignment_4_0 = (Assignment)cGroup_4.eContents().get(0);
+		private final Keyword cExplicitOperationCallLeftParenthesisKeyword_4_0_0 = (Keyword)cExplicitOperationCallAssignment_4_0.eContents().get(0);
+		private final Alternatives cAlternatives_4_1 = (Alternatives)cGroup_4.eContents().get(1);
+		private final Assignment cFeatureCallArgumentsAssignment_4_1_0 = (Assignment)cAlternatives_4_1.eContents().get(0);
+		private final RuleCall cFeatureCallArgumentsXShortClosureParserRuleCall_4_1_0_0 = (RuleCall)cFeatureCallArgumentsAssignment_4_1_0.eContents().get(0);
+		private final Group cGroup_4_1_1 = (Group)cAlternatives_4_1.eContents().get(1);
+		private final Assignment cFeatureCallArgumentsAssignment_4_1_1_0 = (Assignment)cGroup_4_1_1.eContents().get(0);
+		private final RuleCall cFeatureCallArgumentsXExpressionParserRuleCall_4_1_1_0_0 = (RuleCall)cFeatureCallArgumentsAssignment_4_1_1_0.eContents().get(0);
+		private final Group cGroup_4_1_1_1 = (Group)cGroup_4_1_1.eContents().get(1);
+		private final Keyword cCommaKeyword_4_1_1_1_0 = (Keyword)cGroup_4_1_1_1.eContents().get(0);
+		private final Assignment cFeatureCallArgumentsAssignment_4_1_1_1_1 = (Assignment)cGroup_4_1_1_1.eContents().get(1);
+		private final RuleCall cFeatureCallArgumentsXExpressionParserRuleCall_4_1_1_1_1_0 = (RuleCall)cFeatureCallArgumentsAssignment_4_1_1_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_4_2 = (Keyword)cGroup_4.eContents().get(2);
+		private final Assignment cFeatureCallArgumentsAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cFeatureCallArgumentsXClosureParserRuleCall_5_0 = (RuleCall)cFeatureCallArgumentsAssignment_5.eContents().get(0);
+		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
+		private final Action cXAssignmentAssignableAction_6_0 = (Action)cGroup_6.eContents().get(0);
+		private final RuleCall cStaticEqualsParserRuleCall_6_1 = (RuleCall)cGroup_6.eContents().get(1);
+		private final Assignment cValueAssignment_6_2 = (Assignment)cGroup_6.eContents().get(2);
+		private final RuleCall cValueXAssignmentParserRuleCall_6_2_0 = (RuleCall)cValueAssignment_6_2.eContents().get(0);
+		
+		//XFeatureCall returns XExpression: // Same as Xbase...
+		//
+		//	{XFeatureCall} declaringType=[JvmDeclaredType|StaticQualifier]? ("<" typeArguments+=JvmArgumentTypeReference (","
+		//	typeArguments+=JvmArgumentTypeReference)* ">")? feature=[JvmIdentifiableElement|IdOrSuper] (=>
+		//	explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
+		//	featureCallArguments+=XExpression)*)? ")")? => featureCallArguments+=XClosure? // ... Except with this additional optional clause that allows static members to be set with := operator
+		//
+		//	({XAssignment.assignable=current} StaticEquals value=XAssignment)?;
+		public ParserRule getRule() { return rule; }
+
+		//// Same as Xbase...
+		//
+		//{XFeatureCall} declaringType=[JvmDeclaredType|StaticQualifier]? ("<" typeArguments+=JvmArgumentTypeReference (","
+		//typeArguments+=JvmArgumentTypeReference)* ">")? feature=[JvmIdentifiableElement|IdOrSuper] (=>
+		//explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
+		//featureCallArguments+=XExpression)*)? ")")? => featureCallArguments+=XClosure? // ... Except with this additional optional clause that allows static members to be set with := operator
+		//
+		//({XAssignment.assignable=current} StaticEquals value=XAssignment)?
+		public Group getGroup() { return cGroup; }
+
+		//// Same as Xbase...
+		//
+		//{XFeatureCall}
+		public Action getXFeatureCallAction_0() { return cXFeatureCallAction_0; }
+
+		//declaringType=[JvmDeclaredType|StaticQualifier]?
+		public Assignment getDeclaringTypeAssignment_1() { return cDeclaringTypeAssignment_1; }
+
+		//[JvmDeclaredType|StaticQualifier]
+		public CrossReference getDeclaringTypeJvmDeclaredTypeCrossReference_1_0() { return cDeclaringTypeJvmDeclaredTypeCrossReference_1_0; }
+
+		//StaticQualifier
+		public RuleCall getDeclaringTypeJvmDeclaredTypeStaticQualifierParserRuleCall_1_0_1() { return cDeclaringTypeJvmDeclaredTypeStaticQualifierParserRuleCall_1_0_1; }
+
+		//("<" typeArguments+=JvmArgumentTypeReference ("," typeArguments+=JvmArgumentTypeReference)* ">")?
+		public Group getGroup_2() { return cGroup_2; }
+
+		//"<"
+		public Keyword getLessThanSignKeyword_2_0() { return cLessThanSignKeyword_2_0; }
+
+		//typeArguments+=JvmArgumentTypeReference
+		public Assignment getTypeArgumentsAssignment_2_1() { return cTypeArgumentsAssignment_2_1; }
+
+		//JvmArgumentTypeReference
+		public RuleCall getTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_2_1_0() { return cTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_2_1_0; }
+
+		//("," typeArguments+=JvmArgumentTypeReference)*
+		public Group getGroup_2_2() { return cGroup_2_2; }
+
+		//","
+		public Keyword getCommaKeyword_2_2_0() { return cCommaKeyword_2_2_0; }
+
+		//typeArguments+=JvmArgumentTypeReference
+		public Assignment getTypeArgumentsAssignment_2_2_1() { return cTypeArgumentsAssignment_2_2_1; }
+
+		//JvmArgumentTypeReference
+		public RuleCall getTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_2_2_1_0() { return cTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_2_2_1_0; }
+
+		//">"
+		public Keyword getGreaterThanSignKeyword_2_3() { return cGreaterThanSignKeyword_2_3; }
+
+		//feature=[JvmIdentifiableElement|IdOrSuper]
+		public Assignment getFeatureAssignment_3() { return cFeatureAssignment_3; }
+
+		//[JvmIdentifiableElement|IdOrSuper]
+		public CrossReference getFeatureJvmIdentifiableElementCrossReference_3_0() { return cFeatureJvmIdentifiableElementCrossReference_3_0; }
+
+		//IdOrSuper
+		public RuleCall getFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_1() { return cFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_1; }
+
+		//(=> explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
+		//featureCallArguments+=XExpression)*)? ")")?
+		public Group getGroup_4() { return cGroup_4; }
+
+		//=> explicitOperationCall?="("
+		public Assignment getExplicitOperationCallAssignment_4_0() { return cExplicitOperationCallAssignment_4_0; }
+
+		//"("
+		public Keyword getExplicitOperationCallLeftParenthesisKeyword_4_0_0() { return cExplicitOperationCallLeftParenthesisKeyword_4_0_0; }
+
+		//(featureCallArguments+=XShortClosure | featureCallArguments+=XExpression ("," featureCallArguments+=XExpression)*)?
+		public Alternatives getAlternatives_4_1() { return cAlternatives_4_1; }
+
+		//featureCallArguments+=XShortClosure
+		public Assignment getFeatureCallArgumentsAssignment_4_1_0() { return cFeatureCallArgumentsAssignment_4_1_0; }
+
+		//XShortClosure
+		public RuleCall getFeatureCallArgumentsXShortClosureParserRuleCall_4_1_0_0() { return cFeatureCallArgumentsXShortClosureParserRuleCall_4_1_0_0; }
+
+		//featureCallArguments+=XExpression ("," featureCallArguments+=XExpression)*
+		public Group getGroup_4_1_1() { return cGroup_4_1_1; }
+
+		//featureCallArguments+=XExpression
+		public Assignment getFeatureCallArgumentsAssignment_4_1_1_0() { return cFeatureCallArgumentsAssignment_4_1_1_0; }
+
+		//XExpression
+		public RuleCall getFeatureCallArgumentsXExpressionParserRuleCall_4_1_1_0_0() { return cFeatureCallArgumentsXExpressionParserRuleCall_4_1_1_0_0; }
+
+		//("," featureCallArguments+=XExpression)*
+		public Group getGroup_4_1_1_1() { return cGroup_4_1_1_1; }
+
+		//","
+		public Keyword getCommaKeyword_4_1_1_1_0() { return cCommaKeyword_4_1_1_1_0; }
+
+		//featureCallArguments+=XExpression
+		public Assignment getFeatureCallArgumentsAssignment_4_1_1_1_1() { return cFeatureCallArgumentsAssignment_4_1_1_1_1; }
+
+		//XExpression
+		public RuleCall getFeatureCallArgumentsXExpressionParserRuleCall_4_1_1_1_1_0() { return cFeatureCallArgumentsXExpressionParserRuleCall_4_1_1_1_1_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_4_2() { return cRightParenthesisKeyword_4_2; }
+
+		//=> featureCallArguments+=XClosure?
+		public Assignment getFeatureCallArgumentsAssignment_5() { return cFeatureCallArgumentsAssignment_5; }
+
+		//XClosure
+		public RuleCall getFeatureCallArgumentsXClosureParserRuleCall_5_0() { return cFeatureCallArgumentsXClosureParserRuleCall_5_0; }
+
+		//({XAssignment.assignable=current} StaticEquals value=XAssignment)?
+		public Group getGroup_6() { return cGroup_6; }
+
+		//{XAssignment.assignable=current}
+		public Action getXAssignmentAssignableAction_6_0() { return cXAssignmentAssignableAction_6_0; }
+
+		//StaticEquals
+		public RuleCall getStaticEqualsParserRuleCall_6_1() { return cStaticEqualsParserRuleCall_6_1; }
+
+		//value=XAssignment
+		public Assignment getValueAssignment_6_2() { return cValueAssignment_6_2; }
+
+		//XAssignment
+		public RuleCall getValueXAssignmentParserRuleCall_6_2_0() { return cValueXAssignmentParserRuleCall_6_2_0; }
+	}
 	
 	
 	private BodyElements pBody;
@@ -405,6 +595,8 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	private XTestCaseElements pXTestCase;
 	private XAssertExpressionElements pXAssertExpression;
 	private XPrimaryExpressionElements pXPrimaryExpression;
+	private StaticEqualsElements pStaticEquals;
+	private XFeatureCallElements pXFeatureCall;
 	
 	private final GrammarProvider grammarProvider;
 
@@ -515,6 +707,34 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getXPrimaryExpressionRule() {
 		return getXPrimaryExpressionAccess().getRule();
+	}
+
+	//// Add static member setting support to Xbase
+	//
+	//StaticEquals:
+	//	":=";
+	public StaticEqualsElements getStaticEqualsAccess() {
+		return (pStaticEquals != null) ? pStaticEquals : (pStaticEquals = new StaticEqualsElements());
+	}
+	
+	public ParserRule getStaticEqualsRule() {
+		return getStaticEqualsAccess().getRule();
+	}
+
+	//XFeatureCall returns XExpression: // Same as Xbase...
+	//
+	//	{XFeatureCall} declaringType=[JvmDeclaredType|StaticQualifier]? ("<" typeArguments+=JvmArgumentTypeReference (","
+	//	typeArguments+=JvmArgumentTypeReference)* ">")? feature=[JvmIdentifiableElement|IdOrSuper] (=>
+	//	explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
+	//	featureCallArguments+=XExpression)*)? ")")? => featureCallArguments+=XClosure? // ... Except with this additional optional clause that allows static members to be set with := operator
+	//
+	//	({XAssignment.assignable=current} StaticEquals value=XAssignment)?;
+	public XFeatureCallElements getXFeatureCallAccess() {
+		return (pXFeatureCall != null) ? pXFeatureCall : (pXFeatureCall = new XFeatureCallElements());
+	}
+	
+	public ParserRule getXFeatureCallRule() {
+		return getXFeatureCallAccess().getRule();
 	}
 
 	//XExpression:
@@ -914,19 +1134,6 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getFullJvmFormalParameterRule() {
 		return getFullJvmFormalParameterAccess().getRule();
-	}
-
-	//XFeatureCall returns XExpression:
-	//	{XFeatureCall} declaringType=[types::JvmDeclaredType|StaticQualifier]? ("<" typeArguments+=JvmArgumentTypeReference
-	//	("," typeArguments+=JvmArgumentTypeReference)* ">")? feature=[types::JvmIdentifiableElement|IdOrSuper] (=>
-	//	explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
-	//	featureCallArguments+=XExpression)*)? ")")? => featureCallArguments+=XClosure?;
-	public XbaseGrammarAccess.XFeatureCallElements getXFeatureCallAccess() {
-		return gaXbase.getXFeatureCallAccess();
-	}
-	
-	public ParserRule getXFeatureCallRule() {
-		return getXFeatureCallAccess().getRule();
 	}
 
 	//IdOrSuper:

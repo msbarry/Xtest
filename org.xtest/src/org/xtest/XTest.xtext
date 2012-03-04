@@ -18,6 +18,7 @@ Import: 'import' (static?='static' staticImport = [JvmType|QualifiedName] '.' '*
 	              
 QualifiedNamespaceWithWildcard: QualifiedName '.' '*';
 
+
 UniqueName:
 	name=ID (identifier=XParenthesizedExpression)?
 ;
@@ -55,3 +56,20 @@ XPrimaryExpression returns XExpression:
 	XTestCase |
 	XAssertExpression;
 
+// Add static member setting support to Xbase
+StaticEquals:':=';
+XFeatureCall returns XExpression:
+	// Same as Xbase...
+	{XFeatureCall}
+	(declaringType=[JvmDeclaredType|StaticQualifier])?
+	('<' typeArguments+=JvmArgumentTypeReference (',' typeArguments+=JvmArgumentTypeReference)* '>')? 
+	feature=[JvmIdentifiableElement|IdOrSuper] 
+	(=>explicitOperationCall?='(' 
+		(
+		    featureCallArguments+=XShortClosure
+		  |	featureCallArguments+=XExpression (',' featureCallArguments+=XExpression)*
+		)? 
+	')')?
+	=>featureCallArguments+=XClosure?
+	// ... Except with this additional optional clause that allows static members to be set with := operator
+	({XAssignment.assignable = current} StaticEquals value = XAssignment)?;

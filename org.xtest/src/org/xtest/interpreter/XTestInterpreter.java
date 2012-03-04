@@ -6,7 +6,9 @@ import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
+import org.eclipse.xtext.xbase.XFeatureCall;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
 import org.eclipse.xtext.xbase.interpreter.impl.EvaluationException;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
@@ -88,6 +90,15 @@ public class XTestInterpreter extends XbaseInterpreter {
         }
 
         return null;
+    }
+
+    @Override
+    protected Object _evaluateAssignment(XAssignment assignment, IEvaluationContext context,
+            CancelIndicator indicator) {
+        if (assignment.getAssignable() instanceof XFeatureCall && assignment.getFeature() == null) {
+            assignment.setFeature(((XFeatureCall) assignment.getAssignable()).getFeature());
+        }
+        return super._evaluateAssignment(assignment, context, indicator);
     }
 
     /**
