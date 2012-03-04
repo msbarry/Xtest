@@ -11,8 +11,8 @@ import org.eclipse.xtext.formatting.impl.FormattingConfig;
  * 
  * Currently unused
  * 
- * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#formatting
- * on how and when to use it
+ * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#formatting on how and when to
+ * use it
  * 
  */
 public class XTestFormatter extends AbstractDeclarativeFormatter {

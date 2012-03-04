@@ -22,8 +22,7 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
     }
 
     /**
-     * Binds {@link OutlineRefreshJob} implementation to custom
-     * {@link XtestOutlineRefreshJob}
+     * Binds {@link OutlineRefreshJob} implementation to custom {@link XtestOutlineRefreshJob}
      * 
      * @return {@link OutlineRefreshJob} class
      */

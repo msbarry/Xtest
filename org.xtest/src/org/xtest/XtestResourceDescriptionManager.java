@@ -8,8 +8,8 @@ import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
 /**
- * Custom resource description manager that tells the builder to re-validate
- * xtest files any time any file changes.
+ * Custom resource description manager that tells the builder to re-validate xtest files any time
+ * any file changes.
  * 
  * @author Michael Barry
  * 

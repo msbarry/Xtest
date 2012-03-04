@@ -23,38 +23,13 @@ import com.google.inject.Injector;
 public class Main {
 
     /**
-     * Find the line number and text of the expression provided
-     * 
-     * @param indent
-     *            The indent to insert
-     * @param expression
-     *            The expression to find
-     * @return The line number and text of the expression provided
-     */
-    private static String getLineNumAndText(String indent,
-            XExpression expression) {
-        String line = "?";
-        if (expression != null) {
-            INode parserNode = NodeModelUtils.getNode(expression);
-            if (parserNode != null) {
-                int startLine = parserNode.getStartLine();
-                String text = parserNode.getText().replaceAll("[\n\r]+",
-                        "\n" + indent);
-                line = Integer.toString(startLine) + ": " + text;
-            }
-        }
-        return line;
-    }
-
-    /**
      * Runs a list of xtest scripts
      * 
      * @param args
      *            list of xtest scripts to run
      */
     public static void main(String[] args) {
-        Injector injector = new XTestStandaloneSetup()
-                .createInjectorAndDoEMFRegistration();
+        Injector injector = new XTestStandaloneSetup().createInjectorAndDoEMFRegistration();
         for (String arg : args) {
             try {
                 BufferedReader in = new BufferedReader(new FileReader(arg));
@@ -69,13 +44,34 @@ public class Main {
                 in.close();
 
                 System.out.println("Tests from " + arg + ":");
-                XTestSuiteResult run = XTestRunner.run(builder.toString(),
-                        injector);
+                XTestSuiteResult run = XTestRunner.run(builder.toString(), injector);
                 printSuite("", run, true);
             } catch (Exception e) {
                 System.err.println("Error: " + e.getMessage());
             }
         }
+    }
+
+    /**
+     * Find the line number and text of the expression provided
+     * 
+     * @param indent
+     *            The indent to insert
+     * @param expression
+     *            The expression to find
+     * @return The line number and text of the expression provided
+     */
+    private static String getLineNumAndText(String indent, XExpression expression) {
+        String line = "?";
+        if (expression != null) {
+            INode parserNode = NodeModelUtils.getNode(expression);
+            if (parserNode != null) {
+                int startLine = parserNode.getStartLine();
+                String text = parserNode.getText().replaceAll("[\n\r]+", "\n" + indent);
+                line = Integer.toString(startLine) + ": " + text;
+            }
+        }
+        return line;
     }
 
     /**
@@ -91,13 +87,11 @@ public class Main {
         case FAIL:
             System.out.println(indent + "=NG " + tcase.getQualifiedName());
             XTestAssertException assertException = tcase.getAssertException();
-            XTestEvaluationException evaluationException = tcase
-                    .getEvaluationException();
+            XTestEvaluationException evaluationException = tcase.getEvaluationException();
             if (assertException != null) {
                 XAssertExpression expression = assertException.getExpression();
                 String line = getLineNumAndText(indent, expression);
-                System.out.println(indent + "    Assertion failed on line "
-                        + line);
+                System.out.println(indent + "    Assertion failed on line " + line);
             } else if (evaluationException != null) {
                 printEvaluationException(indent, evaluationException);
             }
@@ -118,8 +112,7 @@ public class Main {
      * @param suite
      *            The test suite results to print
      */
-    private static void printChildrenOfSuite(String indent,
-            XTestSuiteResult suite) {
+    private static void printChildrenOfSuite(String indent, XTestSuiteResult suite) {
         for (XTestCaseResult caseResult : suite.getCases()) {
             printCase(indent + "   ", caseResult);
         }
@@ -129,8 +122,7 @@ public class Main {
     }
 
     /**
-     * Prints the line number, expression, and stack trace of an evaluation
-     * exception that occurred
+     * Prints the line number, expression, and stack trace of an evaluation exception that occurred
      * 
      * @param indent
      *            Indent to prepend to printed lines
@@ -165,22 +157,19 @@ public class Main {
      * @param suite
      *            The test suite results to print
      * @param forcePrintChildren
-     *            True to force printing all children, false to just print
-     *            success for the top-level if it passes.
+     *            True to force printing all children, false to just print success for the top-level
+     *            if it passes.
      */
-    private static void printSuite(String indent, XTestSuiteResult suite,
-            boolean forcePrintChildren) {
+    private static void printSuite(String indent, XTestSuiteResult suite, boolean forcePrintChildren) {
         switch (suite.getState()) {
         case FAIL:
             if (!forcePrintChildren) {
                 System.out.println(indent + "+NG " + suite.getQualifiedName());
             }
-            XTestEvaluationException evaluationException = suite
-                    .getEvaluationException();
+            XTestEvaluationException evaluationException = suite.getEvaluationException();
             List<String> errorMessages = suite.getErrorMessages();
             if (!errorMessages.isEmpty()) {
-                System.out.println(indent
-                        + "   Couldn't run because of syntax errors:");
+                System.out.println(indent + "   Couldn't run because of syntax errors:");
                 for (String message : errorMessages) {
                     System.out.println(indent + "   " + message);
                 }

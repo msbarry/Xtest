@@ -52,11 +52,9 @@ public class AbstractXTestResult {
     }
 
     /**
-     * Returns the evaluation exception for this result, or null if there was
-     * none
+     * Returns the evaluation exception for this result, or null if there was none
      * 
-     * @return the evaluation exception for this result, or null if there was
-     *         none
+     * @return the evaluation exception for this result, or null if there was none
      */
     public XTestEvaluationException getEvaluationException() {
         return expression;
@@ -72,11 +70,11 @@ public class AbstractXTestResult {
     }
 
     /**
-     * Returns the name of this test suite or case, prepended with all of the
-     * suites it is contained within.
+     * Returns the name of this test suite or case, prepended with all of the suites it is contained
+     * within.
      * 
-     * @return The name of this test suite or case, prepended with all of the
-     *         suites it is contained within (can't be null, can be empty)
+     * @return The name of this test suite or case, prepended with all of the suites it is contained
+     *         within (can't be null, can be empty)
      */
     public String getQualifiedName() {
         StringBuilder builder = new StringBuilder(name == null ? "" : name);
@@ -99,8 +97,7 @@ public class AbstractXTestResult {
     }
 
     /**
-     * Passes this result. Only passes its parent if the parent has not been run
-     * yet.
+     * Passes this result. Only passes its parent if the parent has not been run yet.
      */
     public void pass() {
         state = XTestState.PASS;

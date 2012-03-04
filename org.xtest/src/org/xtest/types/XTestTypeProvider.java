@@ -11,8 +11,8 @@ import org.xtest.xTest.XTestSuite;
 import com.google.inject.Singleton;
 
 /**
- * Provide the type of each Xtest expression. Each xtest expression returns null
- * so has a void return type.
+ * Provide the type of each Xtest expression. Each xtest expression returns null so has a void
+ * return type.
  * 
  * @author Michael Barry
  */
@@ -20,8 +20,8 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 public class XTestTypeProvider extends XbaseTypeProvider {
     @Override
-    protected JvmTypeReference type(XExpression expression,
-            JvmTypeReference rawExpectation, boolean rawType) {
+    protected JvmTypeReference type(XExpression expression, JvmTypeReference rawExpectation,
+            boolean rawType) {
         JvmTypeReference result;
         if (expression instanceof XTestSuite || expression instanceof XTestCase
                 || expression instanceof XAssertExpression) {
@@ -33,13 +33,12 @@ public class XTestTypeProvider extends XbaseTypeProvider {
     }
 
     @Override
-    protected JvmTypeReference typeForIdentifiable(
-            JvmIdentifiableElement identifiable, boolean rawType) {
+    protected JvmTypeReference typeForIdentifiable(JvmIdentifiableElement identifiable,
+            boolean rawType) {
         JvmTypeReference result;
         if (!(identifiable instanceof XExpression)) {
             result = super.typeForIdentifiable(identifiable, rawType);
-        } else if (identifiable instanceof XTestSuite
-                || identifiable instanceof XTestCase
+        } else if (identifiable instanceof XTestSuite || identifiable instanceof XTestCase
                 || identifiable instanceof XAssertExpression) {
             result = getPrimitiveVoid((XExpression) identifiable);
         } else {

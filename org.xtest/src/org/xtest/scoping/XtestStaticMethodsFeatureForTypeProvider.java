@@ -32,6 +32,20 @@ public class XtestStaticMethodsFeatureForTypeProvider extends
     @Inject
     private TypeReferences typeReferences;
 
+    @Override
+    protected Map<JvmTypeReference, Collection<JvmTypeReference>> getVisibleJvmTypesContainingStaticMethods(
+            Iterable<JvmTypeReference> hierarchy) {
+        Map<JvmTypeReference, Collection<JvmTypeReference>> result = super
+                .getVisibleJvmTypesContainingStaticMethods(hierarchy);
+        if (hierarchy == null) {
+            for (JvmType type : getStaticImports()) {
+                JvmParameterizedTypeReference typeReference = typeReferences.createTypeRef(type);
+                result.get(null).add(typeReference);
+            }
+        }
+        return result;
+    }
+
     /**
      * Return a raw list of static imports.
      * 
@@ -52,19 +66,5 @@ public class XtestStaticMethodsFeatureForTypeProvider extends
             }
         }
         return other;
-    }
-
-    @Override
-    protected Map<JvmTypeReference, Collection<JvmTypeReference>> getVisibleJvmTypesContainingStaticMethods(
-            Iterable<JvmTypeReference> hierarchy) {
-        Map<JvmTypeReference, Collection<JvmTypeReference>> result = super
-                .getVisibleJvmTypesContainingStaticMethods(hierarchy);
-        if (hierarchy == null) {
-            for (JvmType type : getStaticImports()) {
-                JvmParameterizedTypeReference typeReference = typeReferences.createTypeRef(type);
-                result.get(null).add(typeReference);
-            }
-        }
-        return result;
     }
 }

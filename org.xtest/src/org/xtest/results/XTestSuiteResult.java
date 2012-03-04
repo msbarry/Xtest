@@ -19,13 +19,6 @@ public class XTestSuiteResult extends AbstractXTestResult {
     private final List<XTestSuiteResult> suites = Lists.newArrayList();
     private final List<String> syntaxErrors = Lists.newArrayList();
 
-    // Private constructor so that users are forced to call subSuite to
-    // instantiate a non-top-level suite
-    private XTestSuiteResult(AbstractXTestResult parent, String name,
-            EObject eObject) {
-        super(parent, name, eObject);
-    }
-
     /**
      * Construct a top-level xtest suite result
      * 
@@ -36,9 +29,14 @@ public class XTestSuiteResult extends AbstractXTestResult {
         super(null, null, main);
     }
 
+    // Private constructor so that users are forced to call subSuite to
+    // instantiate a non-top-level suite
+    private XTestSuiteResult(AbstractXTestResult parent, String name, EObject eObject) {
+        super(parent, name, eObject);
+    }
+
     /**
-     * Fails this test and all of its parents and adds a syntax error for this
-     * test suite.
+     * Fails this test and all of its parents and adds a syntax error for this test suite.
      * 
      * @param string
      *            The syntax error.
@@ -85,8 +83,7 @@ public class XTestSuiteResult extends AbstractXTestResult {
      * @return The new test case result
      */
     public XTestCaseResult subCase(String name, XTestCase eObject) {
-        XTestCaseResult xTestCaseResult = new XTestCaseResult(this, name,
-                eObject);
+        XTestCaseResult xTestCaseResult = new XTestCaseResult(this, name, eObject);
         cases.add(xTestCaseResult);
         return xTestCaseResult;
     }
@@ -101,8 +98,7 @@ public class XTestSuiteResult extends AbstractXTestResult {
      * @return The new test suite result
      */
     public XTestSuiteResult subSuite(String name, XTestSuite eObject) {
-        XTestSuiteResult xTestSuiteResult = new XTestSuiteResult(this, name,
-                eObject);
+        XTestSuiteResult xTestSuiteResult = new XTestSuiteResult(this, name, eObject);
         suites.add(xTestSuiteResult);
         return xTestSuiteResult;
     }

@@ -14,8 +14,7 @@ public class XTestEObjectNode extends EObjectNode {
     private boolean failed = false;
 
     /**
-     * Constructs a new custom {@link EObjectNode} with an extra "failed"
-     * boolean state
+     * Constructs a new custom {@link EObjectNode} with an extra "failed" boolean state
      * 
      * @param eObject
      *            The EOBject this node corresponds to
@@ -28,8 +27,8 @@ public class XTestEObjectNode extends EObjectNode {
      * @param isLeaf
      *            True if leaf, false if has children
      */
-    public XTestEObjectNode(EObject eObject, IOutlineNode parent, Image image,
-            Object text, boolean isLeaf) {
+    public XTestEObjectNode(EObject eObject, IOutlineNode parent, Image image, Object text,
+            boolean isLeaf) {
         super(eObject, parent, image, text, isLeaf);
     }
 

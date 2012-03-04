@@ -3,8 +3,7 @@ package org.xtest;
 import org.xtest.xTest.XAssertExpression;
 
 /**
- * Special exception that stores the expression that caused the assertion
- * failure
+ * Special exception that stores the expression that caused the assertion failure
  * 
  * @author Michael Barry
  */
@@ -14,8 +13,7 @@ public class XTestAssertException extends RuntimeException {
     private final XAssertExpression assertExpression;
 
     /**
-     * Constructs a new assertion exception wrapping the assertion expression
-     * provided
+     * Constructs a new assertion exception wrapping the assertion expression provided
      * 
      * @param assertExpression
      *            The assertion expression to wrap

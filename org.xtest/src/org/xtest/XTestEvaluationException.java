@@ -3,8 +3,7 @@ package org.xtest;
 import org.eclipse.xtext.xbase.XExpression;
 
 /**
- * Special exception that stores the expression that caused the evaluation
- * exception
+ * Special exception that stores the expression that caused the evaluation exception
  * 
  * @author Michael Barry
  */

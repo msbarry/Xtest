@@ -1,8 +1,7 @@
 package org.xtest;
 
 /**
- * Initialization support for running Xtext languages without equinox extension
- * registry
+ * Initialization support for running Xtext languages without equinox extension registry
  * 
  * @author Michael Barry
  */
