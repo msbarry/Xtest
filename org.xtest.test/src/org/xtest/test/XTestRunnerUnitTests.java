@@ -258,6 +258,26 @@ public class XTestRunnerUnitTests {
     }
 
     @Test
+    public void testTopLevelTestCaseFails() {
+        XTestSuiteResult result = XTestRunner.run("xtest toplevel {\nassert 1!=1\n}", injector);
+        assertTrue(null == result.getEvaluationException());
+        assertEquals("[]", result.getErrorMessages().toString());
+        assertEquals(XTestState.FAIL, result.getState());
+        assertEquals(0, result.getSubSuites().size());
+        assertEquals(1, result.getCases().size());
+    }
+
+    @Test
+    public void testTopLevelTestCasePasses() {
+        XTestSuiteResult result = XTestRunner.run("xtest toplevel {\nassert 1==1\n}", injector);
+        assertTrue(null == result.getEvaluationException());
+        assertEquals("[]", result.getErrorMessages().toString());
+        assertEquals(XTestState.PASS, result.getState());
+        assertEquals(0, result.getSubSuites().size());
+        assertEquals(1, result.getCases().size());
+    }
+
+    @Test
     public void testTrueAssertInCaseInSuiteInSuite() {
         XTestSuiteResult result = XTestRunner.run("xsuite suite {xtest tcase {assert 1==1}}",
                 injector);

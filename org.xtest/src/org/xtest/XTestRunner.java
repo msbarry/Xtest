@@ -100,11 +100,17 @@ public class XTestRunner {
         XTestSuiteResult result;
         result = new XTestSuiteResult(main);
         XTestInterpreter interpreter = getInterpreter(main.eResource());
+        boolean failed = false;
         try {
             interpreter.evaluate(main, contextProvider.get(), monitor);
         } catch (InterpreterCanceledException e) {
+        } catch (Exception e) {
+            failed = true;
         }
         result = interpreter.getTestResult();
+        if (failed) {
+            result.fail();
+        }
         return result;
     }
 

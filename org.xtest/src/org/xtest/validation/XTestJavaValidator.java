@@ -101,15 +101,15 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     }
 
     /**
-     * Checks that the test case is contained within a test suite
+     * Checks that the test suite is not contained within a test case
      * 
-     * @param testCase
-     *            The test case to check
+     * @param testSuite
+     *            The test suite to check
      */
     @Check
-    public void checkXTestCaseInXTestSuite(XTestCase testCase) {
-        if (!checkContainedWithin(testCase, XTestSuite.class)) {
-            error("Test case can only be placed inside a test case", null);
+    public void checkXTestSuiteNotInXTestSuite(XTestSuite testSuite) {
+        if (checkContainedWithin(testSuite, XTestCase.class)) {
+            error("Test suite cannot be placed inside a test case", null);
         }
     }
 
@@ -123,16 +123,12 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     @Check(CheckType.FAST)
     public void doMagic(Body main) {
         if (!(getCheckMode() instanceof XTestRunner.DontRunCheck)) {
-            try {
-                CancelIndicator indicator = cancelIndicators.get(Thread.currentThread());
-                if (indicator == null) {
-                    indicator = CancelIndicator.NullImpl;
-                }
-                XTestSuiteResult run = runner.run(main, indicator);
-                markErrorsFromSuite(run);
-            } catch (Exception e) {
-                e.printStackTrace();
+            CancelIndicator indicator = cancelIndicators.get(Thread.currentThread());
+            if (indicator == null) {
+                indicator = CancelIndicator.NullImpl;
             }
+            XTestSuiteResult run = runner.run(main, indicator);
+            markErrorsFromSuite(run);
         }
     }
 

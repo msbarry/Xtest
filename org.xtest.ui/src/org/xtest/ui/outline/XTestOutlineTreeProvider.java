@@ -32,6 +32,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     private static Image TEST_FAILED;
     private static Image TEST_NOT_RUN;
     private static Image TEST_PASSED;
+    private static final String UNKNOWN_NODE_NAME = "...";
     @Inject
     private PluginImageHelper imageHelper;
 
@@ -44,15 +45,17 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         if (body instanceof Body) {
             // TODO This runs tests twice, one for validation, one for building
             // the outline. It would be better to only run them once.
-            XTestSuiteResult result = runner.run((Body) body, new CancelIndicator() {
+            XTestSuiteResult result;
+            result = runner.run((Body) body, new CancelIndicator() {
                 @Override
                 public boolean isCanceled() {
                     return monitor != null && monitor.isCanceled();
                 }
             });
             if (result != null) {
-                for (XTestSuiteResult subSuite : result.getSubSuites()) {
-                    createNode(parentNode, subSuite);
+                String fileName = getFileName(body);
+                if (parentNode.getText() != fileName) {
+                    createNode(parentNode, result, fileName);
                 }
             }
         }
@@ -98,11 +101,17 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            The parent node
      * @param result
      *            The test or suite result
+     * @param suggestedName
+     *            The suggested name to use
      * @return The new tree node
      */
-    private EObjectNode createEObjectNode(IOutlineNode parentNode, AbstractXTestResult result) {
+    private EObjectNode createEObjectNode(IOutlineNode parentNode, AbstractXTestResult result,
+            String suggestedName) {
         EObjectNode createEObjectNode = createEObjectNode(parentNode, result.getEObject());
         String name = result.getName();
+        if (name == null) {
+            name = suggestedName;
+        }
         if (name != null) {
             createEObjectNode.setText(name);
         }
@@ -147,15 +156,28 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            The parent tree node
      * @param suite
      *            The sub suite
+     * @param suggestedName
+     *            Name to use for the node
      */
-    private void createNode(IOutlineNode parentNode, XTestSuiteResult suite) {
-        EObjectNode thisNode = createEObjectNode(parentNode, suite);
+    private void createNode(IOutlineNode parentNode, XTestSuiteResult suite, String suggestedName) {
+        EObjectNode thisNode = createEObjectNode(parentNode, suite, suggestedName);
         for (XTestCaseResult testCase : suite.getCases()) {
-            createEObjectNode(thisNode, testCase);
+            createEObjectNode(thisNode, testCase, UNKNOWN_NODE_NAME);
         }
         for (XTestSuiteResult subSuite : suite.getSubSuites()) {
-            createNode(thisNode, subSuite);
+            createNode(thisNode, subSuite, null);
         }
+    }
+
+    /**
+     * Returns the file name from a linked object model.
+     * 
+     * @param body
+     *            The linked object model of the xtest test
+     * @return The file name of the test
+     */
+    private String getFileName(EObject body) {
+        return body.eResource().getURI().lastSegment();
     }
 
     private void initImages() {
