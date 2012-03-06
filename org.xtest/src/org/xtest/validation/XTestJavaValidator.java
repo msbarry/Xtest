@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.common.types.JvmField;
+import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
@@ -12,6 +14,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
 import org.xtest.XTestAssertException;
@@ -97,6 +100,15 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     public void checkAssertIsInXTestCase(XAssertExpression assertExpression) {
         if (!checkContainedWithin(assertExpression, XTestCase.class)) {
             error("Assert can only be placed inside a test case", null);
+        }
+    }
+
+    @Override
+    @Check
+    public void checkAssignment(XAssignment assignment) {
+        JvmIdentifiableElement assignmentFeature = assignment.getFeature();
+        if (!(assignmentFeature instanceof JvmField && ((JvmField) assignmentFeature).isFinal())) {
+            super.checkAssignment(assignment);
         }
     }
 
