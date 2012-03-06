@@ -4,7 +4,7 @@ import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.xbase.interpreter.IExpressionInterpreter;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
-import org.eclipse.xtext.xbase.typing.ITypeProvider;
+import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
 import org.xtest.scoping.XtestStaticMethodsFeatureForTypeProvider;
@@ -27,11 +27,6 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     @Override
     public Class<? extends org.eclipse.xtext.resource.IResourceDescription.Manager> bindIResourceDescription$Manager() {
         return XtestResourceDescriptionManager.class;
-    }
-
-    @Override
-    public Class<? extends ITypeProvider> bindITypeProvider() {
-        return XTestTypeProvider.class;
     }
 
     /**
@@ -62,5 +57,14 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends XbaseImportedNamespaceScopeProvider> bindXbaseImportedNamespaceScopeProvider() {
         return XtestImportedNamespaceScopeProvider.class;
+    }
+
+    /**
+     * Bind {@link XbaseTypeProvider} to custom implementation that ignores static imports
+     * 
+     * @return {@link XTestTypeProvider}
+     */
+    public Class<? extends XbaseTypeProvider> bindXbaseTypeProvider() {
+        return XTestTypeProvider.class;
     }
 }

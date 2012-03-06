@@ -27,4 +27,12 @@ public class XTestRegressionTests {
         typeProvider.getCommonReturnType(result, true);
     }
 
+    @Test
+    public void testBug2() throws Exception {
+        Body result = XTestRunner.parse(
+                "val a = new java.util.TreeMap\n\nxtest test {\nassert a.descendingMap == a\n}",
+                injector);
+        typeProvider.getCommonReturnType(result, true);
+    }
+
 }
