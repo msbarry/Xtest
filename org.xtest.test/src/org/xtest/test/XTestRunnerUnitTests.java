@@ -189,6 +189,15 @@ public class XTestRunnerUnitTests {
     }
 
     @Test
+    public void testTestInTestFails() {
+        XTestSuiteResult result = XTestRunner.run("xtest toplevel {xtest inside {assert 1 == 1}}",
+                injector);
+        assertTrue(null == result.getEvaluationException());
+        assertTrue(!"[]".equals(result.getErrorMessages().toString()));
+        assertEquals(XTestState.FAIL, result.getState());
+    }
+
+    @Test
     public void testThrowDivByZeroException() {
         XTestSuiteResult result = XTestRunner.run(
                 "xsuite suite {xtest tcase {assert 1/0 throws Exception}}", injector);

@@ -103,6 +103,19 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     /**
      * Checks that the test suite is not contained within a test case
      * 
+     * @param testCase
+     *            The test case to check
+     */
+    @Check
+    public void checkXTestSuiteNotInXTestSuite(XTestCase testCase) {
+        if (checkContainedWithin(testCase, XTestCase.class)) {
+            error("Test case cannot be placed inside a test case", null);
+        }
+    }
+
+    /**
+     * Checks that the test suite is not contained within a test case
+     * 
      * @param testSuite
      *            The test suite to check
      */
@@ -141,7 +154,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     }
 
     /**
-     * Returns true if the next furthest out containing {@link EObject} of {@code eObject} is a
+     * Returns true if the next farthest out containing {@link EObject} of {@code eObject} is a
      * subclass of {@code clazz}
      * 
      * @param eObject
