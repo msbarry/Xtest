@@ -8,132 +8,132 @@ import org.^xtest.results.XTestSuiteResult
 import com.google.common.collect.Lists
 
 xtest test2CasesInSuiteFailPass {
-    val suite = new XTestSuiteResult(null);
-    val test = suite.subCase("test", null);
-    val xtest2 = suite.subCase("test2", null);
-    test.fail();
-    xtest2.pass();
-    assertEquals(XTestState::FAIL, test.getState());
-    assertEquals(XTestState::PASS, xtest2.getState());
-    assertEquals(XTestState::FAIL, suite.getState());
+    val suite = new XTestSuiteResult(null)
+    val test = suite.subCase("test", null)
+    val xtest2 = suite.subCase("test2", null)
+    test.fail()
+    xtest2.pass()
+    assertEquals(XTestState::FAIL, test.getState())
+    assertEquals(XTestState::PASS, xtest2.getState())
+    assertEquals(XTestState::FAIL, suite.getState())
 }
 
 xtest test2CasesInSuitePassFail {
-    val suite = new XTestSuiteResult(null);
-    val test = suite.subCase("test", null);
-    val xtest2 = suite.subCase("test2", null);
-    test.pass();
-    xtest2.fail();
-    assertEquals(XTestState::PASS, test.getState());
-    assertEquals(XTestState::FAIL, xtest2.getState());
-    assertEquals(XTestState::FAIL, suite.getState());
+    val suite = new XTestSuiteResult(null)
+    val test = suite.subCase("test", null)
+    val xtest2 = suite.subCase("test2", null)
+    test.pass()
+    xtest2.fail()
+    assertEquals(XTestState::PASS, test.getState())
+    assertEquals(XTestState::FAIL, xtest2.getState())
+    assertEquals(XTestState::FAIL, suite.getState())
 }
 
 xtest testEmptySuiteFail {
-    val suite = new XTestSuiteResult(null);
-    suite.fail();
-    assertEquals(XTestState::FAIL, suite.getState());
+    val suite = new XTestSuiteResult(null)
+    suite.fail()
+    assertEquals(XTestState::FAIL, suite.getState())
 }
 
 xtest testEmptySuitePass {
-    val suite = new XTestSuiteResult(null);
-    suite.pass();
-    assertEquals(XTestState::PASS, suite.getState());
+    val suite = new XTestSuiteResult(null)
+    suite.pass()
+    assertEquals(XTestState::PASS, suite.getState())
 }
 
 xtest testEmptySuiteResult {
-    val suite = new XTestSuiteResult(null);
-    assertEquals(XTestState::NOT_RUN, suite.getState());
-    assertEquals(null, suite.getName());
-    assertEquals("", suite.getQualifiedName());
-    assertEquals(0, suite.getSubSuites().size());
-    assertEquals(0, suite.getCases().size());
+    val suite = new XTestSuiteResult(null)
+    assertEquals(XTestState::NOT_RUN, suite.getState())
+    assertEquals(null, suite.getName())
+    assertEquals("", suite.getQualifiedName())
+    assertEquals(0, suite.getSubSuites().size())
+    assertEquals(0, suite.getCases().size())
 }
 
 xtest testSyntaxError {
-    val suite = new XTestSuiteResult(null);
-    suite.addSyntaxError("Syntax Error");
-    assertEquals(XTestState::FAIL, suite.getState());
-    assertEquals(Lists::newArrayList("Syntax Error").toString(), suite.getErrorMessages().toString());
+    val suite = new XTestSuiteResult(null)
+    suite.addSyntaxError("Syntax Error")
+    assertEquals(XTestState::FAIL, suite.getState())
+    assertEquals(Lists::newArrayList("Syntax Error").toString(), suite.getErrorMessages().toString())
 }
 
 xtest xsuiteInSuite {
-    val parent = new XTestSuiteResult(null);
-    val child = parent.subSuite("test", null);
-    assertEquals("test", child.getName());
-    assertEquals("test", child.getQualifiedName());
-    assertEquals(XTestState::NOT_RUN, child.getState());
-    assertEquals(0, child.getSubSuites().size());
-    assertEquals(0, child.getCases().size());
-    assertEquals(XTestState::NOT_RUN, parent.getState());
-    assertEquals(1, parent.getSubSuites().size());
-    assertEquals(0, parent.getCases().size());
+    val parent = new XTestSuiteResult(null)
+    val child = parent.subSuite("test", null)
+    assertEquals("test", child.getName())
+    assertEquals("test", child.getQualifiedName())
+    assertEquals(XTestState::NOT_RUN, child.getState())
+    assertEquals(0, child.getSubSuites().size())
+    assertEquals(0, child.getCases().size())
+    assertEquals(XTestState::NOT_RUN, parent.getState())
+    assertEquals(1, parent.getSubSuites().size())
+    assertEquals(0, parent.getCases().size())
 }
 
 
 xtest xtestInSuite {
-    val parent = new XTestSuiteResult(null);
-    val child = parent.subCase("test", null);
-    assertEquals("test", child.getName());
-    assertEquals("test", child.getQualifiedName());
-    assertEquals(XTestState::NOT_RUN, child.getState());
-    assertEquals(XTestState::NOT_RUN, parent.getState());
-    assertEquals(0, parent.getSubSuites().size());
-    assertEquals(1, parent.getCases().size());
+    val parent = new XTestSuiteResult(null)
+    val child = parent.subCase("test", null)
+    assertEquals("test", child.getName())
+    assertEquals("test", child.getQualifiedName())
+    assertEquals(XTestState::NOT_RUN, child.getState())
+    assertEquals(XTestState::NOT_RUN, parent.getState())
+    assertEquals(0, parent.getSubSuites().size())
+    assertEquals(1, parent.getCases().size())
 }
 
 
 xtest xtestInSuiteFail {
-    val suite = new XTestSuiteResult(null);
-    val test = suite.subCase("test", null);
-    test.fail();
-    assertEquals(XTestState::FAIL, test.getState());
-    assertEquals(XTestState::FAIL, suite.getState());
+    val suite = new XTestSuiteResult(null)
+    val test = suite.subCase("test", null)
+    test.fail()
+    assertEquals(XTestState::FAIL, test.getState())
+    assertEquals(XTestState::FAIL, suite.getState())
 }
 
 
 xtest xtestInSuiteInSuite {
-    val parent = new XTestSuiteResult(null);
-    val child = parent.subSuite("test", null);
-    val grandChild = child.subCase("test2", null);
-    assertEquals("test", child.getQualifiedName());
-    assertEquals("test.test2", grandChild.getQualifiedName());
-    assertEquals(XTestState::NOT_RUN, child.getState());
-    assertEquals(XTestState::NOT_RUN, parent.getState());
-    assertEquals(XTestState::NOT_RUN, grandChild.getState());
-    assertEquals(1, parent.getSubSuites().size());
-    assertEquals(0, parent.getCases().size());
-    assertEquals(0, child.getSubSuites().size());
-    assertEquals(1, child.getCases().size());
+    val parent = new XTestSuiteResult(null)
+    val child = parent.subSuite("test", null)
+    val grandChild = child.subCase("test2", null)
+    assertEquals("test", child.getQualifiedName())
+    assertEquals("test.test2", grandChild.getQualifiedName())
+    assertEquals(XTestState::NOT_RUN, child.getState())
+    assertEquals(XTestState::NOT_RUN, parent.getState())
+    assertEquals(XTestState::NOT_RUN, grandChild.getState())
+    assertEquals(1, parent.getSubSuites().size())
+    assertEquals(0, parent.getCases().size())
+    assertEquals(0, child.getSubSuites().size())
+    assertEquals(1, child.getCases().size())
 }
 
 
 xtest xtestInSuiteInSuiteFail {
-    val parent = new XTestSuiteResult(null);
-    val child = parent.subSuite("test", null);
-    val grandChild = child.subCase("test2", null);
-    grandChild.fail();
-    assertEquals(XTestState::FAIL, child.getState());
-    assertEquals(XTestState::FAIL, parent.getState());
-    assertEquals(XTestState::FAIL, grandChild.getState());
+    val parent = new XTestSuiteResult(null)
+    val child = parent.subSuite("test", null)
+    val grandChild = child.subCase("test2", null)
+    grandChild.fail()
+    assertEquals(XTestState::FAIL, child.getState())
+    assertEquals(XTestState::FAIL, parent.getState())
+    assertEquals(XTestState::FAIL, grandChild.getState())
 }
 
 
 xtest xtestInSuiteInSuitePass {
-    val parent = new XTestSuiteResult(null);
-    val child = parent.subSuite("test", null);
-    val grandChild = child.subCase("test2", null);
-    grandChild.pass();
-    assertEquals(XTestState::PASS, child.getState());
-    assertEquals(XTestState::PASS, parent.getState());
-    assertEquals(XTestState::PASS, grandChild.getState());
+    val parent = new XTestSuiteResult(null)
+    val child = parent.subSuite("test", null)
+    val grandChild = child.subCase("test2", null)
+    grandChild.pass()
+    assertEquals(XTestState::PASS, child.getState())
+    assertEquals(XTestState::PASS, parent.getState())
+    assertEquals(XTestState::PASS, grandChild.getState())
 }
 
 
 xtest xtestInSuitePass {
-    val suite = new XTestSuiteResult(null);
-    val test = suite.subCase("test", null);
-    test.pass();
-    assertEquals(XTestState::PASS, test.getState());
-    assertEquals(XTestState::PASS, suite.getState());
+    val suite = new XTestSuiteResult(null)
+    val test = suite.subCase("test", null)
+    test.pass()
+    assertEquals(XTestState::PASS, test.getState())
+    assertEquals(XTestState::PASS, suite.getState())
 }
