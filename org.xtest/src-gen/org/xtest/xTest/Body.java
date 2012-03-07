@@ -28,20 +28,20 @@ import org.eclipse.xtext.xbase.XBlockExpression;
  */
 public interface Body extends XBlockExpression
 {
-  /**
-   * Returns the value of the '<em><b>Imports</b></em>' containment reference list.
-   * The list contents are of type {@link org.xtest.xTest.Import}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Imports</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Imports</em>' containment reference list.
-   * @see org.xtest.xTest.XTestPackage#getBody_Imports()
-   * @model containment="true"
-   * @generated
-   */
-  EList<Import> getImports();
+	/**
+	 * Returns the value of the '<em><b>Imports</b></em>' containment reference list.
+	 * The list contents are of type {@link org.xtest.xTest.Import}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Imports</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Imports</em>' containment reference list.
+	 * @see org.xtest.xTest.XTestPackage#getBody_Imports()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Import> getImports();
 
 } // Body

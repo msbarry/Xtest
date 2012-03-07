@@ -29,6 +29,7 @@ import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestCase;
 import org.xtest.xTest.XTestPackage;
 import org.xtest.xTest.XTestSuite;
+import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -154,6 +155,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             }
             XTestSuiteResult run = runner.run(main, indicator);
             markErrorsFromSuite(run);
+            if (main instanceof BodyImplCustom) {
+                ((BodyImplCustom) main).setResult(run);
+            }
         }
     }
 
