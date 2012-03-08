@@ -71,7 +71,6 @@ public class UiXTestRunner extends XTestRunner {
             }
             if (monitor.isCanceled()) {
                 job.cancel();
-                job.getThread().interrupt();
                 break;
             }
         }
@@ -189,12 +188,17 @@ public class UiXTestRunner extends XTestRunner {
         }
 
         @Override
+        protected void canceling() {
+            super.canceling();
+            getThread().interrupt();
+        }
+
+        @Override
         protected IStatus run(final IProgressMonitor arg0) {
             CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
             XTestSuiteResult run = UiXTestRunner.super.run(main, indicator);
             result.offer(run);
             return Status.OK_STATUS;
         }
-
     }
 }
