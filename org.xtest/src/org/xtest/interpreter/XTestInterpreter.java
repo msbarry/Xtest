@@ -76,11 +76,8 @@ public class XTestInterpreter extends XbaseInterpreter {
             try {
                 internalEvaluate(resultExp, context, indicator);
                 throw new XTestAssertException(assertExpression);
-            } catch (Throwable throwable) {
-                while (throwable instanceof XTestEvaluationException) {
-                    // This is a wrapped exception, unwrap it
-                    throwable = ((XTestEvaluationException) throwable).getCause();
-                }
+            } catch (XTestEvaluationException exception) {
+                Throwable throwable = exception.getCause();
                 JvmTypeReference actual = typeReferences.getTypeForName(throwable.getClass(),
                         assertExpression);
                 if (!typeConformanceComputer.isConformant(expected, actual)) {
@@ -196,9 +193,9 @@ public class XTestInterpreter extends XbaseInterpreter {
             internalEvaluate = super.internalEvaluate(expression, context, indicator);
         } catch (InterpreterCanceledException e) {
             throw e;
-        } catch (RuntimeException e) {
+        } catch (Throwable e) {
             if (e instanceof XTestAssertException || e instanceof XTestEvaluationException) {
-                throw e;
+                throw (RuntimeException) e;
             } else {
                 Throwable cause = e;
                 while (cause instanceof RuntimeException && cause.getCause() != null) {

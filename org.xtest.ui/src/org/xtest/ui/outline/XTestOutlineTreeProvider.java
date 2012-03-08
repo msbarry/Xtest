@@ -1,6 +1,5 @@
 package org.xtest.ui.outline;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -9,14 +8,12 @@ import org.eclipse.xtext.ui.PluginImageHelper;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
-import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.TextRegion;
-import org.xtest.XTestRunner;
 import org.xtest.results.AbstractXTestResult;
 import org.xtest.results.XTestCaseResult;
 import org.xtest.results.XTestSuiteResult;
-import org.xtest.xTest.Body;
 import org.xtest.xTest.XTestCase;
+import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.inject.Inject;
 
@@ -36,39 +33,16 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     @Inject
     private PluginImageHelper imageHelper;
 
-    private IProgressMonitor monitor;
-    @Inject
-    private XTestRunner runner;
-
     @Override
     public void createChildren(IOutlineNode parentNode, EObject body) {
-        if (body instanceof Body) {
-            // TODO This runs tests twice, one for validation, one for building
-            // the outline. It would be better to only run them once.
-            XTestSuiteResult result;
-            result = runner.run((Body) body, new CancelIndicator() {
-                @Override
-                public boolean isCanceled() {
-                    return monitor != null && monitor.isCanceled();
-                }
-            });
-            if (result != null) {
-                String fileName = getFileName(body);
-                if (parentNode.getText() != fileName) {
-                    createNode(parentNode, result, fileName);
-                }
+        if (body instanceof BodyImplCustom) {
+            String fileName = ((BodyImplCustom) body).getFileName();
+            XTestSuiteResult result = ((BodyImplCustom) body).getResult();
+            Object text = parentNode.getText();
+            if (result != null && !fileName.equals(text)) {
+                createNode(parentNode, result, fileName);
             }
         }
-    }
-
-    /**
-     * Sets the progress monitor
-     * 
-     * @param monitor
-     *            The progress monitor
-     */
-    public void setMonitor(IProgressMonitor monitor) {
-        this.monitor = monitor;
     }
 
     @Override
@@ -167,17 +141,6 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         for (XTestSuiteResult subSuite : suite.getSubSuites()) {
             createNode(thisNode, subSuite, null);
         }
-    }
-
-    /**
-     * Returns the file name from a linked object model.
-     * 
-     * @param body
-     *            The linked object model of the xtest test
-     * @return The file name of the test
-     */
-    private String getFileName(EObject body) {
-        return body.eResource().getURI().lastSegment();
     }
 
     private void initImages() {

@@ -1,15 +1,21 @@
-package org.xtest.ui;
+package org.xtest.ui.runner;
 
 import static com.google.common.collect.Sets.newHashSet;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -17,8 +23,12 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
+import org.xtest.results.XTestSuiteResult;
+import org.xtest.xTest.Body;
+import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -30,8 +40,47 @@ import com.google.inject.Provider;
  * @author Michael Barry
  */
 public class UiXTestRunner extends XTestRunner {
+    /**
+     * Time to wait between checking the caller's cancel indicator.
+     */
+    private static final long DELAY_BETWEEN_CHECKS = 10;
+
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
+
+    @Override
+    public XTestSuiteResult run(final Body main, CancelIndicator monitor) {
+        final ArrayBlockingQueue<XTestSuiteResult> resultQueue = new ArrayBlockingQueue<XTestSuiteResult>(
+                1);
+
+        String name = "Running " + ((BodyImplCustom) main).getFileName();
+
+        // result.set(super.run(main, monitor));
+        // Kick off a new job to run the test
+        Job job = new TestRunnerJob(name, resultQueue, main);
+        job.schedule();
+        XTestSuiteResult jobResult = null;
+
+        // TODO should be able to specify a maximum allowed time for tests to run and cancel after
+        // that
+        while (jobResult == null) {
+            try {
+                jobResult = resultQueue.poll(DELAY_BETWEEN_CHECKS, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            if (monitor.isCanceled()) {
+                job.cancel();
+                job.getThread().interrupt();
+                break;
+            }
+        }
+        XTestSuiteResult result = jobResult == null ? new XTestSuiteResult(main) : jobResult;
+
+        ((BodyImplCustom) main).setResult(result);
+
+        return result;
+    }
 
     @SuppressWarnings("restriction")
     @Override
@@ -104,5 +153,48 @@ public class UiXTestRunner extends XTestRunner {
             interpreter.setClassLoader(cl);
         }
         return interpreter;
+    }
+
+    /**
+     * {@link CancelIndicator} that delegates to an {@link IProgressMonitor}
+     * 
+     * @author Michael Barry
+     */
+    private static class ProgressMonitorCancelIndicator implements CancelIndicator {
+        private final IProgressMonitor monitor;
+
+        private ProgressMonitorCancelIndicator(IProgressMonitor monitor) {
+            this.monitor = monitor;
+        }
+
+        @Override
+        public boolean isCanceled() {
+            return monitor.isCanceled();
+        }
+    }
+
+    /**
+     * Test runner job
+     * 
+     * @author Michael Barry
+     */
+    private class TestRunnerJob extends Job {
+        private final Body main;
+        private final ArrayBlockingQueue<XTestSuiteResult> result;
+
+        private TestRunnerJob(String name, ArrayBlockingQueue<XTestSuiteResult> result, Body main) {
+            super(name);
+            this.result = result;
+            this.main = main;
+        }
+
+        @Override
+        protected IStatus run(final IProgressMonitor arg0) {
+            CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
+            XTestSuiteResult run = UiXTestRunner.super.run(main, indicator);
+            result.offer(run);
+            return Status.OK_STATUS;
+        }
+
     }
 }

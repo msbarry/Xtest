@@ -104,7 +104,7 @@ public class XTestRunner {
         try {
             interpreter.evaluate(main, contextProvider.get(), monitor);
         } catch (InterpreterCanceledException e) {
-        } catch (Exception e) {
+        } catch (Throwable e) {
             failed = true;
         }
         result = interpreter.getTestResult();
