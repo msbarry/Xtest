@@ -1,11 +1,13 @@
 package org.xtest;
 
 import org.eclipse.xtext.common.types.util.VisibilityService;
+import org.eclipse.xtext.conversion.impl.QualifiedNameValueConverter;
 import org.eclipse.xtext.xbase.interpreter.IExpressionInterpreter;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
+import org.xtest.conversion.EscapeCharacterQualifiedNameValueConverter;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.linking.XtestFeatureCallChecker;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
@@ -20,7 +22,6 @@ import org.xtest.types.XTestTypeProvider;
  */
 @SuppressWarnings("restriction")
 public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
-
     /**
      * Bind {@link FeatureCallChecker} to custom implementation that allows assignment to final
      * fields.
@@ -39,6 +40,16 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     @Override
     public Class<? extends org.eclipse.xtext.resource.IResourceDescription.Manager> bindIResourceDescription$Manager() {
         return XtestResourceDescriptionManager.class;
+    }
+
+    /**
+     * Bind {@link QualifiedNameValueConverter} to custom implementation that fixes bug with escaped
+     * name conversion
+     * 
+     * @return {@link EscapeCharacterQualifiedNameValueConverter}
+     */
+    public Class<? extends QualifiedNameValueConverter> bindQualifiedNameValueConverter() {
+        return EscapeCharacterQualifiedNameValueConverter.class;
     }
 
     /**
