@@ -426,9 +426,11 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cTypeArgumentsAssignment_2_2_1 = (Assignment)cGroup_2_2.eContents().get(1);
 		private final RuleCall cTypeArgumentsJvmArgumentTypeReferenceParserRuleCall_2_2_1_0 = (RuleCall)cTypeArgumentsAssignment_2_2_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_2_3 = (Keyword)cGroup_2.eContents().get(3);
-		private final Assignment cFeatureAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final CrossReference cFeatureJvmIdentifiableElementCrossReference_3_0 = (CrossReference)cFeatureAssignment_3.eContents().get(0);
-		private final RuleCall cFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_1 = (RuleCall)cFeatureJvmIdentifiableElementCrossReference_3_0.eContents().get(1);
+		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
+		private final Assignment cFeatureAssignment_3_0 = (Assignment)cAlternatives_3.eContents().get(0);
+		private final CrossReference cFeatureJvmIdentifiableElementCrossReference_3_0_0 = (CrossReference)cFeatureAssignment_3_0.eContents().get(0);
+		private final RuleCall cFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_0_1 = (RuleCall)cFeatureJvmIdentifiableElementCrossReference_3_0_0.eContents().get(1);
+		private final Keyword cClassKeyword_3_1 = (Keyword)cAlternatives_3.eContents().get(1);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
 		private final Assignment cExplicitOperationCallAssignment_4_0 = (Assignment)cGroup_4.eContents().get(0);
 		private final Keyword cExplicitOperationCallLeftParenthesisKeyword_4_0_0 = (Keyword)cExplicitOperationCallAssignment_4_0.eContents().get(0);
@@ -454,7 +456,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//XFeatureCall returns XExpression: // Same as Xbase...
 		//
 		//	{XFeatureCall} declaringType=[JvmDeclaredType|StaticQualifier]? ("<" typeArguments+=JvmArgumentTypeReference (","
-		//	typeArguments+=JvmArgumentTypeReference)* ">")? feature=[JvmIdentifiableElement|IdOrSuper] (=>
+		//	typeArguments+=JvmArgumentTypeReference)* ">")? (feature=[JvmIdentifiableElement|IdOrSuper] | "class") (=>
 		//	explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
 		//	featureCallArguments+=XExpression)*)? ")")? => featureCallArguments+=XClosure? // ... Except with this additional optional clause that allows static members to be set with := operator
 		//
@@ -464,7 +466,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//// Same as Xbase...
 		//
 		//{XFeatureCall} declaringType=[JvmDeclaredType|StaticQualifier]? ("<" typeArguments+=JvmArgumentTypeReference (","
-		//typeArguments+=JvmArgumentTypeReference)* ">")? feature=[JvmIdentifiableElement|IdOrSuper] (=>
+		//typeArguments+=JvmArgumentTypeReference)* ">")? (feature=[JvmIdentifiableElement|IdOrSuper] | "class") (=>
 		//explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
 		//featureCallArguments+=XExpression)*)? ")")? => featureCallArguments+=XClosure? // ... Except with this additional optional clause that allows static members to be set with := operator
 		//
@@ -512,14 +514,20 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//">"
 		public Keyword getGreaterThanSignKeyword_2_3() { return cGreaterThanSignKeyword_2_3; }
 
+		//feature=[JvmIdentifiableElement|IdOrSuper] | "class"
+		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+
 		//feature=[JvmIdentifiableElement|IdOrSuper]
-		public Assignment getFeatureAssignment_3() { return cFeatureAssignment_3; }
+		public Assignment getFeatureAssignment_3_0() { return cFeatureAssignment_3_0; }
 
 		//[JvmIdentifiableElement|IdOrSuper]
-		public CrossReference getFeatureJvmIdentifiableElementCrossReference_3_0() { return cFeatureJvmIdentifiableElementCrossReference_3_0; }
+		public CrossReference getFeatureJvmIdentifiableElementCrossReference_3_0_0() { return cFeatureJvmIdentifiableElementCrossReference_3_0_0; }
 
 		//IdOrSuper
-		public RuleCall getFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_1() { return cFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_1; }
+		public RuleCall getFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_0_1() { return cFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_0_1; }
+
+		//"class"
+		public Keyword getClassKeyword_3_1() { return cClassKeyword_3_1; }
 
 		//(=> explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
 		//featureCallArguments+=XExpression)*)? ")")?
@@ -724,7 +732,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	//XFeatureCall returns XExpression: // Same as Xbase...
 	//
 	//	{XFeatureCall} declaringType=[JvmDeclaredType|StaticQualifier]? ("<" typeArguments+=JvmArgumentTypeReference (","
-	//	typeArguments+=JvmArgumentTypeReference)* ">")? feature=[JvmIdentifiableElement|IdOrSuper] (=>
+	//	typeArguments+=JvmArgumentTypeReference)* ">")? (feature=[JvmIdentifiableElement|IdOrSuper] | "class") (=>
 	//	explicitOperationCall?="(" (featureCallArguments+=XShortClosure | featureCallArguments+=XExpression (","
 	//	featureCallArguments+=XExpression)*)? ")")? => featureCallArguments+=XClosure? // ... Except with this additional optional clause that allows static members to be set with := operator
 	//

@@ -63,7 +63,7 @@ XFeatureCall returns XExpression:
 	{XFeatureCall}
 	(declaringType=[JvmDeclaredType|StaticQualifier])?
 	('<' typeArguments+=JvmArgumentTypeReference (',' typeArguments+=JvmArgumentTypeReference)* '>')? 
-	feature=[JvmIdentifiableElement|IdOrSuper] 
+	(feature=[JvmIdentifiableElement|IdOrSuper]|'class') 
 	(=>explicitOperationCall?='(' 
 		(
 		    featureCallArguments+=XShortClosure

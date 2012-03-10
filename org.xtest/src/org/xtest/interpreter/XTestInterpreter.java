@@ -2,7 +2,10 @@ package org.xtest.interpreter;
 
 import java.util.Stack;
 
+import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmTypeReference;
+import org.eclipse.xtext.common.types.JvmVoid;
+import org.eclipse.xtext.common.types.access.impl.ClassFinder;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -204,6 +207,33 @@ public class XTestInterpreter extends XbaseInterpreter {
         }
         stack.pop();
         return null;
+    }
+
+    /**
+     * Handles a feature call to retrieve the class of a class
+     * 
+     * @param jvmVoid
+     *            Void because feature is null in this case
+     * @param featureCall
+     *            The feature call expression
+     * @param receiver
+     *            The receiver, null in this case
+     * @param context
+     *            The context
+     * @param indicator
+     *            The cancellation indicator
+     * @return The class of the declared type from {@code featureCall}
+     */
+    protected Object _featureCallVoid(JvmVoid jvmVoid, XFeatureCall featureCall, Object receiver,
+            IEvaluationContext context, CancelIndicator indicator) {
+        JvmDeclaredType declaringType = featureCall.getDeclaringType();
+        ClassFinder classFinder = getClassFinder();
+        Class<?> clazz = null;
+        try {
+            clazz = classFinder.forName(declaringType.getQualifiedName());
+        } catch (ClassNotFoundException e) {
+        }
+        return clazz;
     }
 
     /*

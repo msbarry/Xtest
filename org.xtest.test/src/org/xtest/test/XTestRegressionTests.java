@@ -2,9 +2,11 @@ package org.xtest.test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import helpers.SUT;
 
 import java.util.List;
 
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
@@ -36,6 +38,32 @@ public class XTestRegressionTests {
     private static TypeReferences typeRefs = XtestInjector.injector
             .getInstance(TypeReferences.class);
 
+    protected static void assertEvaluatesTo(Object object, Body body) throws Exception {
+        assertEquals(object, invokeXbaseExpression(body));
+    }
+
+    protected static void assertReturnType(JvmTypeReference typeForName, Body parse)
+            throws Exception {
+        JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(parse, true);
+        assertTrue(typeComputer.isConformant(typeForName, commonReturnType, false));
+    }
+
+    protected static void assertValidationPassed(Body parse) throws Exception {
+        IResourceValidator instance = injector.getInstance(IResourceValidator.class);
+        Resource eResource = parse.eResource();
+        List<Issue> validate = instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN,
+                CancelIndicator.NullImpl);
+        assertEquals("[]", validate.toString());
+    }
+
+    protected static Object invokeXbaseExpression(Body expression) throws Exception {
+        return interpreter.evaluate(expression).getResult();
+    }
+
+    protected static Body parse(String string) throws Exception {
+        return XTestRunner.parse(string, injector);
+    }
+
     @Test
     public void testBug1() throws Exception {
         Body result = XTestRunner.parse("xsuite \"test\": {\n" + "    xtest \"case\": {\n"
@@ -52,36 +80,34 @@ public class XTestRegressionTests {
         typeProvider.getCommonReturnType(result, true);
     }
 
-    // @Test TODO
+    @Test
     public void testGetClass() throws Exception {
-        assertEvaluatesTo(System.class, "System::class");
-    }
-
-    // @Test TODO
-    public void testGetClassType() throws Exception {
-        Body parse = XTestRunner.parse("System::class", injector);
-        List<Issue> validate = injector.getInstance(IResourceValidator.class).validate(
-                parse.eResource(), XTestRunner.CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
-        assertEquals("[]", validate.toString());
+        Body parse = parse("System::class");
+        assertValidationPassed(parse);
+        assertEvaluatesTo(System.class, parse);
         JvmTypeReference typeForName = typeRefs.getTypeForName(Class.class, parse,
                 typeRefs.getTypeForName(System.class, parse));
-        JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(parse, true);
-        System.err.println(commonReturnType);
-        System.err.println(typeForName);
-        assertTrue(typeComputer.isConformant(typeForName, commonReturnType, false));
+        assertReturnType(typeForName, parse);
     }
 
-    protected void assertEvaluatesTo(Object object, String string) throws Exception {
-        assertEquals(object, invokeXbaseExpression(string));
+    @Test
+    public void testGetClassImported() throws Exception {
+        Body parse = parse("import helpers.SUT\nSUT::class");
+        assertValidationPassed(parse);
+        assertEvaluatesTo(SUT.class, parse);
+        JvmTypeReference typeForName = typeRefs.getTypeForName(Class.class, parse,
+                typeRefs.getTypeForName(SUT.class, parse));
+        assertReturnType(typeForName, parse);
     }
 
-    protected Object invokeXbaseExpression(String expression) throws Exception {
-        Body parse = XTestRunner.parse(expression, injector);
-
-        List<Issue> validate = injector.getInstance(IResourceValidator.class).validate(
-                parse.eResource(), XTestRunner.CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
-        assertEquals("[]", validate.toString());
-        return interpreter.evaluate(parse).getResult();
+    @Test
+    public void testGetClassNotImported() throws Exception {
+        Body parse = parse("helpers::SUT::class");
+        assertValidationPassed(parse);
+        assertEvaluatesTo(SUT.class, parse);
+        JvmTypeReference typeForName = typeRefs.getTypeForName(Class.class, parse,
+                typeRefs.getTypeForName(SUT.class, parse));
+        assertReturnType(typeForName, parse);
     }
 
 }

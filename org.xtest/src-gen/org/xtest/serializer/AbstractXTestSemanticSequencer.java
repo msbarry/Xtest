@@ -1317,7 +1317,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	 *     (
 	 *         declaringType=[JvmDeclaredType|StaticQualifier] 
 	 *         (typeArguments+=JvmArgumentTypeReference typeArguments+=JvmArgumentTypeReference*)? 
-	 *         feature=[JvmIdentifiableElement|IdOrSuper] 
+	 *         feature=[JvmIdentifiableElement|IdOrSuper]? 
 	 *         (explicitOperationCall?='(' (featureCallArguments+=XShortClosure | (featureCallArguments+=XExpression featureCallArguments+=XExpression*))?)? 
 	 *         featureCallArguments+=XClosure?
 	 *     )
