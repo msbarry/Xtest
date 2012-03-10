@@ -2171,6 +2171,30 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__XFeatureCall__Alternatives_3
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getXFeatureCallAccess().getFeatureAssignment_3_0()); }
+(rule__XFeatureCall__FeatureAssignment_3_0)
+{ after(grammarAccess.getXFeatureCallAccess().getFeatureAssignment_3_0()); }
+)
+
+    |(
+{ before(grammarAccess.getXFeatureCallAccess().getClassKeyword_3_1()); }
+
+	'class' 
+
+{ after(grammarAccess.getXFeatureCallAccess().getClassKeyword_3_1()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__XFeatureCall__Alternatives_4_1
     @init {
 		int stackSize = keepStackSize();
@@ -3859,9 +3883,9 @@ rule__XFeatureCall__Group__3__Impl
     }
 :
 (
-{ before(grammarAccess.getXFeatureCallAccess().getFeatureAssignment_3()); }
-(rule__XFeatureCall__FeatureAssignment_3)
-{ after(grammarAccess.getXFeatureCallAccess().getFeatureAssignment_3()); }
+{ before(grammarAccess.getXFeatureCallAccess().getAlternatives_3()); }
+(rule__XFeatureCall__Alternatives_3)
+{ after(grammarAccess.getXFeatureCallAccess().getAlternatives_3()); }
 )
 
 ;
@@ -13981,18 +14005,18 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__XFeatureCall__FeatureAssignment_3
+rule__XFeatureCall__FeatureAssignment_3_0
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementCrossReference_3_0()); }
+{ before(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementCrossReference_3_0_0()); }
 (
-{ before(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_1()); }
-	ruleIdOrSuper{ after(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_1()); }
+{ before(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_0_1()); }
+	ruleIdOrSuper{ after(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementIdOrSuperParserRuleCall_3_0_0_1()); }
 )
-{ after(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementCrossReference_3_0()); }
+{ after(grammarAccess.getXFeatureCallAccess().getFeatureJvmIdentifiableElementCrossReference_3_0_0()); }
 )
 
 ;

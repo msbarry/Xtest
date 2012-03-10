@@ -39,6 +39,7 @@ public class XTestParser extends AbstractContentAssistParser {
 				{
 					put(grammarAccess.getImportAccess().getAlternatives_1(), "rule__Import__Alternatives_1");
 					put(grammarAccess.getXPrimaryExpressionAccess().getAlternatives(), "rule__XPrimaryExpression__Alternatives");
+					put(grammarAccess.getXFeatureCallAccess().getAlternatives_3(), "rule__XFeatureCall__Alternatives_3");
 					put(grammarAccess.getXFeatureCallAccess().getAlternatives_4_1(), "rule__XFeatureCall__Alternatives_4_1");
 					put(grammarAccess.getXAssignmentAccess().getAlternatives(), "rule__XAssignment__Alternatives");
 					put(grammarAccess.getOpEqualityAccess().getAlternatives(), "rule__OpEquality__Alternatives");
@@ -219,7 +220,7 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getXFeatureCallAccess().getDeclaringTypeAssignment_1(), "rule__XFeatureCall__DeclaringTypeAssignment_1");
 					put(grammarAccess.getXFeatureCallAccess().getTypeArgumentsAssignment_2_1(), "rule__XFeatureCall__TypeArgumentsAssignment_2_1");
 					put(grammarAccess.getXFeatureCallAccess().getTypeArgumentsAssignment_2_2_1(), "rule__XFeatureCall__TypeArgumentsAssignment_2_2_1");
-					put(grammarAccess.getXFeatureCallAccess().getFeatureAssignment_3(), "rule__XFeatureCall__FeatureAssignment_3");
+					put(grammarAccess.getXFeatureCallAccess().getFeatureAssignment_3_0(), "rule__XFeatureCall__FeatureAssignment_3_0");
 					put(grammarAccess.getXFeatureCallAccess().getExplicitOperationCallAssignment_4_0(), "rule__XFeatureCall__ExplicitOperationCallAssignment_4_0");
 					put(grammarAccess.getXFeatureCallAccess().getFeatureCallArgumentsAssignment_4_1_0(), "rule__XFeatureCall__FeatureCallArgumentsAssignment_4_1_0");
 					put(grammarAccess.getXFeatureCallAccess().getFeatureCallArgumentsAssignment_4_1_1_0(), "rule__XFeatureCall__FeatureCallArgumentsAssignment_4_1_1_0");
