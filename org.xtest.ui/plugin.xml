@@ -321,5 +321,44 @@
             extensions="xtest">
     </provider>
   </extension>
-
+  <extension
+        id="org.xtest.ui.wizard"
+        name="newXtestFile"
+        point="org.eclipse.ui.newWizards">
+     <category
+           id="org.xtest.ui.wizards"
+           name="Xtest">
+     </category>
+     <wizard
+           category="org.xtest.ui.wizards"
+           icon="icons/new_xtest.gif"
+           id="org.xtest.ui.wizards.NewXtestFileWizard"
+           name="Xtest File"
+           class="org.xtest.ui.XTestExecutableExtensionFactory:org.xtest.ui.wizards.NewXtestFileWizard">
+        <description>
+           Create a New Xtest File
+        </description>
+     </wizard>
+  </extension>
+  <extension
+        point="org.eclipse.ui.perspectiveExtensions">
+     <perspectiveExtension
+           targetID="org.eclipse.jdt.ui.JavaPerspective">
+        <newWizardShortcut
+              id="org.xtest.ui.wizards.NewXtestFileWizard">
+        </newWizardShortcut>
+     </perspectiveExtension>
+     <perspectiveExtension
+           targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+        <newWizardShortcut
+              id="org.xtest.ui.wizards.NewXtestFileWizard">
+        </newWizardShortcut>
+     </perspectiveExtension>
+     <perspectiveExtension
+           targetID="org.eclipse.pde.ui.PDEPerspective">
+        <newWizardShortcut
+              id="org.xtest.ui.wizards.NewXtestFileWizard">
+        </newWizardShortcut>
+     </perspectiveExtension>
+  </extension>
 </plugin>
