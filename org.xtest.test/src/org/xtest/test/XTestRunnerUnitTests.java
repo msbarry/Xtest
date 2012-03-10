@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.xtest.XTestInjectorProvider;
 import org.xtest.XTestRunner;
 import org.xtest.results.XTestCaseResult;
 import org.xtest.results.XTestState;
@@ -18,7 +17,7 @@ import com.google.inject.Injector;
  * @author Michael Barry
  */
 public class XTestRunnerUnitTests {
-    private static Injector injector = new XTestInjectorProvider().getInjector();
+    private static Injector injector = XtestInjector.injector;
 
     @Test
     public void testCustomValidation() {
@@ -168,6 +167,23 @@ public class XTestRunnerUnitTests {
     public void testPrivateMethodSugared() {
         assertXtestPasses("import helpers.*\nxsuite suite {val a = new PrivateMembers()\n"
                 + "xtest tcase {a.c = 2\nassert a.c == 1}}");
+    }
+
+    @Test
+    public void testReturnDoesntFail() {
+        XTestSuiteResult result = XTestRunner.run("xtest test {\nreturn 1\n}", injector);
+        assertTrue(null == result.getEvaluationException());
+        assertEquals("[]", result.getErrorMessages().toString());
+        assertEquals(XTestState.PASS, result.getState());
+    }
+
+    @Test
+    public void testReturnStopsLaterTests() {
+        XTestSuiteResult result = XTestRunner.run(
+                "xtest test {\nif (1==1)return 1\nassert 1==0\n}", injector);
+        assertTrue(null == result.getEvaluationException());
+        assertEquals("[]", result.getErrorMessages().toString());
+        assertEquals(XTestState.PASS, result.getState());
     }
 
     @Test

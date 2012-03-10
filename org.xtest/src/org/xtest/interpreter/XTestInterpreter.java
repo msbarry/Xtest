@@ -9,7 +9,10 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.XFeatureCall;
+import org.eclipse.xtext.xbase.XReturnExpression;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
+import org.eclipse.xtext.xbase.interpreter.IEvaluationResult;
+import org.eclipse.xtext.xbase.interpreter.impl.DefaultEvaluationResult;
 import org.eclipse.xtext.xbase.interpreter.impl.EvaluationException;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
@@ -39,6 +42,16 @@ public class XTestInterpreter extends XbaseInterpreter {
     private TypeConformanceComputer typeConformanceComputer;
     @Inject
     private TypeReferences typeReferences;
+
+    @Override
+    public IEvaluationResult evaluate(XExpression expression, IEvaluationContext context,
+            CancelIndicator indicator) {
+        try {
+            return super.evaluate(expression, context, indicator);
+        } catch (ReturnValue e) {
+            return new DefaultEvaluationResult(e.returnValue, null);
+        }
+    }
 
     /**
      * Returns the test suite result after the tests have run
@@ -112,12 +125,22 @@ public class XTestInterpreter extends XbaseInterpreter {
     protected Object _evaluateBody(Body main, IEvaluationContext context, CancelIndicator indicator) {
         result = new XTestSuiteResult(main);
         stack.push(result);
+        Object toReturn = null;
         try {
-            super._evaluateBlockExpression(main, context, indicator);
+            toReturn = super._evaluateBlockExpression(main, context, indicator);
         } catch (XTestEvaluationException e) {
             result.addEvaluationException(e);
         }
-        return null;
+        return toReturn;
+    }
+
+    @Override
+    protected Object _evaluateReturnExpression(XReturnExpression returnExpr,
+            IEvaluationContext context, CancelIndicator indicator) {
+        // Need to reimplement xbase's return expression since I need to catch all exceptions and
+        // handle return exception but I don't have access to package-protected ReturnValue
+        Object returnValue = internalEvaluate(returnExpr.getExpression(), context, indicator);
+        throw new ReturnValue(returnValue);
     }
 
     /**
@@ -142,6 +165,8 @@ public class XTestInterpreter extends XbaseInterpreter {
         try {
             internalEvaluate(expression, context, indicator);
             // If no exceptions thrown, the test passed
+            subCase.pass();
+        } catch (ReturnValue e) {
             subCase.pass();
         } catch (XTestAssertException e) {
             subCase.addFailedAssertion(e);
@@ -191,6 +216,8 @@ public class XTestInterpreter extends XbaseInterpreter {
         Object internalEvaluate;
         try {
             internalEvaluate = super.internalEvaluate(expression, context, indicator);
+        } catch (ReturnValue value) {
+            throw value;
         } catch (InterpreterCanceledException e) {
             throw e;
         } catch (Throwable e) {
@@ -229,5 +256,15 @@ public class XTestInterpreter extends XbaseInterpreter {
             }
         }
         return name;
+    }
+
+    private static class ReturnValue extends RuntimeException {
+        private static final long serialVersionUID = 7864448463694945628L;
+        public Object returnValue;
+
+        public ReturnValue(Object value) {
+            super();
+            this.returnValue = value;
+        }
     }
 }

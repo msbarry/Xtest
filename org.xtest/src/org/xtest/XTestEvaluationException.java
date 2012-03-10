@@ -1,6 +1,7 @@
 package org.xtest;
 
 import org.eclipse.xtext.xbase.XExpression;
+import org.eclipse.xtext.xbase.interpreter.impl.EvaluationException;
 
 /**
  * Special exception that stores the expression that caused the evaluation exception
@@ -8,7 +9,7 @@ import org.eclipse.xtext.xbase.XExpression;
  * @author Michael Barry
  */
 @SuppressWarnings("restriction")
-public class XTestEvaluationException extends RuntimeException {
+public class XTestEvaluationException extends EvaluationException {
     private static final long serialVersionUID = -3396029672833078793L;
     private final XExpression expression;
 

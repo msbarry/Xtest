@@ -30,7 +30,10 @@ import com.google.inject.Singleton;
 @Singleton
 @SuppressWarnings("restriction")
 public class XTestRunner {
-    private static final CheckMode CHECK_BUT_DONT_RUN = new DontRunCheck();
+    /**
+     * {@link CheckMode} that validates the file without running tests
+     */
+    public static final CheckMode CHECK_BUT_DONT_RUN = new DontRunCheck();
 
     /**
      * Links a string into an xtest object model

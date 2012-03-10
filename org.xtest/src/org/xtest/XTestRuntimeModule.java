@@ -2,7 +2,7 @@ package org.xtest;
 
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.conversion.impl.QualifiedNameValueConverter;
-import org.eclipse.xtext.xbase.interpreter.IExpressionInterpreter;
+import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
@@ -30,11 +30,6 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends FeatureCallChecker> bindFeatureCallChecker() {
         return XtestFeatureCallChecker.class;
-    }
-
-    @Override
-    public Class<? extends IExpressionInterpreter> bindIExpressionInterpreter() {
-        return XTestInterpreter.class;
     }
 
     @Override
@@ -80,6 +75,15 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends XbaseImportedNamespaceScopeProvider> bindXbaseImportedNamespaceScopeProvider() {
         return XtestImportedNamespaceScopeProvider.class;
+    }
+
+    /**
+     * Bind {@link XbaseInterpreter} to custom implementation for Xtest
+     * 
+     * @return {@link XTestInterpreter}
+     */
+    public Class<? extends XbaseInterpreter> bindXbaseInterpreter() {
+        return XTestInterpreter.class;
     }
 
     /**

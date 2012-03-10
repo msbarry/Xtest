@@ -4,7 +4,7 @@ import org.eclipse.xtext.junit.util.ParseHelper;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.junit.evaluation.AbstractXbaseEvaluationTest;
 import org.junit.Test;
-import org.xtest.XTestInjectorProvider;
+import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.xTest.Body;
 
 /**
@@ -15,10 +15,10 @@ import org.xtest.xTest.Body;
  */
 @SuppressWarnings("restriction")
 public class XTestXBaseRegressionTests extends AbstractXbaseEvaluationTest {
-    private static XbaseInterpreter interpreter = new XTestInjectorProvider().getInjector()
-            .getInstance(XbaseInterpreter.class);
+    private static XbaseInterpreter interpreter = XtestInjector.injector
+            .getInstance(XTestInterpreter.class);
     @SuppressWarnings("unchecked")
-    private static ParseHelper<Body> parseHelper = new XTestInjectorProvider().getInjector()
+    private static ParseHelper<Body> parseHelper = XtestInjector.injector
             .getInstance(ParseHelper.class);
 
     @Override

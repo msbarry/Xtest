@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.xtest.XTestInjectorProvider;
 import org.xtest.XTestRunner;
 import org.xtest.results.XTestState;
 import org.xtest.results.XTestSuiteResult;
@@ -34,7 +33,7 @@ public class XTestResultUnitTests {
         }
         in.close();
         XTestSuiteResult run = XTestRunner.run(builder.toString(),
-                new XTestInjectorProvider().getInjector());
+                XtestInjector.injector);
         assertEquals(XTestState.PASS, run.getState());
     }
 }
