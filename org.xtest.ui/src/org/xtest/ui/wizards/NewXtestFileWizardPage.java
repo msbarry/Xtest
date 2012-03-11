@@ -9,10 +9,13 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
@@ -83,6 +86,27 @@ public class NewXtestFileWizardPage extends NewXtend2ClassWizardPage {
     @Override
     public IResource getResource() {
         return resource;
+    }
+
+    @Override
+    protected IStatus typeNameChanged() {
+        IStatus status = Status.OK_STATUS;
+        IPackageFragment packageFragment = getPackageFragment();
+        if (packageFragment != null) {
+            IResource resource = packageFragment.getResource();
+            if (resource instanceof IFolder) {
+                IFolder folder = (IFolder) resource;
+                if (folder.getFile(getTypeName() + ".xtest").exists()) {
+                    String packageName = "";
+                    if (!packageFragment.isDefaultPackage()) {
+                        packageName = packageFragment.getElementName() + ".";
+                    }
+                    status = new StatusInfo(IStatus.ERROR, packageName + getTypeName()
+                            + " already exists.");
+                }
+            }
+        }
+        return status;
     }
 
     private void createXtestFile(IProgressMonitor monitor, AtomicInteger size)
