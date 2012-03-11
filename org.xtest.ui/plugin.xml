@@ -364,14 +364,14 @@
   </extension>
   <extension point="org.eclipse.ui.decorators"> 
 	  <decorator 
-	      id="org.xtest.ui.decorators.CustomDecorator" 
-	      label="Decorator Example" 
+	      id="org.xtest.ui.decorators.XtestNavigatorTreeDecorator" 
+	      label="Xtest file decoration" 
 	      state="true"
 	      lightweight="true"
 	      class= "org.xtest.ui.XTestExecutableExtensionFactory:org.xtest.ui.decorators.XtestNavigatorTreeDecorator" 
 	      adaptable="true"> 
 	      <description> 
-	        This is an example to illustrate the use of decorators 
+	        Decorates passing xtest files and their containers with a green check mark.
 	      </description> 
 	    </decorator> 
 	</extension>

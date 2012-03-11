@@ -52,6 +52,7 @@ import com.google.inject.Singleton;
 @Singleton
 @SuppressWarnings("restriction")
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
+    private static final int TEST_RUN_FAILURE_INDEX = Integer.MIN_VALUE;
     private final Map<Thread, CancelIndicator> cancelIndicators = Collections
             .synchronizedMap(new WeakHashMap<Thread, CancelIndicator>());
     @Inject
@@ -170,7 +171,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     protected Diagnostic createDiagnostic(Severity severity, String message, EObject object,
             EStructuralFeature feature, int index, String code, String... issueData) {
         // Hook into issue storing
-        storeIssue(severity, object);
+        if (index != TEST_RUN_FAILURE_INDEX) {
+            storeIssue(severity, object);
+        }
         return super.createDiagnostic(severity, message, object, feature, index, code, issueData);
     }
 
@@ -226,7 +229,8 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
         XTestAssertException assertException = testCase.getAssertException();
         if (assertException != null) {
             XAssertExpression expression = assertException.getExpression();
-            error(testCase.getQualifiedName() + ": Assertion Failed", expression, null, -1);
+            error(testCase.getQualifiedName() + ": Assertion Failed", expression, null,
+                    TEST_RUN_FAILURE_INDEX);
         }
     }
 
@@ -239,7 +243,8 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private void markErrorsFromSuite(XTestSuiteResult run) {
         if (run != null) {
             for (String error : run.getErrorMessages()) {
-                error(run.getQualifiedName() + ": " + error, run.getEObject(), null, -1);
+                error(run.getQualifiedName() + ": " + error, run.getEObject(), null,
+                        TEST_RUN_FAILURE_INDEX);
             }
             markEvaluationExceptions(run);
             for (XTestSuiteResult suite : run.getSubSuites()) {
@@ -268,7 +273,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                 builder.append("\n");
                 builder.append(trace.toString());
             }
-            error(builder.toString(), expression, null, -1);
+            error(builder.toString(), expression, null, TEST_RUN_FAILURE_INDEX);
         }
     }
 
