@@ -1,6 +1,7 @@
 package org.xtest.ui.outline;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
@@ -62,5 +63,14 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
                 // newState.getExpandedNodes().remove(child);
             }
         }
+    }
+
+    @Override
+    protected IStatus run(IProgressMonitor monitor) {
+        IStatus status = org.eclipse.core.runtime.Status.OK_STATUS;
+        if (outlinePage != null) {
+            status = super.run(monitor);
+        }
+        return status;
     }
 }

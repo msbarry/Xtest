@@ -70,6 +70,9 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
     @Override
     public void setEditor(XtextEditor editor) {
         startListeningOnValidation(editor.getDocument());
+        XtestOutlineRefreshJob refreshJob = (XtestOutlineRefreshJob) getRefreshJob();
+        refreshJob.setOutlinePage(this);
+        refreshJob.schedule();
     }
 
     @Override

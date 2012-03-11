@@ -16,7 +16,7 @@ public class XtestValidationJobScheduler extends JdtValidationJobScheduler {
         Job validationJob = document.getValidationJob();
         if (validationJob != null) {
             validationJob.cancel();
-            validationJob.schedule();
+            validationJob.schedule(10);
         }
     }
 }

@@ -2,12 +2,16 @@ package org.xtest.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.common.types.xtext.ui.JdtValidationJobScheduler;
+import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
 import org.xtest.XTestRunner;
+import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
 import org.xtest.ui.runner.UiXTestRunner;
+
+import com.google.inject.name.Names;
 
 /**
  * Set up Guice bindings for running xtest plugin in eclipse
@@ -60,5 +64,12 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public Class<? extends XTestRunner> bindXTestRunner() {
         return UiXTestRunner.class;
+    }
+
+    @Override
+    public void configureXtextEditorErrorTickUpdater(com.google.inject.Binder binder) {
+        binder.bind(IXtextEditorCallback.class)
+                .annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
+                        XtestEditorErrorTickUpdater.class);
     }
 }

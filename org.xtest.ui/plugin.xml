@@ -9,6 +9,7 @@
             class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
+            icon="icons/tsuite.gif"
             extensions="xtest"
             id="org.xtest.XTest"
             name="XTest Editor">
@@ -361,4 +362,17 @@
         </newWizardShortcut>
      </perspectiveExtension>
   </extension>
+  <extension point="org.eclipse.ui.decorators"> 
+	  <decorator 
+	      id="org.xtest.ui.decorators.CustomDecorator" 
+	      label="Decorator Example" 
+	      state="true"
+	      lightweight="true"
+	      class= "org.xtest.ui.XTestExecutableExtensionFactory:org.xtest.ui.decorators.XtestNavigatorTreeDecorator" 
+	      adaptable="true"> 
+	      <description> 
+	        This is an example to illustrate the use of decorators 
+	      </description> 
+	    </decorator> 
+	</extension>
 </plugin>
