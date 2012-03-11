@@ -4,9 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.xtest.results.XTestSuiteResult;
 import org.xtest.xTest.Body;
+
+import com.google.common.collect.HashMultimap;
 
 /**
  * Custom implementation of {@link Body}
@@ -15,6 +19,7 @@ import org.xtest.xTest.Body;
  */
 public class BodyImplCustom extends BodyImpl {
 
+    private HashMultimap<Severity, EObject> issues = HashMultimap.create();
     private XTestSuiteResult result;
 
     /**
@@ -36,12 +41,31 @@ public class BodyImplCustom extends BodyImpl {
     }
 
     /**
+     * Returns the list of validation issues
+     * 
+     * @return The list of validation issues
+     */
+    public HashMultimap<Severity, EObject> getIssues() {
+        return issues;
+    }
+
+    /**
      * Returns the validation result
      * 
      * @return The validation result
      */
     public XTestSuiteResult getResult() {
         return result;
+    }
+
+    /**
+     * Sets the list of validation issues
+     * 
+     * @param hashMultimap
+     *            The list of validation issues
+     */
+    public void setIssues(HashMultimap<Severity, EObject> hashMultimap) {
+        this.issues = hashMultimap;
     }
 
     /**

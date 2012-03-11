@@ -1,5 +1,7 @@
 package org.xtest.ui.outline;
 
+import java.util.Set;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -11,11 +13,13 @@ import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.TextRegion;
 import org.xtest.results.AbstractXTestResult;
 import org.xtest.results.XTestCaseResult;
+import org.xtest.results.XTestState;
 import org.xtest.results.XTestSuiteResult;
 import org.xtest.ui.internal.XtestPluginImages;
 import org.xtest.xTest.XTestCase;
 import org.xtest.xTest.impl.BodyImplCustom;
 
+import com.google.common.collect.HashMultimap;
 import com.google.inject.Inject;
 
 /**
@@ -33,9 +37,10 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         if (body instanceof BodyImplCustom) {
             String fileName = ((BodyImplCustom) body).getFileName();
             XTestSuiteResult result = ((BodyImplCustom) body).getResult();
+            HashMultimap<Severity, EObject> issues = ((BodyImplCustom) body).getIssues();
             Object text = parentNode.getText();
             if (result != null && !fileName.equals(text)) {
-                createNode(parentNode, result, fileName);
+                createNode(parentNode, result, fileName, issues);
             }
         }
     }
@@ -62,6 +67,22 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         return eObjectNode;
     }
 
+    private boolean containsChild(EObject eObject, Set<EObject> errors) {
+        boolean result = false;
+        for (EObject error : errors) {
+            for (EObject cursor = error; cursor != null; cursor = cursor.eContainer()) {
+                if (eObject.equals(cursor)) {
+                    result = true;
+                    break;
+                }
+            }
+            if (result) {
+                break;
+            }
+        }
+        return result;
+    }
+
     /**
      * Creates a new node for the suite or case result, setting the name and icon appropriately
      * given the pass/fail/not run state of the test
@@ -72,11 +93,13 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            The test or suite result
      * @param suggestedName
      *            The suggested name to use
+     * @param issues
      * @return The new tree node
      */
     private EObjectNode createEObjectNode(IOutlineNode parentNode, AbstractXTestResult result,
-            String suggestedName) {
-        EObjectNode createEObjectNode = createEObjectNode(parentNode, result.getEObject());
+            String suggestedName, HashMultimap<Severity, EObject> issues) {
+        EObject eObject = result.getEObject();
+        EObjectNode createEObjectNode = createEObjectNode(parentNode, eObject);
         String name = result.getName();
         if (name == null) {
             name = suggestedName;
@@ -85,32 +108,14 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
             createEObjectNode.setText(name);
         }
         Image image;
+        Severity severity = getSeverity(result, issues);
         if (result instanceof XTestCaseResult) {
-            switch (result.getState()) {
-            case FAIL:
-                ((XTestEObjectNode) createEObjectNode).setFailed();
-                image = images.getTestImage(Severity.ERROR);
-                break;
-            case PASS:
-                image = images.getTestImage(Severity.INFO);
-                break;
-            default:
-                image = images.getTestImage();
-                break;
-            }
+            image = severity == null ? images.getTestImage() : images.getTestImage(severity);
         } else {
-            switch (result.getState()) {
-            case FAIL:
-                ((XTestEObjectNode) createEObjectNode).setFailed();
-                image = images.getSuiteImage(Severity.ERROR);
-                break;
-            case PASS:
-                image = images.getSuiteImage(Severity.INFO);
-                break;
-            default:
-                image = images.getSuiteImage();
-                break;
-            }
+            image = severity == null ? images.getSuiteImage() : images.getSuiteImage(severity);
+        }
+        if (severity == Severity.ERROR) {
+            ((XTestEObjectNode) createEObjectNode).setFailed();
         }
         createEObjectNode.setImage(image);
         return createEObjectNode;
@@ -125,14 +130,48 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            The sub suite
      * @param suggestedName
      *            Name to use for the node
+     * @param issues
      */
-    private void createNode(IOutlineNode parentNode, XTestSuiteResult suite, String suggestedName) {
-        EObjectNode thisNode = createEObjectNode(parentNode, suite, suggestedName);
+    private void createNode(IOutlineNode parentNode, XTestSuiteResult suite, String suggestedName,
+            HashMultimap<Severity, EObject> issues) {
+        EObjectNode thisNode = createEObjectNode(parentNode, suite, suggestedName, issues);
         for (XTestCaseResult testCase : suite.getCases()) {
-            createEObjectNode(thisNode, testCase, UNKNOWN_NODE_NAME);
+            createEObjectNode(thisNode, testCase, UNKNOWN_NODE_NAME, issues);
         }
         for (XTestSuiteResult subSuite : suite.getSubSuites()) {
-            createNode(thisNode, subSuite, null);
+            createNode(thisNode, subSuite, null, issues);
         }
+    }
+
+    /**
+     * Returns the severity for the EObject derived from its test result status and any issues on
+     * contained {@link EObject}s
+     * 
+     * @param result
+     *            The test result
+     * @param issues
+     *            The list of issues
+     * @return The {@link Severity} of the node, or null if no issues and no tests have run
+     */
+    private Severity getSeverity(AbstractXTestResult result, HashMultimap<Severity, EObject> issues) {
+        Severity severity = null;
+        XTestState state = result.getState();
+        if (state == XTestState.FAIL) {
+            severity = Severity.ERROR;
+        } else {
+            EObject eObject = result.getEObject();
+            Set<EObject> errors = issues.get(Severity.ERROR);
+            Set<EObject> warnings = issues.get(Severity.WARNING);
+
+            if (containsChild(eObject, errors)) {
+                severity = Severity.ERROR;
+            } else if (containsChild(eObject, warnings)) {
+                severity = Severity.WARNING;
+            } else if (state == XTestState.PASS) {
+                severity = Severity.INFO;
+            }
+        }
+
+        return severity;
     }
 }

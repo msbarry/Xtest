@@ -4,12 +4,15 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.common.types.JvmField;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.validation.Check;
@@ -31,6 +34,7 @@ import org.xtest.xTest.XTestPackage;
 import org.xtest.xTest.XTestSuite;
 import org.xtest.xTest.impl.BodyImplCustom;
 
+import com.google.common.collect.HashMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -156,9 +160,26 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             XTestSuiteResult run = runner.run(main, indicator);
             markErrorsFromSuite(run);
             if (main instanceof BodyImplCustom) {
-                ((BodyImplCustom) main).setResult(run);
+                BodyImplCustom custom = (BodyImplCustom) main;
+                custom.setResult(run);
             }
         }
+    }
+
+    @Override
+    protected Diagnostic createDiagnostic(Severity severity, String message, EObject object,
+            EStructuralFeature feature, int index, String code, String... issueData) {
+        // Hook into issue storing
+        storeIssue(severity, object);
+        return super.createDiagnostic(severity, message, object, feature, index, code, issueData);
+    }
+
+    @Override
+    protected Diagnostic createDiagnostic(Severity severity, String message, EObject object,
+            int offset, int length, String code, String... issueData) {
+        // Hook into issue storing
+        storeIssue(severity, object);
+        return super.createDiagnostic(severity, message, object, offset, length, code, issueData);
     }
 
     @Override
@@ -248,6 +269,27 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                 builder.append(trace.toString());
             }
             error(builder.toString(), expression, null, -1);
+        }
+    }
+
+    /**
+     * Store validation issue into the top-level {@link Body} EObject
+     * 
+     * @param severity
+     *            The severity of the issue
+     * @param object
+     *            The object with the issue
+     */
+    private void storeIssue(Severity severity, EObject object) {
+        BodyImplCustom body = null;
+        for (EObject cursor = object; cursor != null; cursor = cursor.eContainer()) {
+            if (cursor instanceof BodyImplCustom) {
+                body = (BodyImplCustom) cursor;
+            }
+        }
+        if (body != null && (severity == Severity.ERROR || severity == Severity.WARNING)) {
+            HashMultimap<Severity, EObject> issues = body.getIssues();
+            issues.put(severity, object);
         }
     }
 }

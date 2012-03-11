@@ -47,7 +47,7 @@ public class NewXtestFileWizard extends NewXtend2ClassWizard {
 
         @Override
         public Image getImage(String name) {
-            return imgHelper.getImage("testok.gif");
+            return imgHelper.getImage("tsuite.gif");
         }
     }
 }
