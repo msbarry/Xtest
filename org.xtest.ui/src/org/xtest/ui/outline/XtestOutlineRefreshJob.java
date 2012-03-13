@@ -25,7 +25,7 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
      *            True to enable, false to disable
      */
     public void setControlEnabled(final boolean enable) {
-        Display.getDefault().syncExec(new Runnable() {
+        Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
                 outlinePage.getTreeViewer().getControl().setEnabled(enable);
