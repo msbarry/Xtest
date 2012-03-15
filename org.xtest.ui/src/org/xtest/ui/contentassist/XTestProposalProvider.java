@@ -3,11 +3,32 @@
  */
 package org.xtest.ui.contentassist;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.xtext.Assignment;
+import org.eclipse.xtext.Keyword;
+import org.eclipse.xtext.common.types.xtext.ui.TypeMatchFilters;
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor;
+import org.xtest.xTest.XTestPackage;
 
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to
  * customize content assistant
  */
+@SuppressWarnings("restriction")
 public class XTestProposalProvider extends AbstractXTestProposalProvider {
 
+    @Override
+    public void completeImport_TypeImport(EObject model, Assignment assignment,
+            ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+        completeJavaTypes(context, XTestPackage.Literals.IMPORT__TYPE_IMPORT, true,
+                getQualifiedNameValueConverter(), new TypeMatchFilters.All(
+                        IJavaSearchConstants.TYPE), acceptor);
+    }
+
+    @Override
+    protected boolean isKeywordWorthyToPropose(Keyword keyword) {
+        return !keyword.getValue().startsWith("x") && super.isKeywordWorthyToPropose(keyword);
+    }
 }

@@ -3,6 +3,7 @@ package org.xtest.ui;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.common.types.xtext.ui.JdtValidationJobScheduler;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
+import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
 import org.xtest.XTestRunner;
@@ -10,6 +11,7 @@ import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
 import org.xtest.ui.runner.UiXTestRunner;
+import org.xtest.ui.templates.XtestTemplateProposalProvider;
 
 import com.google.inject.name.Names;
 
@@ -27,6 +29,11 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public XTestUiModule(AbstractUIPlugin plugin) {
         super(plugin);
+    }
+
+    @Override
+    public Class<? extends ITemplateProposalProvider> bindITemplateProposalProvider() {
+        return XtestTemplateProposalProvider.class;
     }
 
     /**
