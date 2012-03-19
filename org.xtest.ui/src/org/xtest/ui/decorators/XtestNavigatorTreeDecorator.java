@@ -3,13 +3,11 @@ package org.xtest.ui.decorators;
 import org.eclipse.core.internal.runtime.AdapterManager;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.ui.ProblemsLabelDecorator;
 import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.ILightweightLabelDecorator;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.xtest.ui.internal.XtestPluginImages;
 
 /**
@@ -17,8 +15,7 @@ import org.xtest.ui.internal.XtestPluginImages;
  * 
  * @author Michael Barry
  */
-public class XtestNavigatorTreeDecorator extends LabelProvider implements
-        ILightweightLabelDecorator {
+public class XtestNavigatorTreeDecorator extends ProblemsLabelDecorator {
 
     @Override
     public void decorate(Object input, IDecoration decorator) {
@@ -29,29 +26,28 @@ public class XtestNavigatorTreeDecorator extends LabelProvider implements
                 // Don't show errors from
                 int depth = input instanceof IPackageFragment ? IResource.DEPTH_ONE
                         : IResource.DEPTH_INFINITE;
-                int severity = resource.findMaxProblemSeverity(null, true, depth);
-                if (severity != IMarker.SEVERITY_WARNING && severity != IMarker.SEVERITY_ERROR
-                        && containsXtestFile(resource, depth)) {
+                if (containsXtestFile(resource, depth) && 0 == computeAdornmentFlags(input)) {
                     decorator.addOverlay(XtestPluginImages.OK_OVERLAY, IDecoration.BOTTOM_LEFT);
                 }
             } catch (CoreException e) {
-                e.printStackTrace();
             }
         }
     }
 
     private boolean containsXtestFile(IResource input, int depth) throws CoreException {
+        boolean result = false;
         int nextDepth = depth == IResource.DEPTH_INFINITE ? IResource.DEPTH_INFINITE
                 : IResource.DEPTH_ZERO;
-        if (input instanceof IFile && ((IFile) input).getFileExtension().equals("xtest")) {
-            return true;
+        String fileExtension = input instanceof IFile ? ((IFile) input).getFileExtension() : null;
+        if (fileExtension != null && fileExtension.equals("xtest")) {
+            result = true;
         } else if (input instanceof IContainer && depth != IResource.DEPTH_ZERO) {
             for (IResource resource : ((IContainer) input).members()) {
                 if (containsXtestFile(resource, nextDepth)) {
-                    return true;
+                    result = true;
                 }
             }
         }
-        return false;
+        return result;
     }
 }
