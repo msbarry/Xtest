@@ -4,21 +4,18 @@ import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.conversion.ValueConverterException;
-import org.eclipse.xtext.conversion.impl.QualifiedNameValueConverter;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.xbase.conversion.StaticQualifierValueConverter;
 
 /**
- * Custom {@link QualifiedNameValueConverter} that fixes a bug in the toValue method where it had
- * been calling the value converter service toString method, but now calls its toValue method
- * 
- * 
  * TODO Xtext 2.3 fixes the bug that this custom implementation is required for. After updating to
  * xtext 2.3, remove this file
  * 
  * @author Michael Barry
  */
-public class EscapeCharacterQualifiedNameValueConverter extends QualifiedNameValueConverter {
+@SuppressWarnings("restriction")
+public class StaticEscapeCharacterConverter extends StaticQualifierValueConverter {
     @Override
     public String toValue(String string, INode node) throws ValueConverterException {
         // Same as org.eclipse.xtext.conversion.impl.QualifiedNameConverter...
