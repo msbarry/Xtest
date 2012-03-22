@@ -110,4 +110,32 @@ public class XTestRegressionTests {
         assertReturnType(typeForName, parse);
     }
 
+    @Test
+    public void testGetPrivateSubMember() throws Exception {
+        Body parse = parse("import helpers.SubPrivateMembers\nval a = new SubPrivateMembers()\na.i");
+        assertValidationPassed(parse);
+        assertEvaluatesTo(1, parse);
+    }
+
+    @Test
+    public void testGetPrivateSubMethod() throws Exception {
+        Body parse = parse("import helpers.SubPrivateMembers\nval a = new SubPrivateMembers()\na.setC(2)\na.i");
+        assertValidationPassed(parse);
+        assertEvaluatesTo(2, parse);
+    }
+
+    @Test
+    public void testGetPrivateSuperMember() throws Exception {
+        Body parse = parse("import helpers.*\nval a = new SubPrivateMembers()\n(a as PrivateMembers).i");
+        assertValidationPassed(parse);
+        assertEvaluatesTo(0, parse);
+    }
+
+    @Test
+    public void testGetPrivateSuperMethod() throws Exception {
+        Body parse = parse("import helpers.*\nval a = new SubPrivateMembers()\n(a as PrivateMembers).setC(2)\na.getC()");
+        assertValidationPassed(parse);
+        assertEvaluatesTo(1, parse);
+    }
+
 }

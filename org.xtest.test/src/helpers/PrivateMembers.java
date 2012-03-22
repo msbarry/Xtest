@@ -13,7 +13,7 @@ public class PrivateMembers {
     }
 
     private void setC(int val) {
-        i = i;
+        i = val;
     }
 
     private static class Inner {
