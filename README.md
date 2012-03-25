@@ -1,7 +1,7 @@
 Xtest
 =====
 
-![Xtest Demo](https://github.com/msbarry/Xtest/blob/master/demo.png?raw=true)
+![Xtest Demo](https://github.com/msbarry/Xtest/wiki/wiki_images/demo.png)
 
 Xtest is a unit testing domain-specific-language implemented in [Xtext](http://www.eclipse.org/Xtext/) that extends [Xbase](http://www.eclipse.org/Xtext/#xbase).
 
