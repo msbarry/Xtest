@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.xtest.tests
 Bundle-Vendor: Michael Barry
-Bundle-Version: 0.1.0
+Bundle-Version: 0.1.100
 Bundle-SymbolicName: org.xtest.test;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.xtest,
