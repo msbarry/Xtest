@@ -3,9 +3,7 @@
       id="org.xtest"
       label="Xtest"
       version="0.1.1.qualifier"
-      provider-name="Michael Barry"
-      exclusive="true"
-      colocation-affinity="org.xtest">
+      provider-name="Michael Barry">
 
    <description url="https://msbarry.github.com/Xtest">
       Unit testing domain-specific language for Java.
@@ -145,28 +143,6 @@ re-export of encryption software, to see if this is permitted.
 
 Java and all Java-based trademarks are trademarks of Oracle Corporation in the United States, other countries, or both.
    </license>
-
-   <url>
-      <update label="Xtest Update Site" url="http://msbarry.github.com/Xtest"/>
-      <discovery label="Xtext" url="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
-   </url>
-
-   <requires>
-      <import plugin="org.apache.log4j" version="1.2.15" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.xbase.junit" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui"/>
-      <import plugin="org.eclipse.ui.ide" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui.shared"/>
-      <import plugin="org.eclipse.xtext.builder"/>
-      <import plugin="org.eclipse.xtext.common.types.ui"/>
-      <import plugin="org.eclipse.xtext.xbase.ui"/>
-      <import plugin="org.eclipse.xtext.ui.codetemplates.ui"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.xtext.xbase.lib" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jdt.core" version="3.7.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jdt.ui" version="3.7.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.xtend2.ui" version="2.2.1" match="greaterOrEqual"/>
-   </requires>
 
    <plugin
          id="org.xtest"
