@@ -1,8 +1,6 @@
 package org.xtest.validation;
 
-import java.util.Collections;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
@@ -53,8 +51,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private static final int TEST_RUN_FAILURE_INDEX = Integer.MIN_VALUE;
-    private final Map<Thread, CancelIndicator> cancelIndicators = Collections
-            .synchronizedMap(new WeakHashMap<Thread, CancelIndicator>());
+    private final ThreadLocal<CancelIndicator> cancelIndicators = new ThreadLocal<CancelIndicator>();
     @Inject
     private XTestRunner runner;
     @Inject
@@ -154,7 +151,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     @Check(CheckType.FAST)
     public void doMagic(Body main) {
         if (!(getCheckMode() instanceof XTestRunner.DontRunCheck)) {
-            CancelIndicator indicator = cancelIndicators.get(Thread.currentThread());
+            CancelIndicator indicator = cancelIndicators.get();
             if (indicator == null) {
                 indicator = CancelIndicator.NullImpl;
             }
@@ -187,9 +184,8 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
 
     @Override
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
-        Thread currentThread = Thread.currentThread();
-        cancelIndicators.put(currentThread,
-                (CancelIndicator) context.get(CancelableDiagnostician.CANCEL_INDICATOR));
+        cancelIndicators.set((CancelIndicator) context
+                .get(CancelableDiagnostician.CANCEL_INDICATOR));
         return super.isResponsible(context, eObject);
     }
 
