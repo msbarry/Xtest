@@ -31,8 +31,8 @@ import org.xtest.xTest.XTestExpression;
 import com.google.inject.Inject;
 
 /**
- * Xtest interpreter, inherits behavior from Xbase, but adds handling for test cases and suites and
- * keeps track of the test suite being run, returning the final root test suite result
+ * Xtest interpreter, inherits behavior from Xbase, but adds handling for running tests and keeps
+ * track of the tests being run, returning the final root test
  * 
  * @author Michael Barry
  */
@@ -56,9 +56,9 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Returns the test suite result after the tests have run
+     * Returns the test result after the tests have run
      * 
-     * @return The test suite result
+     * @return The test result
      */
     public XTestResult getTestResult() {
         return result;
@@ -151,36 +151,35 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Evaluates the xtest test suite. Catches any evaluation exceptions thrown and adds them to the
-     * test suite.
+     * Evaluates the test. Catches any evaluation exceptions thrown and adds them to the test.
      * 
-     * @param suite
-     *            The test suite to evaluate
+     * @param test
+     *            The test to evaluate
      * @param context
      *            The evaluation context
      * @param indicator
      *            The cancel indicator
      * @return null
      */
-    protected Object _evaluateTestExpression(XTestExpression suite, IEvaluationContext context,
+    protected Object _evaluateTestExpression(XTestExpression test, IEvaluationContext context,
             CancelIndicator indicator) {
-        UniqueName name = suite.getName();
+        UniqueName name = test.getName();
         String nameStr = getName(name, context, indicator);
-        XExpression expression = suite.getExpression();
+        XExpression expression = test.getExpression();
         XTestResult peek = stack.peek();
-        XTestResult subSuite = peek.subTest(nameStr, suite);
-        stack.push(subSuite);
+        XTestResult subTest = peek.subTest(nameStr, test);
+        stack.push(subTest);
         try {
             internalEvaluate(expression, context, indicator);
-            if (subSuite.getState() != XTestState.FAIL) {
-                subSuite.pass();
+            if (subTest.getState() != XTestState.FAIL) {
+                subTest.pass();
             }
         } catch (ReturnValue e) {
-            subSuite.pass();
+            subTest.pass();
         } catch (XTestAssertException e) {
-            subSuite.addFailedAssertion(e);
+            subTest.addFailedAssertion(e);
         } catch (XTestEvaluationException e) {
-            subSuite.addEvaluationException(e);
+            subTest.addEvaluationException(e);
         }
         stack.pop();
         return null;
@@ -245,7 +244,7 @@ public class XTestInterpreter extends XbaseInterpreter {
      * Evaluates a {@link UniqueName} and returns the result
      * 
      * @param uniqueName
-     *            The {@link UniqueName} object of the case or suite
+     *            The {@link UniqueName} object of the test
      * @param context
      *            The evaluation context
      * @param indicator

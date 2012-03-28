@@ -76,13 +76,13 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     /**
-     * Creates a new node for the suite or case result, setting the name and icon appropriately
-     * given the pass/fail/not run state of the test
+     * Creates a new node for the test result, setting the name and icon appropriately given the
+     * pass/fail/not run state of the test
      * 
      * @param parentNode
      *            The parent node
      * @param result
-     *            The test or suite result
+     *            The test result
      * @param suggestedName
      *            The suggested name to use
      * @param issues
@@ -97,7 +97,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         }
         Image image;
         Severity severity = getSeverity(result, issues);
-        boolean isLeaf = result.getSubSuites().isEmpty();
+        boolean isLeaf = result.getSubTests().isEmpty();
         if (isLeaf && parentNode.getParent() != null) {
             image = severity == null ? images.getTestImage() : images.getTestImage(severity);
         } else {
@@ -113,21 +113,21 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     /**
-     * Creates a node for the test suite and sub suites/cases
+     * Creates a node for the test and sub-tests
      * 
      * @param parentNode
      *            The parent tree node
-     * @param suite
-     *            The sub suite
+     * @param test
+     *            The sub test
      * @param suggestedName
      *            Name to use for the node
      * @param issues
      */
-    private void createNode(IOutlineNode parentNode, XTestResult suite, String suggestedName,
+    private void createNode(IOutlineNode parentNode, XTestResult test, String suggestedName,
             HashMultimap<Severity, EObject> issues) {
-        EObjectNode thisNode = createEObjectNode(parentNode, suite, suggestedName, issues);
-        for (XTestResult subSuite : suite.getSubSuites()) {
-            createNode(thisNode, subSuite, null, issues);
+        EObjectNode thisNode = createEObjectNode(parentNode, test, suggestedName, issues);
+        for (XTestResult subTest : test.getSubTests()) {
+            createNode(thisNode, subTest, null, issues);
         }
     }
 

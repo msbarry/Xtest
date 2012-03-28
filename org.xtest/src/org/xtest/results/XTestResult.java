@@ -10,7 +10,7 @@ import org.xtest.xTest.XTestExpression;
 import com.google.common.collect.Lists;
 
 /**
- * Xtest suite result
+ * Xtest result
  * 
  * @author Michael Barry
  */
@@ -20,7 +20,7 @@ public class XTestResult extends AbstractXTestResult {
     private final List<String> syntaxErrors = Lists.newArrayList();
 
     /**
-     * Construct a top-level xtest suite result
+     * Construct a top-level xtest result
      * 
      * @param main
      *            The xtest expression model
@@ -29,14 +29,14 @@ public class XTestResult extends AbstractXTestResult {
         super(null, null, main);
     }
 
-    // Private constructor so that users are forced to call subSuite to
-    // instantiate a non-top-level suite
+    // Private constructor so that users are forced to call subTest to
+    // instantiate a non-top-level test
     private XTestResult(AbstractXTestResult parent, String name, EObject eObject) {
         super(parent, name, eObject);
     }
 
     /**
-     * Fails the test case and all of its parents, adding the failed assertion.
+     * Fails the test and all of its parents, adding the failed assertion.
      * 
      * @param exception
      *            The failed assertion
@@ -47,7 +47,7 @@ public class XTestResult extends AbstractXTestResult {
     }
 
     /**
-     * Fails this test and all of its parents and adds a syntax error for this test suite.
+     * Fails this test and all of its parents and adds a syntax error for this test.
      * 
      * @param string
      *            The syntax error.
@@ -67,36 +67,36 @@ public class XTestResult extends AbstractXTestResult {
     }
 
     /**
-     * Returns the syntax errors in this test case
+     * Returns the syntax errors in this test
      * 
-     * @return The syntax errors in this test case
+     * @return The syntax errors in this test
      */
     public List<String> getErrorMessages() {
         return syntaxErrors;
     }
 
     /**
-     * Returns the test suite results in this test suite
+     * Returns the tests contained within this test
      * 
-     * @return The test suite results in this test suite
+     * @return The tests contained within this test
      */
-    public List<XTestResult> getSubSuites() {
+    public List<XTestResult> getSubTests() {
         return subTests;
     }
 
     /**
-     * Constructs a new test suite result that is contained in this suite.
+     * Constructs a new test result that is contained in this test.
      * 
      * @param name
-     *            The name of the suite
+     *            The name of the test
      * @param eObject
-     *            The test suite expression that the result corresponds to
-     * @return The new test suite result
+     *            The test test expression that the result corresponds to
+     * @return The new test result
      */
     public XTestResult subTest(String name, XTestExpression eObject) {
-        XTestResult xTestSuiteResult = new XTestResult(this, name, eObject);
-        subTests.add(xTestSuiteResult);
-        return xTestSuiteResult;
+        XTestResult result = new XTestResult(this, name, eObject);
+        subTests.add(result);
+        return result;
     }
 
 }

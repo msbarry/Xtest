@@ -13,8 +13,8 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.xtest.interpreter.XTestInterpreter;
-import org.xtest.results.XTestState;
 import org.xtest.results.XTestResult;
+import org.xtest.results.XTestState;
 import org.xtest.xTest.Body;
 
 import com.google.inject.Inject;
@@ -58,7 +58,7 @@ public class XTestRunner {
      *            string containing the xtest script to run
      * @param injector
      *            The Guice injector to use
-     * @return The xtest suite results
+     * @return The test results
      */
     public static XTestResult run(String string, Injector injector) {
         XTestResult result;
@@ -97,7 +97,7 @@ public class XTestRunner {
      *            The linked xtest object model
      * @param monitor
      *            The progress monitor to tell if canceled
-     * @return The xtest suite result
+     * @return The test result
      */
     public XTestResult run(Body main, CancelIndicator monitor) {
         XTestResult result;
@@ -130,7 +130,7 @@ public class XTestRunner {
     }
 
     /**
-     * CheckMode for validating the xtest script only without running the test cases
+     * CheckMode for validating the xtest script only without running the tests
      */
     public static class DontRunCheck extends CheckMode {
         CheckMode mode = CheckMode.FAST_ONLY;

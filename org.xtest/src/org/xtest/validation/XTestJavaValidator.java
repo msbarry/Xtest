@@ -36,8 +36,6 @@ import com.google.inject.Singleton;
 /**
  * Validator for xtest expression models. Validates that:
  * <ul>
- * <li>asserts are inside cases
- * <li>cases are inside suites
  * <li>assert expressions have boolean return type
  * <li>assert/throws types are subclasses are throwable
  * <li><b>All unit tests pass</b> </ol>
@@ -114,7 +112,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                 indicator = CancelIndicator.NullImpl;
             }
             XTestResult run = runner.run(main, indicator);
-            markErrorsFromSuite(run);
+            markErrorsFromTest(run);
             if (main instanceof BodyImplCustom) {
                 BodyImplCustom custom = (BodyImplCustom) main;
                 custom.setResult(run);
@@ -148,12 +146,12 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     }
 
     /**
-     * Marks the errors from the test suite
+     * Marks the errors from the test
      * 
      * @param run
-     *            The test suite result
+     *            The test result
      */
-    private void markErrorsFromSuite(XTestResult run) {
+    private void markErrorsFromTest(XTestResult run) {
         if (run != null) {
             for (String error : run.getErrorMessages()) {
                 error(run.getQualifiedName() + ": " + error, run.getEObject(), null,
@@ -166,8 +164,8 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                         TEST_RUN_FAILURE_INDEX);
             }
             markEvaluationExceptions(run);
-            for (XTestResult suite : run.getSubSuites()) {
-                markErrorsFromSuite(suite);
+            for (XTestResult test : run.getSubTests()) {
+                markErrorsFromTest(test);
             }
         }
     }
@@ -176,7 +174,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      * Marks the evaluation exception on the line that generated it
      * 
      * @param run
-     *            The case or suite that failed
+     *            The test that failed
      */
     private void markEvaluationExceptions(AbstractXTestResult run) {
         XTestEvaluationException exception = run.getEvaluationException();

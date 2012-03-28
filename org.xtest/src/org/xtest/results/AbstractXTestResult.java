@@ -4,7 +4,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.xtest.XTestEvaluationException;
 
 /**
- * Abstract superclass for xtest suite and case results
+ * Abstract superclass for xtest results
  * 
  * @author Michael Barry
  */
@@ -61,20 +61,19 @@ public class AbstractXTestResult {
     }
 
     /**
-     * Returns the name of this suite or case
+     * Returns the name of this test
      * 
-     * @return The name of this suite or case (can be null)
+     * @return The name of this test (can be null)
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Returns the name of this test suite or case, prepended with all of the suites it is contained
-     * within.
+     * Returns the name of this test, prepended with all of the tests it is contained within.
      * 
-     * @return The name of this test suite or case, prepended with all of the suites it is contained
-     *         within (can't be null, can be empty)
+     * @return The name of this test, prepended with all of the tests it is contained within (can't
+     *         be null, can be empty)
      */
     public String getQualifiedName() {
         StringBuilder builder = new StringBuilder(name == null ? "" : name);
@@ -88,9 +87,9 @@ public class AbstractXTestResult {
     }
 
     /**
-     * Returns the state of this suite or case result
+     * Returns the state of this test result
      * 
-     * @return The state of this suite or case result
+     * @return The state of this test result
      */
     public XTestState getState() {
         return state;

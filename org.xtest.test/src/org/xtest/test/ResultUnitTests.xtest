@@ -45,7 +45,7 @@ xtest testEmptySuiteResult {
     assertEquals(XTestState::NOT_RUN, suite.getState())
     assertEquals(null, suite.getName())
     assertEquals("", suite.getQualifiedName())
-    assertEquals(0, suite.subSuites.size())
+    assertEquals(0, suite.getSubTests.size())
 }
 
 xtest testSyntaxError {
@@ -61,9 +61,9 @@ xtest xsuiteInSuite {
     assertEquals("test", child.getName())
     assertEquals("test", child.getQualifiedName())
     assertEquals(XTestState::NOT_RUN, child.getState())
-    assertEquals(0, child.subSuites.size)
+    assertEquals(0, child.getSubTests.size)
     assertEquals(XTestState::NOT_RUN, parent.getState())
-    assertEquals(1, parent.subSuites.size())
+    assertEquals(1, parent.getSubTests.size())
 }
 
 
@@ -74,7 +74,7 @@ xtest xtestInSuite {
     assertEquals("test", child.getQualifiedName())
     assertEquals(XTestState::NOT_RUN, child.getState())
     assertEquals(XTestState::NOT_RUN, parent.getState())
-    assertEquals(1, parent.subSuites.size())
+    assertEquals(1, parent.getSubTests.size())
 }
 
 
@@ -96,8 +96,8 @@ xtest xtestInSuiteInSuite {
     assertEquals(XTestState::NOT_RUN, child.getState())
     assertEquals(XTestState::NOT_RUN, parent.getState())
     assertEquals(XTestState::NOT_RUN, grandChild.getState())
-    assertEquals(1, parent.subSuites.size)
-    assertEquals(1, child.subSuites.size)
+    assertEquals(1, parent.getSubTests.size)
+    assertEquals(1, child.getSubTests.size)
 }
 
 

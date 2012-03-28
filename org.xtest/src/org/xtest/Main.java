@@ -44,7 +44,7 @@ public class Main {
 
                 System.out.println("Tests from " + arg + ":");
                 XTestResult run = XTestRunner.run(builder.toString(), injector);
-                printSuite("", run, true);
+                printTest("", run, true);
             } catch (Exception e) {
                 System.err.println("Error: " + e.getMessage());
             }
@@ -74,16 +74,16 @@ public class Main {
     }
 
     /**
-     * Prints the cases and suites for the test suite result provided.
+     * Prints the subtest results of the test result provided.
      * 
      * @param indent
      *            Indent to prepend to printed lines
-     * @param suite
-     *            The test suite results to print
+     * @param test
+     *            The test results to print
      */
-    private static void printChildrenOfSuite(String indent, XTestResult suite) {
-        for (XTestResult subSuite : suite.getSubSuites()) {
-            printSuite(indent + "   ", subSuite, false);
+    private static void printChildrenOfTest(String indent, XTestResult test) {
+        for (XTestResult subTest : test.getSubTests()) {
+            printTest(indent + "   ", subTest, false);
         }
     }
 
@@ -116,25 +116,25 @@ public class Main {
     }
 
     /**
-     * Prints the results from the test suite
+     * Prints the results from the test
      * 
      * @param indent
      *            The indent to prepend to printed lines
-     * @param suite
-     *            The test suite results to print
+     * @param test
+     *            The test results to print
      * @param forcePrintChildren
      *            True to force printing all children, false to just print success for the top-level
      *            if it passes.
      */
-    private static void printSuite(String indent, XTestResult suite, boolean forcePrintChildren) {
-        switch (suite.getState()) {
+    private static void printTest(String indent, XTestResult test, boolean forcePrintChildren) {
+        switch (test.getState()) {
         case FAIL:
             if (!forcePrintChildren) {
-                System.out.println(indent + "+NG " + suite.getQualifiedName());
+                System.out.println(indent + "+NG " + test.getQualifiedName());
             }
-            XTestEvaluationException evaluationException = suite.getEvaluationException();
-            List<String> errorMessages = suite.getErrorMessages();
-            XTestAssertException assertException = suite.getAssertException();
+            XTestEvaluationException evaluationException = test.getEvaluationException();
+            List<String> errorMessages = test.getErrorMessages();
+            XTestAssertException assertException = test.getAssertException();
             if (!errorMessages.isEmpty()) {
                 System.out.println(indent + "   Couldn't run because of syntax errors:");
                 for (String message : errorMessages) {
@@ -147,13 +147,13 @@ public class Main {
             } else if (evaluationException != null) {
                 printEvaluationException(indent, evaluationException);
             }
-            printChildrenOfSuite(indent, suite);
+            printChildrenOfTest(indent, test);
             break;
         case PASS:
             if (forcePrintChildren) {
-                printChildrenOfSuite(indent, suite);
+                printChildrenOfTest(indent, test);
             } else {
-                System.out.println(indent + "+OK " + suite.getQualifiedName());
+                System.out.println(indent + "+OK " + test.getQualifiedName());
             }
             break;
         default:

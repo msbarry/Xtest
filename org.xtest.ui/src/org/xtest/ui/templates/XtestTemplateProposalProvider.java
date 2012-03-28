@@ -41,8 +41,8 @@ public class XtestTemplateProposalProvider extends DefaultTemplateProposalProvid
     protected void createTemplates(TemplateContext templateContext, ContentAssistContext context,
             ITemplateAcceptor acceptor) {
         super.createTemplates(templateContext, context, acceptor);
-        addProposal("xtest", "New Test Case", "Add a new test case",
-                images.getTestImage(Severity.INFO), templateContext, context, acceptor);
+        addProposal("xtest", "New Test", "Add a new test", images.getTestImage(Severity.INFO),
+                templateContext, context, acceptor);
         addProposal("xsuite", "New Test Suite", "Add a new test suite",
                 images.getSuiteImage(Severity.INFO), templateContext, context, acceptor);
 

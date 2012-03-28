@@ -1,7 +1,7 @@
 package org.xtest.results;
 
 /**
- * XTest suite or case state
+ * XTest results state
  * 
  * @author Michael Barry
  */

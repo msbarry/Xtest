@@ -25,14 +25,14 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertTrue(null == xTestSuiteResult.getEvaluationException());
         assertEquals(XTestState.FAIL, xTestSuiteResult.getState());
         assertEquals("b", xTestSuiteResult.getQualifiedName());
-        assertEquals(0, xTestSuiteResult.getSubSuites().size());
+        assertEquals(0, xTestSuiteResult.getSubTests().size());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.NOT_RUN, result.getState());
-        assertEquals(0, result.getSubSuites().size());
+        assertEquals(0, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
     }
 
@@ -51,16 +51,16 @@ public class XTestRunnerUnitTests {
         assertTrue(null == result.getEvaluationException());
         assertEquals("[]", result.getErrorMessages().toString());
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertEquals(XTestState.FAIL, xTestSuiteResult.getState());
         assertTrue(null == xTestSuiteResult.getEvaluationException());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult xTestCaseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
         assertTrue(null != xTestCaseResult.getEvaluationException());
         assertEquals(XTestState.FAIL, xTestCaseResult.getState());
         assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
@@ -72,15 +72,15 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertEquals(XTestState.FAIL, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult xTestCaseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
         assertEquals(XTestState.FAIL, xTestCaseResult.getState());
         assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
     }
@@ -146,8 +146,8 @@ public class XTestRunnerUnitTests {
         XTestResult result = XTestRunner.run("testSui", injector);
         assertEquals(1, result.getErrorMessages().size());
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(0, result.getSubSuites().size());
-        assertEquals(0, result.getSubSuites().size());
+        assertEquals(0, result.getSubTests().size());
+        assertEquals(0, result.getSubTests().size());
     }
 
     @Test
@@ -218,15 +218,15 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.PASS, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertEquals(XTestState.PASS, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult xTestCaseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
         assertEquals(XTestState.PASS, xTestCaseResult.getState());
         assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
         assertTrue(null == xTestCaseResult.getEvaluationException());
@@ -240,15 +240,15 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.PASS, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertEquals(XTestState.PASS, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult xTestCaseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
         assertEquals(XTestState.PASS, xTestCaseResult.getState());
         assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
     }
@@ -261,15 +261,15 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertEquals(XTestState.FAIL, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult xTestCaseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
         assertEquals(XTestState.FAIL, xTestCaseResult.getState());
         assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
     }
@@ -281,7 +281,7 @@ public class XTestRunnerUnitTests {
         assertTrue(null == result.getEvaluationException());
         assertTrue(null != result.getAssertException());
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(0, result.getSubSuites().size());
+        assertEquals(0, result.getSubTests().size());
     }
 
     @Test
@@ -290,7 +290,7 @@ public class XTestRunnerUnitTests {
         assertTrue(null == result.getEvaluationException());
         assertEquals("[]", result.getErrorMessages().toString());
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
     }
 
     @Test
@@ -299,7 +299,7 @@ public class XTestRunnerUnitTests {
         assertTrue(null == result.getEvaluationException());
         assertEquals("[]", result.getErrorMessages().toString());
         assertEquals(XTestState.PASS, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
     }
 
     @Test
@@ -308,16 +308,16 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.PASS, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertTrue(null == xTestSuiteResult.getEvaluationException());
         assertEquals(XTestState.PASS, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult xTestCaseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
         assertTrue(null == xTestCaseResult.getEvaluationException());
         assertTrue(null == xTestCaseResult.getAssertException());
         assertEquals(XTestState.PASS, xTestCaseResult.getState());
@@ -338,8 +338,8 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null != result.getEvaluationException());
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(0, result.getSubSuites().size());
-        assertEquals(0, result.getSubSuites().size());
+        assertEquals(0, result.getSubTests().size());
+        assertEquals(0, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
     }
 
@@ -351,17 +351,17 @@ public class XTestRunnerUnitTests {
         assertTrue(null == result.getEvaluationException());
 
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertTrue(null != xTestSuiteResult.getEvaluationException());
         assertEquals("[]", xTestSuiteResult.getErrorMessages().toString());
         assertTrue(null != xTestSuiteResult.getEvaluationException());
 
         assertEquals(XTestState.FAIL, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(0, xTestSuiteResult.getSubSuites().size());
+        assertEquals(0, xTestSuiteResult.getSubTests().size());
     }
 
     @Test
@@ -372,18 +372,18 @@ public class XTestRunnerUnitTests {
         assertTrue(null == result.getEvaluationException());
 
         assertEquals(XTestState.PASS, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertTrue(null == xTestSuiteResult.getEvaluationException());
         assertEquals("[]", xTestSuiteResult.getErrorMessages().toString());
 
         assertEquals(XTestState.PASS, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult caseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult caseResult = xTestSuiteResult.getSubTests().get(0);
         assertTrue(null == caseResult.getAssertException());
         assertTrue(null == caseResult.getEvaluationException());
         assertEquals("suite.tcase", caseResult.getQualifiedName());
@@ -398,18 +398,18 @@ public class XTestRunnerUnitTests {
         assertTrue(null == result.getEvaluationException());
 
         assertEquals(XTestState.FAIL, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertTrue(null == xTestSuiteResult.getEvaluationException());
         assertEquals("[]", xTestSuiteResult.getErrorMessages().toString());
 
         assertEquals(XTestState.FAIL, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult caseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult caseResult = xTestSuiteResult.getSubTests().get(0);
         assertTrue(null != caseResult.getAssertException());
         assertTrue(null == caseResult.getEvaluationException());
         assertEquals("suite.tcase", caseResult.getQualifiedName());
@@ -422,11 +422,11 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.PASS, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
-        assertEquals(0, xTestSuiteResult.getSubSuites().size());
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
+        assertEquals(0, xTestSuiteResult.getSubTests().size());
     }
 
     @Test
@@ -435,15 +435,15 @@ public class XTestRunnerUnitTests {
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
         assertEquals(XTestState.PASS, result.getState());
-        assertEquals(1, result.getSubSuites().size());
+        assertEquals(1, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
 
-        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        XTestResult xTestSuiteResult = result.getSubTests().get(0);
         assertEquals(XTestState.PASS, xTestSuiteResult.getState());
         assertEquals("suite", xTestSuiteResult.getQualifiedName());
-        assertEquals(1, xTestSuiteResult.getSubSuites().size());
+        assertEquals(1, xTestSuiteResult.getSubTests().size());
 
-        XTestResult xTestCaseResult = xTestSuiteResult.getSubSuites().get(0);
+        XTestResult xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
         assertEquals(XTestState.PASS, xTestCaseResult.getState());
         assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
     }
