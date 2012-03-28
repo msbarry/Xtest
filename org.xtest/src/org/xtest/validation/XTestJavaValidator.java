@@ -22,7 +22,6 @@ import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.XTestRunner.DontRunCheck;
-import org.xtest.results.AbstractXTestResult;
 import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XAssertExpression;
@@ -176,7 +175,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      * @param run
      *            The test that failed
      */
-    private void markEvaluationExceptions(AbstractXTestResult run) {
+    private void markEvaluationExceptions(XTestResult run) {
         XTestEvaluationException exception = run.getEvaluationException();
         if (exception != null) {
             Throwable cause = exception.getCause();

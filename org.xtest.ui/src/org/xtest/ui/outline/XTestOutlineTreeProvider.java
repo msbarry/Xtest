@@ -11,7 +11,6 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.TextRegion;
-import org.xtest.results.AbstractXTestResult;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
 import org.xtest.ui.internal.XtestPluginImages;
@@ -141,7 +140,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            The list of issues
      * @return The {@link Severity} of the node, or null if no issues and no tests have run
      */
-    private Severity getSeverity(AbstractXTestResult result, HashMultimap<Severity, EObject> issues) {
+    private Severity getSeverity(XTestResult result, HashMultimap<Severity, EObject> issues) {
         Severity severity = null;
         XTestState state = result.getState();
         if (state == XTestState.FAIL) {

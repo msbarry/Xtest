@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.xtest.XTestAssertException;
+import org.xtest.XTestEvaluationException;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XTestExpression;
 
@@ -14,8 +15,13 @@ import com.google.common.collect.Lists;
  * 
  * @author Michael Barry
  */
-public class XTestResult extends AbstractXTestResult {
+public class XTestResult {
+    private final EObject eObject;
     private XTestAssertException exception;
+    private XTestEvaluationException expression;
+    private final String name;
+    private final XTestResult parent;
+    private XTestState state = XTestState.NOT_RUN;
     private final List<XTestResult> subTests = Lists.newArrayList();
     private final List<String> syntaxErrors = Lists.newArrayList();
 
@@ -26,13 +32,26 @@ public class XTestResult extends AbstractXTestResult {
      *            The xtest expression model
      */
     public XTestResult(Body main) {
-        super(null, null, main);
+        this(null, null, main);
     }
 
     // Private constructor so that users are forced to call subTest to
     // instantiate a non-top-level test
-    private XTestResult(AbstractXTestResult parent, String name, EObject eObject) {
-        super(parent, name, eObject);
+    private XTestResult(XTestResult parent, String name, EObject eObject) {
+        this.parent = parent;
+        this.name = name;
+        this.eObject = eObject;
+    }
+
+    /**
+     * Fails the test and all of its parents and stores the evaluation exception
+     * 
+     * @param exception
+     *            The evaluation exception
+     */
+    public void addEvaluationException(XTestEvaluationException exception) {
+        fail();
+        this.expression = exception;
     }
 
     /**
@@ -58,12 +77,31 @@ public class XTestResult extends AbstractXTestResult {
     }
 
     /**
+     * Fails the test and all of its parents
+     */
+    public void fail() {
+        state = XTestState.FAIL;
+        if (parent != null) {
+            parent.fail();
+        }
+    }
+
+    /**
      * Returns the failed assertion or null if empty
      * 
      * @return The failed assertion or null if empty
      */
     public XTestAssertException getAssertException() {
         return exception;
+    }
+
+    /**
+     * Returns the {@link EObject} associated with this result
+     * 
+     * @return The {@link EObject} assocated with this result
+     */
+    public EObject getEObject() {
+        return eObject;
     }
 
     /**
@@ -76,12 +114,66 @@ public class XTestResult extends AbstractXTestResult {
     }
 
     /**
+     * Returns the evaluation exception for this result, or null if there was none
+     * 
+     * @return the evaluation exception for this result, or null if there was none
+     */
+    public XTestEvaluationException getEvaluationException() {
+        return expression;
+    }
+
+    /**
+     * Returns the name of this test
+     * 
+     * @return The name of this test (can be null)
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns the name of this test, prepended with all of the tests it is contained within.
+     * 
+     * @return The name of this test, prepended with all of the tests it is contained within (can't
+     *         be null, can be empty)
+     */
+    public String getQualifiedName() {
+        StringBuilder builder = new StringBuilder(name == null ? "" : name);
+        for (XTestResult cursor = parent; cursor != null; cursor = cursor.parent) {
+            if (cursor.getName() != null) {
+                builder.insert(0, '.');
+                builder.insert(0, cursor.getQualifiedName());
+            }
+        }
+        return builder.toString();
+    }
+
+    /**
+     * Returns the state of this test result
+     * 
+     * @return The state of this test result
+     */
+    public XTestState getState() {
+        return state;
+    }
+
+    /**
      * Returns the tests contained within this test
      * 
      * @return The tests contained within this test
      */
     public List<XTestResult> getSubTests() {
         return subTests;
+    }
+
+    /**
+     * Passes this result. Only passes its parent if the parent has not been run yet.
+     */
+    public void pass() {
+        state = XTestState.PASS;
+        if (parent != null && parent.getState() == XTestState.NOT_RUN) {
+            parent.pass();
+        }
     }
 
     /**

@@ -1,6 +1,5 @@
 import static org.junit.Assert.*
 
-import org.^xtest.results.AbstractXTestResult
 import org.^xtest.results.XTestState
 import org.^xtest.results.XTestResult
 
