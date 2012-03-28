@@ -1,6 +1,5 @@
 package org.xtest.ui.templates;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContext;
@@ -13,7 +12,6 @@ import org.eclipse.xtext.ui.editor.contentassist.ITemplateAcceptor;
 import org.eclipse.xtext.ui.editor.templates.ContextTypeIdHelper;
 import org.eclipse.xtext.ui.editor.templates.DefaultTemplateProposalProvider;
 import org.xtest.ui.internal.XtestPluginImages;
-import org.xtest.xTest.XTestCase;
 
 import com.google.inject.Inject;
 
@@ -43,14 +41,8 @@ public class XtestTemplateProposalProvider extends DefaultTemplateProposalProvid
     protected void createTemplates(TemplateContext templateContext, ContentAssistContext context,
             ITemplateAcceptor acceptor) {
         super.createTemplates(templateContext, context, acceptor);
-        for (EObject cursor = context.getCurrentModel(); cursor != null; cursor = cursor
-                .eContainer()) {
-            if (cursor instanceof XTestCase) {
-                return;
-            }
-        }
-        addProposal("xtest", "New Test Case", "Add a new test case",
-                images.getTestImage(Severity.INFO), templateContext, context, acceptor);
+        addProposal("xtest", "New Test", "Add a new test", images.getTestImage(Severity.INFO),
+                templateContext, context, acceptor);
         addProposal("xsuite", "New Test Suite", "Add a new test suite",
                 images.getSuiteImage(Severity.INFO), templateContext, context, acceptor);
 

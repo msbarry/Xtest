@@ -11,12 +11,9 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.TextRegion;
-import org.xtest.results.AbstractXTestResult;
-import org.xtest.results.XTestCaseResult;
+import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
-import org.xtest.results.XTestSuiteResult;
 import org.xtest.ui.internal.XtestPluginImages;
-import org.xtest.xTest.XTestCase;
 import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.common.collect.HashMultimap;
@@ -28,7 +25,6 @@ import com.google.inject.Inject;
  * @author Michael Barry
  */
 public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
-    private static final String UNKNOWN_NODE_NAME = "...";
     @Inject
     private XtestPluginImages images;
 
@@ -36,18 +32,13 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     public void createChildren(IOutlineNode parentNode, EObject body) {
         if (body instanceof BodyImplCustom) {
             String fileName = ((BodyImplCustom) body).getFileName();
-            XTestSuiteResult result = ((BodyImplCustom) body).getResult();
+            XTestResult result = ((BodyImplCustom) body).getResult();
             HashMultimap<Severity, EObject> issues = ((BodyImplCustom) body).getIssues();
             Object text = parentNode.getText();
             if (result != null && !fileName.equals(text)) {
                 createNode(parentNode, result, fileName, issues);
             }
         }
-    }
-
-    @Override
-    protected boolean _isLeaf(EObject feature) {
-        return feature instanceof XTestCase;
     }
 
     @Override
@@ -84,62 +75,58 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     /**
-     * Creates a new node for the suite or case result, setting the name and icon appropriately
-     * given the pass/fail/not run state of the test
+     * Creates a new node for the test result, setting the name and icon appropriately given the
+     * pass/fail/not run state of the test
      * 
      * @param parentNode
      *            The parent node
      * @param result
-     *            The test or suite result
+     *            The test result
      * @param suggestedName
      *            The suggested name to use
      * @param issues
      * @return The new tree node
      */
-    private EObjectNode createEObjectNode(IOutlineNode parentNode, AbstractXTestResult result,
+    private EObjectNode createEObjectNode(IOutlineNode parentNode, XTestResult result,
             String suggestedName, HashMultimap<Severity, EObject> issues) {
         EObject eObject = result.getEObject();
-        EObjectNode createEObjectNode = createEObjectNode(parentNode, eObject);
         String name = result.getName();
         if (name == null) {
             name = suggestedName;
         }
-        if (name != null) {
-            createEObjectNode.setText(name);
-        }
         Image image;
         Severity severity = getSeverity(result, issues);
-        if (result instanceof XTestCaseResult) {
+        boolean isLeaf = result.getSubTests().isEmpty();
+        if (isLeaf && parentNode.getParent() != null) {
             image = severity == null ? images.getTestImage() : images.getTestImage(severity);
         } else {
             image = severity == null ? images.getSuiteImage() : images.getSuiteImage(severity);
         }
+
+        EObjectNode createEObjectNode = createEObjectNode(parentNode, eObject, image, name, isLeaf);
+
         if (severity == Severity.ERROR) {
             ((XTestEObjectNode) createEObjectNode).setFailed();
         }
-        createEObjectNode.setImage(image);
         return createEObjectNode;
     }
 
     /**
-     * Creates a node for the test suite and sub suites/cases
+     * Creates a node for the test and sub-tests
      * 
      * @param parentNode
      *            The parent tree node
-     * @param suite
-     *            The sub suite
+     * @param test
+     *            The sub test
      * @param suggestedName
      *            Name to use for the node
      * @param issues
      */
-    private void createNode(IOutlineNode parentNode, XTestSuiteResult suite, String suggestedName,
+    private void createNode(IOutlineNode parentNode, XTestResult test, String suggestedName,
             HashMultimap<Severity, EObject> issues) {
-        EObjectNode thisNode = createEObjectNode(parentNode, suite, suggestedName, issues);
-        for (XTestCaseResult testCase : suite.getCases()) {
-            createEObjectNode(thisNode, testCase, UNKNOWN_NODE_NAME, issues);
-        }
-        for (XTestSuiteResult subSuite : suite.getSubSuites()) {
-            createNode(thisNode, subSuite, null, issues);
+        EObjectNode thisNode = createEObjectNode(parentNode, test, suggestedName, issues);
+        for (XTestResult subTest : test.getSubTests()) {
+            createNode(thisNode, subTest, null, issues);
         }
     }
 
@@ -153,7 +140,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            The list of issues
      * @return The {@link Severity} of the node, or null if no issues and no tests have run
      */
-    private Severity getSeverity(AbstractXTestResult result, HashMultimap<Severity, EObject> issues) {
+    private Severity getSeverity(XTestResult result, HashMultimap<Severity, EObject> issues) {
         Severity severity = null;
         XTestState state = result.getState();
         if (state == XTestState.FAIL) {

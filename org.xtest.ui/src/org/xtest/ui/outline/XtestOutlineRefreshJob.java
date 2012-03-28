@@ -1,5 +1,7 @@
 package org.xtest.ui.outline;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -54,13 +56,17 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
     protected void restoreChildrenSelectionAndExpansion(IOutlineNode parent, Resource resource,
             OutlineTreeState formerState, OutlineTreeState newState) {
         super.restoreChildrenSelectionAndExpansion(parent, resource, formerState, newState);
-        for (IOutlineNode child : parent.getChildren()) {
+        List<IOutlineNode> children = parent.getChildren();
+        for (IOutlineNode child : children) {
             if (child instanceof XTestEObjectNode && ((XTestEObjectNode) child).getFailed()) {
                 // Show failed nodes
-                newState.getExpandedNodes().add(child);
-            } else {
-                // Attempt to hide passed nodes?
-                // newState.getExpandedNodes().remove(child);
+                newState.addExpandedNode(parent);
+            } else if (containsUsingComparer(formerState.getExpandedNodes(), child)) {
+                newState.addExpandedNode(child);
+            }
+            restoreChildrenSelectionAndExpansion(child, resource, formerState, newState);
+            if (containsUsingComparer(formerState.getSelectedNodes(), child)) {
+                newState.addSelectedNode(child);
             }
         }
     }

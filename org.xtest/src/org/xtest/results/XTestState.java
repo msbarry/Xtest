@@ -1,7 +1,7 @@
 package org.xtest.results;
 
 /**
- * XTest suite or case state
+ * XTest results state
  * 
  * @author Michael Barry
  */
@@ -10,6 +10,6 @@ public enum XTestState {
     FAIL,
     /** Test hasn't run yet */
     NOT_RUN,
-    /** Test and all subtests failed */
+    /** Test and all subtests passed */
     PASS
 }

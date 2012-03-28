@@ -7,8 +7,7 @@ import java.util.List;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.xbase.XExpression;
-import org.xtest.results.XTestCaseResult;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
 import org.xtest.xTest.XAssertExpression;
 
 import com.google.inject.Injector;
@@ -44,8 +43,8 @@ public class Main {
                 in.close();
 
                 System.out.println("Tests from " + arg + ":");
-                XTestSuiteResult run = XTestRunner.run(builder.toString(), injector);
-                printSuite("", run, true);
+                XTestResult run = XTestRunner.run(builder.toString(), injector);
+                printTest("", run, true);
             } catch (Exception e) {
                 System.err.println("Error: " + e.getMessage());
             }
@@ -75,49 +74,16 @@ public class Main {
     }
 
     /**
-     * Prints a test case result
+     * Prints the subtest results of the test result provided.
      * 
      * @param indent
      *            Indent to prepend to printed lines
-     * @param tcase
-     *            Test case result to print
+     * @param test
+     *            The test results to print
      */
-    private static void printCase(String indent, XTestCaseResult tcase) {
-        switch (tcase.getState()) {
-        case FAIL:
-            System.out.println(indent + "=NG " + tcase.getQualifiedName());
-            XTestAssertException assertException = tcase.getAssertException();
-            XTestEvaluationException evaluationException = tcase.getEvaluationException();
-            if (assertException != null) {
-                XAssertExpression expression = assertException.getExpression();
-                String line = getLineNumAndText(indent, expression);
-                System.out.println(indent + "    Assertion failed on line " + line);
-            } else if (evaluationException != null) {
-                printEvaluationException(indent, evaluationException);
-            }
-            break;
-        case PASS:
-            System.out.println(indent + "=OK " + tcase.getQualifiedName());
-            break;
-        default:
-            break;
-        }
-    }
-
-    /**
-     * Prints the cases and suites for the test suite result provided.
-     * 
-     * @param indent
-     *            Indent to prepend to printed lines
-     * @param suite
-     *            The test suite results to print
-     */
-    private static void printChildrenOfSuite(String indent, XTestSuiteResult suite) {
-        for (XTestCaseResult caseResult : suite.getCases()) {
-            printCase(indent + "   ", caseResult);
-        }
-        for (XTestSuiteResult subSuite : suite.getSubSuites()) {
-            printSuite(indent + "   ", subSuite, false);
+    private static void printChildrenOfTest(String indent, XTestResult test) {
+        for (XTestResult subTest : test.getSubTests()) {
+            printTest(indent + "   ", subTest, false);
         }
     }
 
@@ -150,40 +116,44 @@ public class Main {
     }
 
     /**
-     * Prints the results from the test suite
+     * Prints the results from the test
      * 
      * @param indent
      *            The indent to prepend to printed lines
-     * @param suite
-     *            The test suite results to print
+     * @param test
+     *            The test results to print
      * @param forcePrintChildren
      *            True to force printing all children, false to just print success for the top-level
      *            if it passes.
      */
-    private static void printSuite(String indent, XTestSuiteResult suite, boolean forcePrintChildren) {
-        switch (suite.getState()) {
+    private static void printTest(String indent, XTestResult test, boolean forcePrintChildren) {
+        switch (test.getState()) {
         case FAIL:
             if (!forcePrintChildren) {
-                System.out.println(indent + "+NG " + suite.getQualifiedName());
+                System.out.println(indent + "+NG " + test.getQualifiedName());
             }
-            XTestEvaluationException evaluationException = suite.getEvaluationException();
-            List<String> errorMessages = suite.getErrorMessages();
+            XTestEvaluationException evaluationException = test.getEvaluationException();
+            List<String> errorMessages = test.getErrorMessages();
+            XTestAssertException assertException = test.getAssertException();
             if (!errorMessages.isEmpty()) {
                 System.out.println(indent + "   Couldn't run because of syntax errors:");
                 for (String message : errorMessages) {
                     System.out.println(indent + "   " + message);
                 }
+            } else if (assertException != null) {
+                XAssertExpression expression = assertException.getExpression();
+                String line = getLineNumAndText(indent, expression);
+                System.out.println(indent + "    Assertion failed on line " + line);
+            } else if (evaluationException != null) {
+                printEvaluationException(indent, evaluationException);
             }
-            if (evaluationException != null) {
-                printEvaluationException(indent + "   ", evaluationException);
-            }
-            printChildrenOfSuite(indent, suite);
+            printChildrenOfTest(indent, test);
             break;
         case PASS:
             if (forcePrintChildren) {
-                printChildrenOfSuite(indent, suite);
+                printChildrenOfTest(indent, test);
             } else {
-                System.out.println(indent + "+OK " + suite.getQualifiedName());
+                System.out.println(indent + "+OK " + test.getQualifiedName());
             }
             break;
         default:

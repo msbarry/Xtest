@@ -8,8 +8,7 @@ import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.XFeatureCall;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.xTest.XAssertExpression;
-import org.xtest.xTest.XTestCase;
-import org.xtest.xTest.XTestSuite;
+import org.xtest.xTest.XTestExpression;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,8 +29,7 @@ public class XTestTypeProvider extends XbaseTypeProvider {
     protected JvmTypeReference type(XExpression expression, JvmTypeReference rawExpectation,
             boolean rawType) {
         JvmTypeReference result;
-        if (expression instanceof XTestSuite || expression instanceof XTestCase
-                || expression instanceof XAssertExpression) {
+        if (expression instanceof XTestExpression || expression instanceof XAssertExpression) {
             result = getPrimitiveVoid(expression);
         } else if (expression instanceof XFeatureCall
                 && ((XFeatureCall) expression).getFeature() == null) {
@@ -51,7 +49,7 @@ public class XTestTypeProvider extends XbaseTypeProvider {
         JvmTypeReference result;
         if (!(identifiable instanceof XExpression)) {
             result = super.typeForIdentifiable(identifiable, rawType);
-        } else if (identifiable instanceof XTestSuite || identifiable instanceof XTestCase
+        } else if (identifiable instanceof XTestExpression
                 || identifiable instanceof XAssertExpression) {
             result = getPrimitiveVoid((XExpression) identifiable);
         } else {

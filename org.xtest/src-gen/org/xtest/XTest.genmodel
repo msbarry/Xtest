@@ -21,13 +21,9 @@
     <genClasses ecoreClass="XTest.ecore#//Body">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//Body/imports"/>
     </genClasses>
-    <genClasses ecoreClass="XTest.ecore#//XTestSuite">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestSuite/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestSuite/expression"/>
-    </genClasses>
-    <genClasses ecoreClass="XTest.ecore#//XTestCase">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestCase/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestCase/expression"/>
+    <genClasses ecoreClass="XTest.ecore#//XTestExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestExpression/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestExpression/expression"/>
     </genClasses>
     <genClasses ecoreClass="XTest.ecore#//XAssertExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XAssertExpression/actual"/>

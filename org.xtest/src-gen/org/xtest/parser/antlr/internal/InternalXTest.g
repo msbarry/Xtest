@@ -329,43 +329,48 @@ ruleUniqueName returns [EObject current=null]
 
 
 
-// Entry rule entryRuleXTestSuite
-entryRuleXTestSuite returns [EObject current=null] 
+// Entry rule entryRuleXTestExpression
+entryRuleXTestExpression returns [EObject current=null] 
 	:
-	{ newCompositeNode(grammarAccess.getXTestSuiteRule()); }
-	 iv_ruleXTestSuite=ruleXTestSuite 
-	 { $current=$iv_ruleXTestSuite.current; } 
+	{ newCompositeNode(grammarAccess.getXTestExpressionRule()); }
+	 iv_ruleXTestExpression=ruleXTestExpression 
+	 { $current=$iv_ruleXTestExpression.current; } 
 	 EOF 
 ;
 
-// Rule XTestSuite
-ruleXTestSuite returns [EObject current=null] 
+// Rule XTestExpression
+ruleXTestExpression returns [EObject current=null] 
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
 ((
     {
         $current = forceCreateModelElement(
-            grammarAccess.getXTestSuiteAccess().getXTestSuiteAction_0(),
+            grammarAccess.getXTestExpressionAccess().getXTestExpressionAction_0(),
             $current);
     }
-)	otherlv_1='xsuite' 
+)(	otherlv_1='xsuite' 
     {
-    	newLeafNode(otherlv_1, grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1());
+    	newLeafNode(otherlv_1, grammarAccess.getXTestExpressionAccess().getXsuiteKeyword_1_0());
     }
-(
+
+    |	otherlv_2='xtest' 
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getXTestExpressionAccess().getXtestKeyword_1_1());
+    }
+)(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getXTestSuiteAccess().getNameUniqueNameParserRuleCall_2_0()); 
+	        newCompositeNode(grammarAccess.getXTestExpressionAccess().getNameUniqueNameParserRuleCall_2_0()); 
 	    }
-		lv_name_2_0=ruleUniqueName		{
+		lv_name_3_0=ruleUniqueName		{
 	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getXTestSuiteRule());
+	            $current = createModelElementForParent(grammarAccess.getXTestExpressionRule());
 	        }
        		set(
        			$current, 
        			"name",
-        		lv_name_2_0, 
+        		lv_name_3_0, 
         		"UniqueName");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -374,83 +379,16 @@ ruleXTestSuite returns [EObject current=null]
 )(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getXTestSuiteAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); 
+	        newCompositeNode(grammarAccess.getXTestExpressionAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); 
 	    }
-		lv_expression_3_0=ruleXBlockExpression		{
+		lv_expression_4_0=ruleXBlockExpression		{
 	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getXTestSuiteRule());
+	            $current = createModelElementForParent(grammarAccess.getXTestExpressionRule());
 	        }
        		set(
        			$current, 
        			"expression",
-        		lv_expression_3_0, 
-        		"XBlockExpression");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-))
-;
-
-
-
-
-
-// Entry rule entryRuleXTestCase
-entryRuleXTestCase returns [EObject current=null] 
-	:
-	{ newCompositeNode(grammarAccess.getXTestCaseRule()); }
-	 iv_ruleXTestCase=ruleXTestCase 
-	 { $current=$iv_ruleXTestCase.current; } 
-	 EOF 
-;
-
-// Rule XTestCase
-ruleXTestCase returns [EObject current=null] 
-    @init { enterRule(); 
-    }
-    @after { leaveRule(); }:
-((
-    {
-        $current = forceCreateModelElement(
-            grammarAccess.getXTestCaseAccess().getXTestCaseAction_0(),
-            $current);
-    }
-)	otherlv_1='xtest' 
-    {
-    	newLeafNode(otherlv_1, grammarAccess.getXTestCaseAccess().getXtestKeyword_1());
-    }
-(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getXTestCaseAccess().getNameUniqueNameParserRuleCall_2_0()); 
-	    }
-		lv_name_2_0=ruleUniqueName		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getXTestCaseRule());
-	        }
-       		set(
-       			$current, 
-       			"name",
-        		lv_name_2_0, 
-        		"UniqueName");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-)(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getXTestCaseAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); 
-	    }
-		lv_expression_3_0=ruleXBlockExpression		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getXTestCaseRule());
-	        }
-       		set(
-       			$current, 
-       			"expression",
-        		lv_expression_3_0, 
+        		lv_expression_4_0, 
         		"XBlockExpression");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -681,31 +619,21 @@ ruleXPrimaryExpression returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXTestSuiteParserRuleCall_13()); 
+        newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXTestExpressionParserRuleCall_13()); 
     }
-    this_XTestSuite_13=ruleXTestSuite
+    this_XTestExpression_13=ruleXTestExpression
     { 
-        $current = $this_XTestSuite_13.current; 
+        $current = $this_XTestExpression_13.current; 
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXTestCaseParserRuleCall_14()); 
+        newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXAssertExpressionParserRuleCall_14()); 
     }
-    this_XTestCase_14=ruleXTestCase
+    this_XAssertExpression_14=ruleXAssertExpression
     { 
-        $current = $this_XTestCase_14.current; 
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXAssertExpressionParserRuleCall_15()); 
-    }
-    this_XAssertExpression_15=ruleXAssertExpression
-    { 
-        $current = $this_XAssertExpression_15.current; 
+        $current = $this_XAssertExpression_14.current; 
         afterParserOrEnumRuleCall();
     }
 )

@@ -102,19 +102,11 @@ public class XTestSwitch<T> extends Switch<T>
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case XTestPackage.XTEST_SUITE:
+			case XTestPackage.XTEST_EXPRESSION:
 			{
-				XTestSuite xTestSuite = (XTestSuite)theEObject;
-				T result = caseXTestSuite(xTestSuite);
-				if (result == null) result = caseXExpression(xTestSuite);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case XTestPackage.XTEST_CASE:
-			{
-				XTestCase xTestCase = (XTestCase)theEObject;
-				T result = caseXTestCase(xTestCase);
-				if (result == null) result = caseXExpression(xTestCase);
+				XTestExpression xTestExpression = (XTestExpression)theEObject;
+				T result = caseXTestExpression(xTestExpression);
+				if (result == null) result = caseXExpression(xTestExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -179,33 +171,17 @@ public class XTestSwitch<T> extends Switch<T>
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Suite</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Suite</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Expression</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseXTestSuite(XTestSuite object)
-	{
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Case</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Case</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseXTestCase(XTestCase object)
+	public T caseXTestExpression(XTestExpression object)
 	{
 		return null;
 	}

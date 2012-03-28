@@ -13,8 +13,8 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.xtest.interpreter.XTestInterpreter;
+import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
-import org.xtest.results.XTestSuiteResult;
 import org.xtest.xTest.Body;
 
 import com.google.inject.Inject;
@@ -58,13 +58,13 @@ public class XTestRunner {
      *            string containing the xtest script to run
      * @param injector
      *            The Guice injector to use
-     * @return The xtest suite results
+     * @return The test results
      */
-    public static XTestSuiteResult run(String string, Injector injector) {
-        XTestSuiteResult result;
+    public static XTestResult run(String string, Injector injector) {
+        XTestResult result;
         try {
             Body parse = parse(string, injector);
-            result = new XTestSuiteResult(parse);
+            result = new XTestResult(parse);
             List<Issue> validate = injector.getInstance(IResourceValidator.class).validate(
                     parse.eResource(), CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
             for (Issue issue : validate) {
@@ -77,7 +77,7 @@ public class XTestRunner {
                         CancelIndicator.NullImpl);
             }
         } catch (Exception e) {
-            result = new XTestSuiteResult(null);
+            result = new XTestResult(null);
             result.fail();
         }
 
@@ -97,11 +97,11 @@ public class XTestRunner {
      *            The linked xtest object model
      * @param monitor
      *            The progress monitor to tell if canceled
-     * @return The xtest suite result
+     * @return The test result
      */
-    public XTestSuiteResult run(Body main, CancelIndicator monitor) {
-        XTestSuiteResult result;
-        result = new XTestSuiteResult(main);
+    public XTestResult run(Body main, CancelIndicator monitor) {
+        XTestResult result;
+        result = new XTestResult(main);
         XTestInterpreter interpreter = getInterpreter(main.eResource());
         boolean failed = false;
         try {
@@ -130,7 +130,7 @@ public class XTestRunner {
     }
 
     /**
-     * CheckMode for validating the xtest script only without running the test cases
+     * CheckMode for validating the xtest script only without running the tests
      */
     public static class DontRunCheck extends CheckMode {
         CheckMode mode = CheckMode.FAST_ONLY;

@@ -192,14 +192,14 @@ public interface XTestPackage extends EPackage
 	int BODY_FEATURE_COUNT = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.xtest.xTest.impl.XTestSuiteImpl <em>Suite</em>}' class.
+	 * The meta object id for the '{@link org.xtest.xTest.impl.XTestExpressionImpl <em>Expression</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.xtest.xTest.impl.XTestSuiteImpl
-	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestSuite()
+	 * @see org.xtest.xTest.impl.XTestExpressionImpl
+	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestExpression()
 	 * @generated
 	 */
-	int XTEST_SUITE = 3;
+	int XTEST_EXPRESSION = 3;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' containment reference.
@@ -208,7 +208,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XTEST_SUITE__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+	int XTEST_EXPRESSION__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -217,53 +217,16 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XTEST_SUITE__EXPRESSION = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
+	int XTEST_EXPRESSION__EXPRESSION = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the '<em>Suite</em>' class.
+	 * The number of structural features of the '<em>Expression</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int XTEST_SUITE_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
-
-	/**
-	 * The meta object id for the '{@link org.xtest.xTest.impl.XTestCaseImpl <em>Case</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.xtest.xTest.impl.XTestCaseImpl
-	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestCase()
-	 * @generated
-	 */
-	int XTEST_CASE = 4;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XTEST_CASE__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XTEST_CASE__EXPRESSION = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Case</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XTEST_CASE_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
+	int XTEST_EXPRESSION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.xtest.xTest.impl.XAssertExpressionImpl <em>XAssert Expression</em>}' class.
@@ -273,7 +236,7 @@ public interface XTestPackage extends EPackage
 	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXAssertExpression()
 	 * @generated
 	 */
-	int XASSERT_EXPRESSION = 5;
+	int XASSERT_EXPRESSION = 4;
 
 	/**
 	 * The feature id for the '<em><b>Actual</b></em>' containment reference.
@@ -411,68 +374,36 @@ public interface XTestPackage extends EPackage
 	EReference getBody_Imports();
 
 	/**
-	 * Returns the meta object for class '{@link org.xtest.xTest.XTestSuite <em>Suite</em>}'.
+	 * Returns the meta object for class '{@link org.xtest.xTest.XTestExpression <em>Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Suite</em>'.
-	 * @see org.xtest.xTest.XTestSuite
+	 * @return the meta object for class '<em>Expression</em>'.
+	 * @see org.xtest.xTest.XTestExpression
 	 * @generated
 	 */
-	EClass getXTestSuite();
+	EClass getXTestExpression();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestSuite#getName <em>Name</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestExpression#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Name</em>'.
-	 * @see org.xtest.xTest.XTestSuite#getName()
-	 * @see #getXTestSuite()
+	 * @see org.xtest.xTest.XTestExpression#getName()
+	 * @see #getXTestExpression()
 	 * @generated
 	 */
-	EReference getXTestSuite_Name();
+	EReference getXTestExpression_Name();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestSuite#getExpression <em>Expression</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestExpression#getExpression <em>Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Expression</em>'.
-	 * @see org.xtest.xTest.XTestSuite#getExpression()
-	 * @see #getXTestSuite()
+	 * @see org.xtest.xTest.XTestExpression#getExpression()
+	 * @see #getXTestExpression()
 	 * @generated
 	 */
-	EReference getXTestSuite_Expression();
-
-	/**
-	 * Returns the meta object for class '{@link org.xtest.xTest.XTestCase <em>Case</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Case</em>'.
-	 * @see org.xtest.xTest.XTestCase
-	 * @generated
-	 */
-	EClass getXTestCase();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestCase#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Name</em>'.
-	 * @see org.xtest.xTest.XTestCase#getName()
-	 * @see #getXTestCase()
-	 * @generated
-	 */
-	EReference getXTestCase_Name();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestCase#getExpression <em>Expression</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Expression</em>'.
-	 * @see org.xtest.xTest.XTestCase#getExpression()
-	 * @see #getXTestCase()
-	 * @generated
-	 */
-	EReference getXTestCase_Expression();
+	EReference getXTestExpression_Expression();
 
 	/**
 	 * Returns the meta object for class '{@link org.xtest.xTest.XAssertExpression <em>XAssert Expression</em>}'.
@@ -616,14 +547,14 @@ public interface XTestPackage extends EPackage
 		EReference BODY__IMPORTS = eINSTANCE.getBody_Imports();
 
 		/**
-		 * The meta object literal for the '{@link org.xtest.xTest.impl.XTestSuiteImpl <em>Suite</em>}' class.
+		 * The meta object literal for the '{@link org.xtest.xTest.impl.XTestExpressionImpl <em>Expression</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.xtest.xTest.impl.XTestSuiteImpl
-		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestSuite()
+		 * @see org.xtest.xTest.impl.XTestExpressionImpl
+		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestExpression()
 		 * @generated
 		 */
-		EClass XTEST_SUITE = eINSTANCE.getXTestSuite();
+		EClass XTEST_EXPRESSION = eINSTANCE.getXTestExpression();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' containment reference feature.
@@ -631,7 +562,7 @@ public interface XTestPackage extends EPackage
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference XTEST_SUITE__NAME = eINSTANCE.getXTestSuite_Name();
+		EReference XTEST_EXPRESSION__NAME = eINSTANCE.getXTestExpression_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
@@ -639,33 +570,7 @@ public interface XTestPackage extends EPackage
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference XTEST_SUITE__EXPRESSION = eINSTANCE.getXTestSuite_Expression();
-
-		/**
-		 * The meta object literal for the '{@link org.xtest.xTest.impl.XTestCaseImpl <em>Case</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.xtest.xTest.impl.XTestCaseImpl
-		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestCase()
-		 * @generated
-		 */
-		EClass XTEST_CASE = eINSTANCE.getXTestCase();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference XTEST_CASE__NAME = eINSTANCE.getXTestCase_Name();
-
-		/**
-		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference XTEST_CASE__EXPRESSION = eINSTANCE.getXTestCase_Expression();
+		EReference XTEST_EXPRESSION__EXPRESSION = eINSTANCE.getXTestExpression_Expression();
 
 		/**
 		 * The meta object literal for the '{@link org.xtest.xTest.impl.XAssertExpressionImpl <em>XAssert Expression</em>}' class.

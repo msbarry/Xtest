@@ -21,26 +21,25 @@ import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
-import org.xtest.results.XTestCaseResult;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
+import org.xtest.results.XTestState;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
-import org.xtest.xTest.XTestCase;
-import org.xtest.xTest.XTestSuite;
+import org.xtest.xTest.XTestExpression;
 
 import com.google.inject.Inject;
 
 /**
- * Xtest interpreter, inherits behavior from Xbase, but adds handling for test cases and suites and
- * keeps track of the test suite being run, returning the final root test suite result
+ * Xtest interpreter, inherits behavior from Xbase, but adds handling for running tests and keeps
+ * track of the tests being run, returning the final root test
  * 
  * @author Michael Barry
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
-    private XTestSuiteResult result;
-    private final Stack<XTestSuiteResult> stack = new Stack<XTestSuiteResult>();
+    private XTestResult result;
+    private final Stack<XTestResult> stack = new Stack<XTestResult>();
     @Inject
     private TypeConformanceComputer typeConformanceComputer;
     @Inject
@@ -57,11 +56,11 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Returns the test suite result after the tests have run
+     * Returns the test result after the tests have run
      * 
-     * @return The test suite result
+     * @return The test result
      */
-    public XTestSuiteResult getTestResult() {
+    public XTestResult getTestResult() {
         return result;
     }
 
@@ -126,11 +125,19 @@ public class XTestInterpreter extends XbaseInterpreter {
      * @return null
      */
     protected Object _evaluateBody(Body main, IEvaluationContext context, CancelIndicator indicator) {
-        result = new XTestSuiteResult(main);
+        result = new XTestResult(main);
         stack.push(result);
         Object toReturn = null;
         try {
             toReturn = super._evaluateBlockExpression(main, context, indicator);
+            if (result.getState() != XTestState.FAIL) {
+                result.pass();
+            }
+        } catch (ReturnValue e) {
+            toReturn = e.returnValue;
+            result.pass();
+        } catch (XTestAssertException e) {
+            result.addFailedAssertion(e);
         } catch (XTestEvaluationException e) {
             result.addEvaluationException(e);
         }
@@ -147,63 +154,35 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Evaluates the xtest test case. Catches any evaluation exceptions or assertion exceptions
-     * thrown and adds them to the test suite. If the end is reached, the test passes
+     * Evaluates the test. Catches any evaluation exceptions thrown and adds them to the test.
      * 
-     * @param testCase
-     *            The test case to evaluate
+     * @param test
+     *            The test to evaluate
      * @param context
      *            The evaluation context
      * @param indicator
      *            The cancel indicator
      * @return null
      */
-    protected Object _evaluateTestCase(XTestCase testCase, IEvaluationContext context,
+    protected Object _evaluateTestExpression(XTestExpression test, IEvaluationContext context,
             CancelIndicator indicator) {
-        UniqueName name = testCase.getName();
+        UniqueName name = test.getName();
         String nameStr = getName(name, context, indicator);
-        XExpression expression = testCase.getExpression();
-        XTestSuiteResult peek = stack.peek();
-        XTestCaseResult subCase = peek.subCase(nameStr, testCase);
+        XExpression expression = test.getExpression();
+        XTestResult peek = stack.peek();
+        XTestResult subTest = peek.subTest(nameStr, test);
+        stack.push(subTest);
         try {
             internalEvaluate(expression, context, indicator);
-            // If no exceptions thrown, the test passed
-            subCase.pass();
+            if (subTest.getState() != XTestState.FAIL) {
+                subTest.pass();
+            }
         } catch (ReturnValue e) {
-            subCase.pass();
+            subTest.pass();
         } catch (XTestAssertException e) {
-            subCase.addFailedAssertion(e);
+            subTest.addFailedAssertion(e);
         } catch (XTestEvaluationException e) {
-            subCase.addEvaluationException(e);
-        }
-
-        return null;
-    }
-
-    /**
-     * Evaluates the xtest test suite. Catches any evaluation exceptions thrown and adds them to the
-     * test suite.
-     * 
-     * @param suite
-     *            The test suite to evaluate
-     * @param context
-     *            The evaluation context
-     * @param indicator
-     *            The cancel indicator
-     * @return null
-     */
-    protected Object _evaluateTestSuite(XTestSuite suite, IEvaluationContext context,
-            CancelIndicator indicator) {
-        UniqueName name = suite.getName();
-        String nameStr = getName(name, context, indicator);
-        XExpression expression = suite.getExpression();
-        XTestSuiteResult peek = stack.peek();
-        XTestSuiteResult subSuite = peek.subSuite(nameStr, suite);
-        stack.push(subSuite);
-        try {
-            internalEvaluate(expression, context, indicator);
-        } catch (XTestEvaluationException e) {
-            subSuite.addEvaluationException(e);
+            subTest.addEvaluationException(e);
         }
         stack.pop();
         return null;
@@ -268,7 +247,7 @@ public class XTestInterpreter extends XbaseInterpreter {
      * Evaluates a {@link UniqueName} and returns the result
      * 
      * @param uniqueName
-     *            The {@link UniqueName} object of the case or suite
+     *            The {@link UniqueName} object of the test
      * @param context
      *            The evaluation context
      * @param indicator

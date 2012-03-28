@@ -56,9 +56,8 @@ import org.xtest.xTest.Body;
 import org.xtest.xTest.Import;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
-import org.xtest.xTest.XTestCase;
+import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestPackage;
-import org.xtest.xTest.XTestSuite;
 
 @SuppressWarnings("restriction")
 public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
@@ -203,7 +202,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 					return; 
 				}
 				else break;
-			case XTestPackage.XTEST_CASE:
+			case XTestPackage.XTEST_EXPRESSION:
 				if(context == grammarAccess.getXAdditiveExpressionRule() ||
 				   context == grammarAccess.getXAdditiveExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
 				   context == grammarAccess.getXAndExpressionRule() ||
@@ -230,42 +229,9 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				   context == grammarAccess.getXRelationalExpressionRule() ||
 				   context == grammarAccess.getXRelationalExpressionAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
 				   context == grammarAccess.getXRelationalExpressionAccess().getXInstanceOfExpressionExpressionAction_1_0_0_0_0() ||
-				   context == grammarAccess.getXTestCaseRule() ||
+				   context == grammarAccess.getXTestExpressionRule() ||
 				   context == grammarAccess.getXUnaryOperationRule()) {
-					sequence_XTestCase(context, (XTestCase) semanticObject); 
-					return; 
-				}
-				else break;
-			case XTestPackage.XTEST_SUITE:
-				if(context == grammarAccess.getXAdditiveExpressionRule() ||
-				   context == grammarAccess.getXAdditiveExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXAndExpressionRule() ||
-				   context == grammarAccess.getXAndExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXAssignmentRule() ||
-				   context == grammarAccess.getXAssignmentAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
-				   context == grammarAccess.getXCastedExpressionRule() ||
-				   context == grammarAccess.getXCastedExpressionAccess().getXCastedExpressionTargetAction_1_0_0_0() ||
-				   context == grammarAccess.getXEqualityExpressionRule() ||
-				   context == grammarAccess.getXEqualityExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXExpressionRule() ||
-				   context == grammarAccess.getXExpressionInsideBlockRule() ||
-				   context == grammarAccess.getXMemberFeatureCallRule() ||
-				   context == grammarAccess.getXMemberFeatureCallAccess().getXAssignmentAssignableAction_1_0_0_0_0() ||
-				   context == grammarAccess.getXMemberFeatureCallAccess().getXMemberFeatureCallMemberCallTargetAction_1_1_0_0_0() ||
-				   context == grammarAccess.getXMultiplicativeExpressionRule() ||
-				   context == grammarAccess.getXMultiplicativeExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXOrExpressionRule() ||
-				   context == grammarAccess.getXOrExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXOtherOperatorExpressionRule() ||
-				   context == grammarAccess.getXOtherOperatorExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
-				   context == grammarAccess.getXParenthesizedExpressionRule() ||
-				   context == grammarAccess.getXPrimaryExpressionRule() ||
-				   context == grammarAccess.getXRelationalExpressionRule() ||
-				   context == grammarAccess.getXRelationalExpressionAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
-				   context == grammarAccess.getXRelationalExpressionAccess().getXInstanceOfExpressionExpressionAction_1_0_0_0_0() ||
-				   context == grammarAccess.getXTestSuiteRule() ||
-				   context == grammarAccess.getXUnaryOperationRule()) {
-					sequence_XTestSuite(context, (XTestSuite) semanticObject); 
+					sequence_XTestExpression(context, (XTestExpression) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1463,36 +1429,17 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	 * Constraint:
 	 *     (name=UniqueName expression=XBlockExpression)
 	 */
-	protected void sequence_XTestCase(EObject context, XTestCase semanticObject) {
+	protected void sequence_XTestExpression(EObject context, XTestExpression semanticObject) {
 		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.XTEST_CASE__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.XTEST_CASE__NAME));
-			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.XTEST_CASE__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.XTEST_CASE__EXPRESSION));
+			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.XTEST_EXPRESSION__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.XTEST_EXPRESSION__NAME));
+			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.XTEST_EXPRESSION__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.XTEST_EXPRESSION__EXPRESSION));
 		}
 		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
 		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getXTestCaseAccess().getNameUniqueNameParserRuleCall_2_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getXTestCaseAccess().getExpressionXBlockExpressionParserRuleCall_3_0(), semanticObject.getExpression());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (name=UniqueName expression=XBlockExpression)
-	 */
-	protected void sequence_XTestSuite(EObject context, XTestSuite semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.XTEST_SUITE__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.XTEST_SUITE__NAME));
-			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.XTEST_SUITE__EXPRESSION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.XTEST_SUITE__EXPRESSION));
-		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getXTestSuiteAccess().getNameUniqueNameParserRuleCall_2_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getXTestSuiteAccess().getExpressionXBlockExpressionParserRuleCall_3_0(), semanticObject.getExpression());
+		feeder.accept(grammarAccess.getXTestExpressionAccess().getNameUniqueNameParserRuleCall_2_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getXTestExpressionAccess().getExpressionXBlockExpressionParserRuleCall_3_0(), semanticObject.getExpression());
 		feeder.finish();
 	}
 	
