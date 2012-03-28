@@ -55,16 +55,16 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
     @Override
     protected void restoreChildrenSelectionAndExpansion(IOutlineNode parent, Resource resource,
             OutlineTreeState formerState, OutlineTreeState newState) {
+        super.restoreChildrenSelectionAndExpansion(parent, resource, formerState, newState);
         List<IOutlineNode> children = parent.getChildren();
         for (IOutlineNode child : children) {
             if (child instanceof XTestEObjectNode && ((XTestEObjectNode) child).getFailed()) {
                 // Show failed nodes
-                newState.getExpandedNodes().add(child);
-                restoreChildrenSelectionAndExpansion(child, resource, formerState, newState);
+                newState.addExpandedNode(parent);
             } else if (containsUsingComparer(formerState.getExpandedNodes(), child)) {
                 newState.addExpandedNode(child);
-                restoreChildrenSelectionAndExpansion(child, resource, formerState, newState);
             }
+            restoreChildrenSelectionAndExpansion(child, resource, formerState, newState);
             if (containsUsingComparer(formerState.getSelectedNodes(), child)) {
                 newState.addSelectedNode(child);
             }

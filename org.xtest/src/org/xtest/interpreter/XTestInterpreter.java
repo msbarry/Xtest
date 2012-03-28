@@ -130,6 +130,9 @@ public class XTestInterpreter extends XbaseInterpreter {
         Object toReturn = null;
         try {
             toReturn = super._evaluateBlockExpression(main, context, indicator);
+            if (result.getState() != XTestState.FAIL) {
+                result.pass();
+            }
         } catch (ReturnValue e) {
             toReturn = e.returnValue;
             result.pass();

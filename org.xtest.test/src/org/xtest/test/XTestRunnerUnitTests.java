@@ -40,7 +40,7 @@ public class XTestRunnerUnitTests {
         XTestResult result = XTestRunner.run("", injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(null == result.getEvaluationException());
-        assertEquals(XTestState.NOT_RUN, result.getState());
+        assertEquals(XTestState.PASS, result.getState());
         assertEquals(0, result.getSubTests().size());
         assertEquals("", result.getQualifiedName());
     }
@@ -328,7 +328,7 @@ public class XTestRunnerUnitTests {
     public void testWarningIsOk() {
         XTestResult result = XTestRunner.run("val a = 1", injector);
         assertEquals("[]", result.getErrorMessages().toString());
-        assertEquals(XTestState.NOT_RUN, result.getState());
+        assertEquals(XTestState.PASS, result.getState());
     }
 
     @Test
