@@ -19,24 +19,24 @@ import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.impl.XExpressionImpl;
 
 import org.xtest.xTest.UniqueName;
+import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestPackage;
-import org.xtest.xTest.XTestSuite;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Suite</b></em>'.
+ * An implementation of the model object '<em><b>Expression</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.xtest.xTest.impl.XTestSuiteImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.xtest.xTest.impl.XTestSuiteImpl#getExpression <em>Expression</em>}</li>
+ *   <li>{@link org.xtest.xTest.impl.XTestExpressionImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.xtest.xTest.impl.XTestExpressionImpl#getExpression <em>Expression</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
+public class XTestExpressionImpl extends XExpressionImpl implements XTestExpression
 {
 	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' containment reference.
@@ -63,7 +63,7 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected XTestSuiteImpl()
+	protected XTestExpressionImpl()
 	{
 		super();
 	}
@@ -76,7 +76,7 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 	@Override
 	protected EClass eStaticClass()
 	{
-		return XTestPackage.Literals.XTEST_SUITE;
+		return XTestPackage.Literals.XTEST_EXPRESSION;
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 		name = newName;
 		if (eNotificationRequired())
 		{
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, XTestPackage.XTEST_SUITE__NAME, oldName, newName);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, XTestPackage.XTEST_EXPRESSION__NAME, oldName, newName);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -117,14 +117,14 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 		{
 			NotificationChain msgs = null;
 			if (name != null)
-				msgs = ((InternalEObject)name).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - XTestPackage.XTEST_SUITE__NAME, null, msgs);
+				msgs = ((InternalEObject)name).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - XTestPackage.XTEST_EXPRESSION__NAME, null, msgs);
 			if (newName != null)
-				msgs = ((InternalEObject)newName).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - XTestPackage.XTEST_SUITE__NAME, null, msgs);
+				msgs = ((InternalEObject)newName).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - XTestPackage.XTEST_EXPRESSION__NAME, null, msgs);
 			msgs = basicSetName(newName, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XTestPackage.XTEST_SUITE__NAME, newName, newName));
+			eNotify(new ENotificationImpl(this, Notification.SET, XTestPackage.XTEST_EXPRESSION__NAME, newName, newName));
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 		expression = newExpression;
 		if (eNotificationRequired())
 		{
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, XTestPackage.XTEST_SUITE__EXPRESSION, oldExpression, newExpression);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, XTestPackage.XTEST_EXPRESSION__EXPRESSION, oldExpression, newExpression);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -165,14 +165,14 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 		{
 			NotificationChain msgs = null;
 			if (expression != null)
-				msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - XTestPackage.XTEST_SUITE__EXPRESSION, null, msgs);
+				msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - XTestPackage.XTEST_EXPRESSION__EXPRESSION, null, msgs);
 			if (newExpression != null)
-				msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - XTestPackage.XTEST_SUITE__EXPRESSION, null, msgs);
+				msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - XTestPackage.XTEST_EXPRESSION__EXPRESSION, null, msgs);
 			msgs = basicSetExpression(newExpression, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XTestPackage.XTEST_SUITE__EXPRESSION, newExpression, newExpression));
+			eNotify(new ENotificationImpl(this, Notification.SET, XTestPackage.XTEST_EXPRESSION__EXPRESSION, newExpression, newExpression));
 	}
 
 	/**
@@ -185,9 +185,9 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XTEST_SUITE__NAME:
+			case XTestPackage.XTEST_EXPRESSION__NAME:
 				return basicSetName(null, msgs);
-			case XTestPackage.XTEST_SUITE__EXPRESSION:
+			case XTestPackage.XTEST_EXPRESSION__EXPRESSION:
 				return basicSetExpression(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -203,9 +203,9 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XTEST_SUITE__NAME:
+			case XTestPackage.XTEST_EXPRESSION__NAME:
 				return getName();
-			case XTestPackage.XTEST_SUITE__EXPRESSION:
+			case XTestPackage.XTEST_EXPRESSION__EXPRESSION:
 				return getExpression();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -221,10 +221,10 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XTEST_SUITE__NAME:
+			case XTestPackage.XTEST_EXPRESSION__NAME:
 				setName((UniqueName)newValue);
 				return;
-			case XTestPackage.XTEST_SUITE__EXPRESSION:
+			case XTestPackage.XTEST_EXPRESSION__EXPRESSION:
 				setExpression((XExpression)newValue);
 				return;
 		}
@@ -241,10 +241,10 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XTEST_SUITE__NAME:
+			case XTestPackage.XTEST_EXPRESSION__NAME:
 				setName((UniqueName)null);
 				return;
-			case XTestPackage.XTEST_SUITE__EXPRESSION:
+			case XTestPackage.XTEST_EXPRESSION__EXPRESSION:
 				setExpression((XExpression)null);
 				return;
 		}
@@ -261,12 +261,12 @@ public class XTestSuiteImpl extends XExpressionImpl implements XTestSuite
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XTEST_SUITE__NAME:
+			case XTestPackage.XTEST_EXPRESSION__NAME:
 				return name != null;
-			case XTestPackage.XTEST_SUITE__EXPRESSION:
+			case XTestPackage.XTEST_EXPRESSION__EXPRESSION:
 				return expression != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //XTestSuiteImpl
+} //XTestExpressionImpl

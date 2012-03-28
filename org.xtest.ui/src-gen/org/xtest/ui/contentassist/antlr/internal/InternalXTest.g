@@ -169,53 +169,25 @@ finally {
 
 
 
-// Entry rule entryRuleXTestSuite
-entryRuleXTestSuite 
+// Entry rule entryRuleXTestExpression
+entryRuleXTestExpression 
 :
-{ before(grammarAccess.getXTestSuiteRule()); }
-	 ruleXTestSuite
-{ after(grammarAccess.getXTestSuiteRule()); } 
+{ before(grammarAccess.getXTestExpressionRule()); }
+	 ruleXTestExpression
+{ after(grammarAccess.getXTestExpressionRule()); } 
 	 EOF 
 ;
 
-// Rule XTestSuite
-ruleXTestSuite
+// Rule XTestExpression
+ruleXTestExpression
     @init {
 		int stackSize = keepStackSize();
     }
 	:
 (
-{ before(grammarAccess.getXTestSuiteAccess().getGroup()); }
-(rule__XTestSuite__Group__0)
-{ after(grammarAccess.getXTestSuiteAccess().getGroup()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-
-// Entry rule entryRuleXTestCase
-entryRuleXTestCase 
-:
-{ before(grammarAccess.getXTestCaseRule()); }
-	 ruleXTestCase
-{ after(grammarAccess.getXTestCaseRule()); } 
-	 EOF 
-;
-
-// Rule XTestCase
-ruleXTestCase
-    @init {
-		int stackSize = keepStackSize();
-    }
-	:
-(
-{ before(grammarAccess.getXTestCaseAccess().getGroup()); }
-(rule__XTestCase__Group__0)
-{ after(grammarAccess.getXTestCaseAccess().getGroup()); }
+{ before(grammarAccess.getXTestExpressionAccess().getGroup()); }
+(rule__XTestExpression__Group__0)
+{ after(grammarAccess.getXTestExpressionAccess().getGroup()); }
 )
 
 ;
@@ -2065,6 +2037,32 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__XTestExpression__Alternatives_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getXTestExpressionAccess().getXsuiteKeyword_1_0()); }
+
+	'xsuite' 
+
+{ after(grammarAccess.getXTestExpressionAccess().getXsuiteKeyword_1_0()); }
+)
+
+    |(
+{ before(grammarAccess.getXTestExpressionAccess().getXtestKeyword_1_1()); }
+
+	'xtest' 
+
+{ after(grammarAccess.getXTestExpressionAccess().getXtestKeyword_1_1()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__XPrimaryExpression__Alternatives
     @init {
 		int stackSize = keepStackSize();
@@ -2149,21 +2147,15 @@ rule__XPrimaryExpression__Alternatives
 )
 
     |(
-{ before(grammarAccess.getXPrimaryExpressionAccess().getXTestSuiteParserRuleCall_13()); }
-	ruleXTestSuite
-{ after(grammarAccess.getXPrimaryExpressionAccess().getXTestSuiteParserRuleCall_13()); }
+{ before(grammarAccess.getXPrimaryExpressionAccess().getXTestExpressionParserRuleCall_13()); }
+	ruleXTestExpression
+{ after(grammarAccess.getXPrimaryExpressionAccess().getXTestExpressionParserRuleCall_13()); }
 )
 
     |(
-{ before(grammarAccess.getXPrimaryExpressionAccess().getXTestCaseParserRuleCall_14()); }
-	ruleXTestCase
-{ after(grammarAccess.getXPrimaryExpressionAccess().getXTestCaseParserRuleCall_14()); }
-)
-
-    |(
-{ before(grammarAccess.getXPrimaryExpressionAccess().getXAssertExpressionParserRuleCall_15()); }
+{ before(grammarAccess.getXPrimaryExpressionAccess().getXAssertExpressionParserRuleCall_14()); }
 	ruleXAssertExpression
-{ after(grammarAccess.getXPrimaryExpressionAccess().getXAssertExpressionParserRuleCall_15()); }
+{ after(grammarAccess.getXPrimaryExpressionAccess().getXAssertExpressionParserRuleCall_14()); }
 )
 
 ;
@@ -3332,60 +3324,29 @@ finally {
 
 
 
-rule__XTestSuite__Group__0
+rule__XTestExpression__Group__0
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__XTestSuite__Group__0__Impl
-	rule__XTestSuite__Group__1
+	rule__XTestExpression__Group__0__Impl
+	rule__XTestExpression__Group__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__XTestSuite__Group__0__Impl
+rule__XTestExpression__Group__0__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getXTestSuiteAccess().getXTestSuiteAction_0()); }
+{ before(grammarAccess.getXTestExpressionAccess().getXTestExpressionAction_0()); }
 (
 
 )
-{ after(grammarAccess.getXTestSuiteAccess().getXTestSuiteAction_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__XTestSuite__Group__1
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__XTestSuite__Group__1__Impl
-	rule__XTestSuite__Group__2
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__XTestSuite__Group__1__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1()); }
-
-	'xsuite' 
-
-{ after(grammarAccess.getXTestSuiteAccess().getXsuiteKeyword_1()); }
+{ after(grammarAccess.getXTestExpressionAccess().getXTestExpressionAction_0()); }
 )
 
 ;
@@ -3394,27 +3355,27 @@ finally {
 }
 
 
-rule__XTestSuite__Group__2
+rule__XTestExpression__Group__1
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__XTestSuite__Group__2__Impl
-	rule__XTestSuite__Group__3
+	rule__XTestExpression__Group__1__Impl
+	rule__XTestExpression__Group__2
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__XTestSuite__Group__2__Impl
+rule__XTestExpression__Group__1__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getXTestSuiteAccess().getNameAssignment_2()); }
-(rule__XTestSuite__NameAssignment_2)
-{ after(grammarAccess.getXTestSuiteAccess().getNameAssignment_2()); }
+{ before(grammarAccess.getXTestExpressionAccess().getAlternatives_1()); }
+(rule__XTestExpression__Alternatives_1)
+{ after(grammarAccess.getXTestExpressionAccess().getAlternatives_1()); }
 )
 
 ;
@@ -3423,26 +3384,27 @@ finally {
 }
 
 
-rule__XTestSuite__Group__3
+rule__XTestExpression__Group__2
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__XTestSuite__Group__3__Impl
+	rule__XTestExpression__Group__2__Impl
+	rule__XTestExpression__Group__3
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__XTestSuite__Group__3__Impl
+rule__XTestExpression__Group__2__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getXTestSuiteAccess().getExpressionAssignment_3()); }
-(rule__XTestSuite__ExpressionAssignment_3)
-{ after(grammarAccess.getXTestSuiteAccess().getExpressionAssignment_3()); }
+{ before(grammarAccess.getXTestExpressionAccess().getNameAssignment_2()); }
+(rule__XTestExpression__NameAssignment_2)
+{ after(grammarAccess.getXTestExpressionAccess().getNameAssignment_2()); }
 )
 
 ;
@@ -3451,125 +3413,26 @@ finally {
 }
 
 
-
-
-
-
-
-
-
-
-rule__XTestCase__Group__0
+rule__XTestExpression__Group__3
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__XTestCase__Group__0__Impl
-	rule__XTestCase__Group__1
+	rule__XTestExpression__Group__3__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__XTestCase__Group__0__Impl
+rule__XTestExpression__Group__3__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getXTestCaseAccess().getXTestCaseAction_0()); }
-(
-
-)
-{ after(grammarAccess.getXTestCaseAccess().getXTestCaseAction_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__XTestCase__Group__1
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__XTestCase__Group__1__Impl
-	rule__XTestCase__Group__2
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__XTestCase__Group__1__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getXTestCaseAccess().getXtestKeyword_1()); }
-
-	'xtest' 
-
-{ after(grammarAccess.getXTestCaseAccess().getXtestKeyword_1()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__XTestCase__Group__2
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__XTestCase__Group__2__Impl
-	rule__XTestCase__Group__3
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__XTestCase__Group__2__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getXTestCaseAccess().getNameAssignment_2()); }
-(rule__XTestCase__NameAssignment_2)
-{ after(grammarAccess.getXTestCaseAccess().getNameAssignment_2()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__XTestCase__Group__3
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__XTestCase__Group__3__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__XTestCase__Group__3__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getXTestCaseAccess().getExpressionAssignment_3()); }
-(rule__XTestCase__ExpressionAssignment_3)
-{ after(grammarAccess.getXTestCaseAccess().getExpressionAssignment_3()); }
+{ before(grammarAccess.getXTestExpressionAccess().getExpressionAssignment_3()); }
+(rule__XTestExpression__ExpressionAssignment_3)
+{ after(grammarAccess.getXTestExpressionAccess().getExpressionAssignment_3()); }
 )
 
 ;
@@ -13866,14 +13729,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__XTestSuite__NameAssignment_2
+rule__XTestExpression__NameAssignment_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getXTestSuiteAccess().getNameUniqueNameParserRuleCall_2_0()); }
-	ruleUniqueName{ after(grammarAccess.getXTestSuiteAccess().getNameUniqueNameParserRuleCall_2_0()); }
+{ before(grammarAccess.getXTestExpressionAccess().getNameUniqueNameParserRuleCall_2_0()); }
+	ruleUniqueName{ after(grammarAccess.getXTestExpressionAccess().getNameUniqueNameParserRuleCall_2_0()); }
 )
 
 ;
@@ -13881,44 +13744,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__XTestSuite__ExpressionAssignment_3
+rule__XTestExpression__ExpressionAssignment_3
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getXTestSuiteAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); }
-	ruleXBlockExpression{ after(grammarAccess.getXTestSuiteAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__XTestCase__NameAssignment_2
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getXTestCaseAccess().getNameUniqueNameParserRuleCall_2_0()); }
-	ruleUniqueName{ after(grammarAccess.getXTestCaseAccess().getNameUniqueNameParserRuleCall_2_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__XTestCase__ExpressionAssignment_3
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getXTestCaseAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); }
-	ruleXBlockExpression{ after(grammarAccess.getXTestCaseAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); }
+{ before(grammarAccess.getXTestExpressionAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); }
+	ruleXBlockExpression{ after(grammarAccess.getXTestExpressionAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); }
 )
 
 ;

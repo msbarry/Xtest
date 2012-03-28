@@ -26,7 +26,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
@@ -49,8 +49,8 @@ public class UiXTestRunner extends XTestRunner {
     private Provider<XTestInterpreter> interpreterProvider;
 
     @Override
-    public XTestSuiteResult run(final Body main, CancelIndicator monitor) {
-        final ArrayBlockingQueue<XTestSuiteResult> resultQueue = new ArrayBlockingQueue<XTestSuiteResult>(
+    public XTestResult run(final Body main, CancelIndicator monitor) {
+        final ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(
                 1);
 
         String name = "Running " + ((BodyImplCustom) main).getFileName();
@@ -59,7 +59,7 @@ public class UiXTestRunner extends XTestRunner {
         // Kick off a new job to run the test
         Job job = new TestRunnerJob(name, resultQueue, main);
         job.schedule();
-        XTestSuiteResult jobResult = null;
+        XTestResult jobResult = null;
 
         // TODO should be able to specify a maximum allowed time for tests to run and cancel after
         // that
@@ -74,7 +74,7 @@ public class UiXTestRunner extends XTestRunner {
                 break;
             }
         }
-        XTestSuiteResult result = jobResult == null ? new XTestSuiteResult(main) : jobResult;
+        XTestResult result = jobResult == null ? new XTestResult(main) : jobResult;
 
         ((BodyImplCustom) main).setResult(result);
 
@@ -179,9 +179,9 @@ public class UiXTestRunner extends XTestRunner {
      */
     private class TestRunnerJob extends Job {
         private final Body main;
-        private final ArrayBlockingQueue<XTestSuiteResult> result;
+        private final ArrayBlockingQueue<XTestResult> result;
 
-        private TestRunnerJob(String name, ArrayBlockingQueue<XTestSuiteResult> result, Body main) {
+        private TestRunnerJob(String name, ArrayBlockingQueue<XTestResult> result, Body main) {
             super(name);
             this.result = result;
             this.main = main;
@@ -196,7 +196,7 @@ public class UiXTestRunner extends XTestRunner {
         @Override
         protected IStatus run(final IProgressMonitor arg0) {
             CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
-            XTestSuiteResult run = UiXTestRunner.super.run(main, indicator);
+            XTestResult run = UiXTestRunner.super.run(main, indicator);
             result.offer(run);
             return Status.OK_STATUS;
         }

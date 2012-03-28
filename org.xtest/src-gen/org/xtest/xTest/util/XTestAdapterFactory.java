@@ -97,14 +97,9 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 				return createBodyAdapter();
 			}
 			@Override
-			public Adapter caseXTestSuite(XTestSuite object)
+			public Adapter caseXTestExpression(XTestExpression object)
 			{
-				return createXTestSuiteAdapter();
-			}
-			@Override
-			public Adapter caseXTestCase(XTestCase object)
-			{
-				return createXTestCaseAdapter();
+				return createXTestExpressionAdapter();
 			}
 			@Override
 			public Adapter caseXAssertExpression(XAssertExpression object)
@@ -189,31 +184,16 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XTestSuite <em>Suite</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XTestExpression <em>Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.xtest.xTest.XTestSuite
+	 * @see org.xtest.xTest.XTestExpression
 	 * @generated
 	 */
-	public Adapter createXTestSuiteAdapter()
-	{
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XTestCase <em>Case</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.xtest.xTest.XTestCase
-	 * @generated
-	 */
-	public Adapter createXTestCaseAdapter()
+	public Adapter createXTestExpressionAdapter()
 	{
 		return null;
 	}

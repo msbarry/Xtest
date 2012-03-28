@@ -187,64 +187,36 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getIdentifierXParenthesizedExpressionParserRuleCall_1_0() { return cIdentifierXParenthesizedExpressionParserRuleCall_1_0; }
 	}
 
-	public class XTestSuiteElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XTestSuite");
+	public class XTestExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XTestExpression");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cXTestSuiteAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cXsuiteKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Action cXTestExpressionAction_0 = (Action)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Keyword cXsuiteKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
+		private final Keyword cXtestKeyword_1_1 = (Keyword)cAlternatives_1.eContents().get(1);
 		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cNameUniqueNameParserRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
 		private final Assignment cExpressionAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cExpressionXBlockExpressionParserRuleCall_3_0 = (RuleCall)cExpressionAssignment_3.eContents().get(0);
 		
-		//XTestSuite returns XExpression:
-		//	{XTestSuite} "xsuite" name=UniqueName expression=XBlockExpression;
+		//XTestExpression returns XExpression:
+		//	{XTestExpression} ("xsuite" | "xtest") name=UniqueName expression=XBlockExpression;
 		public ParserRule getRule() { return rule; }
 
-		//{XTestSuite} "xsuite" name=UniqueName expression=XBlockExpression
+		//{XTestExpression} ("xsuite" | "xtest") name=UniqueName expression=XBlockExpression
 		public Group getGroup() { return cGroup; }
 
-		//{XTestSuite}
-		public Action getXTestSuiteAction_0() { return cXTestSuiteAction_0; }
+		//{XTestExpression}
+		public Action getXTestExpressionAction_0() { return cXTestExpressionAction_0; }
+
+		//"xsuite" | "xtest"
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
 		//"xsuite"
-		public Keyword getXsuiteKeyword_1() { return cXsuiteKeyword_1; }
-
-		//name=UniqueName
-		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
-
-		//UniqueName
-		public RuleCall getNameUniqueNameParserRuleCall_2_0() { return cNameUniqueNameParserRuleCall_2_0; }
-
-		//expression=XBlockExpression
-		public Assignment getExpressionAssignment_3() { return cExpressionAssignment_3; }
-
-		//XBlockExpression
-		public RuleCall getExpressionXBlockExpressionParserRuleCall_3_0() { return cExpressionXBlockExpressionParserRuleCall_3_0; }
-	}
-
-	public class XTestCaseElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XTestCase");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cXTestCaseAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cXtestKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cNameUniqueNameParserRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
-		private final Assignment cExpressionAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cExpressionXBlockExpressionParserRuleCall_3_0 = (RuleCall)cExpressionAssignment_3.eContents().get(0);
-		
-		//XTestCase returns XExpression:
-		//	{XTestCase} "xtest" name=UniqueName expression=XBlockExpression;
-		public ParserRule getRule() { return rule; }
-
-		//{XTestCase} "xtest" name=UniqueName expression=XBlockExpression
-		public Group getGroup() { return cGroup; }
-
-		//{XTestCase}
-		public Action getXTestCaseAction_0() { return cXTestCaseAction_0; }
+		public Keyword getXsuiteKeyword_1_0() { return cXsuiteKeyword_1_0; }
 
 		//"xtest"
-		public Keyword getXtestKeyword_1() { return cXtestKeyword_1; }
+		public Keyword getXtestKeyword_1_1() { return cXtestKeyword_1_1; }
 
 		//name=UniqueName
 		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
@@ -319,9 +291,8 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cXReturnExpressionParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
 		private final RuleCall cXTryCatchFinallyExpressionParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
 		private final RuleCall cXParenthesizedExpressionParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
-		private final RuleCall cXTestSuiteParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
-		private final RuleCall cXTestCaseParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
-		private final RuleCall cXAssertExpressionParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
+		private final RuleCall cXTestExpressionParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
+		private final RuleCall cXAssertExpressionParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
 		
 		//// Hook our newly defined expressions into XBase as new kinds of expressions
 		//
@@ -331,7 +302,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//	| XWhileExpression | XDoWhileExpression | XThrowExpression | XReturnExpression | XTryCatchFinallyExpression |
 		//	XParenthesizedExpression | // Add new expressions
 		//
-		//	XTestSuite | XTestCase | XAssertExpression;
+		//	XTestExpression | XAssertExpression;
 		public ParserRule getRule() { return rule; }
 
 		//// Keep old expressions
@@ -340,7 +311,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//XWhileExpression | XDoWhileExpression | XThrowExpression | XReturnExpression | XTryCatchFinallyExpression |
 		//XParenthesizedExpression | // Add new expressions
 		//
-		//XTestSuite | XTestCase | XAssertExpression
+		//XTestExpression | XAssertExpression
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//// Keep old expressions
@@ -386,14 +357,11 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 
 		//// Add new expressions
 		//
-		//XTestSuite
-		public RuleCall getXTestSuiteParserRuleCall_13() { return cXTestSuiteParserRuleCall_13; }
-
-		//XTestCase
-		public RuleCall getXTestCaseParserRuleCall_14() { return cXTestCaseParserRuleCall_14; }
+		//XTestExpression
+		public RuleCall getXTestExpressionParserRuleCall_13() { return cXTestExpressionParserRuleCall_13; }
 
 		//XAssertExpression
-		public RuleCall getXAssertExpressionParserRuleCall_15() { return cXAssertExpressionParserRuleCall_15; }
+		public RuleCall getXAssertExpressionParserRuleCall_14() { return cXAssertExpressionParserRuleCall_14; }
 	}
 
 	public class StaticEqualsElements extends AbstractParserRuleElementFinder {
@@ -599,8 +567,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	private ImportElements pImport;
 	private QualifiedNamespaceWithWildcardElements pQualifiedNamespaceWithWildcard;
 	private UniqueNameElements pUniqueName;
-	private XTestSuiteElements pXTestSuite;
-	private XTestCaseElements pXTestCase;
+	private XTestExpressionElements pXTestExpression;
 	private XAssertExpressionElements pXAssertExpression;
 	private XPrimaryExpressionElements pXPrimaryExpression;
 	private StaticEqualsElements pStaticEquals;
@@ -670,24 +637,14 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		return getUniqueNameAccess().getRule();
 	}
 
-	//XTestSuite returns XExpression:
-	//	{XTestSuite} "xsuite" name=UniqueName expression=XBlockExpression;
-	public XTestSuiteElements getXTestSuiteAccess() {
-		return (pXTestSuite != null) ? pXTestSuite : (pXTestSuite = new XTestSuiteElements());
+	//XTestExpression returns XExpression:
+	//	{XTestExpression} ("xsuite" | "xtest") name=UniqueName expression=XBlockExpression;
+	public XTestExpressionElements getXTestExpressionAccess() {
+		return (pXTestExpression != null) ? pXTestExpression : (pXTestExpression = new XTestExpressionElements());
 	}
 	
-	public ParserRule getXTestSuiteRule() {
-		return getXTestSuiteAccess().getRule();
-	}
-
-	//XTestCase returns XExpression:
-	//	{XTestCase} "xtest" name=UniqueName expression=XBlockExpression;
-	public XTestCaseElements getXTestCaseAccess() {
-		return (pXTestCase != null) ? pXTestCase : (pXTestCase = new XTestCaseElements());
-	}
-	
-	public ParserRule getXTestCaseRule() {
-		return getXTestCaseAccess().getRule();
+	public ParserRule getXTestExpressionRule() {
+		return getXTestExpressionAccess().getRule();
 	}
 
 	//XAssertExpression returns XExpression:
@@ -708,7 +665,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	//	| XWhileExpression | XDoWhileExpression | XThrowExpression | XReturnExpression | XTryCatchFinallyExpression |
 	//	XParenthesizedExpression | // Add new expressions
 	//
-	//	XTestSuite | XTestCase | XAssertExpression;
+	//	XTestExpression | XAssertExpression;
 	public XPrimaryExpressionElements getXPrimaryExpressionAccess() {
 		return (pXPrimaryExpression != null) ? pXPrimaryExpression : (pXPrimaryExpression = new XPrimaryExpressionElements());
 	}

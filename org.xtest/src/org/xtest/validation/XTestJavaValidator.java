@@ -23,13 +23,10 @@ import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.XTestRunner.DontRunCheck;
 import org.xtest.results.AbstractXTestResult;
-import org.xtest.results.XTestCaseResult;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XAssertExpression;
-import org.xtest.xTest.XTestCase;
 import org.xtest.xTest.XTestPackage;
-import org.xtest.xTest.XTestSuite;
 import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.common.collect.HashMultimap;
@@ -93,51 +90,12 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
         }
     }
 
-    /**
-     * Verifies that an assert is inside a test case
-     * 
-     * @param assertExpression
-     *            The assert expression to check
-     */
-    @Check
-    public void checkAssertIsInXTestCase(XAssertExpression assertExpression) {
-        if (!checkContainedWithin(assertExpression, XTestCase.class)) {
-            error("Assert can only be placed inside a test case", null);
-        }
-    }
-
     @Override
     @Check
     public void checkAssignment(XAssignment assignment) {
         JvmIdentifiableElement assignmentFeature = assignment.getFeature();
         if (!(assignmentFeature instanceof JvmField && ((JvmField) assignmentFeature).isFinal())) {
             super.checkAssignment(assignment);
-        }
-    }
-
-    /**
-     * Checks that the test suite is not contained within a test case
-     * 
-     * @param testCase
-     *            The test case to check
-     */
-    @Check
-    public void checkXTestSuiteNotInXTestSuite(XTestCase testCase) {
-        if (checkContainedWithin(testCase, XTestCase.class)) {
-            error("Test case cannot be placed inside a test case", null);
-        }
-    }
-
-    /**
-     * Checks that the test suite is not contained within a test case
-     * 
-     * @param testSuite
-     *            The test suite to check
-     */
-    @Check
-    public void checkXTestSuiteNotInXTestSuite(XTestSuite testSuite) {
-        if (checkContainedWithin(testSuite, XTestCase.class)) {
-            error("Test suite cannot be placed inside a test case", null);
         }
     }
 
@@ -155,7 +113,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             if (indicator == null) {
                 indicator = CancelIndicator.NullImpl;
             }
-            XTestSuiteResult run = runner.run(main, indicator);
+            XTestResult run = runner.run(main, indicator);
             markErrorsFromSuite(run);
             if (main instanceof BodyImplCustom) {
                 BodyImplCustom custom = (BodyImplCustom) main;
@@ -190,64 +148,26 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     }
 
     /**
-     * Returns true if the next farthest out containing {@link EObject} of {@code eObject} is a
-     * subclass of {@code clazz}
-     * 
-     * @param eObject
-     *            The {@link EObject} to check
-     * @param clazz
-     *            The desired class
-     * @return True if the next furthest out containing {@link EObject} of {@code eObject} is a
-     *         subclass of {@code clazz}, false otherwise
-     */
-    private boolean checkContainedWithin(EObject eObject, Class<?> clazz) {
-        boolean good = false;
-        for (EObject eObj = eObject.eContainer(); eObj != null; eObj = eObj.eContainer()) {
-            if (clazz.isInstance(eObj)) {
-                good = true;
-            }
-            if (eObj.eClass().getEPackage() == XTestPackage.eINSTANCE) {
-                // Only find the first container from this package
-                break;
-            }
-        }
-        return good;
-    }
-
-    /**
-     * Marks the errors from the test case
-     * 
-     * @param testCase
-     *            The test case result
-     */
-    private void markErrorsFromCase(XTestCaseResult testCase) {
-        markEvaluationExceptions(testCase);
-        XTestAssertException assertException = testCase.getAssertException();
-        if (assertException != null) {
-            XAssertExpression expression = assertException.getExpression();
-            error(testCase.getQualifiedName() + ": Assertion Failed", expression, null,
-                    TEST_RUN_FAILURE_INDEX);
-        }
-    }
-
-    /**
      * Marks the errors from the test suite
      * 
      * @param run
      *            The test suite result
      */
-    private void markErrorsFromSuite(XTestSuiteResult run) {
+    private void markErrorsFromSuite(XTestResult run) {
         if (run != null) {
             for (String error : run.getErrorMessages()) {
                 error(run.getQualifiedName() + ": " + error, run.getEObject(), null,
                         TEST_RUN_FAILURE_INDEX);
             }
-            markEvaluationExceptions(run);
-            for (XTestSuiteResult suite : run.getSubSuites()) {
-                markErrorsFromSuite(suite);
+            XTestAssertException assertException = run.getAssertException();
+            if (assertException != null) {
+                XAssertExpression expression = assertException.getExpression();
+                error(run.getQualifiedName() + ": Assertion Failed", expression, null,
+                        TEST_RUN_FAILURE_INDEX);
             }
-            for (XTestCaseResult suite : run.getCases()) {
-                markErrorsFromCase(suite);
+            markEvaluationExceptions(run);
+            for (XTestResult suite : run.getSubSuites()) {
+                markErrorsFromSuite(suite);
             }
         }
     }

@@ -10,6 +10,6 @@ public enum XTestState {
     FAIL,
     /** Test hasn't run yet */
     NOT_RUN,
-    /** Test and all subtests failed */
+    /** Test and all subtests passed */
     PASS
 }

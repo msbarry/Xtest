@@ -23,12 +23,9 @@ UniqueName:
 	name=ID (identifier=XParenthesizedExpression)?
 ;
 
-XTestSuite returns XExpression:
-	{XTestSuite}
-	'xsuite' name=UniqueName (expression=XBlockExpression);
-XTestCase returns XExpression:
-	{XTestCase}
-	'xtest' name=UniqueName (expression=XBlockExpression);
+XTestExpression returns XExpression:
+	{XTestExpression}
+	('xsuite'|'xtest') name=UniqueName (expression=XBlockExpression);
 	
 XAssertExpression returns XExpression:
 	{XAssertExpression}
@@ -52,8 +49,7 @@ XPrimaryExpression returns XExpression:
 	XTryCatchFinallyExpression |
 	XParenthesizedExpression |
 	// Add new expressions
-	XTestSuite |
-	XTestCase |
+	XTestExpression |
 	XAssertExpression;
 
 // Add static member setting support to Xbase

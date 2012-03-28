@@ -7,7 +7,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.diagnostics.Severity;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
 
 import com.google.common.collect.HashMultimap;
@@ -20,7 +20,7 @@ import com.google.common.collect.HashMultimap;
 public class BodyImplCustom extends BodyImpl {
 
     private HashMultimap<Severity, EObject> issues = HashMultimap.create();
-    private XTestSuiteResult result;
+    private XTestResult result;
 
     /**
      * Returns the file name of this test
@@ -54,7 +54,7 @@ public class BodyImplCustom extends BodyImpl {
      * 
      * @return The validation result
      */
-    public XTestSuiteResult getResult() {
+    public XTestResult getResult() {
         return result;
     }
 
@@ -74,7 +74,7 @@ public class BodyImplCustom extends BodyImpl {
      * @param result
      *            The validation result
      */
-    public void setResult(XTestSuiteResult result) {
+    public void setResult(XTestResult result) {
         this.result = result;
     }
 }

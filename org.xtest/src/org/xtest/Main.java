@@ -7,8 +7,7 @@ import java.util.List;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.xbase.XExpression;
-import org.xtest.results.XTestCaseResult;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
 import org.xtest.xTest.XAssertExpression;
 
 import com.google.inject.Injector;
@@ -44,7 +43,7 @@ public class Main {
                 in.close();
 
                 System.out.println("Tests from " + arg + ":");
-                XTestSuiteResult run = XTestRunner.run(builder.toString(), injector);
+                XTestResult run = XTestRunner.run(builder.toString(), injector);
                 printSuite("", run, true);
             } catch (Exception e) {
                 System.err.println("Error: " + e.getMessage());
@@ -75,36 +74,6 @@ public class Main {
     }
 
     /**
-     * Prints a test case result
-     * 
-     * @param indent
-     *            Indent to prepend to printed lines
-     * @param tcase
-     *            Test case result to print
-     */
-    private static void printCase(String indent, XTestCaseResult tcase) {
-        switch (tcase.getState()) {
-        case FAIL:
-            System.out.println(indent + "=NG " + tcase.getQualifiedName());
-            XTestAssertException assertException = tcase.getAssertException();
-            XTestEvaluationException evaluationException = tcase.getEvaluationException();
-            if (assertException != null) {
-                XAssertExpression expression = assertException.getExpression();
-                String line = getLineNumAndText(indent, expression);
-                System.out.println(indent + "    Assertion failed on line " + line);
-            } else if (evaluationException != null) {
-                printEvaluationException(indent, evaluationException);
-            }
-            break;
-        case PASS:
-            System.out.println(indent + "=OK " + tcase.getQualifiedName());
-            break;
-        default:
-            break;
-        }
-    }
-
-    /**
      * Prints the cases and suites for the test suite result provided.
      * 
      * @param indent
@@ -112,11 +81,8 @@ public class Main {
      * @param suite
      *            The test suite results to print
      */
-    private static void printChildrenOfSuite(String indent, XTestSuiteResult suite) {
-        for (XTestCaseResult caseResult : suite.getCases()) {
-            printCase(indent + "   ", caseResult);
-        }
-        for (XTestSuiteResult subSuite : suite.getSubSuites()) {
+    private static void printChildrenOfSuite(String indent, XTestResult suite) {
+        for (XTestResult subSuite : suite.getSubSuites()) {
             printSuite(indent + "   ", subSuite, false);
         }
     }
@@ -160,7 +126,7 @@ public class Main {
      *            True to force printing all children, false to just print success for the top-level
      *            if it passes.
      */
-    private static void printSuite(String indent, XTestSuiteResult suite, boolean forcePrintChildren) {
+    private static void printSuite(String indent, XTestResult suite, boolean forcePrintChildren) {
         switch (suite.getState()) {
         case FAIL:
             if (!forcePrintChildren) {
@@ -168,14 +134,18 @@ public class Main {
             }
             XTestEvaluationException evaluationException = suite.getEvaluationException();
             List<String> errorMessages = suite.getErrorMessages();
+            XTestAssertException assertException = suite.getAssertException();
             if (!errorMessages.isEmpty()) {
                 System.out.println(indent + "   Couldn't run because of syntax errors:");
                 for (String message : errorMessages) {
                     System.out.println(indent + "   " + message);
                 }
-            }
-            if (evaluationException != null) {
-                printEvaluationException(indent + "   ", evaluationException);
+            } else if (assertException != null) {
+                XAssertExpression expression = assertException.getExpression();
+                String line = getLineNumAndText(indent, expression);
+                System.out.println(indent + "    Assertion failed on line " + line);
+            } else if (evaluationException != null) {
+                printEvaluationException(indent, evaluationException);
             }
             printChildrenOfSuite(indent, suite);
             break;

@@ -21,10 +21,9 @@ import org.xtest.xTest.Body;
 import org.xtest.xTest.Import;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
-import org.xtest.xTest.XTestCase;
+import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestFactory;
 import org.xtest.xTest.XTestPackage;
-import org.xtest.xTest.XTestSuite;
 
 /**
  * <!-- begin-user-doc -->
@@ -60,14 +59,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass xTestSuiteEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass xTestCaseEClass = null;
+	private EClass xTestExpressionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -247,9 +239,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getXTestSuite()
+	public EClass getXTestExpression()
 	{
-		return xTestSuiteEClass;
+		return xTestExpressionEClass;
 	}
 
 	/**
@@ -257,9 +249,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getXTestSuite_Name()
+	public EReference getXTestExpression_Name()
 	{
-		return (EReference)xTestSuiteEClass.getEStructuralFeatures().get(0);
+		return (EReference)xTestExpressionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -267,39 +259,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getXTestSuite_Expression()
+	public EReference getXTestExpression_Expression()
 	{
-		return (EReference)xTestSuiteEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getXTestCase()
-	{
-		return xTestCaseEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getXTestCase_Name()
-	{
-		return (EReference)xTestCaseEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getXTestCase_Expression()
-	{
-		return (EReference)xTestCaseEClass.getEStructuralFeatures().get(1);
+		return (EReference)xTestExpressionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -375,13 +337,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		bodyEClass = createEClass(BODY);
 		createEReference(bodyEClass, BODY__IMPORTS);
 
-		xTestSuiteEClass = createEClass(XTEST_SUITE);
-		createEReference(xTestSuiteEClass, XTEST_SUITE__NAME);
-		createEReference(xTestSuiteEClass, XTEST_SUITE__EXPRESSION);
-
-		xTestCaseEClass = createEClass(XTEST_CASE);
-		createEReference(xTestCaseEClass, XTEST_CASE__NAME);
-		createEReference(xTestCaseEClass, XTEST_CASE__EXPRESSION);
+		xTestExpressionEClass = createEClass(XTEST_EXPRESSION);
+		createEReference(xTestExpressionEClass, XTEST_EXPRESSION__NAME);
+		createEReference(xTestExpressionEClass, XTEST_EXPRESSION__EXPRESSION);
 
 		xAssertExpressionEClass = createEClass(XASSERT_EXPRESSION);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__ACTUAL);
@@ -422,8 +380,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 
 		// Add supertypes to classes
 		bodyEClass.getESuperTypes().add(theXbasePackage.getXBlockExpression());
-		xTestSuiteEClass.getESuperTypes().add(theXbasePackage.getXExpression());
-		xTestCaseEClass.getESuperTypes().add(theXbasePackage.getXExpression());
+		xTestExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xAssertExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 
 		// Initialize classes and features; add operations and parameters
@@ -440,13 +397,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		initEClass(bodyEClass, Body.class, "Body", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBody_Imports(), this.getImport(), null, "imports", null, 0, -1, Body.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(xTestSuiteEClass, XTestSuite.class, "XTestSuite", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getXTestSuite_Name(), this.getUniqueName(), null, "name", null, 0, 1, XTestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getXTestSuite_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(xTestCaseEClass, XTestCase.class, "XTestCase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getXTestCase_Name(), this.getUniqueName(), null, "name", null, 0, 1, XTestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getXTestCase_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(xTestExpressionEClass, XTestExpression.class, "XTestExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getXTestExpression_Name(), this.getUniqueName(), null, "name", null, 0, 1, XTestExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getXTestExpression_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(xAssertExpressionEClass, XAssertExpression.class, "XAssertExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getXAssertExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

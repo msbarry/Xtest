@@ -54,22 +54,13 @@ public interface XTestFactory extends EFactory
 	Body createBody();
 
 	/**
-	 * Returns a new object of class '<em>Suite</em>'.
+	 * Returns a new object of class '<em>Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Suite</em>'.
+	 * @return a new object of class '<em>Expression</em>'.
 	 * @generated
 	 */
-	XTestSuite createXTestSuite();
-
-	/**
-	 * Returns a new object of class '<em>Case</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Case</em>'.
-	 * @generated
-	 */
-	XTestCase createXTestCase();
+	XTestExpression createXTestExpression();
 
 	/**
 	 * Returns a new object of class '<em>XAssert Expression</em>'.

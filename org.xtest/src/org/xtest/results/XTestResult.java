@@ -3,9 +3,9 @@ package org.xtest.results;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.xtest.XTestAssertException;
 import org.xtest.xTest.Body;
-import org.xtest.xTest.XTestCase;
-import org.xtest.xTest.XTestSuite;
+import org.xtest.xTest.XTestExpression;
 
 import com.google.common.collect.Lists;
 
@@ -14,9 +14,9 @@ import com.google.common.collect.Lists;
  * 
  * @author Michael Barry
  */
-public class XTestSuiteResult extends AbstractXTestResult {
-    private final List<XTestCaseResult> cases = Lists.newArrayList();
-    private final List<XTestSuiteResult> suites = Lists.newArrayList();
+public class XTestResult extends AbstractXTestResult {
+    private XTestAssertException exception;
+    private final List<XTestResult> subTests = Lists.newArrayList();
     private final List<String> syntaxErrors = Lists.newArrayList();
 
     /**
@@ -25,14 +25,25 @@ public class XTestSuiteResult extends AbstractXTestResult {
      * @param main
      *            The xtest expression model
      */
-    public XTestSuiteResult(Body main) {
+    public XTestResult(Body main) {
         super(null, null, main);
     }
 
     // Private constructor so that users are forced to call subSuite to
     // instantiate a non-top-level suite
-    private XTestSuiteResult(AbstractXTestResult parent, String name, EObject eObject) {
+    private XTestResult(AbstractXTestResult parent, String name, EObject eObject) {
         super(parent, name, eObject);
+    }
+
+    /**
+     * Fails the test case and all of its parents, adding the failed assertion.
+     * 
+     * @param exception
+     *            The failed assertion
+     */
+    public void addFailedAssertion(XTestAssertException exception) {
+        fail();
+        this.exception = exception;
     }
 
     /**
@@ -47,12 +58,12 @@ public class XTestSuiteResult extends AbstractXTestResult {
     }
 
     /**
-     * Returns the test case results in this test suite
+     * Returns the failed assertion or null if empty
      * 
-     * @return The test case results in this test suite
+     * @return The failed assertion or null if empty
      */
-    public List<XTestCaseResult> getCases() {
-        return cases;
+    public XTestAssertException getAssertException() {
+        return exception;
     }
 
     /**
@@ -69,23 +80,8 @@ public class XTestSuiteResult extends AbstractXTestResult {
      * 
      * @return The test suite results in this test suite
      */
-    public List<XTestSuiteResult> getSubSuites() {
-        return suites;
-    }
-
-    /**
-     * Constructs a new test case result that is contained in this suite.
-     * 
-     * @param name
-     *            The name of the case
-     * @param eObject
-     *            The test case expression that the result corresponds to
-     * @return The new test case result
-     */
-    public XTestCaseResult subCase(String name, XTestCase eObject) {
-        XTestCaseResult xTestCaseResult = new XTestCaseResult(this, name, eObject);
-        cases.add(xTestCaseResult);
-        return xTestCaseResult;
+    public List<XTestResult> getSubSuites() {
+        return subTests;
     }
 
     /**
@@ -97,9 +93,9 @@ public class XTestSuiteResult extends AbstractXTestResult {
      *            The test suite expression that the result corresponds to
      * @return The new test suite result
      */
-    public XTestSuiteResult subSuite(String name, XTestSuite eObject) {
-        XTestSuiteResult xTestSuiteResult = new XTestSuiteResult(this, name, eObject);
-        suites.add(xTestSuiteResult);
+    public XTestResult subTest(String name, XTestExpression eObject) {
+        XTestResult xTestSuiteResult = new XTestResult(this, name, eObject);
+        subTests.add(xTestSuiteResult);
         return xTestSuiteResult;
     }
 

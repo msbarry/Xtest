@@ -12,11 +12,9 @@ import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.TextRegion;
 import org.xtest.results.AbstractXTestResult;
-import org.xtest.results.XTestCaseResult;
+import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
-import org.xtest.results.XTestSuiteResult;
 import org.xtest.ui.internal.XtestPluginImages;
-import org.xtest.xTest.XTestCase;
 import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.common.collect.HashMultimap;
@@ -28,7 +26,6 @@ import com.google.inject.Inject;
  * @author Michael Barry
  */
 public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
-    private static final String UNKNOWN_NODE_NAME = "...";
     @Inject
     private XtestPluginImages images;
 
@@ -36,18 +33,13 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     public void createChildren(IOutlineNode parentNode, EObject body) {
         if (body instanceof BodyImplCustom) {
             String fileName = ((BodyImplCustom) body).getFileName();
-            XTestSuiteResult result = ((BodyImplCustom) body).getResult();
+            XTestResult result = ((BodyImplCustom) body).getResult();
             HashMultimap<Severity, EObject> issues = ((BodyImplCustom) body).getIssues();
             Object text = parentNode.getText();
             if (result != null && !fileName.equals(text)) {
                 createNode(parentNode, result, fileName, issues);
             }
         }
-    }
-
-    @Override
-    protected boolean _isLeaf(EObject feature) {
-        return feature instanceof XTestCase;
     }
 
     @Override
@@ -96,28 +88,27 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      * @param issues
      * @return The new tree node
      */
-    private EObjectNode createEObjectNode(IOutlineNode parentNode, AbstractXTestResult result,
+    private EObjectNode createEObjectNode(IOutlineNode parentNode, XTestResult result,
             String suggestedName, HashMultimap<Severity, EObject> issues) {
         EObject eObject = result.getEObject();
-        EObjectNode createEObjectNode = createEObjectNode(parentNode, eObject);
         String name = result.getName();
         if (name == null) {
             name = suggestedName;
         }
-        if (name != null) {
-            createEObjectNode.setText(name);
-        }
         Image image;
         Severity severity = getSeverity(result, issues);
-        if (result instanceof XTestCaseResult) {
+        boolean isLeaf = result.getSubSuites().isEmpty();
+        if (isLeaf && parentNode.getParent() != null) {
             image = severity == null ? images.getTestImage() : images.getTestImage(severity);
         } else {
             image = severity == null ? images.getSuiteImage() : images.getSuiteImage(severity);
         }
+
+        EObjectNode createEObjectNode = createEObjectNode(parentNode, eObject, image, name, isLeaf);
+
         if (severity == Severity.ERROR) {
             ((XTestEObjectNode) createEObjectNode).setFailed();
         }
-        createEObjectNode.setImage(image);
         return createEObjectNode;
     }
 
@@ -132,13 +123,10 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            Name to use for the node
      * @param issues
      */
-    private void createNode(IOutlineNode parentNode, XTestSuiteResult suite, String suggestedName,
+    private void createNode(IOutlineNode parentNode, XTestResult suite, String suggestedName,
             HashMultimap<Severity, EObject> issues) {
         EObjectNode thisNode = createEObjectNode(parentNode, suite, suggestedName, issues);
-        for (XTestCaseResult testCase : suite.getCases()) {
-            createEObjectNode(thisNode, testCase, UNKNOWN_NODE_NAME, issues);
-        }
-        for (XTestSuiteResult subSuite : suite.getSubSuites()) {
+        for (XTestResult subSuite : suite.getSubSuites()) {
             createNode(thisNode, subSuite, null, issues);
         }
     }

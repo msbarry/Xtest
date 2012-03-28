@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.xtest.XTestRunner;
 import org.xtest.results.XTestState;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
 
 /**
  * Container for unit tests of the non-EMF xtest result model (org.xtest.results.*)
@@ -32,7 +32,7 @@ public class XTestResultUnitTests {
             builder.append(line);
         }
         in.close();
-        XTestSuiteResult run = XTestRunner.run(builder.toString(),
+        XTestResult run = XTestRunner.run(builder.toString(),
                 XtestInjector.injector);
         assertEquals(XTestState.PASS, run.getState());
     }

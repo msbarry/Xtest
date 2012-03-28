@@ -7,6 +7,7 @@ import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AbstractElementAlias;
+import org.eclipse.xtext.serializer.analysis.GrammarAlias.AlternativeAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.GroupAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.TokenAlias;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynNavigable;
@@ -24,6 +25,7 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 	protected AbstractElementAlias match_XFunctionTypeRef___LeftParenthesisKeyword_0_0_RightParenthesisKeyword_0_2__q;
 	protected AbstractElementAlias match_XParenthesizedExpression_LeftParenthesisKeyword_0_a;
 	protected AbstractElementAlias match_XParenthesizedExpression_LeftParenthesisKeyword_0_p;
+	protected AbstractElementAlias match_XTestExpression_XsuiteKeyword_1_0_or_XtestKeyword_1_1;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
@@ -34,6 +36,7 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 		match_XFunctionTypeRef___LeftParenthesisKeyword_0_0_RightParenthesisKeyword_0_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getXFunctionTypeRefAccess().getLeftParenthesisKeyword_0_0()), new TokenAlias(false, false, grammarAccess.getXFunctionTypeRefAccess().getRightParenthesisKeyword_0_2()));
 		match_XParenthesizedExpression_LeftParenthesisKeyword_0_a = new TokenAlias(true, true, grammarAccess.getXParenthesizedExpressionAccess().getLeftParenthesisKeyword_0());
 		match_XParenthesizedExpression_LeftParenthesisKeyword_0_p = new TokenAlias(true, false, grammarAccess.getXParenthesizedExpressionAccess().getLeftParenthesisKeyword_0());
+		match_XTestExpression_XsuiteKeyword_1_0_or_XtestKeyword_1_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getXTestExpressionAccess().getXsuiteKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getXTestExpressionAccess().getXtestKeyword_1_1()));
 	}
 	
 	@Override
@@ -74,6 +77,8 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 				emit_XParenthesizedExpression_LeftParenthesisKeyword_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_XParenthesizedExpression_LeftParenthesisKeyword_0_p.equals(syntax))
 				emit_XParenthesizedExpression_LeftParenthesisKeyword_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_XTestExpression_XsuiteKeyword_1_0_or_XtestKeyword_1_1.equals(syntax))
+				emit_XTestExpression_XsuiteKeyword_1_0_or_XtestKeyword_1_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
@@ -123,6 +128,14 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 	 *     '('+
 	 */
 	protected void emit_XParenthesizedExpression_LeftParenthesisKeyword_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Syntax:
+	 *     'xsuite' | 'xtest'
+	 */
+	protected void emit_XTestExpression_XsuiteKeyword_1_0_or_XtestKeyword_1_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

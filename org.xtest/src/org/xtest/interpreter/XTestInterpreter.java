@@ -21,13 +21,12 @@ import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
-import org.xtest.results.XTestCaseResult;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
+import org.xtest.results.XTestState;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
-import org.xtest.xTest.XTestCase;
-import org.xtest.xTest.XTestSuite;
+import org.xtest.xTest.XTestExpression;
 
 import com.google.inject.Inject;
 
@@ -39,8 +38,8 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
-    private XTestSuiteResult result;
-    private final Stack<XTestSuiteResult> stack = new Stack<XTestSuiteResult>();
+    private XTestResult result;
+    private final Stack<XTestResult> stack = new Stack<XTestResult>();
     @Inject
     private TypeConformanceComputer typeConformanceComputer;
     @Inject
@@ -61,7 +60,7 @@ public class XTestInterpreter extends XbaseInterpreter {
      * 
      * @return The test suite result
      */
-    public XTestSuiteResult getTestResult() {
+    public XTestResult getTestResult() {
         return result;
     }
 
@@ -126,11 +125,16 @@ public class XTestInterpreter extends XbaseInterpreter {
      * @return null
      */
     protected Object _evaluateBody(Body main, IEvaluationContext context, CancelIndicator indicator) {
-        result = new XTestSuiteResult(main);
+        result = new XTestResult(main);
         stack.push(result);
         Object toReturn = null;
         try {
             toReturn = super._evaluateBlockExpression(main, context, indicator);
+        } catch (ReturnValue e) {
+            toReturn = e.returnValue;
+            result.pass();
+        } catch (XTestAssertException e) {
+            result.addFailedAssertion(e);
         } catch (XTestEvaluationException e) {
             result.addEvaluationException(e);
         }
@@ -147,40 +151,6 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Evaluates the xtest test case. Catches any evaluation exceptions or assertion exceptions
-     * thrown and adds them to the test suite. If the end is reached, the test passes
-     * 
-     * @param testCase
-     *            The test case to evaluate
-     * @param context
-     *            The evaluation context
-     * @param indicator
-     *            The cancel indicator
-     * @return null
-     */
-    protected Object _evaluateTestCase(XTestCase testCase, IEvaluationContext context,
-            CancelIndicator indicator) {
-        UniqueName name = testCase.getName();
-        String nameStr = getName(name, context, indicator);
-        XExpression expression = testCase.getExpression();
-        XTestSuiteResult peek = stack.peek();
-        XTestCaseResult subCase = peek.subCase(nameStr, testCase);
-        try {
-            internalEvaluate(expression, context, indicator);
-            // If no exceptions thrown, the test passed
-            subCase.pass();
-        } catch (ReturnValue e) {
-            subCase.pass();
-        } catch (XTestAssertException e) {
-            subCase.addFailedAssertion(e);
-        } catch (XTestEvaluationException e) {
-            subCase.addEvaluationException(e);
-        }
-
-        return null;
-    }
-
-    /**
      * Evaluates the xtest test suite. Catches any evaluation exceptions thrown and adds them to the
      * test suite.
      * 
@@ -192,16 +162,23 @@ public class XTestInterpreter extends XbaseInterpreter {
      *            The cancel indicator
      * @return null
      */
-    protected Object _evaluateTestSuite(XTestSuite suite, IEvaluationContext context,
+    protected Object _evaluateTestExpression(XTestExpression suite, IEvaluationContext context,
             CancelIndicator indicator) {
         UniqueName name = suite.getName();
         String nameStr = getName(name, context, indicator);
         XExpression expression = suite.getExpression();
-        XTestSuiteResult peek = stack.peek();
-        XTestSuiteResult subSuite = peek.subSuite(nameStr, suite);
+        XTestResult peek = stack.peek();
+        XTestResult subSuite = peek.subTest(nameStr, suite);
         stack.push(subSuite);
         try {
             internalEvaluate(expression, context, indicator);
+            if (subSuite.getState() != XTestState.FAIL) {
+                subSuite.pass();
+            }
+        } catch (ReturnValue e) {
+            subSuite.pass();
+        } catch (XTestAssertException e) {
+            subSuite.addFailedAssertion(e);
         } catch (XTestEvaluationException e) {
             subSuite.addEvaluationException(e);
         }
