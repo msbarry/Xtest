@@ -19,6 +19,23 @@ public class XTestRunnerUnitTests {
     private static Injector injector = XtestInjector.injector;
 
     @Test
+    public void testCaseInAssert() {
+        XTestResult result = XTestRunner.run(
+                "assert {if (0 == 1) true else {xtest b {assert false}\n true}}", injector);
+        assertEquals("[]", result.getErrorMessages().toString());
+        assertTrue(null == result.getEvaluationException());
+        assertEquals(XTestState.FAIL, result.getState());
+        assertEquals(1, result.getSubSuites().size());
+        assertEquals("", result.getQualifiedName());
+
+        XTestResult xTestSuiteResult = result.getSubSuites().get(0);
+        assertTrue(null == xTestSuiteResult.getEvaluationException());
+        assertEquals(XTestState.FAIL, xTestSuiteResult.getState());
+        assertEquals("b", xTestSuiteResult.getQualifiedName());
+        assertEquals(0, xTestSuiteResult.getSubSuites().size());
+    }
+
+    @Test
     public void testEmptyTestCase() {
         XTestResult result = XTestRunner.run("", injector);
         assertEquals("[]", result.getErrorMessages().toString());
@@ -255,6 +272,16 @@ public class XTestRunnerUnitTests {
         XTestResult xTestCaseResult = xTestSuiteResult.getSubSuites().get(0);
         assertEquals(XTestState.FAIL, xTestCaseResult.getState());
         assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
+    }
+
+    @Test
+    public void testTopLevelAssert() {
+        XTestResult result = XTestRunner.run("assert false", injector);
+        assertEquals("[]", result.getErrorMessages().toString());
+        assertTrue(null == result.getEvaluationException());
+        assertTrue(null != result.getAssertException());
+        assertEquals(XTestState.FAIL, result.getState());
+        assertEquals(0, result.getSubSuites().size());
     }
 
     @Test
