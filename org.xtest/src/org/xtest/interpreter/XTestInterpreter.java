@@ -59,8 +59,7 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * <<<<<<< HEAD Returns the test result after the tests have run ======= Returns the list of
-     * executed expressions
+     * Returns the list of executed expressions
      * 
      * @return The list of executed expressions
      */
@@ -69,7 +68,7 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Returns the test suite result after the tests have run >>>>>>> unexecuted
+     * Returns the test suite result after the tests have run
      * 
      * @return The test result
      */
