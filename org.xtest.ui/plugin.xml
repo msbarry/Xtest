@@ -53,8 +53,17 @@
         <page
             class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.xtest.XTest"
-            name="XTest">
+            name="Xtest">
             <keywordReference id="org.xtest.ui.keyword_XTest"/>
+        </page>
+        <page
+              category="org.xtest.XTest"
+              class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+              id="org.xtest.XTest.refactoring"
+              name="Refactoring">
+           <keywordReference
+                 id="org.xtest.ui.keyword_XTest">
+           </keywordReference>
         </page>
         <page
             category="org.xtest.XTest"
@@ -159,16 +168,6 @@
             class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
       </participant>
    </extension>
-   <extension
-            point="org.eclipse.ui.preferencePages">
-        <page
-            category="org.xtest.XTest"
-            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.xtest.XTest.compiler.preferencePage"
-            name="Compiler">
-            <keywordReference id="org.xtest.ui.keyword_XTest"/>
-        </page>
-    </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
@@ -249,15 +248,6 @@
          </command>
       </menuContribution>
    </extension>
-   <extension point="org.eclipse.ui.preferencePages">
-	    <page
-	        category="org.xtest.XTest"
-	        class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-	        id="org.xtest.XTest.refactoring"
-	        name="Refactoring">
-	        <keywordReference id="org.xtest.ui.keyword_XTest"/>
-	    </page>
-	</extension>
 
 <!-- Type Hierarchy  -->
 	<extension
