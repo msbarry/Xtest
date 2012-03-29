@@ -1,6 +1,7 @@
 package org.xtest.validation;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
@@ -112,6 +113,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             }
             XTestResult run = runner.run(main, indicator);
             markErrorsFromTest(run);
+
+            Set<XExpression> unexecutedExpressions = runner.getUnexecutedExpressions(main);
+            markUnexecuted(main, unexecutedExpressions);
             if (main instanceof BodyImplCustom) {
                 BodyImplCustom custom = (BodyImplCustom) main;
                 custom.setResult(run);
@@ -139,6 +143,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
 
     @Override
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
+        if (eObject instanceof BodyImplCustom) {
+            ((BodyImplCustom) eObject).getIssues().clear();
+        }
         cancelIndicators.set((CancelIndicator) context
                 .get(CancelableDiagnostician.CANCEL_INDICATOR));
         return super.isResponsible(context, eObject);
@@ -187,6 +194,20 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                 builder.append(trace.toString());
             }
             error(builder.toString(), expression, null, TEST_RUN_FAILURE_INDEX);
+        }
+    }
+
+    /**
+     * Finds all expressions in {@code main} that are not contained in {@code executedExpressions}
+     * 
+     * @param main
+     *            The top-level expression object
+     * @param executedExpressions
+     *            The set of evaluated expressions
+     */
+    private void markUnexecuted(Body main, Set<XExpression> unexecuted) {
+        for (XExpression expression : unexecuted) {
+            warning("Expression never reached", expression, null, 10);
         }
     }
 

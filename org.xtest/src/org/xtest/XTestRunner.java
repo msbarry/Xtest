@@ -1,7 +1,10 @@
 package org.xtest;
 
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.junit.util.ParseHelper;
@@ -10,6 +13,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.xtest.interpreter.XTestInterpreter;
@@ -17,6 +21,7 @@ import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
 import org.xtest.xTest.Body;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
@@ -87,8 +92,35 @@ public class XTestRunner {
     @Inject
     private Provider<IEvaluationContext> contextProvider;
 
+    private Set<XExpression> executed = Sets.newHashSet();
+
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
+
+    /**
+     * Returns the list of executed expressions
+     * 
+     * @param main
+     *            The main body of the xtest file
+     * @return The list of executed expressions
+     */
+    public Set<XExpression> getUnexecutedExpressions(Body main) {
+        Set<XExpression> unexecuted = Sets.newHashSet();
+        TreeIterator<EObject> eAllContents = main.eAllContents();
+        while (eAllContents.hasNext()) {
+            EObject next = eAllContents.next();
+            if (next instanceof XExpression && !executed.contains(next)) {
+                unexecuted.add((XExpression) next);
+            }
+        }
+        // remove contained EObjects, only mark warning on outer container
+        Set<EObject> toRemove = Sets.newHashSet();
+        for (XExpression expression : unexecuted) {
+            toRemove.addAll(expression.eContents());
+        }
+        unexecuted.removeAll(toRemove);
+        return unexecuted;
+    }
 
     /**
      * Interprets an already linked xtest object model
@@ -111,6 +143,7 @@ public class XTestRunner {
             failed = true;
         }
         result = interpreter.getTestResult();
+        executed = interpreter.getExecutedExpressions();
         if (failed) {
             result.fail();
         }

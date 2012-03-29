@@ -1,5 +1,6 @@
 package org.xtest.interpreter;
 
+import java.util.Set;
 import java.util.Stack;
 
 import org.eclipse.xtext.common.types.JvmDeclaredType;
@@ -28,6 +29,7 @@ import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestExpression;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 /**
@@ -38,6 +40,7 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
+    private final Set<XExpression> executedExpressions = Sets.newHashSet();
     private XTestResult result;
     private final Stack<XTestResult> stack = new Stack<XTestResult>();
     @Inject
@@ -56,7 +59,17 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Returns the test result after the tests have run
+     * <<<<<<< HEAD Returns the test result after the tests have run ======= Returns the list of
+     * executed expressions
+     * 
+     * @return The list of executed expressions
+     */
+    public Set<XExpression> getExecutedExpressions() {
+        return executedExpressions;
+    }
+
+    /**
+     * Returns the test suite result after the tests have run >>>>>>> unexecuted
      * 
      * @return The test result
      */
@@ -223,6 +236,7 @@ public class XTestInterpreter extends XbaseInterpreter {
     protected Object internalEvaluate(XExpression expression, IEvaluationContext context,
             CancelIndicator indicator) throws EvaluationException {
         Object internalEvaluate;
+        executedExpressions.add(expression);
         try {
             internalEvaluate = super.internalEvaluate(expression, context, indicator);
         } catch (ReturnValue value) {

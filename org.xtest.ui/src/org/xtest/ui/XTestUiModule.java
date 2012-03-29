@@ -6,8 +6,13 @@ import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
+import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
+import org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage;
 import org.xtest.XTestRunner;
 import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
+import org.xtest.ui.editor.XtestPreferencePage;
+import org.xtest.ui.editor.XtestPreferences;
+import org.xtest.ui.editor.XtestPreferences.Initializer;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
 import org.xtest.ui.runner.UiXTestRunner;
@@ -47,6 +52,15 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
     }
 
     /**
+     * Binds {@link LanguageRootPreferencePage} implementation to custom {@link XtestPreferencePage}
+     * 
+     * @return {@link XtestPreferencePage} class
+     */
+    public Class<? extends LanguageRootPreferencePage> bindLanguageRootPreferencePage() {
+        return XtestPreferencePage.class;
+    }
+
+    /**
      * Binds {@link OutlinePage} implementation to custom {@link ValidationTriggeredOutlinePage}
      * 
      * @return {@link ValidationTriggeredOutlinePage} class
@@ -71,6 +85,19 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public Class<? extends XTestRunner> bindXTestRunner() {
         return UiXTestRunner.class;
+    }
+
+    /**
+     * Binds {@link IPreferenceStoreInitializer} implementation for {@link XtestPreferences} to
+     * custom {@link Initializer} implementation.
+     * 
+     * @param binder
+     *            The Guice Binder
+     */
+    public void configureXtestPreferenceStoreInitializer(com.google.inject.Binder binder) {
+        binder.bind(org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer.class)
+                .annotatedWith(com.google.inject.name.Names.named("XtestPreferences"))
+                .to(XtestPreferences.Initializer.class);
     }
 
     @Override
