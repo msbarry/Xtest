@@ -143,6 +143,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
 
     @Override
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
+        if (eObject instanceof BodyImplCustom) {
+            ((BodyImplCustom) eObject).getIssues().clear();
+        }
         cancelIndicators.set((CancelIndicator) context
                 .get(CancelableDiagnostician.CANCEL_INDICATOR));
         return super.isResponsible(context, eObject);
