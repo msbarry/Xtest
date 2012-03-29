@@ -10,7 +10,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.Test;
@@ -19,6 +21,7 @@ import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.types.XTestTypeProvider;
 import org.xtest.xTest.Body;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
 /**
@@ -56,6 +59,20 @@ public class XTestRegressionTests {
         assertEquals("[]", validate.toString());
     }
 
+    protected static List<Issue> getWarningsRunTests(Body parse) throws Exception {
+        IResourceValidator instance = injector.getInstance(IResourceValidator.class);
+        Resource eResource = parse.eResource();
+        List<Issue> validate = instance
+                .validate(eResource, CheckMode.ALL, CancelIndicator.NullImpl);
+        List<Issue> result = Lists.newArrayList();
+        for (Issue issue : validate) {
+            if (issue.getSeverity() == Severity.WARNING) {
+                result.add(issue);
+            }
+        }
+        return result;
+    }
+
     protected static Object invokeXbaseExpression(Body expression) throws Exception {
         return interpreter.evaluate(expression).getResult();
     }
@@ -78,6 +95,20 @@ public class XTestRegressionTests {
                 "val a = new java.util.TreeMap\n\nxtest test {\nassert a.descendingMap == a\n}",
                 injector);
         typeProvider.getCommonReturnType(result, true);
+    }
+
+    @Test
+    public void testCodeNotRun() throws Exception {
+        Body parse = parse("val a = 1\nif (a == 1) true else false");
+        List<Issue> warningsRunTests = getWarningsRunTests(parse);
+        assertEquals(1, warningsRunTests.size());
+    }
+
+    @Test
+    public void testCodeNotRunOnly1Warning() throws Exception {
+        Body parse = parse("val a = 1\nif (a == 1) true else {if (a != 1) true else false}");
+        List<Issue> warningsRunTests = getWarningsRunTests(parse);
+        assertEquals(1, warningsRunTests.size());
     }
 
     @Test
