@@ -27,6 +27,7 @@ public class XtestPreferences {
      */
     public boolean isMarkUnexecuted() {
         return preferenceStoreAccess.getPreferenceStore().getBoolean(MARK_UNEXECUTED);
+        // TODO re-run tests in project?
     }
 
     /**
@@ -38,6 +39,7 @@ public class XtestPreferences {
     public void setMarkUnexecuted(boolean markUnexecuted) {
         preferenceStoreAccess.getWritablePreferenceStore()
                 .setValue(MARK_UNEXECUTED, markUnexecuted);
+        // TODO re-run tests in project?
     }
 
     /**

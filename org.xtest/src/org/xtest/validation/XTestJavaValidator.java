@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.common.types.JvmField;
@@ -31,7 +30,6 @@ import org.xtest.xTest.XTestPackage;
 import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -115,8 +113,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             }
             XTestResult run = runner.run(main, indicator);
             markErrorsFromTest(run);
-            Set<XExpression> executedExpressions = runner.getExecutedExpressions();
-            markUnexecuted(main, executedExpressions);
+
+            Set<XExpression> unexecutedExpressions = runner.getUnexecutedExpressions(main);
+            markUnexecuted(main, unexecutedExpressions);
             if (main instanceof BodyImplCustom) {
                 BodyImplCustom custom = (BodyImplCustom) main;
                 custom.setResult(run);
@@ -203,21 +202,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      * @param executedExpressions
      *            The set of evaluated expressions
      */
-    private void markUnexecuted(Body main, Set<XExpression> executedExpressions) {
-        Set<XExpression> unexecuted = Sets.newHashSet();
-        TreeIterator<EObject> eAllContents = main.eAllContents();
-        while (eAllContents.hasNext()) {
-            EObject next = eAllContents.next();
-            if (next instanceof XExpression && !executedExpressions.contains(next)) {
-                unexecuted.add((XExpression) next);
-            }
-        }
-        // remove contained EObjects, only mark warning on outer container
-        Set<EObject> toRemove = Sets.newHashSet();
-        for (XExpression expression : unexecuted) {
-            toRemove.addAll(expression.eContents());
-        }
-        unexecuted.removeAll(toRemove);
+    private void markUnexecuted(Body main, Set<XExpression> unexecuted) {
         for (XExpression expression : unexecuted) {
             warning("Expression never reached", expression, null, 10);
         }

@@ -3,6 +3,8 @@ package org.xtest;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.junit.util.ParseHelper;
@@ -98,10 +100,26 @@ public class XTestRunner {
     /**
      * Returns the list of executed expressions
      * 
+     * @param main
+     *            The main body of the xtest file
      * @return The list of executed expressions
      */
-    public Set<XExpression> getExecutedExpressions() {
-        return executed;
+    public Set<XExpression> getUnexecutedExpressions(Body main) {
+        Set<XExpression> unexecuted = Sets.newHashSet();
+        TreeIterator<EObject> eAllContents = main.eAllContents();
+        while (eAllContents.hasNext()) {
+            EObject next = eAllContents.next();
+            if (next instanceof XExpression && !executed.contains(next)) {
+                unexecuted.add((XExpression) next);
+            }
+        }
+        // remove contained EObjects, only mark warning on outer container
+        Set<EObject> toRemove = Sets.newHashSet();
+        for (XExpression expression : unexecuted) {
+            toRemove.addAll(expression.eContents());
+        }
+        unexecuted.removeAll(toRemove);
+        return unexecuted;
     }
 
     /**

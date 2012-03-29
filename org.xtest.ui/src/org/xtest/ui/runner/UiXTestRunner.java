@@ -24,12 +24,15 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.xbase.XExpression;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
+import org.xtest.ui.editor.XtestPreferences;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -39,6 +42,7 @@ import com.google.inject.Provider;
  * 
  * @author Michael Barry
  */
+@SuppressWarnings("restriction")
 public class UiXTestRunner extends XTestRunner {
     /**
      * Time to wait between checking the caller's cancel indicator.
@@ -47,11 +51,23 @@ public class UiXTestRunner extends XTestRunner {
 
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
+    @Inject
+    private XtestPreferences preferences;
+
+    @Override
+    public Set<XExpression> getUnexecutedExpressions(Body main) {
+        Set<XExpression> result;
+        if (preferences.isMarkUnexecuted()) {
+            result = super.getUnexecutedExpressions(main);
+        } else {
+            result = Sets.newHashSet();
+        }
+        return result;
+    }
 
     @Override
     public XTestResult run(final Body main, CancelIndicator monitor) {
-        final ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(
-                1);
+        final ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(1);
 
         String name = "Running " + ((BodyImplCustom) main).getFileName();
 
@@ -81,7 +97,6 @@ public class UiXTestRunner extends XTestRunner {
         return result;
     }
 
-    @SuppressWarnings("restriction")
     @Override
     protected XTestInterpreter getInterpreter(Resource resource) {
         // BORROWED FROM
