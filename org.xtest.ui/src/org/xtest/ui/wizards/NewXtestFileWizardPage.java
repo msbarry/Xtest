@@ -23,8 +23,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.xtext.xtend2.ui.wizards.Messages;
-import org.eclipse.xtext.xtend2.ui.wizards.NewXtend2ClassWizardPage;
+import org.eclipse.xtend.ide.wizards.Messages;
+import org.eclipse.xtend.ide.wizards.NewXtendClassWizardPage;
 
 /**
  * Custom wizard page for creating a new Xtest file. Extends {@link NewXtend2ClassWizardPage}, but
@@ -32,7 +32,7 @@ import org.eclipse.xtext.xtend2.ui.wizards.NewXtend2ClassWizardPage;
  * 
  * @author Michael Barry
  */
-public class NewXtestFileWizardPage extends NewXtend2ClassWizardPage {
+public class NewXtestFileWizardPage extends NewXtendClassWizardPage {
 
     /**
      * Default contents of a brand-new Xtest file.
