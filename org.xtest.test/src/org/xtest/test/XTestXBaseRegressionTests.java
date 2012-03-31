@@ -1,11 +1,21 @@
 package org.xtest.test;
 
+import java.util.List;
+
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.junit.util.ParseHelper;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.IResourceValidator;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.junit.evaluation.AbstractXbaseEvaluationTest;
 import org.junit.Test;
+import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.xTest.Body;
+
+import com.google.common.collect.Lists;
 
 /**
  * Container for regression tests provided with xbase to verify I haven't broken any xbase
@@ -59,7 +69,19 @@ public class XTestXBaseRegressionTests extends AbstractXbaseEvaluationTest {
 
     @Override
     protected Object invokeXbaseExpression(String expression) throws Exception {
-        return interpreter.evaluate(parseHelper.parse(expression)).getResult();
+        Body parse = parseHelper.parse(expression);
+        IResourceValidator instance = XtestInjector.injector.getInstance(IResourceValidator.class);
+        Resource eResource = parse.eResource();
+        List<Issue> validate = instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN,
+                CancelIndicator.NullImpl);
+        List<Issue> errors = Lists.newArrayList();
+        for (Issue issue : validate) {
+            if (issue.getSeverity() == Severity.ERROR) {
+                errors.add(issue);
+            }
+        }
+        assertEquals("[]", errors.toString());
+        return interpreter.evaluate(parse).getResult();
     }
 
 }

@@ -6,6 +6,7 @@ import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.XFeatureCall;
+import org.eclipse.xtext.xbase.impl.XFeatureCallImplCustom;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestCase;
@@ -33,8 +34,8 @@ public class XTestTypeProvider extends XbaseTypeProvider {
         if (expression instanceof XTestSuite || expression instanceof XTestCase
                 || expression instanceof XAssertExpression) {
             result = getPrimitiveVoid(expression);
-        } else if (expression instanceof XFeatureCall
-                && ((XFeatureCall) expression).getFeature() == null) {
+        } else if (expression instanceof XFeatureCallImplCustom
+                && ((XFeatureCallImplCustom) expression).basicGetFeature() == null) {
             XFeatureCall call = (XFeatureCall) expression;
             JvmParameterizedTypeReference typeArgRef = typeRefs.createTypeRef(call
                     .getDeclaringType());
