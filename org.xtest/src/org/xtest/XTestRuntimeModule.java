@@ -1,15 +1,11 @@
 package org.xtest;
 
 import org.eclipse.xtext.common.types.util.VisibilityService;
-import org.eclipse.xtext.conversion.impl.QualifiedNameValueConverter;
-import org.eclipse.xtext.xbase.conversion.StaticQualifierValueConverter;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
-import org.xtest.conversion.EscapeCharacterQualifiedNameValueConverter;
-import org.xtest.conversion.StaticEscapeCharacterConverter;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.linking.XtestFeatureCallChecker;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
@@ -40,19 +36,6 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     }
 
     /**
-     * Bind {@link QualifiedNameValueConverter} to custom implementation that fixes bug with escaped
-     * name conversion
-     * 
-     * TODO Xtext 2.3 fixes the bug that this custom implementation is required for. After updating
-     * to xtext 2.3, remove this file
-     * 
-     * @return {@link EscapeCharacterQualifiedNameValueConverter}
-     */
-    public Class<? extends QualifiedNameValueConverter> bindQualifiedNameValueConverter() {
-        return EscapeCharacterQualifiedNameValueConverter.class;
-    }
-
-    /**
      * Bind {@link StaticImplicitMethodsFeatureForTypeProvider} to custom implementation that
      * contributes static imports as implicit static methods
      * 
@@ -60,20 +43,6 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends StaticImplicitMethodsFeatureForTypeProvider> bindStaticImplicitMethodsFeatureForTypeProvider() {
         return XtestStaticMethodsFeatureForTypeProvider.class;
-    }
-
-    /**
-     * Bind {@link StaticQualifierValueConverter} to a custom implementation that fixes bug with
-     * escaped name conversion
-     * 
-     * TODO Xtext 2.3 fixes the bug that this custom implementation is required for. After updating
-     * to xtext 2.3, remove this file
-     * 
-     * @return StaticEscapeCharacterConverter
-     * 
-     */
-    public Class<? extends StaticQualifierValueConverter> bindStaticQualifierValueConverter() {
-        return StaticEscapeCharacterConverter.class;
     }
 
     /**
