@@ -2,7 +2,7 @@
 <feature
       id="org.xtest"
       label="Xtest for Xtext 2.1"
-      version="0.1.1.x2_1_qualifier"
+      version="0.1.1.qualifier"
       provider-name="Michael Barry">
 
    <description url="https://msbarry.github.com/Xtest">
