@@ -6,7 +6,7 @@
  */
 package org.xtest.xTest;
 
-import org.eclipse.xtext.common.types.JvmTypeReference;
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
 
 import org.eclipse.xtext.xbase.XExpression;
 
@@ -64,12 +64,12 @@ public interface XAssertExpression extends XExpression
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Throws</em>' containment reference.
-	 * @see #setThrows(JvmTypeReference)
+	 * @see #setThrows(JvmParameterizedTypeReference)
 	 * @see org.xtest.xTest.XTestPackage#getXAssertExpression_Throws()
 	 * @model containment="true"
 	 * @generated
 	 */
-	JvmTypeReference getThrows();
+	JvmParameterizedTypeReference getThrows();
 
 	/**
 	 * Sets the value of the '{@link org.xtest.xTest.XAssertExpression#getThrows <em>Throws</em>}' containment reference.
@@ -79,6 +79,6 @@ public interface XAssertExpression extends XExpression
 	 * @see #getThrows()
 	 * @generated
 	 */
-	void setThrows(JvmTypeReference value);
+	void setThrows(JvmParameterizedTypeReference value);
 
 } // XAssertExpression

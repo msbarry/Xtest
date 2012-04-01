@@ -2,10 +2,10 @@ package org.xtest;
 
 import java.util.Collection;
 
-import org.eclipse.xtext.resource.DerivedStateAwareResourceDescriptionManager;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionManager;
 
 /**
  * Custom resource description manager that tells the builder to re-validate xtest files any time
@@ -14,7 +14,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
  * @author Michael Barry
  * 
  */
-public class XtestResourceDescriptionManager extends DerivedStateAwareResourceDescriptionManager {
+public class XtestResourceDescriptionManager extends DefaultResourceDescriptionManager {
     @Override
     public boolean isAffected(Collection<Delta> deltas, IResourceDescription candidate,
             IResourceDescriptions context) {

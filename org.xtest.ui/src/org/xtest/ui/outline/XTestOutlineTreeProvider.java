@@ -51,19 +51,18 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     @Override
-    protected EObjectNode createEObjectNode(IOutlineNode parentNode, EObject modelElement,
-            Image image, Object text, boolean isLeaf) {
+    protected EObjectNode createEObjectNode(IOutlineNode parentNode, EObject modelElement) {
+        Object text = textDispatcher.invoke(modelElement);
+        Image image = imageDispatcher.invoke(modelElement);
         EObjectNode eObjectNode = new XTestEObjectNode(modelElement, parentNode, image, text,
-                isLeaf);
+                isLeafDispatcher.invoke(modelElement));
         ICompositeNode parserNode = NodeModelUtils.getNode(modelElement);
         if (parserNode != null) {
             eObjectNode
                     .setTextRegion(new TextRegion(parserNode.getOffset(), parserNode.getLength()));
         }
-        if (isLocalElement(parentNode, modelElement)) {
-            eObjectNode.setShortTextRegion(locationInFileProvider
-                    .getSignificantTextRegion(modelElement));
-        }
+        eObjectNode.setShortTextRegion(locationInFileProvider
+                .getSignificantTextRegion(modelElement));
         return eObjectNode;
     }
 

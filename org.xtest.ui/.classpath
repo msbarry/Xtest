@@ -6,6 +6,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
 			<accessrule kind="accessible" pattern="**/internal/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/xtext/xtend2/ui/wizards/*"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

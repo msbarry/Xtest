@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.xtext.common.types.JvmTypeReference;
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
 
 import org.eclipse.xtext.xbase.XExpression;
 
@@ -57,7 +57,7 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	 * @generated
 	 * @ordered
 	 */
-	protected JvmTypeReference throws_;
+	protected JvmParameterizedTypeReference throws_;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -133,7 +133,7 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public JvmTypeReference getThrows()
+	public JvmParameterizedTypeReference getThrows()
 	{
 		return throws_;
 	}
@@ -143,9 +143,9 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetThrows(JvmTypeReference newThrows, NotificationChain msgs)
+	public NotificationChain basicSetThrows(JvmParameterizedTypeReference newThrows, NotificationChain msgs)
 	{
-		JvmTypeReference oldThrows = throws_;
+		JvmParameterizedTypeReference oldThrows = throws_;
 		throws_ = newThrows;
 		if (eNotificationRequired())
 		{
@@ -160,7 +160,7 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setThrows(JvmTypeReference newThrows)
+	public void setThrows(JvmParameterizedTypeReference newThrows)
 	{
 		if (newThrows != throws_)
 		{
@@ -226,7 +226,7 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 				setActual((XExpression)newValue);
 				return;
 			case XTestPackage.XASSERT_EXPRESSION__THROWS:
-				setThrows((JvmTypeReference)newValue);
+				setThrows((JvmParameterizedTypeReference)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -246,7 +246,7 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 				setActual((XExpression)null);
 				return;
 			case XTestPackage.XASSERT_EXPRESSION__THROWS:
-				setThrows((JvmTypeReference)null);
+				setThrows((JvmParameterizedTypeReference)null);
 				return;
 		}
 		super.eUnset(featureID);

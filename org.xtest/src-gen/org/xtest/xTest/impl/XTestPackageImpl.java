@@ -450,7 +450,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 
 		initEClass(xAssertExpressionEClass, XAssertExpression.class, "XAssertExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getXAssertExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getXAssertExpression_Throws(), theTypesPackage.getJvmTypeReference(), null, "throws", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getXAssertExpression_Throws(), theTypesPackage.getJvmParameterizedTypeReference(), null, "throws", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

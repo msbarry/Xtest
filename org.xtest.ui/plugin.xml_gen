@@ -71,19 +71,6 @@
         </page>
     </extension>
     <extension
-            point="org.eclipse.ui.propertyPages">
-        <page
-            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.xtest.XTest"
-            name="XTest">
-            <keywordReference id="org.xtest.ui.keyword_XTest"/>
-            <enabledWhen>
-	            <adapt type="org.eclipse.core.resources.IProject"/>
-			</enabledWhen>
-	        <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
-        </page>
-    </extension>
-    <extension
         point="org.eclipse.ui.keywords">
         <keyword
             id="org.xtest.ui.keyword_XTest"
@@ -158,30 +145,6 @@
             class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
       </participant>
    </extension>
-   <extension
-            point="org.eclipse.ui.preferencePages">
-        <page
-            category="org.xtest.XTest"
-            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.xtest.XTest.compiler.preferencePage"
-            name="Compiler">
-            <keywordReference id="org.xtest.ui.keyword_XTest"/>
-        </page>
-    </extension>
-    <extension
-            point="org.eclipse.ui.propertyPages">
-        <page
-            category="org.xtest.XTest"
-            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.xtest.XTest.compiler.propertyPage"
-            name="Compiler">
-            <keywordReference id="org.xtest.ui.keyword_XTest"/>
-            <enabledWhen>
-	            <adapt type="org.eclipse.core.resources.IProject"/>
-			</enabledWhen>
-	        <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
-        </page>
-    </extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -226,7 +189,7 @@
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
-			class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.IRenameElementHandler"
+			class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
 				<reference
@@ -248,60 +211,7 @@
          </command>
       </menuContribution>
    </extension>
-   <extension point="org.eclipse.ui.preferencePages">
-	    <page
-	        category="org.xtest.XTest"
-	        class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-	        id="org.xtest.XTest.refactoring"
-	        name="Refactoring">
-	        <keywordReference id="org.xtest.ui.keyword_XTest"/>
-	    </page>
-	</extension>
 
-<!-- Type Hierarchy  -->
-	<extension
-		point="org.eclipse.ui.handlers">
-		<handler 
-			class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.hierarchy.OpenTypeHierarchyHandler"
-			commandId="org.eclipse.xtext.xbase.ui.hierarchy.OpenTypeHierarchy">
-			<activeWhen>
-				<reference
-					definitionId="org.xtest.XTest.Editor.opened">
-				</reference>
-			</activeWhen>
-		</handler>
-		<handler 
-			class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.hierarchy.QuickTypeHierarchyHandler"
-			commandId="org.eclipse.xtext.xbase.ui.hierarchy.QuickTypeHierarchy">
-			<activeWhen>
-				<reference
-					definitionId="org.xtest.XTest.Editor.opened">
-				</reference>
-			</activeWhen>
-		</handler>
-	</extension>
-	<extension point="org.eclipse.ui.menus">
-		<menuContribution
-			locationURI="popup:#TextEditorContext?after=group.open">
-			<command commandId="org.eclipse.xtext.xbase.ui.hierarchy.OpenTypeHierarchy"
-				style="push"
-				tooltip="Open Type Hierarchy">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.xtest.XTest.Editor.opened"/>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-		<menuContribution
-			locationURI="popup:#TextEditorContext?after=group.open">
-			<command commandId="org.eclipse.xtext.xbase.ui.hierarchy.QuickTypeHierarchy"
-				style="push"
-				tooltip="Quick Type Hierarchy">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.xtest.XTest.Editor.opened"/>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-	</extension>
 
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.xtest.XTest.compare.contentViewers"

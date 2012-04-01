@@ -6,7 +6,7 @@ import org.eclipse.xtext.xbase.conversion.StaticQualifierValueConverter;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
-import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
+import org.eclipse.xtext.xbase.scoping.featurecalls.StaticMethodsFeatureForTypeProvider;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.conversion.EscapeCharacterQualifiedNameValueConverter;
 import org.xtest.conversion.StaticEscapeCharacterConverter;
@@ -34,7 +34,12 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
         return XtestFeatureCallChecker.class;
     }
 
-    @Override
+    /**
+     * Bind the resource description manager to a custom implementation that says that all Xtest
+     * files are affected by all other non-xtest files.
+     * 
+     * @return {@link XtestResourceDescriptionManager}
+     */
     public Class<? extends org.eclipse.xtext.resource.IResourceDescription.Manager> bindIResourceDescription$Manager() {
         return XtestResourceDescriptionManager.class;
     }
@@ -53,12 +58,12 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     }
 
     /**
-     * Bind {@link StaticImplicitMethodsFeatureForTypeProvider} to custom implementation that
-     * contributes static imports as implicit static methods
+     * Bind {@link StaticMethodsFeatureForTypeProvider} to custom implementation that contributes
+     * static imports as implicit static methods
      * 
      * @return {@link XtestStaticMethodsFeatureForTypeProvider}
      */
-    public Class<? extends StaticImplicitMethodsFeatureForTypeProvider> bindStaticImplicitMethodsFeatureForTypeProvider() {
+    public Class<? extends StaticMethodsFeatureForTypeProvider> bindStaticImplicitMethodsFeatureForTypeProvider() {
         return XtestStaticMethodsFeatureForTypeProvider.class;
     }
 

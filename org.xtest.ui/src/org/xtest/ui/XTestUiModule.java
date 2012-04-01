@@ -1,12 +1,13 @@
 package org.xtest.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.common.types.xtext.ui.JdtValidationJobScheduler;
+import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
 import org.xtest.XTestRunner;
+import org.xtest.ui.editor.XtestDirtyStateEditorSupport;
 import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
@@ -31,19 +32,13 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
         super(plugin);
     }
 
+    public Class<? extends DirtyStateEditorSupport> bindDirtyStateEditorSupport() {
+        return XtestDirtyStateEditorSupport.class;
+    }
+
     @Override
     public Class<? extends ITemplateProposalProvider> bindITemplateProposalProvider() {
         return XtestTemplateProposalProvider.class;
-    }
-
-    /**
-     * Binds {@link JdtValidationJobScheduler} implementation to custom
-     * {@link XtestValidationJobScheduler}
-     * 
-     * @return {@link XtestValidationJobScheduler} class
-     */
-    public Class<? extends JdtValidationJobScheduler> bindJdtValidationJobScheduler() {
-        return XtestValidationJobScheduler.class;
     }
 
     /**
