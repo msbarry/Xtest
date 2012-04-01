@@ -111,7 +111,7 @@ public class XTestRunnerUnitTests {
 
     @Test
     public void testImportStatic_innerStaticClassWildcard() {
-        assertXtestPasses("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert innerField==1}}");
+        assertXtestPreEvalFailure("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert innerField==1}}");
         assertXtestPasses("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert getStatic==1}}");
         // Try to use nonstatic
         assertXtestPreEvalFailure("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert getNonStatic==1}}");
@@ -194,7 +194,7 @@ public class XTestRunnerUnitTests {
 
     @Test
     public void testStaticMemberTypeImportedWrite() {
-        assertXtestPasses("import static helpers.StaticMembers.*\nxsuite suite {pub := 11\n"
+        assertXtestPreEvalFailure("import static helpers.StaticMembers.*\nxsuite suite {pub := 11\n"
                 + "xtest tcase {assert pub == 11}}");
     }
 
