@@ -8,6 +8,8 @@ import org.osgi.framework.Bundle;
 
 import com.google.inject.Injector;
 
+import org.xtest.ui.internal.XTestActivator;
+
 /**
  * This class was generated. Customizations should only happen in a newly
  * introduced subclass. 
@@ -16,12 +18,12 @@ public class XTestExecutableExtensionFactory extends AbstractGuiceAwareExecutabl
 
 	@Override
 	protected Bundle getBundle() {
-		return org.xtest.ui.internal.XTestActivator.getInstance().getBundle();
+		return XTestActivator.getInstance().getBundle();
 	}
 	
 	@Override
 	protected Injector getInjector() {
-		return org.xtest.ui.internal.XTestActivator.getInstance().getInjector("org.xtest.XTest");
+		return XTestActivator.getInstance().getInjector(XTestActivator.ORG_XTEST_XTEST);
 	}
 	
 }

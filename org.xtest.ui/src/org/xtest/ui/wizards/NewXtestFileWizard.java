@@ -2,8 +2,8 @@ package org.xtest.ui.wizards;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.xtend.ide.wizards.NewXtendClassWizard;
 import org.eclipse.xtext.ui.IImageHelper;
-import org.eclipse.xtext.xtend2.ui.wizards.NewXtend2ClassWizard;
 
 import com.google.inject.Inject;
 
@@ -12,7 +12,7 @@ import com.google.inject.Inject;
  * 
  * @author Michael Barry
  */
-public class NewXtestFileWizard extends NewXtend2ClassWizard {
+public class NewXtestFileWizard extends NewXtendClassWizard {
 
     /**
      * Constructs a new Xtest file wizard
