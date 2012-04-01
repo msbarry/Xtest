@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.xtest"
-      label="Xtest"
-      version="0.1.1.qualifier"
+      label="Xtest for Xtext 2.0"
+      version="0.1.1.x2_0_qualifier"
       provider-name="Michael Barry">
 
    <description url="https://msbarry.github.com/Xtest">
