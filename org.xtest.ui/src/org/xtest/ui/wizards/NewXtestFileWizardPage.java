@@ -7,32 +7,43 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.dialogs.StatusInfo;
+import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.xtend.ide.wizards.Messages;
-import org.eclipse.xtend.ide.wizards.NewXtendClassWizardPage;
+import org.eclipse.ui.views.contentoutline.ContentOutline;
+import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 
 /**
- * Custom wizard page for creating a new Xtest file. Extends {@link NewXtend2ClassWizardPage}, but
+ * Custom wizard page for creating a new Xtest file. Similar to NewXtend2ClassWizardPage, but
  * removes the parts that are unneccessary for Xtest files.
  * 
  * @author Michael Barry
  */
-public class NewXtestFileWizardPage extends NewXtendClassWizardPage {
+public class NewXtestFileWizardPage extends NewTypeWizardPage {
 
     /**
      * Default contents of a brand-new Xtest file.
@@ -45,14 +56,12 @@ public class NewXtestFileWizardPage extends NewXtendClassWizardPage {
      * Constructs a new Xtest file wizard page.
      */
     public NewXtestFileWizardPage() {
-        super();
-        this.setTitle("New Xtest File");
+        super(0, "New Xtest File");
         this.setDescription("Create a new Xtest File");
     }
 
     @Override
     public void createControl(Composite parent) {
-        // Same as Xtend, except only need a file name
         initializeDialogUnits(parent);
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setFont(parent.getFont());
@@ -67,7 +76,11 @@ public class NewXtestFileWizardPage extends NewXtendClassWizardPage {
         setControl(composite);
     }
 
-    @Override
+    /**
+     * Runs a new "Create Xtest file" Job
+     * 
+     * @return The number of bytes created in the new file.
+     */
     public int createType() {
         final AtomicInteger size = new AtomicInteger(0);
         IRunnableWithProgress op = new CreateXtestFile(size, this);
@@ -77,15 +90,106 @@ public class NewXtestFileWizardPage extends NewXtendClassWizardPage {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
             Throwable realException = e.getTargetException();
-            MessageDialog.openError(getShell(), Messages.ERROR_CREATING_CLASS,
+            MessageDialog.openError(getShell(), "Error creating Xtest File",
                     realException.getMessage());
         }
         return size.get();
     }
 
     @Override
+    public void createType(IProgressMonitor monitor) throws CoreException, InterruptedException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Returns the newly created resource
+     * 
+     * @return The newly created resource
+     */
     public IResource getResource() {
         return resource;
+    }
+
+    /**
+     * Returns the selected resource from which this wizard was opened
+     * 
+     * @param selection
+     *            The selection input
+     * @return The selected resource from which this wizard was opened
+     */
+    public IJavaElement getSelectedResource(IStructuredSelection selection) {
+        IJavaElement elem = null;
+        if (selection != null && !selection.isEmpty()) {
+            Object o = selection.getFirstElement();
+            if (o == null) {
+            } else if (o instanceof IAdaptable) {
+                IAdaptable adaptable = (IAdaptable) o;
+                elem = (IJavaElement) adaptable.getAdapter(IJavaElement.class);
+                if (elem == null) {
+                    elem = getPackage(adaptable);
+                }
+            }
+        }
+        if (elem == null) {
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                    .getActivePage();
+            IWorkbenchPart part = activePage.getActivePart();
+            if (part instanceof ContentOutline) {
+                part = activePage.getActiveEditor();
+            }
+            if (part instanceof XtextEditor) {
+                IXtextDocument doc = ((XtextEditor) part).getDocument();
+                IFile file = doc.getAdapter(IFile.class);
+                elem = getPackage(file);
+            }
+        }
+        if (elem == null || elem.getElementType() == IJavaElement.JAVA_MODEL) {
+            try {
+                IJavaProject[] projects = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot())
+                        .getJavaProjects();
+                if (projects.length == 1) {
+                    elem = projects[0];
+                }
+            } catch (JavaModelException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+        return elem;
+    }
+
+    @Override
+    public String getTypeName() {
+        String typeName2 = super.getTypeName();
+        return typeName2.endsWith(".xtest") ? typeName2 : typeName2 + ".xtest";
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            setFocus();
+        }
+    }
+
+    /*
+     * @see NewContainerWizardPage#handleFieldChanged
+     */
+    @Override
+    protected void handleFieldChanged(String fieldName) {
+        super.handleFieldChanged(fieldName);
+        doStatusUpdate();
+    }
+
+    /**
+     * Initialize this wizard page from the selection provided.
+     * 
+     * @param selection
+     *            The initially selected item
+     */
+    protected void init(IStructuredSelection selection) {
+        IJavaElement elem = getSelectedResource(selection);
+        initContainerPage(elem);
+        initTypePage(elem);
     }
 
     @Override
@@ -96,7 +200,7 @@ public class NewXtestFileWizardPage extends NewXtendClassWizardPage {
             IResource resource = packageFragment.getResource();
             if (resource instanceof IFolder) {
                 IFolder folder = (IFolder) resource;
-                if (folder.getFile(getTypeName() + ".xtest").exists()) {
+                if (folder.getFile(getTypeName()).exists()) {
                     String packageName = "";
                     if (!packageFragment.isDefaultPackage()) {
                         packageName = packageFragment.getElementName() + ".";
@@ -131,8 +235,7 @@ public class NewXtestFileWizardPage extends NewXtendClassWizardPage {
             IFile xtestFile = null;
             IFolder iFolder = (IFolder) res;
             String typeName = getTypeName();
-            String string = typeName + ".xtest";
-            xtestFile = iFolder.getFile(string);
+            xtestFile = iFolder.getFile(typeName);
             try {
                 String contents = DEFAULT_XTEST_FILE;
                 byte[] bytes = contents.getBytes();
@@ -158,6 +261,27 @@ public class NewXtestFileWizardPage extends NewXtendClassWizardPage {
                 MessageDialog.openError(getShell(), title, message);
             }
         });
+    }
+
+    private void doStatusUpdate() {
+        IStatus[] status = new IStatus[] { fContainerStatus, fPackageStatus, fTypeNameStatus,
+                fSuperClassStatus, fSuperInterfacesStatus };
+        updateStatus(status);
+    }
+
+    private IJavaElement getPackage(IAdaptable adaptable) {
+        IJavaElement elem = null;
+        IResource resource = (IResource) adaptable.getAdapter(IResource.class);
+        if (resource != null && resource.getType() != IResource.ROOT) {
+            while (elem == null && resource.getType() != IResource.PROJECT) {
+                resource = resource.getParent();
+                elem = (IJavaElement) resource.getAdapter(IJavaElement.class);
+            }
+        }
+        if (elem == null) {
+            elem = JavaCore.create(resource);
+        }
+        return elem;
     }
 
     private static class CreateXtestFile extends WorkspaceModifyOperation {
