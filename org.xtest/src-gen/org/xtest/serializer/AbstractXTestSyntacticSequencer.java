@@ -19,16 +19,18 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 	protected XTestGrammarAccess grammarAccess;
 	protected AbstractElementAlias match_Body_SemicolonKeyword_2_1_q;
 	protected AbstractElementAlias match_XBlockExpression_SemicolonKeyword_2_1_q;
+	protected AbstractElementAlias match_XExpressionInClosure_SemicolonKeyword_1_1_q;
 	protected AbstractElementAlias match_XParenthesizedExpression_LeftParenthesisKeyword_0_a;
 	protected AbstractElementAlias match_XParenthesizedExpression_LeftParenthesisKeyword_0_p;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (XTestGrammarAccess) access;
-		match_Body_SemicolonKeyword_2_1_q = new TokenAlias(true, false, grammarAccess.getBodyAccess().getSemicolonKeyword_2_1());
-		match_XBlockExpression_SemicolonKeyword_2_1_q = new TokenAlias(true, false, grammarAccess.getXBlockExpressionAccess().getSemicolonKeyword_2_1());
+		match_Body_SemicolonKeyword_2_1_q = new TokenAlias(false, true, grammarAccess.getBodyAccess().getSemicolonKeyword_2_1());
+		match_XBlockExpression_SemicolonKeyword_2_1_q = new TokenAlias(false, true, grammarAccess.getXBlockExpressionAccess().getSemicolonKeyword_2_1());
+		match_XExpressionInClosure_SemicolonKeyword_1_1_q = new TokenAlias(false, true, grammarAccess.getXExpressionInClosureAccess().getSemicolonKeyword_1_1());
 		match_XParenthesizedExpression_LeftParenthesisKeyword_0_a = new TokenAlias(true, true, grammarAccess.getXParenthesizedExpressionAccess().getLeftParenthesisKeyword_0());
-		match_XParenthesizedExpression_LeftParenthesisKeyword_0_p = new TokenAlias(false, true, grammarAccess.getXParenthesizedExpressionAccess().getLeftParenthesisKeyword_0());
+		match_XParenthesizedExpression_LeftParenthesisKeyword_0_p = new TokenAlias(true, false, grammarAccess.getXParenthesizedExpressionAccess().getLeftParenthesisKeyword_0());
 	}
 	
 	@Override
@@ -61,6 +63,8 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 				emit_Body_SemicolonKeyword_2_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_XBlockExpression_SemicolonKeyword_2_1_q.equals(syntax))
 				emit_XBlockExpression_SemicolonKeyword_2_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_XExpressionInClosure_SemicolonKeyword_1_1_q.equals(syntax))
+				emit_XExpressionInClosure_SemicolonKeyword_1_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_XParenthesizedExpression_LeftParenthesisKeyword_0_a.equals(syntax))
 				emit_XParenthesizedExpression_LeftParenthesisKeyword_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_XParenthesizedExpression_LeftParenthesisKeyword_0_p.equals(syntax))
@@ -82,6 +86,14 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 	 *     ';'?
 	 */
 	protected void emit_XBlockExpression_SemicolonKeyword_2_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Syntax:
+	 *     ';'?
+	 */
+	protected void emit_XExpressionInClosure_SemicolonKeyword_1_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

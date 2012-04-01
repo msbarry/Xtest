@@ -1,12 +1,6 @@
 package org.xtest.jvmmodel;
 
-import java.util.List;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.common.types.JvmDeclaredType;
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelInferrer;
-
-import com.google.common.collect.Lists;
+import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer;
 
 /**
  * Infers a JVM Model (classes, methods, etc.) from the xtest model.
@@ -14,10 +8,6 @@ import com.google.common.collect.Lists;
  * Currently unused, but may be used in future
  */
 @SuppressWarnings("all")
-public class XTestJvmModelInferrer implements IJvmModelInferrer {
+public class XTestJvmModelInferrer extends AbstractModelInferrer {
 
-    @Override
-    public List<? extends JvmDeclaredType> inferJvmModel(EObject sourceObject) {
-        return Lists.newArrayList();
-    }
 }

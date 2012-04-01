@@ -849,10 +849,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__47;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:47:7: ( '|' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:47:9: '|'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:47:7: ( ']' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:47:9: ']'
             {
-            match('|'); 
+            match(']'); 
 
             }
 
@@ -869,10 +869,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__48;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:48:7: ( ']' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:48:9: ']'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:48:7: ( '(' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:48:9: '('
             {
-            match(']'); 
+            match('('); 
 
             }
 
@@ -889,10 +889,11 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__49;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:49:7: ( '(' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:49:9: '('
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:49:7: ( 'if' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:49:9: 'if'
             {
-            match('('); 
+            match("if"); 
+
 
             }
 
@@ -909,10 +910,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__50;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:50:7: ( 'if' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:50:9: 'if'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:50:7: ( 'else' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:50:9: 'else'
             {
-            match("if"); 
+            match("else"); 
 
 
             }
@@ -930,10 +931,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__51;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:51:7: ( 'else' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:51:9: 'else'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:51:7: ( 'switch' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:51:9: 'switch'
             {
-            match("else"); 
+            match("switch"); 
 
 
             }
@@ -951,11 +952,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__52;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:52:7: ( 'switch' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:52:9: 'switch'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:52:7: ( '{' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:52:9: '{'
             {
-            match("switch"); 
-
+            match('{'); 
 
             }
 
@@ -972,10 +972,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__53;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:53:7: ( '{' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:53:9: '{'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:53:7: ( '}' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:53:9: '}'
             {
-            match('{'); 
+            match('}'); 
 
             }
 
@@ -992,10 +992,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__54;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:54:7: ( '}' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:54:9: '}'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:54:7: ( ':' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:54:9: ':'
             {
-            match('}'); 
+            match(':'); 
 
             }
 
@@ -1012,10 +1012,11 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__55;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:55:7: ( ':' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:55:9: ':'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:55:7: ( 'default' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:55:9: 'default'
             {
-            match(':'); 
+            match("default"); 
+
 
             }
 
@@ -1032,10 +1033,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__56;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:56:7: ( 'default' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:56:9: 'default'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:56:7: ( 'case' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:56:9: 'case'
             {
-            match("default"); 
+            match("case"); 
 
 
             }
@@ -1053,10 +1054,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__57;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:57:7: ( 'case' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:57:9: 'case'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:57:7: ( 'for' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:57:9: 'for'
             {
-            match("case"); 
+            match("for"); 
 
 
             }
@@ -1074,10 +1075,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__58;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:58:7: ( 'for' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:58:9: 'for'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:58:7: ( 'while' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:58:9: 'while'
             {
-            match("for"); 
+            match("while"); 
 
 
             }
@@ -1095,10 +1096,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__59;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:59:7: ( 'while' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:59:9: 'while'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:59:7: ( 'do' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:59:9: 'do'
             {
-            match("while"); 
+            match("do"); 
 
 
             }
@@ -1116,10 +1117,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__60;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:60:7: ( 'do' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:60:9: 'do'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:60:7: ( '::' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:60:9: '::'
             {
-            match("do"); 
+            match("::"); 
 
 
             }
@@ -1137,10 +1138,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__61;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:61:7: ( '::' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:61:9: '::'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:61:7: ( 'new' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:61:9: 'new'
             {
-            match("::"); 
+            match("new"); 
 
 
             }
@@ -1158,10 +1159,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__62;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:62:7: ( 'new' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:62:9: 'new'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:62:7: ( 'null' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:62:9: 'null'
             {
-            match("new"); 
+            match("null"); 
 
 
             }
@@ -1179,10 +1180,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__63;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:63:7: ( 'null' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:63:9: 'null'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:63:7: ( 'typeof' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:63:9: 'typeof'
             {
-            match("null"); 
+            match("typeof"); 
 
 
             }
@@ -1200,10 +1201,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__64;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:64:7: ( 'typeof' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:64:9: 'typeof'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:64:7: ( 'throw' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:64:9: 'throw'
             {
-            match("typeof"); 
+            match("throw"); 
 
 
             }
@@ -1221,10 +1222,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__65;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:65:7: ( 'throw' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:65:9: 'throw'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:65:7: ( 'return' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:65:9: 'return'
             {
-            match("throw"); 
+            match("return"); 
 
 
             }
@@ -1242,10 +1243,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__66;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:66:7: ( 'return' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:66:9: 'return'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:66:7: ( 'try' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:66:9: 'try'
             {
-            match("return"); 
+            match("try"); 
 
 
             }
@@ -1263,10 +1264,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__67;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:67:7: ( 'try' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:67:9: 'try'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:67:7: ( 'finally' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:67:9: 'finally'
             {
-            match("try"); 
+            match("finally"); 
 
 
             }
@@ -1284,10 +1285,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__68;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:68:7: ( 'finally' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:68:9: 'finally'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:68:7: ( 'catch' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:68:9: 'catch'
             {
-            match("finally"); 
+            match("catch"); 
 
 
             }
@@ -1305,10 +1306,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__69;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:69:7: ( 'catch' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:69:9: 'catch'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:69:7: ( '=>' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:69:9: '=>'
             {
-            match("catch"); 
+            match("=>"); 
 
 
             }
@@ -1326,11 +1327,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__70;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:70:7: ( '=>' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:70:9: '=>'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:70:7: ( '?' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:70:9: '?'
             {
-            match("=>"); 
-
+            match('?'); 
 
             }
 
@@ -1347,10 +1347,11 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__71;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:71:7: ( '?' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:71:9: '?'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:71:7: ( 'extends' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:71:9: 'extends'
             {
-            match('?'); 
+            match("extends"); 
+
 
             }
 
@@ -1367,11 +1368,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__72;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:72:7: ( 'extends' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:72:9: 'extends'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:72:7: ( '&' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:72:9: '&'
             {
-            match("extends"); 
-
+            match('&'); 
 
             }
 
@@ -1388,10 +1388,11 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__73;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:73:7: ( '&' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:73:9: '&'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:73:7: ( 'static' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:73:9: 'static'
             {
-            match('&'); 
+            match("static"); 
+
 
             }
 
@@ -1408,10 +1409,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__74;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:74:7: ( 'static' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:74:9: 'static'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:74:7: ( '?.' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:74:9: '?.'
             {
-            match("static"); 
+            match("?."); 
 
 
             }
@@ -1429,10 +1430,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__75;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:75:7: ( '?.' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:75:9: '?.'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:75:7: ( '*.' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:75:9: '*.'
             {
-            match("?."); 
+            match("*."); 
 
 
             }
@@ -1450,11 +1451,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = T__76;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:76:7: ( '*.' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:76:9: '*.'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:76:7: ( '|' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:76:9: '|'
             {
-            match("*."); 
-
+            match('|'); 
 
             }
 
@@ -1513,10 +1513,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15019:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )* )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15019:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15720:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )* )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15720:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15019:11: ( '^' )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15720:11: ( '^' )?
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -1525,7 +1525,7 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15019:11: '^'
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15720:11: '^'
                     {
                     match('^'); 
 
@@ -1543,7 +1543,7 @@ public class InternalXTestLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15019:44: ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15720:44: ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
             loop2:
             do {
                 int alt2=2;
@@ -1592,10 +1592,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15021:10: ( ( '0' .. '9' )+ )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15021:12: ( '0' .. '9' )+
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15722:10: ( ( '0' .. '9' )+ )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15722:12: ( '0' .. '9' )+
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15021:12: ( '0' .. '9' )+
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15722:12: ( '0' .. '9' )+
             int cnt3=0;
             loop3:
             do {
@@ -1609,7 +1609,7 @@ public class InternalXTestLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15021:13: '0' .. '9'
+            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15722:13: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -1641,10 +1641,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -1662,10 +1662,10 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt6) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop4:
                     do {
                         int alt4=3;
@@ -1681,7 +1681,7 @@ public class InternalXTestLexer extends Lexer {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -1697,7 +1697,7 @@ public class InternalXTestLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:66: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:66: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -1722,10 +1722,10 @@ public class InternalXTestLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop5:
                     do {
                         int alt5=3;
@@ -1741,7 +1741,7 @@ public class InternalXTestLexer extends Lexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -1757,7 +1757,7 @@ public class InternalXTestLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15023:137: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15724:137: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -1800,12 +1800,12 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_ML_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15025:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15025:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15726:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15726:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15025:24: ( options {greedy=false; } : . )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15726:24: ( options {greedy=false; } : . )*
             loop7:
             do {
                 int alt7=2;
@@ -1830,7 +1830,7 @@ public class InternalXTestLexer extends Lexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15025:52: .
+            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15726:52: .
             	    {
             	    matchAny(); 
 
@@ -1860,12 +1860,12 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15027:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15027:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15728:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15728:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15027:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15728:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop8:
             do {
                 int alt8=2;
@@ -1878,7 +1878,7 @@ public class InternalXTestLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15027:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15728:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -1898,7 +1898,7 @@ public class InternalXTestLexer extends Lexer {
                 }
             } while (true);
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15027:40: ( ( '\\r' )? '\\n' )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15728:40: ( ( '\\r' )? '\\n' )?
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -1907,9 +1907,9 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt10) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15027:41: ( '\\r' )? '\\n'
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15728:41: ( '\\r' )? '\\n'
                     {
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15027:41: ( '\\r' )?
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15728:41: ( '\\r' )?
                     int alt9=2;
                     int LA9_0 = input.LA(1);
 
@@ -1918,7 +1918,7 @@ public class InternalXTestLexer extends Lexer {
                     }
                     switch (alt9) {
                         case 1 :
-                            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15027:41: '\\r'
+                            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15728:41: '\\r'
                             {
                             match('\r'); 
 
@@ -1950,10 +1950,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15029:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15029:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15730:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15730:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15029:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15730:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt11=0;
             loop11:
             do {
@@ -2007,8 +2007,8 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_ANY_OTHER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15031:16: ( . )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15031:18: .
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15732:16: ( . )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:15732:18: .
             {
             matchAny(); 
 
@@ -2609,19 +2609,19 @@ public class InternalXTestLexer extends Lexer {
         "\1\172\1\163\1\164\1\uffff\1\172\2\uffff\1\172\1\uffff\1\145\4\uffff"+
         "\2\172\2\uffff\1\157\2\uffff\1\146\1\172\1\uffff";
     static final String DFA12_acceptS =
-        "\16\uffff\1\24\3\uffff\1\32\4\uffff\1\40\1\41\1\44\1\46\1\47\1"+
-        "\uffff\1\53\1\54\6\uffff\1\105\1\106\2\uffff\1\112\1\113\1\1\1\63"+
-        "\1\55\1\7\1\74\1\2\1\3\1\17\1\4\1\45\1\5\1\77\2\uffff\1\105\1\10"+
-        "\1\25\1\11\1\13\1\12\1\14\1\15\1\20\1\16\1\26\1\22\1\102\1\21\1"+
-        "\110\1\111\1\23\1\24\7\uffff\1\32\11\uffff\1\40\1\41\1\44\1\46\1"+
-        "\47\2\uffff\1\53\1\54\6\uffff\1\101\1\75\1\106\1\107\1\112\15\uffff"+
-        "\1\50\3\uffff\1\43\7\uffff\1\62\7\uffff\1\27\1\103\4\uffff\1\60"+
-        "\10\uffff\1\71\5\uffff\1\64\3\uffff\1\57\15\uffff\1\104\1\51\3\uffff"+
-        "\1\65\1\uffff\1\6\1\73\1\30\2\uffff\1\31\4\uffff\1\35\2\uffff\1"+
-        "\67\3\uffff\1\61\1\uffff\1\52\1\100\1\uffff\1\33\1\uffff\1\34\1"+
-        "\36\1\37\1\66\2\uffff\1\70\1\72\1\uffff\1\76\1\56\2\uffff\1\42";
+        "\16\uffff\1\24\3\uffff\1\32\4\uffff\1\40\1\41\1\44\1\45\1\46\1"+
+        "\uffff\1\52\1\53\6\uffff\1\105\1\106\2\uffff\1\112\1\113\1\1\1\62"+
+        "\1\54\1\7\1\73\1\2\1\3\1\17\1\4\1\102\1\5\1\76\2\uffff\1\105\1\10"+
+        "\1\25\1\11\1\13\1\12\1\14\1\15\1\20\1\16\1\26\1\22\1\101\1\21\1"+
+        "\110\1\111\1\23\1\24\7\uffff\1\32\11\uffff\1\40\1\41\1\44\1\45\1"+
+        "\46\2\uffff\1\52\1\53\6\uffff\1\100\1\74\1\106\1\107\1\112\15\uffff"+
+        "\1\47\3\uffff\1\43\7\uffff\1\61\7\uffff\1\27\1\103\4\uffff\1\57"+
+        "\10\uffff\1\70\5\uffff\1\63\3\uffff\1\56\15\uffff\1\104\1\50\3\uffff"+
+        "\1\64\1\uffff\1\6\1\72\1\30\2\uffff\1\31\4\uffff\1\35\2\uffff\1"+
+        "\66\3\uffff\1\60\1\uffff\1\51\1\77\1\uffff\1\33\1\uffff\1\34\1\36"+
+        "\1\37\1\65\2\uffff\1\67\1\71\1\uffff\1\75\1\55\2\uffff\1\42";
     static final String DFA12_specialS =
-        "\1\1\46\uffff\1\2\1\0\u00bc\uffff}>";
+        "\1\2\46\uffff\1\1\1\0\u00bc\uffff}>";
     static final String[] DFA12_transitionS = {
             "\11\52\2\51\2\52\1\51\22\52\1\51\1\7\1\47\1\52\1\45\1\16\1"+
             "\5\1\50\1\33\1\30\1\14\1\3\1\27\1\12\1\13\1\15\12\46\1\1\1\22"+
@@ -2936,6 +2936,16 @@ public class InternalXTestLexer extends Lexer {
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
+                        int LA12_39 = input.LA(1);
+
+                        s = -1;
+                        if ( ((LA12_39>='\u0000' && LA12_39<='\uFFFF')) ) {s = 110;}
+
+                        else s = 42;
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
                         int LA12_0 = input.LA(1);
 
                         s = -1;
@@ -3022,16 +3032,6 @@ public class InternalXTestLexer extends Lexer {
                         else if ( ((LA12_0>='\t' && LA12_0<='\n')||LA12_0=='\r'||LA12_0==' ') ) {s = 41;}
 
                         else if ( ((LA12_0>='\u0000' && LA12_0<='\b')||(LA12_0>='\u000B' && LA12_0<='\f')||(LA12_0>='\u000E' && LA12_0<='\u001F')||LA12_0=='#'||LA12_0=='@'||LA12_0=='\\'||LA12_0=='`'||(LA12_0>='~' && LA12_0<='\uFFFF')) ) {s = 42;}
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA12_39 = input.LA(1);
-
-                        s = -1;
-                        if ( ((LA12_39>='\u0000' && LA12_39<='\uFFFF')) ) {s = 110;}
-
-                        else s = 42;
 
                         if ( s>=0 ) return s;
                         break;
