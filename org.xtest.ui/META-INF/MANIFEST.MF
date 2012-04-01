@@ -6,7 +6,7 @@ Bundle-Version: 0.1.1.qualifier
 Bundle-SymbolicName: org.xtest.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.xtest;visibility:=reexport,
- org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui;bundle-version="[2.0.0,2.1.0)",
  org.eclipse.ui.ide;bundle-version="3.5.0",
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.builder,
