@@ -1,7 +1,9 @@
 package org.xtest.scoping;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -14,6 +16,7 @@ import org.xtest.xTest.Body;
 import org.xtest.xTest.Import;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 /**
@@ -30,8 +33,15 @@ public class XtestStaticMethodsFeatureForTypeProvider extends StaticMethodsFeatu
     @Override
     protected Map<JvmTypeReference, Collection<String>> getVisibleTypesContainingStaticMethods(
             Iterable<JvmTypeReference> hierarchy) {
-        Map<JvmTypeReference, Collection<String>> result = super
+        Map<JvmTypeReference, Collection<String>> superResult = super
                 .getVisibleTypesContainingStaticMethods(hierarchy);
+        Map<JvmTypeReference, Collection<String>> result = Maps.newLinkedHashMap();
+        for (Entry<JvmTypeReference, Collection<String>> entry : superResult.entrySet()) {
+            JvmTypeReference key = entry.getKey();
+            Collection<String> value = entry.getValue();
+            List<String> value2 = Lists.newArrayList(value);
+            result.put(key, value2);
+        }
         if (hierarchy == null) {
             for (JvmType type : getStaticImports()) {
                 JvmParameterizedTypeReference typeReference = typeReferences.createTypeRef(type);
