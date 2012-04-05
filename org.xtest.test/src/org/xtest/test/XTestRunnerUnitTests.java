@@ -3,7 +3,6 @@ package org.xtest.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xtest.XTestRunner;
 import org.xtest.results.XTestCaseResult;
@@ -128,10 +127,6 @@ public class XTestRunnerUnitTests {
         assertEquals(XTestState.FAIL, result.getState());
     }
 
-    // TODO Don't run this test because of a 2.1 bug with the resource scope cache in
-    // AbstractStaticMethodsFeatureForTypeProvider. It appears to be fixed in subsequent
-    // versions, though
-    @Ignore
     @Test
     public void testImportStatic_wildcard_shouldPass() {
         XTestSuiteResult result = XTestRunner.run(
