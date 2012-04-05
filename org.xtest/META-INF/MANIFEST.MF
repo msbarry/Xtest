@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.xtest
 Bundle-Vendor: Michael Barry
-Bundle-Version: 0.1.101.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-SymbolicName: org.xtest;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.generator;resolution:=optional,
