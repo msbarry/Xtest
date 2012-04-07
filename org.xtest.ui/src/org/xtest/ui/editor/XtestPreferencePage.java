@@ -27,7 +27,9 @@ public class XtestPreferencePage extends LanguageRootPreferencePage {
         xtestGroup.setLayout(layout);
         Composite composite = new Composite(xtestGroup, SWT.NONE);
         addField(new BooleanFieldEditor(XtestPreferences.MARK_UNEXECUTED,
-                "Mark unexecuted code in xtest files as warning", composite));
+                "Enable marking unexecuted code in xtest files as warnings", composite));
+        addField(new BooleanFieldEditor(XtestPreferences.RUN_WHILE_EDITING,
+                "Enable running tests while you edit them", composite));
         xtestGroup.pack();
     }
 }

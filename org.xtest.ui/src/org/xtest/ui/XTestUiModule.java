@@ -17,6 +17,8 @@ import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
 import org.xtest.ui.runner.UiXTestRunner;
 import org.xtest.ui.templates.XtestTemplateProposalProvider;
+import org.xtest.ui.validation.UIXTestJavaValidator;
+import org.xtest.validation.XTestJavaValidator;
 
 import com.google.inject.name.Names;
 
@@ -76,6 +78,16 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public Class<? extends OutlineRefreshJob> bindOutlineRefreshJob() {
         return XtestOutlineRefreshJob.class;
+    }
+
+    /**
+     * Override {@link XTestJavaValidator} with custom {@link UIXTestJavaValidator} implementation
+     * 
+     * @return {@link UIXTestJavaValidator}
+     */
+    @org.eclipse.xtext.service.SingletonBinding(eager = true)
+    public Class<? extends org.xtest.validation.XTestJavaValidator> bindXTestJavaValidator() {
+        return UIXTestJavaValidator.class;
     }
 
     /**

@@ -17,6 +17,12 @@ public class XtestPreferences {
      */
     public static final String MARK_UNEXECUTED = "markUnexecuted";
 
+    /**
+     * Property corresponding to a boolean to control running tests while you type, as opposed to
+     * only on save.
+     */
+    public static final String RUN_WHILE_EDITING = "runWhileEditing";
+
     @Inject
     private IPreferenceStoreAccess preferenceStoreAccess;
 
@@ -27,7 +33,15 @@ public class XtestPreferences {
      */
     public boolean isMarkUnexecuted() {
         return preferenceStoreAccess.getPreferenceStore().getBoolean(MARK_UNEXECUTED);
-        // TODO re-run tests in project?
+    }
+
+    /**
+     * Returns true if tests should be run while you edit them.
+     * 
+     * @return true if tests should be run while you edit them.
+     */
+    public boolean isRunWhileEditing() {
+        return preferenceStoreAccess.getPreferenceStore().getBoolean(RUN_WHILE_EDITING);
     }
 
     /**
@@ -43,6 +57,17 @@ public class XtestPreferences {
     }
 
     /**
+     * Set whether tests should be run while you edit them.
+     * 
+     * @param runWhileEditing
+     *            True to run tests while you edit them, false to only run them on save
+     */
+    public void setRunWhileEditing(boolean runWhileEditing) {
+        preferenceStoreAccess.getWritablePreferenceStore().setValue(RUN_WHILE_EDITING,
+                runWhileEditing);
+    }
+
+    /**
      * Initializer for xtest preferences
      * 
      * @author Michael Barry
@@ -51,6 +76,7 @@ public class XtestPreferences {
         @Override
         public void initialize(IPreferenceStoreAccess access) {
             access.getWritablePreferenceStore().setDefault(MARK_UNEXECUTED, true);
+            access.getWritablePreferenceStore().setDefault(RUN_WHILE_EDITING, true);
         }
     }
 }
