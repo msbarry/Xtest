@@ -335,9 +335,9 @@ ruleFileParam returns [EObject current=null]
 	}
 
 )
-)	otherlv_1='=' 
+)	otherlv_1=':' 
     {
-    	newLeafNode(otherlv_1, grammarAccess.getFileParamAccess().getEqualsSignKeyword_1());
+    	newLeafNode(otherlv_1, grammarAccess.getFileParamAccess().getColonKeyword_1());
     }
 (
 (

@@ -21,7 +21,7 @@ QualifiedNamespaceWithWildcard: QualifiedName '.' '*';
 
 FileParam:
 	// Currently, only boolean literals are supported
-	=>feature=[JvmEnumerationLiteral] '=' value=XBooleanLiteral;
+	=>feature=[JvmEnumerationLiteral] ':' value=XBooleanLiteral;
 
 
 UniqueName:

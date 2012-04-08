@@ -169,7 +169,7 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 	
 	/**
 	 * Syntax:
-	 *     'xtest' | 'xsuite'
+	 *     'xsuite' | 'xtest'
 	 */
 	protected void emit_XTestExpression_XsuiteKeyword_1_0_or_XtestKeyword_1_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

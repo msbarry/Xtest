@@ -3619,11 +3619,11 @@ rule__FileParam__Group__1__Impl
     }
 :
 (
-{ before(grammarAccess.getFileParamAccess().getEqualsSignKeyword_1()); }
+{ before(grammarAccess.getFileParamAccess().getColonKeyword_1()); }
 
-	'=' 
+	':' 
 
-{ after(grammarAccess.getFileParamAccess().getEqualsSignKeyword_1()); }
+{ after(grammarAccess.getFileParamAccess().getColonKeyword_1()); }
 )
 
 ;

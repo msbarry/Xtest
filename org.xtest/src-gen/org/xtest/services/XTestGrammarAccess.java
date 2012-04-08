@@ -195,18 +195,18 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cFeatureAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final CrossReference cFeatureJvmEnumerationLiteralCrossReference_0_0 = (CrossReference)cFeatureAssignment_0.eContents().get(0);
 		private final RuleCall cFeatureJvmEnumerationLiteralIDTerminalRuleCall_0_0_1 = (RuleCall)cFeatureJvmEnumerationLiteralCrossReference_0_0.eContents().get(1);
-		private final Keyword cEqualsSignKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Keyword cColonKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Assignment cValueAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cValueXBooleanLiteralParserRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
 		
 		//FileParam: // Currently, only boolean literals are supported
 		//
-		//	=> feature=[JvmEnumerationLiteral] "=" value=XBooleanLiteral;
+		//	=> feature=[JvmEnumerationLiteral] ":" value=XBooleanLiteral;
 		public ParserRule getRule() { return rule; }
 
 		//// Currently, only boolean literals are supported
 		//
-		//=> feature=[JvmEnumerationLiteral] "=" value=XBooleanLiteral
+		//=> feature=[JvmEnumerationLiteral] ":" value=XBooleanLiteral
 		public Group getGroup() { return cGroup; }
 
 		//// Currently, only boolean literals are supported
@@ -220,8 +220,8 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getFeatureJvmEnumerationLiteralIDTerminalRuleCall_0_0_1() { return cFeatureJvmEnumerationLiteralIDTerminalRuleCall_0_0_1; }
 
-		//"="
-		public Keyword getEqualsSignKeyword_1() { return cEqualsSignKeyword_1; }
+		//":"
+		public Keyword getColonKeyword_1() { return cColonKeyword_1; }
 
 		//value=XBooleanLiteral
 		public Assignment getValueAssignment_2() { return cValueAssignment_2; }
@@ -720,7 +720,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 
 	//FileParam: // Currently, only boolean literals are supported
 	//
-	//	=> feature=[JvmEnumerationLiteral] "=" value=XBooleanLiteral;
+	//	=> feature=[JvmEnumerationLiteral] ":" value=XBooleanLiteral;
 	public FileParamElements getFileParamAccess() {
 		return (pFileParam != null) ? pFileParam : (pFileParam = new FileParamElements());
 	}
