@@ -7,6 +7,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage;
+import org.xtest.preferences.RuntimePref;
 
 /**
  * Custom Xtest Preference page
@@ -26,10 +27,10 @@ public class XtestPreferencePage extends LanguageRootPreferencePage {
         GridLayout layout = new GridLayout(1, false);
         xtestGroup.setLayout(layout);
         Composite composite = new Composite(xtestGroup, SWT.NONE);
-        addField(new BooleanFieldEditor(XtestPreferences.MARK_UNEXECUTED,
-                "Enable marking unexecuted code in xtest files as warnings", composite));
-        addField(new BooleanFieldEditor(XtestPreferences.RUN_WHILE_EDITING,
-                "Enable running tests while you edit them", composite));
+
+        for (RuntimePref preference : RuntimePref.values()) {
+            addField(new BooleanFieldEditor(preference.getId(), preference.getDisplay(), composite));
+        }
         xtestGroup.pack();
     }
 }

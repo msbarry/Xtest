@@ -8,17 +8,17 @@ import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 import org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage;
+import org.eclipse.xtext.xbase.ui.highlighting.XbaseHighlightingCalculator;
 import org.xtest.XTestRunner;
+import org.xtest.ui.editor.UIDefaultPreferenceProvider;
+import org.xtest.ui.editor.UIDefaultPreferenceProvider.Initializer;
 import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
 import org.xtest.ui.editor.XtestPreferencePage;
-import org.xtest.ui.editor.XtestPreferences;
-import org.xtest.ui.editor.XtestPreferences.Initializer;
+import org.xtest.ui.highlight.XtestHighlightingCalculator;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
 import org.xtest.ui.runner.UiXTestRunner;
 import org.xtest.ui.templates.XtestTemplateProposalProvider;
-import org.xtest.ui.validation.UIXTestJavaValidator;
-import org.xtest.validation.XTestJavaValidator;
 
 import com.google.inject.name.Names;
 
@@ -81,13 +81,14 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
     }
 
     /**
-     * Override {@link XTestJavaValidator} with custom {@link UIXTestJavaValidator} implementation
+     * Binds {@link XbaseHighlightingCalculator} implementation to custom
+     * {@link XtestHighlightingCalculator}
      * 
-     * @return {@link UIXTestJavaValidator}
+     * @return {@link XtestHighlightingCalculator} class
      */
-    @org.eclipse.xtext.service.SingletonBinding(eager = true)
-    public Class<? extends org.xtest.validation.XTestJavaValidator> bindXTestJavaValidator() {
-        return UIXTestJavaValidator.class;
+    @SuppressWarnings("restriction")
+    public Class<? extends XbaseHighlightingCalculator> bindXbaseHighlightingCalculator() {
+        return XtestHighlightingCalculator.class;
     }
 
     /**
@@ -100,16 +101,17 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
     }
 
     /**
-     * Binds {@link IPreferenceStoreInitializer} implementation for {@link XtestPreferences} to
-     * custom {@link Initializer} implementation.
+     * Binds {@link IPreferenceStoreInitializer} implementation for
+     * {@link UIDefaultPreferenceProvider} to custom
+     * {@link org.xtest.ui.editor.UIDefaultPreferenceProvider.Initializer} implementation.
      * 
      * @param binder
      *            The Guice Binder
      */
     public void configureXtestPreferenceStoreInitializer(com.google.inject.Binder binder) {
         binder.bind(org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer.class)
-                .annotatedWith(com.google.inject.name.Names.named("XtestPreferences"))
-                .to(XtestPreferences.Initializer.class);
+                .annotatedWith(com.google.inject.name.Names.named("UIDefaultPreferenceProvider"))
+                .to(Initializer.class);
     }
 
     @Override

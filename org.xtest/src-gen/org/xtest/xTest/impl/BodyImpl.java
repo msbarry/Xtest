@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.xtext.xbase.impl.XBlockExpressionImpl;
 
 import org.xtest.xTest.Body;
+import org.xtest.xTest.FileParam;
 import org.xtest.xTest.Import;
 import org.xtest.xTest.XTestPackage;
 
@@ -31,6 +32,7 @@ import org.xtest.xTest.XTestPackage;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.xtest.xTest.impl.BodyImpl#getFileparam <em>Fileparam</em>}</li>
  *   <li>{@link org.xtest.xTest.impl.BodyImpl#getImports <em>Imports</em>}</li>
  * </ul>
  * </p>
@@ -39,6 +41,16 @@ import org.xtest.xTest.XTestPackage;
  */
 public class BodyImpl extends XBlockExpressionImpl implements Body
 {
+	/**
+	 * The cached value of the '{@link #getFileparam() <em>Fileparam</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFileparam()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<FileParam> fileparam;
+
 	/**
 	 * The cached value of the '{@link #getImports() <em>Imports</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -75,6 +87,20 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<FileParam> getFileparam()
+	{
+		if (fileparam == null)
+		{
+			fileparam = new EObjectContainmentEList<FileParam>(FileParam.class, this, XTestPackage.BODY__FILEPARAM);
+		}
+		return fileparam;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Import> getImports()
 	{
 		if (imports == null)
@@ -94,6 +120,8 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				return ((InternalEList<?>)getFileparam()).basicRemove(otherEnd, msgs);
 			case XTestPackage.BODY__IMPORTS:
 				return ((InternalEList<?>)getImports()).basicRemove(otherEnd, msgs);
 		}
@@ -110,6 +138,8 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				return getFileparam();
 			case XTestPackage.BODY__IMPORTS:
 				return getImports();
 		}
@@ -127,6 +157,10 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				getFileparam().clear();
+				getFileparam().addAll((Collection<? extends FileParam>)newValue);
+				return;
 			case XTestPackage.BODY__IMPORTS:
 				getImports().clear();
 				getImports().addAll((Collection<? extends Import>)newValue);
@@ -145,6 +179,9 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				getFileparam().clear();
+				return;
 			case XTestPackage.BODY__IMPORTS:
 				getImports().clear();
 				return;
@@ -162,6 +199,8 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				return fileparam != null && !fileparam.isEmpty();
 			case XTestPackage.BODY__IMPORTS:
 				return imports != null && !imports.isEmpty();
 		}

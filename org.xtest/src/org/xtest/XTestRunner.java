@@ -3,6 +3,7 @@ package org.xtest;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -106,11 +107,16 @@ public class XTestRunner {
      */
     public Set<XExpression> getUnexecutedExpressions(Body main) {
         Set<XExpression> unexecuted = Sets.newHashSet();
-        TreeIterator<EObject> eAllContents = main.eAllContents();
-        while (eAllContents.hasNext()) {
-            EObject next = eAllContents.next();
-            if (next instanceof XExpression && !executed.contains(next)) {
-                unexecuted.add((XExpression) next);
+        // Only mark unexecuted from list of expressions, otherwise will mark file properties as
+        // unexecuted
+        EList<XExpression> expressions = main.getExpressions();
+        for (XExpression expression : expressions) {
+            TreeIterator<EObject> eAllContents = expression.eAllContents();
+            while (eAllContents.hasNext()) {
+                EObject next = eAllContents.next();
+                if (next instanceof XExpression && !executed.contains(next)) {
+                    unexecuted.add((XExpression) next);
+                }
             }
         }
         // remove contained EObjects, only mark warning on outer container

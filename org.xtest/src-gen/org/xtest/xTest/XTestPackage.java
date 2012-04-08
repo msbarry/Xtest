@@ -118,6 +118,43 @@ public interface XTestPackage extends EPackage
 	int IMPORT_FEATURE_COUNT = 4;
 
 	/**
+	 * The meta object id for the '{@link org.xtest.xTest.impl.FileParamImpl <em>File Param</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.xtest.xTest.impl.FileParamImpl
+	 * @see org.xtest.xTest.impl.XTestPackageImpl#getFileParam()
+	 * @generated
+	 */
+	int FILE_PARAM = 1;
+
+	/**
+	 * The feature id for the '<em><b>Feature</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILE_PARAM__FEATURE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILE_PARAM__VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>File Param</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILE_PARAM_FEATURE_COUNT = 2;
+
+	/**
 	 * The meta object id for the '{@link org.xtest.xTest.impl.UniqueNameImpl <em>Unique Name</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -125,7 +162,7 @@ public interface XTestPackage extends EPackage
 	 * @see org.xtest.xTest.impl.XTestPackageImpl#getUniqueName()
 	 * @generated
 	 */
-	int UNIQUE_NAME = 1;
+	int UNIQUE_NAME = 2;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -162,7 +199,7 @@ public interface XTestPackage extends EPackage
 	 * @see org.xtest.xTest.impl.XTestPackageImpl#getBody()
 	 * @generated
 	 */
-	int BODY = 2;
+	int BODY = 3;
 
 	/**
 	 * The feature id for the '<em><b>Expressions</b></em>' containment reference list.
@@ -174,13 +211,22 @@ public interface XTestPackage extends EPackage
 	int BODY__EXPRESSIONS = XbasePackage.XBLOCK_EXPRESSION__EXPRESSIONS;
 
 	/**
+	 * The feature id for the '<em><b>Fileparam</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BODY__FILEPARAM = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Imports</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BODY__IMPORTS = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 0;
+	int BODY__IMPORTS = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Body</em>' class.
@@ -189,7 +235,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int BODY_FEATURE_COUNT = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 1;
+	int BODY_FEATURE_COUNT = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.xtest.xTest.impl.XTestExpressionImpl <em>Expression</em>}' class.
@@ -199,7 +245,7 @@ public interface XTestPackage extends EPackage
 	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestExpression()
 	 * @generated
 	 */
-	int XTEST_EXPRESSION = 3;
+	int XTEST_EXPRESSION = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' containment reference.
@@ -236,7 +282,7 @@ public interface XTestPackage extends EPackage
 	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXAssertExpression()
 	 * @generated
 	 */
-	int XASSERT_EXPRESSION = 4;
+	int XASSERT_EXPRESSION = 5;
 
 	/**
 	 * The feature id for the '<em><b>Actual</b></em>' containment reference.
@@ -321,6 +367,38 @@ public interface XTestPackage extends EPackage
 	EAttribute getImport_ImportedNamespace();
 
 	/**
+	 * Returns the meta object for class '{@link org.xtest.xTest.FileParam <em>File Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>File Param</em>'.
+	 * @see org.xtest.xTest.FileParam
+	 * @generated
+	 */
+	EClass getFileParam();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.xtest.xTest.FileParam#getFeature <em>Feature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Feature</em>'.
+	 * @see org.xtest.xTest.FileParam#getFeature()
+	 * @see #getFileParam()
+	 * @generated
+	 */
+	EReference getFileParam_Feature();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.FileParam#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Value</em>'.
+	 * @see org.xtest.xTest.FileParam#getValue()
+	 * @see #getFileParam()
+	 * @generated
+	 */
+	EReference getFileParam_Value();
+
+	/**
 	 * Returns the meta object for class '{@link org.xtest.xTest.UniqueName <em>Unique Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -361,6 +439,17 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 */
 	EClass getBody();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.xtest.xTest.Body#getFileparam <em>Fileparam</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Fileparam</em>'.
+	 * @see org.xtest.xTest.Body#getFileparam()
+	 * @see #getBody()
+	 * @generated
+	 */
+	EReference getBody_Fileparam();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.xtest.xTest.Body#getImports <em>Imports</em>}'.
@@ -503,6 +592,32 @@ public interface XTestPackage extends EPackage
 		EAttribute IMPORT__IMPORTED_NAMESPACE = eINSTANCE.getImport_ImportedNamespace();
 
 		/**
+		 * The meta object literal for the '{@link org.xtest.xTest.impl.FileParamImpl <em>File Param</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.xtest.xTest.impl.FileParamImpl
+		 * @see org.xtest.xTest.impl.XTestPackageImpl#getFileParam()
+		 * @generated
+		 */
+		EClass FILE_PARAM = eINSTANCE.getFileParam();
+
+		/**
+		 * The meta object literal for the '<em><b>Feature</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FILE_PARAM__FEATURE = eINSTANCE.getFileParam_Feature();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FILE_PARAM__VALUE = eINSTANCE.getFileParam_Value();
+
+		/**
 		 * The meta object literal for the '{@link org.xtest.xTest.impl.UniqueNameImpl <em>Unique Name</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -537,6 +652,14 @@ public interface XTestPackage extends EPackage
 		 * @generated
 		 */
 		EClass BODY = eINSTANCE.getBody();
+
+		/**
+		 * The meta object literal for the '<em><b>Fileparam</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BODY__FILEPARAM = eINSTANCE.getBody_Fileparam();
 
 		/**
 		 * The meta object literal for the '<em><b>Imports</b></em>' containment reference list feature.

@@ -9,7 +9,8 @@ import "http://www.eclipse.org/xtext/common/JavaVMTypes"
 // Top-level expression
 Body returns XBlockExpression:
 	{Body}
-	(imports+=Import)*
+	(fileparam+=FileParam ';'?)*
+	(imports+=Import ';'?)*
 	(expressions+=XExpressionInsideBlock ';'?)*;
 
 Import: 'import' (static?='static' staticImport = [JvmType|QualifiedName] '.' '*' |
@@ -17,6 +18,10 @@ Import: 'import' (static?='static' staticImport = [JvmType|QualifiedName] '.' '*
 	              importedNamespace = QualifiedNamespaceWithWildcard);
 	              
 QualifiedNamespaceWithWildcard: QualifiedName '.' '*';
+
+FileParam:
+	// Currently, only boolean literals are supported
+	=>feature=[JvmEnumerationLiteral] ':' value=XBooleanLiteral;
 
 
 UniqueName:

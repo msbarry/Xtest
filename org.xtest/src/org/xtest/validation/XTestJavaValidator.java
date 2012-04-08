@@ -23,6 +23,8 @@ import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.XTestRunner.DontRunCheck;
+import org.xtest.preferences.PerFilePreferenceProvider;
+import org.xtest.preferences.RuntimePref;
 import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XAssertExpression;
@@ -47,6 +49,8 @@ import com.google.inject.Singleton;
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private static final int TEST_RUN_FAILURE_INDEX = Integer.MIN_VALUE;
     private final ThreadLocal<CancelIndicator> cancelIndicators = new ThreadLocal<CancelIndicator>();
+    @Inject
+    private PerFilePreferenceProvider preferenceProvider;
     @Inject
     private XTestRunner runner;
     @Inject
@@ -104,7 +108,6 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      * @param main
      *            The xtest expression model to run.
      */
-    @Check(CheckType.FAST)
     public void doMagic(Body main) {
         if (!(getCheckMode() instanceof XTestRunner.DontRunCheck)) {
             CancelIndicator indicator = cancelIndicators.get();
@@ -114,12 +117,42 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             XTestResult run = runner.run(main, indicator);
             markErrorsFromTest(run);
 
-            Set<XExpression> unexecutedExpressions = runner.getUnexecutedExpressions(main);
-            markUnexecuted(main, unexecutedExpressions);
+            if (preferenceProvider.get(main, RuntimePref.MARK_UNEXECUTED)) {
+                Set<XExpression> unexecutedExpressions = runner.getUnexecutedExpressions(main);
+                markUnexecuted(main, unexecutedExpressions);
+            }
             if (main instanceof BodyImplCustom) {
                 BodyImplCustom custom = (BodyImplCustom) main;
                 custom.setResult(run);
             }
+        }
+    }
+
+    /**
+     * Invoke {@link #doMagic(Body)} while editing an Xtest file if
+     * {@link RuntimePref#RUN_WHILE_EDITING} is true
+     * 
+     * @param main
+     *            Body of the xtest file
+     */
+    @Check(CheckType.FAST)
+    public void doMagicFast(Body main) {
+        if (preferenceProvider.get(main, RuntimePref.RUN_WHILE_EDITING)) {
+            doMagic(main);
+        }
+    }
+
+    /**
+     * Invoke {@link #doMagic(Body)} while building an Xtest file if
+     * {@link RuntimePref#RUN_WHILE_EDITING} is false
+     * 
+     * @param main
+     *            Body of the xtest file
+     */
+    @Check(CheckType.NORMAL)
+    public void doMagicNormal(Body main) {
+        if (!preferenceProvider.get(main, RuntimePref.RUN_WHILE_EDITING)) {
+            doMagic(main);
         }
     }
 

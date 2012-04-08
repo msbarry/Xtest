@@ -87,6 +87,11 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 				return createImportAdapter();
 			}
 			@Override
+			public Adapter caseFileParam(FileParam object)
+			{
+				return createFileParamAdapter();
+			}
+			@Override
 			public Adapter caseUniqueName(UniqueName object)
 			{
 				return createUniqueNameAdapter();
@@ -149,6 +154,21 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	public Adapter createImportAdapter()
+	{
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.FileParam <em>File Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.xtest.xTest.FileParam
+	 * @generated
+	 */
+	public Adapter createFileParamAdapter()
 	{
 		return null;
 	}
