@@ -2,8 +2,10 @@ package org.xtest.test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import helpers.SUT;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
@@ -18,6 +20,8 @@ import org.eclipse.xtext.validation.Issue;
 import org.junit.Test;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
+import org.xtest.results.XTestResult;
+import org.xtest.results.XTestState;
 import org.xtest.types.XTestTypeProvider;
 import org.xtest.xTest.Body;
 
@@ -82,105 +86,20 @@ public class XTestRegressionTests {
     }
 
     @Test
-    public void testBug1() throws Exception {
-        Body result = XTestRunner.parse("xsuite \"test\": {\n" + "    xtest \"case\": {\n"
-                + "        assert 1 == 1\n" + "      assert 2 ==\n" + "        assert 3 == 3\n"
-                + "    }}  ", injector);
-        typeProvider.getCommonReturnType(result, true);
+    public void runXTest() throws IOException {
+        // TODO Get rid of this, eventually wean off of Junit tests
+        BufferedReader in = new BufferedReader(new FileReader(
+                "src/org/xtest/test/RegressionTests.xtest"));
+        String line;
+        StringBuilder builder = new StringBuilder();
+        while ((line = in.readLine()) != null) {
+            if (builder.length() > 0) {
+                builder.append('\n');
+            }
+            builder.append(line);
+        }
+        in.close();
+        XTestResult run = XTestRunner.run(builder.toString(), XtestInjector.injector);
+        assertEquals(XTestState.PASS, run.getState());
     }
-
-    @Test
-    public void testBug2() throws Exception {
-        Body result = XTestRunner.parse(
-                "val a = new java.util.TreeMap\n\nxtest test {\nassert a.descendingMap == a\n}",
-                injector);
-        typeProvider.getCommonReturnType(result, true);
-    }
-
-    @Test
-    public void testCodeNotRun() throws Exception {
-        Body parse = parse("val a = 1\nif (a == 1) true else false");
-        List<Issue> warningsRunTests = getWarningsRunTests(parse);
-        assertEquals(1, warningsRunTests.size());
-    }
-
-    @Test
-    public void testCodeNotRunOnly1Warning() throws Exception {
-        Body parse = parse("val a = 1\nif (a == 1) true else {if (a != 1) true else false}");
-        List<Issue> warningsRunTests = getWarningsRunTests(parse);
-        assertEquals(1, warningsRunTests.size());
-    }
-
-    @Test
-    public void testCodeNotRunParamFalse() throws Exception {
-        Body parse = parse("markUnexecuted=false\nval a = 1\nif (a == 1) true else {if (a != 1) true else false}");
-        List<Issue> warningsRunTests = getWarningsRunTests(parse);
-        assertEquals(0, warningsRunTests.size());
-    }
-
-    @Test
-    public void testCodeNotRunParamTrue() throws Exception {
-        Body parse = parse("markUnexecuted=true\nval a = 1\nif (a == 1) true else {if (a != 1) true else false}");
-        List<Issue> warningsRunTests = getWarningsRunTests(parse);
-        assertEquals(1, warningsRunTests.size());
-    }
-
-    @Test
-    public void testGetClass() throws Exception {
-        Body parse = parse("System::class");
-        assertValidationPassed(parse);
-        assertEvaluatesTo(System.class, parse);
-        JvmTypeReference typeForName = typeRefs.getTypeForName(Class.class, parse,
-                typeRefs.getTypeForName(System.class, parse));
-        assertReturnType(typeForName, parse);
-    }
-
-    @Test
-    public void testGetClassImported() throws Exception {
-        Body parse = parse("import helpers.SUT\nSUT::class");
-        assertValidationPassed(parse);
-        assertEvaluatesTo(SUT.class, parse);
-        JvmTypeReference typeForName = typeRefs.getTypeForName(Class.class, parse,
-                typeRefs.getTypeForName(SUT.class, parse));
-        assertReturnType(typeForName, parse);
-    }
-
-    @Test
-    public void testGetClassNotImported() throws Exception {
-        Body parse = parse("helpers::SUT::class");
-        assertValidationPassed(parse);
-        assertEvaluatesTo(SUT.class, parse);
-        JvmTypeReference typeForName = typeRefs.getTypeForName(Class.class, parse,
-                typeRefs.getTypeForName(SUT.class, parse));
-        assertReturnType(typeForName, parse);
-    }
-
-    @Test
-    public void testGetPrivateSubMember() throws Exception {
-        Body parse = parse("import helpers.SubPrivateMembers\nval a = new SubPrivateMembers()\na.i");
-        assertValidationPassed(parse);
-        assertEvaluatesTo(1, parse);
-    }
-
-    @Test
-    public void testGetPrivateSubMethod() throws Exception {
-        Body parse = parse("import helpers.SubPrivateMembers\nval a = new SubPrivateMembers()\na.setC(2)\na.i");
-        assertValidationPassed(parse);
-        assertEvaluatesTo(2, parse);
-    }
-
-    @Test
-    public void testGetPrivateSuperMember() throws Exception {
-        Body parse = parse("import helpers.*\nval a = new SubPrivateMembers()\n(a as PrivateMembers).i");
-        assertValidationPassed(parse);
-        assertEvaluatesTo(0, parse);
-    }
-
-    @Test
-    public void testGetPrivateSuperMethod() throws Exception {
-        Body parse = parse("import helpers.*\nval a = new SubPrivateMembers()\n(a as PrivateMembers).setC(2)\na.getC()");
-        assertValidationPassed(parse);
-        assertEvaluatesTo(1, parse);
-    }
-
 }

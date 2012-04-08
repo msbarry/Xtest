@@ -1,3 +1,4 @@
+runWhileEditing: false
 import static org.junit.Assert.*
 
 import org.^xtest.results.XTestState

@@ -1,0 +1,134 @@
+/* File-specific parameters */
+runWhileEditing: false 
+
+import static org.junit.Assert.*
+import static org.^xtest.test.XTestRegressionTests.*
+import org.^xtest.XTestRunner
+import helpers.*
+xtest testBug1 {
+    val result = XTestRunner::parse('
+xsuite test {
+	xtest case {
+		assert 1 == 1
+		assert 2 ==
+		assert 3 == 3
+	}
+}', injector)
+    typeProvider.getCommonReturnType(result, true)
+} 
+xtest testBug2 {
+    val result = XTestRunner::parse('
+val a = new java.util.TreeMap
+xtest test {
+	assert a.descendingMap == a
+}', injector)
+    typeProvider.getCommonReturnType(result, true)
+}
+
+xtest testCodeNotRun {
+    val parse = parse('
+val a = 1
+if (a == 1) true else false
+')
+    val warningsRunTests = getWarningsRunTests(parse)
+    assertEquals(1, warningsRunTests.size())
+}
+ 
+
+xtest testCodeNotRunOnly1Warning {
+    val parse = parse('
+val a = 1
+if (a == 1) true else {if (a != 1) true else false}')
+    val warningsRunTests = getWarningsRunTests(parse)
+    assertEquals(1, warningsRunTests.size())
+}
+
+xtest testCodeNotRunParamFalse {
+    val parse = parse('
+markUnexecuted: false
+val a = 1
+if (a == 1) true else {if (a != 1) true else false}')
+    val warningsRunTests = getWarningsRunTests(parse)
+    assertEquals(0, warningsRunTests.size())
+}
+
+xtest testCodeNotRunParamTrue {
+    val parse = parse('
+markUnexecuted: true
+val a = 1
+if (a == 1) true else {if (a != 1) true else false}')
+    val warningsRunTests = getWarningsRunTests(parse)
+    assertEquals(1, warningsRunTests.size())
+}
+
+
+xtest testGetClass {
+    val parse = parse('System::class')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(System::class, parse)
+    val typeForName = typeRefs.getTypeForName(Class::class, parse,
+            typeRefs.getTypeForName(System::class, parse))
+    assertReturnType(typeForName, parse)
+}
+
+
+xtest testGetClassImported {
+    val parse = parse('import helpers.SUT; SUT::class')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(SUT::class, parse)
+    val typeForName = typeRefs.getTypeForName(Class::class, parse,
+            typeRefs.getTypeForName(SUT::class, parse))
+    assertReturnType(typeForName, parse)
+}
+
+
+xtest testGetClassNotImported {
+    val parse = parse('helpers::SUT::class')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(SUT::class, parse)
+    val typeForName = typeRefs.getTypeForName(Class::class, parse,
+            typeRefs.getTypeForName(SUT::class, parse))
+    assertReturnType(typeForName, parse)
+}
+
+
+xtest testGetPrivateSubMember {
+    val parse = parse('
+import helpers.SubPrivateMembers
+val a = new SubPrivateMembers()
+a.i')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(1, parse)
+}
+
+
+xtest testGetPrivateSubMethod {
+    val parse = parse('
+import helpers.SubPrivateMembers
+val a = new SubPrivateMembers()
+a.setC(2)
+a.i')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(2, parse)
+}
+
+
+xtest testGetPrivateSuperMember {
+    val parse = parse('
+import helpers.*
+val a = new SubPrivateMembers()
+(a as PrivateMembers).i')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(0, parse)
+}
+
+
+xtest testGetPrivateSuperMethod {
+    val parse = parse('
+import helpers.*
+val a = new SubPrivateMembers()
+(a as PrivateMembers).setC(2)
+a.getC()')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(1, parse)
+}
