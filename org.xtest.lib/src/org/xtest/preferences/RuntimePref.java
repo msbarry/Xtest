@@ -10,7 +10,7 @@ package org.xtest.preferences;
 public enum RuntimePref {
     /** Enable marking unexecuted code in xtest files as warnings */
     MARK_UNEXECUTED("markUnexecuted", "Enable marking unexecuted code in xtest files as warnings",
-            false),
+            true),
     /** Enable running tests while you edit them */
     RUN_WHILE_EDITING("runWhileEditing", "Enable running tests while you edit them", true);
 

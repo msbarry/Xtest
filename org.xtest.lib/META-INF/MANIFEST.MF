@@ -7,3 +7,4 @@ Bundle-Vendor: Michael Barry
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: com.google.guava;visibility:=reexport,
  org.eclipse.xtext.xbase.lib;visibility:=reexport
+Export-Package: org.xtest.preferences
