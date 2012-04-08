@@ -16,7 +16,6 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.MapBasedScope;
 import org.eclipse.xtext.xbase.scoping.XbaseScopeProvider;
 import org.xtest.preferences.RuntimePref;
-import org.xtest.xTest.FileParam;
 import org.xtest.xTest.XTestPackage;
 
 import com.google.common.collect.Lists;
@@ -36,7 +35,7 @@ public class XTestScopeProvider extends XbaseScopeProvider {
     @Override
     public IScope getScope(EObject context, EReference reference) {
         IScope scope;
-        if (context instanceof FileParam && reference == XTestPackage.Literals.FILE_PARAM__FEATURE) {
+        if (reference == XTestPackage.Literals.FILE_PARAM__FEATURE) {
             List<IEObjectDescription> descriptions = Lists.newArrayList();
             Map<String, RuntimePref> map = Maps.newTreeMap();
             for (RuntimePref pref : RuntimePref.values()) {
