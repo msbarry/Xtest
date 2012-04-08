@@ -69,6 +69,7 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 		switch (eClass.getClassifierID())
 		{
 			case XTestPackage.IMPORT: return createImport();
+			case XTestPackage.FILE_PARAM: return createFileParam();
 			case XTestPackage.UNIQUE_NAME: return createUniqueName();
 			case XTestPackage.BODY: return createBody();
 			case XTestPackage.XTEST_EXPRESSION: return createXTestExpression();
@@ -87,6 +88,17 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	{
 		ImportImpl import_ = new ImportImpl();
 		return import_;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FileParam createFileParam()
+	{
+		FileParamImpl fileParam = new FileParamImpl();
+		return fileParam;
 	}
 
 	/**

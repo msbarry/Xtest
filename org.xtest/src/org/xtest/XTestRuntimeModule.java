@@ -4,10 +4,12 @@ import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
+import org.eclipse.xtext.xbase.scoping.XbaseScopeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.linking.XtestFeatureCallChecker;
+import org.xtest.scoping.XTestScopeProvider;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
 import org.xtest.scoping.XtestStaticMethodsFeatureForTypeProvider;
 import org.xtest.scoping.XtestVisibilityService;
@@ -72,6 +74,15 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends XbaseInterpreter> bindXbaseInterpreter() {
         return XTestInterpreter.class;
+    }
+
+    /**
+     * Bind {@link XbaseScopeProvider} to custom implementation that ignores static imports
+     * 
+     * @return {@link XTestScopeProvider}
+     */
+    public Class<? extends XbaseScopeProvider> bindXbaseScopeProvider() {
+        return XTestScopeProvider.class;
     }
 
     /**

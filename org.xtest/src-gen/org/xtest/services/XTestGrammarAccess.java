@@ -22,43 +22,67 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Body");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cBodyAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cImportsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cImportsImportParserRuleCall_1_0 = (RuleCall)cImportsAssignment_1.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Assignment cFileparamAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
+		private final RuleCall cFileparamFileParamParserRuleCall_1_0_0 = (RuleCall)cFileparamAssignment_1_0.eContents().get(0);
+		private final Keyword cSemicolonKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
-		private final Assignment cExpressionsAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
-		private final RuleCall cExpressionsXExpressionInsideBlockParserRuleCall_2_0_0 = (RuleCall)cExpressionsAssignment_2_0.eContents().get(0);
+		private final Assignment cImportsAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
+		private final RuleCall cImportsImportParserRuleCall_2_0_0 = (RuleCall)cImportsAssignment_2_0.eContents().get(0);
 		private final Keyword cSemicolonKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
+		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
+		private final Assignment cExpressionsAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
+		private final RuleCall cExpressionsXExpressionInsideBlockParserRuleCall_3_0_0 = (RuleCall)cExpressionsAssignment_3_0.eContents().get(0);
+		private final Keyword cSemicolonKeyword_3_1 = (Keyword)cGroup_3.eContents().get(1);
 		
 		//// Top-level expression
 		//
 		//Body returns XBlockExpression:
 		//
-		//	{Body} imports+=Import* (expressions+=XExpressionInsideBlock ";"?)*;
+		//	{Body} (fileparam+=FileParam ";"?)* (imports+=Import ";"?)* (expressions+=XExpressionInsideBlock ";"?)*;
 		public ParserRule getRule() { return rule; }
 
-		//{Body} imports+=Import* (expressions+=XExpressionInsideBlock ";"?)*
+		//{Body} (fileparam+=FileParam ";"?)* (imports+=Import ";"?)* (expressions+=XExpressionInsideBlock ";"?)*
 		public Group getGroup() { return cGroup; }
 
 		//{Body}
 		public Action getBodyAction_0() { return cBodyAction_0; }
 
-		//imports+=Import*
-		public Assignment getImportsAssignment_1() { return cImportsAssignment_1; }
+		//(fileparam+=FileParam ";"?)*
+		public Group getGroup_1() { return cGroup_1; }
 
-		//Import
-		public RuleCall getImportsImportParserRuleCall_1_0() { return cImportsImportParserRuleCall_1_0; }
+		//fileparam+=FileParam
+		public Assignment getFileparamAssignment_1_0() { return cFileparamAssignment_1_0; }
 
-		//(expressions+=XExpressionInsideBlock ";"?)*
+		//FileParam
+		public RuleCall getFileparamFileParamParserRuleCall_1_0_0() { return cFileparamFileParamParserRuleCall_1_0_0; }
+
+		//";"?
+		public Keyword getSemicolonKeyword_1_1() { return cSemicolonKeyword_1_1; }
+
+		//(imports+=Import ";"?)*
 		public Group getGroup_2() { return cGroup_2; }
 
-		//expressions+=XExpressionInsideBlock
-		public Assignment getExpressionsAssignment_2_0() { return cExpressionsAssignment_2_0; }
+		//imports+=Import
+		public Assignment getImportsAssignment_2_0() { return cImportsAssignment_2_0; }
 
-		//XExpressionInsideBlock
-		public RuleCall getExpressionsXExpressionInsideBlockParserRuleCall_2_0_0() { return cExpressionsXExpressionInsideBlockParserRuleCall_2_0_0; }
+		//Import
+		public RuleCall getImportsImportParserRuleCall_2_0_0() { return cImportsImportParserRuleCall_2_0_0; }
 
 		//";"?
 		public Keyword getSemicolonKeyword_2_1() { return cSemicolonKeyword_2_1; }
+
+		//(expressions+=XExpressionInsideBlock ";"?)*
+		public Group getGroup_3() { return cGroup_3; }
+
+		//expressions+=XExpressionInsideBlock
+		public Assignment getExpressionsAssignment_3_0() { return cExpressionsAssignment_3_0; }
+
+		//XExpressionInsideBlock
+		public RuleCall getExpressionsXExpressionInsideBlockParserRuleCall_3_0_0() { return cExpressionsXExpressionInsideBlockParserRuleCall_3_0_0; }
+
+		//";"?
+		public Keyword getSemicolonKeyword_3_1() { return cSemicolonKeyword_3_1; }
 	}
 
 	public class ImportElements extends AbstractParserRuleElementFinder {
@@ -163,6 +187,47 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"*"
 		public Keyword getAsteriskKeyword_2() { return cAsteriskKeyword_2; }
+	}
+
+	public class FileParamElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "FileParam");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cFeatureAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final CrossReference cFeatureJvmEnumerationLiteralCrossReference_0_0 = (CrossReference)cFeatureAssignment_0.eContents().get(0);
+		private final RuleCall cFeatureJvmEnumerationLiteralIDTerminalRuleCall_0_0_1 = (RuleCall)cFeatureJvmEnumerationLiteralCrossReference_0_0.eContents().get(1);
+		private final Keyword cEqualsSignKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cValueAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cValueXBooleanLiteralParserRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
+		
+		//FileParam: // Currently, only boolean literals are supported
+		//
+		//	=> feature=[JvmEnumerationLiteral] "=" value=XBooleanLiteral;
+		public ParserRule getRule() { return rule; }
+
+		//// Currently, only boolean literals are supported
+		//
+		//=> feature=[JvmEnumerationLiteral] "=" value=XBooleanLiteral
+		public Group getGroup() { return cGroup; }
+
+		//// Currently, only boolean literals are supported
+		//
+		//=> feature=[JvmEnumerationLiteral]
+		public Assignment getFeatureAssignment_0() { return cFeatureAssignment_0; }
+
+		//[JvmEnumerationLiteral]
+		public CrossReference getFeatureJvmEnumerationLiteralCrossReference_0_0() { return cFeatureJvmEnumerationLiteralCrossReference_0_0; }
+
+		//ID
+		public RuleCall getFeatureJvmEnumerationLiteralIDTerminalRuleCall_0_0_1() { return cFeatureJvmEnumerationLiteralIDTerminalRuleCall_0_0_1; }
+
+		//"="
+		public Keyword getEqualsSignKeyword_1() { return cEqualsSignKeyword_1; }
+
+		//value=XBooleanLiteral
+		public Assignment getValueAssignment_2() { return cValueAssignment_2; }
+
+		//XBooleanLiteral
+		public RuleCall getValueXBooleanLiteralParserRuleCall_2_0() { return cValueXBooleanLiteralParserRuleCall_2_0; }
 	}
 
 	public class UniqueNameElements extends AbstractParserRuleElementFinder {
@@ -587,6 +652,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	private BodyElements pBody;
 	private ImportElements pImport;
 	private QualifiedNamespaceWithWildcardElements pQualifiedNamespaceWithWildcard;
+	private FileParamElements pFileParam;
 	private UniqueNameElements pUniqueName;
 	private XTestExpressionElements pXTestExpression;
 	private XAssertExpressionElements pXAssertExpression;
@@ -619,7 +685,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	//
 	//Body returns XBlockExpression:
 	//
-	//	{Body} imports+=Import* (expressions+=XExpressionInsideBlock ";"?)*;
+	//	{Body} (fileparam+=FileParam ";"?)* (imports+=Import ";"?)* (expressions+=XExpressionInsideBlock ";"?)*;
 	public BodyElements getBodyAccess() {
 		return (pBody != null) ? pBody : (pBody = new BodyElements());
 	}
@@ -650,6 +716,17 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getQualifiedNamespaceWithWildcardRule() {
 		return getQualifiedNamespaceWithWildcardAccess().getRule();
+	}
+
+	//FileParam: // Currently, only boolean literals are supported
+	//
+	//	=> feature=[JvmEnumerationLiteral] "=" value=XBooleanLiteral;
+	public FileParamElements getFileParamAccess() {
+		return (pFileParam != null) ? pFileParam : (pFileParam = new FileParamElements());
+	}
+	
+	public ParserRule getFileParamRule() {
+		return getFileParamAccess().getRule();
 	}
 
 	//UniqueName:

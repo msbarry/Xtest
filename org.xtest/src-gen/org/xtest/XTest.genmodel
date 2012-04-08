@@ -14,11 +14,16 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference XTest.ecore#//Import/typeImport"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//Import/importedNamespace"/>
     </genClasses>
+    <genClasses ecoreClass="XTest.ecore#//FileParam">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference XTest.ecore#//FileParam/feature"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//FileParam/value"/>
+    </genClasses>
     <genClasses ecoreClass="XTest.ecore#//UniqueName">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//UniqueName/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//UniqueName/identifier"/>
     </genClasses>
     <genClasses ecoreClass="XTest.ecore#//Body">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//Body/fileparam"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//Body/imports"/>
     </genClasses>
     <genClasses ecoreClass="XTest.ecore#//XTestExpression">

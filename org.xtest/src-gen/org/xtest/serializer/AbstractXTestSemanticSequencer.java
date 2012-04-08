@@ -53,6 +53,7 @@ import org.eclipse.xtext.xtype.XFunctionTypeRef;
 import org.eclipse.xtext.xtype.XtypePackage;
 import org.xtest.services.XTestGrammarAccess;
 import org.xtest.xTest.Body;
+import org.xtest.xTest.FileParam;
 import org.xtest.xTest.Import;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
@@ -154,6 +155,12 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 			case XTestPackage.BODY:
 				if(context == grammarAccess.getBodyRule()) {
 					sequence_Body(context, (Body) semanticObject); 
+					return; 
+				}
+				else break;
+			case XTestPackage.FILE_PARAM:
+				if(context == grammarAccess.getFileParamRule()) {
+					sequence_FileParam(context, (FileParam) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1047,10 +1054,29 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (imports+=Import* expressions+=XExpressionInsideBlock*)
+	 *     (fileparam+=FileParam* imports+=Import* expressions+=XExpressionInsideBlock*)
 	 */
 	protected void sequence_Body(EObject context, Body semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (feature=[JvmEnumerationLiteral|ID] value=XBooleanLiteral)
+	 */
+	protected void sequence_FileParam(EObject context, FileParam semanticObject) {
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.FILE_PARAM__FEATURE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.FILE_PARAM__FEATURE));
+			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.FILE_PARAM__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.FILE_PARAM__VALUE));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getFileParamAccess().getFeatureJvmEnumerationLiteralIDTerminalRuleCall_0_0_1(), semanticObject.getFeature());
+		feeder.accept(grammarAccess.getFileParamAccess().getValueXBooleanLiteralParserRuleCall_2_0(), semanticObject.getValue());
+		feeder.finish();
 	}
 	
 	

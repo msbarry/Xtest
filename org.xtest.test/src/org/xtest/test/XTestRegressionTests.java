@@ -112,6 +112,20 @@ public class XTestRegressionTests {
     }
 
     @Test
+    public void testCodeNotRunParamFalse() throws Exception {
+        Body parse = parse("markUnexecuted=false\nval a = 1\nif (a == 1) true else {if (a != 1) true else false}");
+        List<Issue> warningsRunTests = getWarningsRunTests(parse);
+        assertEquals(0, warningsRunTests.size());
+    }
+
+    @Test
+    public void testCodeNotRunParamTrue() throws Exception {
+        Body parse = parse("markUnexecuted=true\nval a = 1\nif (a == 1) true else {if (a != 1) true else false}");
+        List<Issue> warningsRunTests = getWarningsRunTests(parse);
+        assertEquals(1, warningsRunTests.size());
+    }
+
+    @Test
     public void testGetClass() throws Exception {
         Body parse = parse("System::class");
         assertValidationPassed(parse);

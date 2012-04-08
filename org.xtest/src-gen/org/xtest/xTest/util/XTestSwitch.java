@@ -86,6 +86,13 @@ public class XTestSwitch<T> extends Switch<T>
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case XTestPackage.FILE_PARAM:
+			{
+				FileParam fileParam = (FileParam)theEObject;
+				T result = caseFileParam(fileParam);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case XTestPackage.UNIQUE_NAME:
 			{
 				UniqueName uniqueName = (UniqueName)theEObject;
@@ -134,6 +141,22 @@ public class XTestSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	public T caseImport(Import object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>File Param</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>File Param</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFileParam(FileParam object)
 	{
 		return null;
 	}

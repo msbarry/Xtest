@@ -18,6 +18,7 @@ import org.eclipse.xtext.common.types.TypesPackage;
 import org.eclipse.xtext.xbase.XbasePackage;
 
 import org.xtest.xTest.Body;
+import org.xtest.xTest.FileParam;
 import org.xtest.xTest.Import;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
@@ -39,6 +40,13 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * @generated
 	 */
 	private EClass importEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass fileParamEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -189,6 +197,36 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getFileParam()
+	{
+		return fileParamEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getFileParam_Feature()
+	{
+		return (EReference)fileParamEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getFileParam_Value()
+	{
+		return (EReference)fileParamEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getUniqueName()
 	{
 		return uniqueNameEClass;
@@ -229,9 +267,19 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getBody_Imports()
+	public EReference getBody_Fileparam()
 	{
 		return (EReference)bodyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getBody_Imports()
+	{
+		return (EReference)bodyEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -330,11 +378,16 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		createEReference(importEClass, IMPORT__TYPE_IMPORT);
 		createEAttribute(importEClass, IMPORT__IMPORTED_NAMESPACE);
 
+		fileParamEClass = createEClass(FILE_PARAM);
+		createEReference(fileParamEClass, FILE_PARAM__FEATURE);
+		createEReference(fileParamEClass, FILE_PARAM__VALUE);
+
 		uniqueNameEClass = createEClass(UNIQUE_NAME);
 		createEAttribute(uniqueNameEClass, UNIQUE_NAME__NAME);
 		createEReference(uniqueNameEClass, UNIQUE_NAME__IDENTIFIER);
 
 		bodyEClass = createEClass(BODY);
+		createEReference(bodyEClass, BODY__FILEPARAM);
 		createEReference(bodyEClass, BODY__IMPORTS);
 
 		xTestExpressionEClass = createEClass(XTEST_EXPRESSION);
@@ -390,11 +443,16 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		initEReference(getImport_TypeImport(), theTypesPackage.getJvmType(), null, "typeImport", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImport_ImportedNamespace(), ecorePackage.getEString(), "importedNamespace", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(fileParamEClass, FileParam.class, "FileParam", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getFileParam_Feature(), theTypesPackage.getJvmEnumerationLiteral(), null, "feature", null, 0, 1, FileParam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFileParam_Value(), theXbasePackage.getXExpression(), null, "value", null, 0, 1, FileParam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(uniqueNameEClass, UniqueName.class, "UniqueName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getUniqueName_Name(), ecorePackage.getEString(), "name", null, 0, 1, UniqueName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getUniqueName_Identifier(), theXbasePackage.getXExpression(), null, "identifier", null, 0, 1, UniqueName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(bodyEClass, Body.class, "Body", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getBody_Fileparam(), this.getFileParam(), null, "fileparam", null, 0, -1, Body.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBody_Imports(), this.getImport(), null, "imports", null, 0, -1, Body.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(xTestExpressionEClass, XTestExpression.class, "XTestExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

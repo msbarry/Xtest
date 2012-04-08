@@ -36,6 +36,15 @@ public interface XTestFactory extends EFactory
 	Import createImport();
 
 	/**
+	 * Returns a new object of class '<em>File Param</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>File Param</em>'.
+	 * @generated
+	 */
+	FileParam createFileParam();
+
+	/**
 	 * Returns a new object of class '<em>Unique Name</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
