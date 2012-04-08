@@ -465,4 +465,19 @@
 	      </description> 
 	    </decorator> 
 	</extension>
+	
+	<!-- Xtest libraries-->
+    <extension point="org.eclipse.jdt.core.classpathContainerInitializer">            
+   		<classpathContainerInitializer                                          
+			id="org.xtest.XTEST_CONTAINER"                                                        
+			class="org.xtest.ui.buildpath.XtestContainerInitializer"/>                           
+	</extension>
+	<extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            name="Xtest Libraries"
+            class="org.xtest.ui.buildpath.XtestContainerWizardPage"
+            id="org.xtest.XTEST_CONTAINER">
+      </classpathContainerPage>
+   </extension>
 </plugin>
