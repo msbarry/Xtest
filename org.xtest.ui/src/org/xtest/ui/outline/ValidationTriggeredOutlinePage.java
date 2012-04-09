@@ -1,9 +1,5 @@
 package org.xtest.ui.outline;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.swt.widgets.Composite;
@@ -13,6 +9,11 @@ import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentUtil;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
+import org.xtest.results.XTestResult;
+import org.xtest.ui.mediator.IXtestListener;
+import org.xtest.ui.mediator.XtestResultsMediator;
+
+import com.google.inject.Inject;
 
 /**
  * Custom outline page that listens on validation job start/finish events to trigger refreshing the
@@ -21,16 +22,10 @@ import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
  * @author Michael Barry
  */
 public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtextEditorAware,
-        IJobChangeListener {
+        IXtestListener {
+    @Inject
+    private XtestResultsMediator mediator;
     private ITextInputListener textInputListener;
-
-    @Override
-    public void aboutToRun(IJobChangeEvent arg0) {
-    }
-
-    @Override
-    public void awake(IJobChangeEvent arg0) {
-    }
 
     @Override
     public void createControl(Composite parent) {
@@ -43,22 +38,6 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
         super.dispose();
         getSourceViewer().removeTextInputListener(textInputListener);
         stopListeningOnValidation(getXtextDocument());
-    }
-
-    @Override
-    public void done(IJobChangeEvent arg0) {
-        if (arg0.getResult().getSeverity() != IStatus.CANCEL) {
-            showValidationFinished();
-        }
-    }
-
-    @Override
-    public void running(IJobChangeEvent arg0) {
-    }
-
-    @Override
-    public void scheduled(IJobChangeEvent arg0) {
-        showValidationStarted();
     }
 
     @Override
@@ -76,7 +55,13 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
     }
 
     @Override
-    public void sleeping(IJobChangeEvent arg0) {
+    public void validationFinished(XTestResult result) {
+        showValidationFinished();
+    };
+
+    @Override
+    public void validationStarted() {
+        showValidationStarted();
     }
 
     @Override
@@ -84,7 +69,7 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
         super.configureTextInputListener();
         textInputListener = new InputChangedListener(this);
         getSourceViewer().addTextInputListener(textInputListener);
-    };
+    }
 
     /**
      * Refresh the outline page with results from tests that have run
@@ -104,20 +89,14 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
     private void startListeningOnValidation(IXtextDocument document) {
         if (document instanceof XtextDocument) {
             XtextDocument xtestDoc = (XtextDocument) document;
-            Job validationJob = xtestDoc.getValidationJob();
-            if (validationJob != null) {
-                validationJob.addJobChangeListener(this);
-            }
+            mediator.addXtestListener(xtestDoc.getResourceURI(), this);
         }
     }
 
     private void stopListeningOnValidation(IXtextDocument document) {
         if (document instanceof XtextDocument) {
             XtextDocument xtestDoc = (XtextDocument) document;
-            Job validationJob = xtestDoc.getValidationJob();
-            if (validationJob != null) {
-                validationJob.removeJobChangeListener(this);
-            }
+            mediator.removeXtestListener(xtestDoc.getResourceURI(), this);
         }
     }
 

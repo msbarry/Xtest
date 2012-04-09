@@ -138,8 +138,6 @@ public class XTestRunner {
      * @return The test result
      */
     public XTestResult run(Body main, CancelIndicator monitor) {
-        XTestResult result;
-        result = new XTestResult(main);
         XTestInterpreter interpreter = getInterpreter(main.eResource());
         boolean failed = false;
         try {
@@ -148,7 +146,7 @@ public class XTestRunner {
         } catch (Throwable e) {
             failed = true;
         }
-        result = interpreter.getTestResult();
+        XTestResult result = interpreter.getTestResult();
         executed = interpreter.getExecutedExpressions();
         if (failed) {
             result.fail();

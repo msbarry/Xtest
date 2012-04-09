@@ -51,12 +51,8 @@ public class UiXTestRunner extends XTestRunner {
 
     @Override
     public XTestResult run(final Body main, CancelIndicator monitor) {
-        final ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(1);
-
         String name = "Running " + ((BodyImplCustom) main).getFileName();
-
-        // result.set(super.run(main, monitor));
-        // Kick off a new job to run the test
+        ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(1);
         Job job = new TestRunnerJob(name, resultQueue, main);
         job.schedule();
         XTestResult jobResult = null;
@@ -75,9 +71,6 @@ public class UiXTestRunner extends XTestRunner {
             }
         }
         XTestResult result = jobResult == null ? new XTestResult(main) : jobResult;
-
-        ((BodyImplCustom) main).setResult(result);
-
         return result;
     }
 
@@ -195,8 +188,8 @@ public class UiXTestRunner extends XTestRunner {
         @Override
         protected IStatus run(final IProgressMonitor arg0) {
             CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
-            XTestResult run = UiXTestRunner.super.run(main, indicator);
-            result.offer(run);
+            XTestResult xtestResult = UiXTestRunner.super.run(main, indicator);
+            result.offer(xtestResult);
             return Status.OK_STATUS;
         }
     }
