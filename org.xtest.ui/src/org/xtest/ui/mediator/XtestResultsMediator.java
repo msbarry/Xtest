@@ -1,54 +1,78 @@
 package org.xtest.ui.mediator;
 
-import java.util.Collection;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.xtest.results.XTestResult;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Singleton;
 
-// TODO replace this with EventBus/result cache?
+/**
+ * Xtest file validation result mediator that notifies listeners when validation starts and finishes
+ * and caches validation results
+ * 
+ * @author Michael Barry
+ */
 @Singleton
 public class XtestResultsMediator {
-    private final Multimap<URI, IXtestListener> listeners;
-    private final ConcurrentMap<URI, XTestResult> xtestFiles = Maps.newConcurrentMap();
+    private final EventBus eventBus = new EventBus("Xtest Result Event Bus");
+    private final Map<URI, XTestResult> resultCache = Maps.newHashMap();
 
-    public XtestResultsMediator() {
-        HashMultimap<URI, IXtestListener> unsynchronized = HashMultimap.create();
-        listeners = Multimaps.synchronizedSetMultimap(unsynchronized);
-    }
-
-    public void addXtestListener(URI uri, IXtestListener listener) {
-        listeners.put(uri, listener);
-    }
-
-    public void finish(URI uri, XTestResult result) {
-        if (result != null) {
-            xtestFiles.put(uri, result);
+    /**
+     * Called when Xtest file validation is finished
+     * 
+     * @param uri
+     *            URI of the Xtest file that was validated
+     * @param xtestResult
+     *            Validation result
+     */
+    public void finish(URI uri, XTestResult xtestResult) {
+        if (xtestResult != null) {
+            resultCache.put(uri, xtestResult);
         }
-        Collection<IXtestListener> collection = listeners.get(uri);
-        for (IXtestListener listener : collection) {
-            listener.validationFinished(result);
-        }
+        eventBus.post(new ValidationFinishedEvent(uri, xtestResult));
     }
 
-    public XTestResult last(URI uri) {
-        return xtestFiles.get(uri);
+    /**
+     * Return the last validation result for the Xtest file at the given URI
+     * 
+     * @param uri
+     *            The last validation result for the Xtest file at the given URI
+     * @return URI of the Xtest file
+     */
+    public XTestResult getLast(URI uri) {
+        return resultCache.get(uri);
     }
 
-    public void removeXtestListener(URI uri, IXtestListener listener) {
-        listeners.remove(uri, listener);
+    /**
+     * Register a validation start/finish event listener on the event bus
+     * 
+     * @param object
+     *            The listener to register
+     */
+    public void register(Object object) {
+        eventBus.register(object);
     }
 
+    /**
+     * Called when Xtest file validation is started
+     * 
+     * @param uri
+     *            URI of the Xtest file which has started validation
+     */
     public void start(URI uri) {
-        Collection<IXtestListener> collection = listeners.get(uri);
-        for (IXtestListener listener : collection) {
-            listener.validationStarted();
-        }
+        eventBus.post(new ValidationStartedEvent(uri));
+    }
+
+    /**
+     * Unregister a validation start/finish event listener from the event bus
+     * 
+     * @param object
+     *            The listener to unregister
+     */
+    public void unregister(Object object) {
+        eventBus.unregister(object);
     }
 }

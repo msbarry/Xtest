@@ -49,7 +49,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         if (body instanceof BodyImplCustom) {
             String fileName = ((BodyImplCustom) body).getFileName();
             URI uri = body.eResource().getURI();
-            XTestResult last = mediator.last(uri);
+            XTestResult last = mediator.getLast(uri);
             if (last != null) {
                 HashMultimap<Severity, EObject> issues = last.getIssues();
                 Object text = parentNode.getText();

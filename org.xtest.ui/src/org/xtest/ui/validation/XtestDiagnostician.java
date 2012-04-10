@@ -43,7 +43,6 @@ public class XtestDiagnostician extends CancelableDiagnostician {
         boolean validate = false;
         URI uri = eObject.eResource().getURI();
         if (eObject instanceof Body) {
-            mediator.start(uri);
             XTestResult xtestResult = null;
             try {
                 validate = super.validate(eClass, eObject, diagnostics, context);
