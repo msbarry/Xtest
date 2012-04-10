@@ -22,6 +22,7 @@ import org.xtest.ui.runner.UiXTestRunner;
 import org.xtest.ui.templates.XtestTemplateProposalProvider;
 import org.xtest.ui.validation.XtestDiagnostician;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.name.Names;
 
 /**
@@ -48,6 +49,15 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
     @SingletonBinding
     public Class<? extends CancelableDiagnostician> bindCancelableDiagnostician() {
         return XtestDiagnostician.class;
+    }
+
+    /**
+     * Binds {@link EventBus} to a singleton instance for publishing Xtest events to listeners
+     * 
+     * @return The singleton Xtest event bus
+     */
+    public EventBus bindEventBusToInstance() {
+        return new EventBus("Xtest Event Bus");
     }
 
     @Override

@@ -27,10 +27,11 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
-import org.xtest.ui.mediator.XtestResultsMediator;
+import org.xtest.ui.mediator.ValidationStartedEvent;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -46,16 +47,15 @@ public class UiXTestRunner extends XTestRunner {
      * Time to wait between checking the caller's cancel indicator.
      */
     private static final long DELAY_BETWEEN_CHECKS = 10;
+    @Inject
+    private EventBus eventBus;
 
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
 
-    @Inject
-    private XtestResultsMediator mediator;
-
     @Override
     public XTestResult run(final Body main, CancelIndicator monitor) {
-        mediator.start(main.eResource().getURI());
+        eventBus.post(new ValidationStartedEvent(main.eResource().getURI()));
         String name = "Running " + ((BodyImplCustom) main).getFileName();
         ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(1);
         Job job = new TestRunnerJob(name, resultQueue, main);

@@ -23,7 +23,7 @@ import org.eclipse.xtext.validation.IResourceValidator;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
 import org.xtest.ui.internal.XtestPluginImages;
-import org.xtest.ui.mediator.XtestResultsMediator;
+import org.xtest.ui.mediator.XtestResultsCache;
 import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.common.collect.HashMultimap;
@@ -39,7 +39,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     private XtestPluginImages images;
 
     @Inject
-    private XtestResultsMediator mediator;
+    private XtestResultsCache mediator;
 
     @Inject
     private IResourceValidator validator;

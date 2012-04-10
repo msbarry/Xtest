@@ -8,8 +8,8 @@ import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.xtest.ui.mediator.ValidationFinishedEvent;
 import org.xtest.ui.mediator.ValidationStartedEvent;
-import org.xtest.ui.mediator.XtestResultsMediator;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
@@ -21,11 +21,11 @@ import com.google.inject.Inject;
  */
 public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtextEditorAware {
     @Inject
-    private XtestResultsMediator mediator;
+    private EventBus eventBus;
 
     @Override
     public void createControl(Composite parent) {
-        mediator.register(this);
+        eventBus.register(this);
         super.createControl(parent);
         showValidationStarted();
     }
@@ -33,7 +33,7 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
     @Override
     public void dispose() {
         super.dispose();
-        mediator.unregister(this);
+        eventBus.unregister(this);
     }
 
     @Override

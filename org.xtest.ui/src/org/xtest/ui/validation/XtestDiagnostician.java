@@ -9,20 +9,22 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.xtest.results.XTestResult;
-import org.xtest.ui.mediator.XtestResultsMediator;
+import org.xtest.ui.mediator.ValidationFinishedEvent;
+import org.xtest.ui.mediator.XtestResultsCache;
 import org.xtest.xTest.Body;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 /**
- * Custom Xtest diagnostician that alerts the {@link XtestResultsMediator} before validation of an
+ * Custom Xtest diagnostician that alerts the {@link XtestResultsCache} before validation of an
  * Xtest file starts, and after it finishes
  * 
  * @author Michael Barry
  */
 public class XtestDiagnostician extends CancelableDiagnostician {
     @Inject
-    private XtestResultsMediator mediator;
+    private EventBus eventBus;
 
     /**
      * Construct a new {@link XtestDiagnostician}
@@ -48,7 +50,7 @@ public class XtestDiagnostician extends CancelableDiagnostician {
                 validate = super.validate(eClass, eObject, diagnostics, context);
                 xtestResult = (XTestResult) context.get(XTestResult.KEY);
             } finally {
-                mediator.finish(uri, xtestResult);
+                eventBus.post(new ValidationFinishedEvent(uri, xtestResult));
             }
         } else {
             validate = super.validate(eClass, eObject, diagnostics, context);
