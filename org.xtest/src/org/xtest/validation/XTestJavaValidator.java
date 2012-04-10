@@ -49,6 +49,7 @@ import com.google.inject.Singleton;
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private static final int TEST_RUN_FAILURE_INDEX = Integer.MIN_VALUE;
     private final ThreadLocal<CancelIndicator> cancelIndicators = new ThreadLocal<CancelIndicator>();
+    private final ThreadLocal<HashMultimap<Severity, EObject>> issues = new ThreadLocal<HashMultimap<Severity, EObject>>();
     @Inject
     private PerFilePreferenceProvider preferenceProvider;
     @Inject
@@ -114,17 +115,15 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             if (indicator == null) {
                 indicator = CancelIndicator.NullImpl;
             }
-            XTestResult run = runner.run(main, indicator);
-            markErrorsFromTest(run);
+            XTestResult result = runner.run(main, indicator);
+            markErrorsFromTest(result);
 
             if (preferenceProvider.get(main, RuntimePref.MARK_UNEXECUTED)) {
                 Set<XExpression> unexecutedExpressions = runner.getUnexecutedExpressions(main);
                 markUnexecuted(main, unexecutedExpressions);
             }
-            if (main instanceof BodyImplCustom) {
-                BodyImplCustom custom = (BodyImplCustom) main;
-                custom.setResult(run);
-            }
+            result.setIssues(issues.get());
+            getContext().put(XTestResult.KEY, result);
         }
     }
 
@@ -176,11 +175,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
 
     @Override
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
-        if (eObject instanceof BodyImplCustom) {
-            ((BodyImplCustom) eObject).getIssues().clear();
-        }
         cancelIndicators.set((CancelIndicator) context
                 .get(CancelableDiagnostician.CANCEL_INDICATOR));
+        issues.set(HashMultimap.<Severity, EObject> create());
         return super.isResponsible(context, eObject);
     }
 
@@ -260,8 +257,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             }
         }
         if (body != null && (severity == Severity.ERROR || severity == Severity.WARNING)) {
-            HashMultimap<Severity, EObject> issues = body.getIssues();
-            issues.put(severity, object);
+            issues.get().put(severity, object);
         }
     }
 }

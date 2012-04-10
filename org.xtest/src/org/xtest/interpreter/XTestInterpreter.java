@@ -137,7 +137,10 @@ public class XTestInterpreter extends XbaseInterpreter {
      * @return null
      */
     protected Object _evaluateBody(Body main, IEvaluationContext context, CancelIndicator indicator) {
-        result = new XTestResult(main);
+        if (result == null) {
+            // In case this is called outside of the context of XtestDiagnostician
+            result = new XTestResult(main);
+        }
         stack.push(result);
         Object toReturn = null;
         try {

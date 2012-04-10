@@ -3,11 +3,14 @@ package org.xtest.results;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
+import org.xtest.validation.XTestJavaValidator;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XTestExpression;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 
 /**
@@ -16,9 +19,14 @@ import com.google.common.collect.Lists;
  * @author Michael Barry
  */
 public class XTestResult {
+    /**
+     * Key to use as index to store {@link XTestResult}s in {@link XTestJavaValidator} context map
+     */
+    public static final String KEY = "XtestResult";
     private final EObject eObject;
     private XTestAssertException exception;
     private XTestEvaluationException expression;
+    private HashMultimap<Severity, EObject> issues = HashMultimap.create();
     private final String name;
     private final XTestResult parent;
     private XTestState state = XTestState.NOT_RUN;
@@ -123,6 +131,15 @@ public class XTestResult {
     }
 
     /**
+     * Returns the list of validation issues
+     * 
+     * @return The list of validation issues
+     */
+    public HashMultimap<Severity, EObject> getIssues() {
+        return issues;
+    }
+
+    /**
      * Returns the name of this test
      * 
      * @return The name of this test (can be null)
@@ -174,6 +191,16 @@ public class XTestResult {
         if (parent != null && parent.getState() == XTestState.NOT_RUN) {
             parent.pass();
         }
+    }
+
+    /**
+     * Sets the list of validation issues
+     * 
+     * @param hashMultimap
+     *            The list of validation issues
+     */
+    public void setIssues(HashMultimap<Severity, EObject> hashMultimap) {
+        this.issues = hashMultimap;
     }
 
     /**

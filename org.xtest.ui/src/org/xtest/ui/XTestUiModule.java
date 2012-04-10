@@ -1,13 +1,14 @@
 package org.xtest.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.common.types.xtext.ui.JdtValidationJobScheduler;
+import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 import org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage;
+import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.xbase.ui.highlighting.XbaseHighlightingCalculator;
 import org.xtest.XTestRunner;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider;
@@ -19,6 +20,7 @@ import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
 import org.xtest.ui.runner.UiXTestRunner;
 import org.xtest.ui.templates.XtestTemplateProposalProvider;
+import org.xtest.ui.validation.XtestDiagnostician;
 
 import com.google.inject.name.Names;
 
@@ -27,8 +29,8 @@ import com.google.inject.name.Names;
  * 
  * @author Michael Barry
  */
+@SuppressWarnings("restriction")
 public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
-
     /**
      * Construct the Guice Binding UI module for the pluin provided
      * 
@@ -38,19 +40,19 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
         super(plugin);
     }
 
+    /**
+     * Binds {@link CancelableDiagnostician} implementation to custom {@link XtestDiagnostician}
+     * 
+     * @return {@link XtestDiagnostician} class
+     */
+    @SingletonBinding
+    public Class<? extends CancelableDiagnostician> bindCancelableDiagnostician() {
+        return XtestDiagnostician.class;
+    }
+
     @Override
     public Class<? extends ITemplateProposalProvider> bindITemplateProposalProvider() {
         return XtestTemplateProposalProvider.class;
-    }
-
-    /**
-     * Binds {@link JdtValidationJobScheduler} implementation to custom
-     * {@link XtestValidationJobScheduler}
-     * 
-     * @return {@link XtestValidationJobScheduler} class
-     */
-    public Class<? extends JdtValidationJobScheduler> bindJdtValidationJobScheduler() {
-        return XtestValidationJobScheduler.class;
     }
 
     /**
@@ -86,7 +88,6 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      * 
      * @return {@link XtestHighlightingCalculator} class
      */
-    @SuppressWarnings("restriction")
     public Class<? extends XbaseHighlightingCalculator> bindXbaseHighlightingCalculator() {
         return XtestHighlightingCalculator.class;
     }
