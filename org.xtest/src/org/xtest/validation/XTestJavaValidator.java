@@ -177,7 +177,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
         cancelIndicators.set((CancelIndicator) context
                 .get(CancelableDiagnostician.CANCEL_INDICATOR));
-        issues.set(HashMultimap.<Severity, EObject> create());
+        if (eObject instanceof Body) {
+            issues.set(HashMultimap.<Severity, EObject> create());
+        }
         return super.isResponsible(context, eObject);
     }
 
