@@ -47,7 +47,7 @@ import com.google.inject.Singleton;
 @Singleton
 @SuppressWarnings("restriction")
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
-    private static final int TEST_RUN_FAILURE_INDEX = Integer.MIN_VALUE;
+    private static final int TEST_RUN_FAILURE_INDEX = Integer.MAX_VALUE;
     private final ThreadLocal<CancelIndicator> cancelIndicators = new ThreadLocal<CancelIndicator>();
     private final ThreadLocal<HashMultimap<Severity, EObject>> issues = new ThreadLocal<HashMultimap<Severity, EObject>>();
     @Inject
