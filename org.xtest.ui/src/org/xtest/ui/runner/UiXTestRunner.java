@@ -135,9 +135,12 @@ public class UiXTestRunner extends XTestRunner {
                                     }
                                 }
                             } else {
-                                // Change "toURL" to "toURI.toURL" since toURI is deprecated (does
-                                // not properly escape character sequences)
-                                urls.add(entry.getPath().toFile().toURI().toURL());
+                                IPath path = entry.getPath();
+                                // Local libs will have project-relative path
+                                if (root.exists(path)) {
+                                    path = root.getLocation().append(path);
+                                }
+                                urls.add(path.toFile().toURI().toURL());
                             }
                         }
                         cl = new URLClassLoader(urls.toArray(new URL[urls.size()]));
@@ -192,9 +195,13 @@ public class UiXTestRunner extends XTestRunner {
 
         @Override
         protected IStatus run(final IProgressMonitor arg0) {
-            CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
-            XTestResult xtestResult = UiXTestRunner.super.run(main, indicator);
-            result.offer(xtestResult);
+            XTestResult xtestResult = new XTestResult(main);
+            try {
+                CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
+                xtestResult = UiXTestRunner.super.run(main, indicator);
+            } finally {
+                result.offer(xtestResult);
+            }
             return Status.OK_STATUS;
         }
     }
