@@ -1,5 +1,6 @@
 package org.xtest.types;
 
+import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
 import org.eclipse.xtext.common.types.JvmTypeReference;
@@ -35,9 +36,13 @@ public class XTestTypeProvider extends XbaseTypeProvider {
         } else if (expression instanceof XFeatureCallImplCustom
                 && ((XFeatureCallImplCustom) expression).basicGetFeature() == null) {
             XFeatureCall call = (XFeatureCall) expression;
-            JvmParameterizedTypeReference typeArgRef = typeRefs.createTypeRef(call
-                    .getDeclaringType());
-            result = typeRefs.getTypeForName(Class.class, expression, typeArgRef);
+            JvmDeclaredType declaringType = call.getDeclaringType();
+            if (declaringType != null) {
+                JvmParameterizedTypeReference typeArgRef = typeRefs.createTypeRef(declaringType);
+                result = typeRefs.getTypeForName(Class.class, expression, typeArgRef);
+            } else {
+                result = typeRefs.getTypeForName(Class.class, expression);
+            }
         } else {
             result = super.type(expression, rawExpectation, rawType);
         }

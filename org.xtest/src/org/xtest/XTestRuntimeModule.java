@@ -1,5 +1,7 @@
 package org.xtest;
 
+import org.eclipse.xtend.core.formatting.OrganizeImports;
+import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
@@ -7,6 +9,7 @@ import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.eclipse.xtext.xbase.scoping.XbaseScopeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
+import org.xtest.formatting.XtestOrganizeImports;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.linking.XtestFeatureCallChecker;
 import org.xtest.scoping.XTestScopeProvider;
@@ -38,12 +41,22 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     }
 
     /**
+     * Bind {@link OrganizeImports} to custom implementation that organizes imports for Xtest files
+     * rather than Xtend files
+     * 
+     * @return {@link XtestOrganizeImports}
+     */
+    public Class<? extends OrganizeImports> bindOrganizeImports() {
+        return XtestOrganizeImports.class;
+    }
+
+    /**
      * Bind {@link StaticImplicitMethodsFeatureForTypeProvider} to custom implementation that
      * contributes static imports as implicit static methods
      * 
      * @return {@link XtestStaticMethodsFeatureForTypeProvider}
      */
-    public Class<? extends StaticImplicitMethodsFeatureForTypeProvider> bindStaticImplicitMethodsFeatureForTypeProvider() {
+    public Class<? extends StaticallyImportedFeaturesProvider> bindStaticallyImportedFeaturesProvider() {
         return XtestStaticMethodsFeatureForTypeProvider.class;
     }
 

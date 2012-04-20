@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtend.core.formatting.OrganizeImports;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
@@ -38,6 +39,8 @@ public class XTestRegressionTests {
     private static Injector injector = XtestInjector.injector;
     private static XTestInterpreter interpreter = XtestInjector.injector
             .getInstance(XTestInterpreter.class);
+    private static OrganizeImports organizeImports = XtestInjector.injector
+            .getInstance(OrganizeImports.class);
     private static TypeConformanceComputer typeComputer = XtestInjector.injector
             .getInstance(TypeConformanceComputer.class);
     private static XTestTypeProvider typeProvider = XtestInjector.injector
@@ -60,7 +63,13 @@ public class XTestRegressionTests {
         Resource eResource = parse.eResource();
         List<Issue> validate = instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN,
                 CancelIndicator.NullImpl);
-        assertEquals("[]", validate.toString());
+        List<Issue> errors = Lists.newArrayList();
+        for (Issue issue : validate) {
+            if (issue.getSeverity() == Severity.ERROR) {
+                errors.add(issue);
+            }
+        }
+        assertEquals("[]", errors.toString());
     }
 
     protected static List<Issue> getWarningsRunTests(Body parse) throws Exception {
@@ -83,6 +92,12 @@ public class XTestRegressionTests {
 
     protected static Body parse(String string) throws Exception {
         return XTestRunner.parse(string, injector);
+    }
+
+    protected static void runValidation(Body parse) throws Exception {
+        IResourceValidator instance = injector.getInstance(IResourceValidator.class);
+        Resource eResource = parse.eResource();
+        instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
     }
 
     @Test

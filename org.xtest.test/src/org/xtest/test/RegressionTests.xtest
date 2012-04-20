@@ -9,12 +9,12 @@ xtest testBug1 {
     val result = XTestRunner::parse('
 xsuite test {
 	xtest case {
-		assert 1 == 1
+		assert 1 == 1 
 		assert 2 ==
 		assert 3 == 3
 	}
 }', injector)
-    typeProvider.getCommonReturnType(result, true)
+    typeProvider.getCommonReturnType(result, true) 
 } 
 xtest testBug2 {
     val result = XTestRunner::parse('
@@ -23,6 +23,15 @@ xtest test {
 	assert a.descendingMap == a
 }', injector)
     typeProvider.getCommonReturnType(result, true)
+}
+
+xtest bug3 {
+	val result = XTestRunner::parse('	
+import java.util.List
+xtest mockito {
+	val mo   List::class.mock
+}', injector)
+    runValidation(result)
 }
 
 xtest testCodeNotRun {
@@ -34,6 +43,13 @@ if (a == 1) true else false
     assertEquals(1, warningsRunTests.size())
 }
  
+xtest testFirstImport {
+    val parse = parse('
+import java.util.ArrayList
+import java.util.LinkedHashMap
+val a = new ArrayList<String>')
+    assertValidationPassed(parse)
+}
 
 xtest testCodeNotRunOnly1Warning {
     val parse = parse('

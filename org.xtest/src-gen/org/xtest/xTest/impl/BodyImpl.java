@@ -18,11 +18,12 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.xtend.core.xtend.XtendImport;
+
 import org.eclipse.xtext.xbase.impl.XBlockExpressionImpl;
 
 import org.xtest.xTest.Body;
 import org.xtest.xTest.FileParam;
-import org.xtest.xTest.Import;
 import org.xtest.xTest.XTestPackage;
 
 /**
@@ -59,7 +60,7 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Import> imports;
+	protected EList<XtendImport> imports;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -101,11 +102,11 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Import> getImports()
+	public EList<XtendImport> getImports()
 	{
 		if (imports == null)
 		{
-			imports = new EObjectContainmentEList<Import>(Import.class, this, XTestPackage.BODY__IMPORTS);
+			imports = new EObjectContainmentEList<XtendImport>(XtendImport.class, this, XTestPackage.BODY__IMPORTS);
 		}
 		return imports;
 	}
@@ -163,7 +164,7 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 				return;
 			case XTestPackage.BODY__IMPORTS:
 				getImports().clear();
-				getImports().addAll((Collection<? extends Import>)newValue);
+				getImports().addAll((Collection<? extends XtendImport>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

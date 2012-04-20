@@ -3,6 +3,8 @@ package org.xtest.serializer;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtend.core.xtend.XtendImport;
+import org.eclipse.xtend.core.xtend.XtendPackage;
 import org.eclipse.xtext.common.types.JvmFormalParameter;
 import org.eclipse.xtext.common.types.JvmGenericArrayTypeReference;
 import org.eclipse.xtext.common.types.JvmLowerBound;
@@ -54,7 +56,6 @@ import org.eclipse.xtext.xtype.XtypePackage;
 import org.xtest.services.XTestGrammarAccess;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.FileParam;
-import org.xtest.xTest.Import;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestExpression;
@@ -161,12 +162,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 			case XTestPackage.FILE_PARAM:
 				if(context == grammarAccess.getFileParamRule()) {
 					sequence_FileParam(context, (FileParam) semanticObject); 
-					return; 
-				}
-				else break;
-			case XTestPackage.IMPORT:
-				if(context == grammarAccess.getImportRule()) {
-					sequence_Import(context, (Import) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1039,6 +1034,14 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				}
 				else break;
 			}
+		else if(semanticObject.eClass().getEPackage() == XtendPackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
+			case XtendPackage.XTEND_IMPORT:
+				if(context == grammarAccess.getImportRule()) {
+					sequence_Import(context, (XtendImport) semanticObject); 
+					return; 
+				}
+				else break;
+			}
 		else if(semanticObject.eClass().getEPackage() == XtypePackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
 			case XtypePackage.XFUNCTION_TYPE_REF:
 				if(context == grammarAccess.getJvmArgumentTypeReferenceRule() ||
@@ -1091,9 +1094,13 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     ((static?='static' staticImport=[JvmType|QualifiedName]) | typeImport=[JvmType|QualifiedName] | importedNamespace=QualifiedNamespaceWithWildcard)
+	 *     (
+	 *         (static?='static' extension?='extension'? importedType=[JvmType|QualifiedName]) | 
+	 *         importedType=[JvmType|QualifiedName] | 
+	 *         importedNamespace=QualifiedNamespaceWithWildcard
+	 *     )
 	 */
-	protected void sequence_Import(EObject context, Import semanticObject) {
+	protected void sequence_Import(EObject context, XtendImport semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

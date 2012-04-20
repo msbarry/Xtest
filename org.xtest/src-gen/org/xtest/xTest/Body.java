@@ -8,6 +8,8 @@ package org.xtest.xTest;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.xtend.core.xtend.XtendImport;
+
 import org.eclipse.xtext.xbase.XBlockExpression;
 
 /**
@@ -47,7 +49,7 @@ public interface Body extends XBlockExpression
 
 	/**
 	 * Returns the value of the '<em><b>Imports</b></em>' containment reference list.
-	 * The list contents are of type {@link org.xtest.xTest.Import}.
+	 * The list contents are of type {@link org.eclipse.xtend.core.xtend.XtendImport}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Imports</em>' containment reference list isn't clear,
@@ -59,6 +61,6 @@ public interface Body extends XBlockExpression
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Import> getImports();
+	EList<XtendImport> getImports();
 
 } // Body
