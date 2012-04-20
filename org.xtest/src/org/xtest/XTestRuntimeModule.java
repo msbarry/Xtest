@@ -1,5 +1,6 @@
 package org.xtest;
 
+import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
@@ -43,7 +44,7 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      * 
      * @return {@link XtestStaticMethodsFeatureForTypeProvider}
      */
-    public Class<? extends StaticImplicitMethodsFeatureForTypeProvider> bindStaticImplicitMethodsFeatureForTypeProvider() {
+    public Class<? extends StaticallyImportedFeaturesProvider> bindStaticallyImportedFeaturesProvider() {
         return XtestStaticMethodsFeatureForTypeProvider.class;
     }
 

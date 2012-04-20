@@ -67,6 +67,16 @@ public class XTestRunnerUnitTests {
     }
 
     @Test
+    public void testExtensionImport() {
+        assertXtestPasses("import static extension helpers.ExtensionMethods.*\nassert 1.incr == 2");
+    }
+
+    @Test
+    public void testExtensionImportBad() {
+        assertXtestPreEvalFailure("import static helpers.ExtensionMethods.*\nassert 1.incr == 2");
+    }
+
+    @Test
     public void testFalseAssertInCaseInSuiteInSuite() {
         XTestResult result = XTestRunner.run("xsuite suite {xtest tcase {assert 0==1}}", injector);
         assertEquals("[]", result.getErrorMessages().toString());

@@ -196,26 +196,41 @@ ruleImport returns [EObject current=null]
 )
 )(
 (
+		lv_extension_2_0=	'extension' 
+    {
+        newLeafNode(lv_extension_2_0, grammarAccess.getImportAccess().getExtensionExtensionKeyword_1_0_1_0());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getImportRule());
+	        }
+       		setWithLastConsumed($current, "extension", true, "extension");
+	    }
+
+)
+)?(
+(
 		{
 			if ($current==null) {
 	            $current = createModelElement(grammarAccess.getImportRule());
 	        }
         }
 		{ 
-	        newCompositeNode(grammarAccess.getImportAccess().getStaticImportJvmTypeCrossReference_1_0_1_0()); 
+	        newCompositeNode(grammarAccess.getImportAccess().getImportedTypeJvmTypeCrossReference_1_0_2_0()); 
 	    }
 		ruleQualifiedName		{ 
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
-)	otherlv_3='.' 
+)	otherlv_4='.' 
     {
-    	newLeafNode(otherlv_3, grammarAccess.getImportAccess().getFullStopKeyword_1_0_2());
+    	newLeafNode(otherlv_4, grammarAccess.getImportAccess().getFullStopKeyword_1_0_3());
     }
-	otherlv_4='*' 
+	otherlv_5='*' 
     {
-    	newLeafNode(otherlv_4, grammarAccess.getImportAccess().getAsteriskKeyword_1_0_3());
+    	newLeafNode(otherlv_5, grammarAccess.getImportAccess().getAsteriskKeyword_1_0_4());
     }
 )
     |(
@@ -226,7 +241,7 @@ ruleImport returns [EObject current=null]
 	        }
         }
 		{ 
-	        newCompositeNode(grammarAccess.getImportAccess().getTypeImportJvmTypeCrossReference_1_1_0()); 
+	        newCompositeNode(grammarAccess.getImportAccess().getImportedTypeJvmTypeCrossReference_1_1_0()); 
 	    }
 		ruleQualifiedName		{ 
 	        afterParserOrEnumRuleCall();
@@ -239,14 +254,14 @@ ruleImport returns [EObject current=null]
 		{ 
 	        newCompositeNode(grammarAccess.getImportAccess().getImportedNamespaceQualifiedNamespaceWithWildcardParserRuleCall_1_2_0()); 
 	    }
-		lv_importedNamespace_6_0=ruleQualifiedNamespaceWithWildcard		{
+		lv_importedNamespace_7_0=ruleQualifiedNamespaceWithWildcard		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getImportRule());
 	        }
        		set(
        			$current, 
        			"importedNamespace",
-        		lv_importedNamespace_6_0, 
+        		lv_importedNamespace_7_0, 
         		"QualifiedNamespaceWithWildcard");
 	        afterParserOrEnumRuleCall();
 	    }

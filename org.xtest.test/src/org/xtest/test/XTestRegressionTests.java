@@ -60,7 +60,13 @@ public class XTestRegressionTests {
         Resource eResource = parse.eResource();
         List<Issue> validate = instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN,
                 CancelIndicator.NullImpl);
-        assertEquals("[]", validate.toString());
+        List<Issue> errors = Lists.newArrayList();
+        for (Issue issue : validate) {
+            if (issue.getSeverity() == Severity.ERROR) {
+                errors.add(issue);
+            }
+        }
+        assertEquals("[]", errors.toString());
     }
 
     protected static List<Issue> getWarningsRunTests(Body parse) throws Exception {
@@ -83,6 +89,12 @@ public class XTestRegressionTests {
 
     protected static Body parse(String string) throws Exception {
         return XTestRunner.parse(string, injector);
+    }
+
+    protected static void runValidation(Body parse) throws Exception {
+        IResourceValidator instance = injector.getInstance(IResourceValidator.class);
+        Resource eResource = parse.eResource();
+        instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
     }
 
     @Test

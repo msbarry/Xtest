@@ -16,12 +16,6 @@ import org.xtest.xTest.XTestPackage;
  */
 @SuppressWarnings("restriction")
 public class XtestHighlightingCalculator extends XbaseHighlightingCalculator {
-    @Override
-    protected void doProvideHighlightingFor(XtextResource resource,
-            IHighlightedPositionAcceptor acceptor) {
-        // TODO Auto-generated method stub
-        super.doProvideHighlightingFor(resource, acceptor);
-    }
 
     @Override
     protected void searchAndHighlightElements(XtextResource resource,

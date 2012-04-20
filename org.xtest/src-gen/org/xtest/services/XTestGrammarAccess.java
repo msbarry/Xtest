@@ -93,38 +93,42 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
 		private final Assignment cStaticAssignment_1_0_0 = (Assignment)cGroup_1_0.eContents().get(0);
 		private final Keyword cStaticStaticKeyword_1_0_0_0 = (Keyword)cStaticAssignment_1_0_0.eContents().get(0);
-		private final Assignment cStaticImportAssignment_1_0_1 = (Assignment)cGroup_1_0.eContents().get(1);
-		private final CrossReference cStaticImportJvmTypeCrossReference_1_0_1_0 = (CrossReference)cStaticImportAssignment_1_0_1.eContents().get(0);
-		private final RuleCall cStaticImportJvmTypeQualifiedNameParserRuleCall_1_0_1_0_1 = (RuleCall)cStaticImportJvmTypeCrossReference_1_0_1_0.eContents().get(1);
-		private final Keyword cFullStopKeyword_1_0_2 = (Keyword)cGroup_1_0.eContents().get(2);
-		private final Keyword cAsteriskKeyword_1_0_3 = (Keyword)cGroup_1_0.eContents().get(3);
-		private final Assignment cTypeImportAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
-		private final CrossReference cTypeImportJvmTypeCrossReference_1_1_0 = (CrossReference)cTypeImportAssignment_1_1.eContents().get(0);
-		private final RuleCall cTypeImportJvmTypeQualifiedNameParserRuleCall_1_1_0_1 = (RuleCall)cTypeImportJvmTypeCrossReference_1_1_0.eContents().get(1);
+		private final Assignment cExtensionAssignment_1_0_1 = (Assignment)cGroup_1_0.eContents().get(1);
+		private final Keyword cExtensionExtensionKeyword_1_0_1_0 = (Keyword)cExtensionAssignment_1_0_1.eContents().get(0);
+		private final Assignment cImportedTypeAssignment_1_0_2 = (Assignment)cGroup_1_0.eContents().get(2);
+		private final CrossReference cImportedTypeJvmTypeCrossReference_1_0_2_0 = (CrossReference)cImportedTypeAssignment_1_0_2.eContents().get(0);
+		private final RuleCall cImportedTypeJvmTypeQualifiedNameParserRuleCall_1_0_2_0_1 = (RuleCall)cImportedTypeJvmTypeCrossReference_1_0_2_0.eContents().get(1);
+		private final Keyword cFullStopKeyword_1_0_3 = (Keyword)cGroup_1_0.eContents().get(3);
+		private final Keyword cAsteriskKeyword_1_0_4 = (Keyword)cGroup_1_0.eContents().get(4);
+		private final Assignment cImportedTypeAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
+		private final CrossReference cImportedTypeJvmTypeCrossReference_1_1_0 = (CrossReference)cImportedTypeAssignment_1_1.eContents().get(0);
+		private final RuleCall cImportedTypeJvmTypeQualifiedNameParserRuleCall_1_1_0_1 = (RuleCall)cImportedTypeJvmTypeCrossReference_1_1_0.eContents().get(1);
 		private final Assignment cImportedNamespaceAssignment_1_2 = (Assignment)cAlternatives_1.eContents().get(2);
 		private final RuleCall cImportedNamespaceQualifiedNamespaceWithWildcardParserRuleCall_1_2_0 = (RuleCall)cImportedNamespaceAssignment_1_2.eContents().get(0);
 		
-		//Import:
+		//// From Xtend 2.3
 		//
-		//	"import" (static?="static" staticImport=[JvmType|QualifiedName] "." "*" | typeImport=[JvmType|QualifiedName] |
+		//Import returns XtendImport:
 		//
-		//	importedNamespace=QualifiedNamespaceWithWildcard);
+		//	"import" (static?="static" extension?="extension"? importedType=[JvmType|QualifiedName] "." "*" |
+		//
+		//	importedType=[JvmType|QualifiedName] | importedNamespace=QualifiedNamespaceWithWildcard);
 		public ParserRule getRule() { return rule; }
 
-		//"import" (static?="static" staticImport=[JvmType|QualifiedName] "." "*" | typeImport=[JvmType|QualifiedName] |
+		//"import" (static?="static" extension?="extension"? importedType=[JvmType|QualifiedName] "." "*" |
 		//
-		//importedNamespace=QualifiedNamespaceWithWildcard)
+		//importedType=[JvmType|QualifiedName] | importedNamespace=QualifiedNamespaceWithWildcard)
 		public Group getGroup() { return cGroup; }
 
 		//"import"
 		public Keyword getImportKeyword_0() { return cImportKeyword_0; }
 
-		//static?="static" staticImport=[JvmType|QualifiedName] "." "*" | typeImport=[JvmType|QualifiedName] |
+		//static?="static" extension?="extension"? importedType=[JvmType|QualifiedName] "." "*" |
 		//
-		//importedNamespace=QualifiedNamespaceWithWildcard
+		//importedType=[JvmType|QualifiedName] | importedNamespace=QualifiedNamespaceWithWildcard
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
-		//static?="static" staticImport=[JvmType|QualifiedName] "." "*"
+		//static?="static" extension?="extension"? importedType=[JvmType|QualifiedName] "." "*"
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
 		//static?="static"
@@ -133,29 +137,35 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//"static"
 		public Keyword getStaticStaticKeyword_1_0_0_0() { return cStaticStaticKeyword_1_0_0_0; }
 
-		//staticImport=[JvmType|QualifiedName]
-		public Assignment getStaticImportAssignment_1_0_1() { return cStaticImportAssignment_1_0_1; }
+		//extension?="extension"?
+		public Assignment getExtensionAssignment_1_0_1() { return cExtensionAssignment_1_0_1; }
+
+		//"extension"
+		public Keyword getExtensionExtensionKeyword_1_0_1_0() { return cExtensionExtensionKeyword_1_0_1_0; }
+
+		//importedType=[JvmType|QualifiedName]
+		public Assignment getImportedTypeAssignment_1_0_2() { return cImportedTypeAssignment_1_0_2; }
 
 		//[JvmType|QualifiedName]
-		public CrossReference getStaticImportJvmTypeCrossReference_1_0_1_0() { return cStaticImportJvmTypeCrossReference_1_0_1_0; }
+		public CrossReference getImportedTypeJvmTypeCrossReference_1_0_2_0() { return cImportedTypeJvmTypeCrossReference_1_0_2_0; }
 
 		//QualifiedName
-		public RuleCall getStaticImportJvmTypeQualifiedNameParserRuleCall_1_0_1_0_1() { return cStaticImportJvmTypeQualifiedNameParserRuleCall_1_0_1_0_1; }
+		public RuleCall getImportedTypeJvmTypeQualifiedNameParserRuleCall_1_0_2_0_1() { return cImportedTypeJvmTypeQualifiedNameParserRuleCall_1_0_2_0_1; }
 
 		//"."
-		public Keyword getFullStopKeyword_1_0_2() { return cFullStopKeyword_1_0_2; }
+		public Keyword getFullStopKeyword_1_0_3() { return cFullStopKeyword_1_0_3; }
 
 		//"*"
-		public Keyword getAsteriskKeyword_1_0_3() { return cAsteriskKeyword_1_0_3; }
+		public Keyword getAsteriskKeyword_1_0_4() { return cAsteriskKeyword_1_0_4; }
 
-		//typeImport=[JvmType|QualifiedName]
-		public Assignment getTypeImportAssignment_1_1() { return cTypeImportAssignment_1_1; }
+		//importedType=[JvmType|QualifiedName]
+		public Assignment getImportedTypeAssignment_1_1() { return cImportedTypeAssignment_1_1; }
 
 		//[JvmType|QualifiedName]
-		public CrossReference getTypeImportJvmTypeCrossReference_1_1_0() { return cTypeImportJvmTypeCrossReference_1_1_0; }
+		public CrossReference getImportedTypeJvmTypeCrossReference_1_1_0() { return cImportedTypeJvmTypeCrossReference_1_1_0; }
 
 		//QualifiedName
-		public RuleCall getTypeImportJvmTypeQualifiedNameParserRuleCall_1_1_0_1() { return cTypeImportJvmTypeQualifiedNameParserRuleCall_1_1_0_1; }
+		public RuleCall getImportedTypeJvmTypeQualifiedNameParserRuleCall_1_1_0_1() { return cImportedTypeJvmTypeQualifiedNameParserRuleCall_1_1_0_1; }
 
 		//importedNamespace=QualifiedNamespaceWithWildcard
 		public Assignment getImportedNamespaceAssignment_1_2() { return cImportedNamespaceAssignment_1_2; }
@@ -694,11 +704,13 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		return getBodyAccess().getRule();
 	}
 
-	//Import:
+	//// From Xtend 2.3
 	//
-	//	"import" (static?="static" staticImport=[JvmType|QualifiedName] "." "*" | typeImport=[JvmType|QualifiedName] |
+	//Import returns XtendImport:
 	//
-	//	importedNamespace=QualifiedNamespaceWithWildcard);
+	//	"import" (static?="static" extension?="extension"? importedType=[JvmType|QualifiedName] "." "*" |
+	//
+	//	importedType=[JvmType|QualifiedName] | importedNamespace=QualifiedNamespaceWithWildcard);
 	public ImportElements getImportAccess() {
 		return (pImport != null) ? pImport : (pImport = new ImportElements());
 	}

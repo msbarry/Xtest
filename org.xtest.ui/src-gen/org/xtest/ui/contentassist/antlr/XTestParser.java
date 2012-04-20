@@ -221,8 +221,9 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getBodyAccess().getImportsAssignment_2_0(), "rule__Body__ImportsAssignment_2_0");
 					put(grammarAccess.getBodyAccess().getExpressionsAssignment_3_0(), "rule__Body__ExpressionsAssignment_3_0");
 					put(grammarAccess.getImportAccess().getStaticAssignment_1_0_0(), "rule__Import__StaticAssignment_1_0_0");
-					put(grammarAccess.getImportAccess().getStaticImportAssignment_1_0_1(), "rule__Import__StaticImportAssignment_1_0_1");
-					put(grammarAccess.getImportAccess().getTypeImportAssignment_1_1(), "rule__Import__TypeImportAssignment_1_1");
+					put(grammarAccess.getImportAccess().getExtensionAssignment_1_0_1(), "rule__Import__ExtensionAssignment_1_0_1");
+					put(grammarAccess.getImportAccess().getImportedTypeAssignment_1_0_2(), "rule__Import__ImportedTypeAssignment_1_0_2");
+					put(grammarAccess.getImportAccess().getImportedTypeAssignment_1_1(), "rule__Import__ImportedTypeAssignment_1_1");
 					put(grammarAccess.getImportAccess().getImportedNamespaceAssignment_1_2(), "rule__Import__ImportedNamespaceAssignment_1_2");
 					put(grammarAccess.getFileParamAccess().getFeatureAssignment_0(), "rule__FileParam__FeatureAssignment_0");
 					put(grammarAccess.getFileParamAccess().getValueAssignment_2(), "rule__FileParam__ValueAssignment_2");

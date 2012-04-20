@@ -3,11 +3,11 @@ package org.xtest.scoping;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtend.core.xtend.XtendImport;
 import org.eclipse.xtext.common.types.JvmType;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.xtest.xTest.Body;
-import org.xtest.xTest.Import;
 
 import com.google.common.collect.Lists;
 
@@ -25,10 +25,10 @@ public class XtestImportedNamespaceScopeProvider extends XbaseImportedNamespaceS
             boolean ignoreCase) {
         List<ImportNormalizer> importedNamespaceResolvers = Lists.newArrayList();
         if (context instanceof Body) {
-            for (Import imported : ((Body) context).getImports()) {
+            for (XtendImport imported : ((Body) context).getImports()) {
                 if (!imported.isStatic()) {
                     String value = imported.getImportedNamespace();
-                    JvmType typeImport = imported.getTypeImport();
+                    JvmType typeImport = imported.getImportedType();
                     if (value == null && typeImport != null) {
                         value = typeImport.getQualifiedName();
                     }
