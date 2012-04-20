@@ -43,6 +43,13 @@ if (a == 1) true else false
     assertEquals(1, warningsRunTests.size())
 }
  
+xtest testFirstImport {
+    val parse = parse('
+import java.util.ArrayList
+import java.util.LinkedHashMap
+val a = new ArrayList<String>')
+    assertValidationPassed(parse)
+}
 
 xtest testCodeNotRunOnly1Warning {
     val parse = parse('

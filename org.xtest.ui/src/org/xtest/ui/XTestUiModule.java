@@ -1,6 +1,7 @@
 package org.xtest.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.common.types.xtext.ui.ITypesProposalProvider;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
@@ -11,6 +12,7 @@ import org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.xbase.ui.highlighting.XbaseHighlightingCalculator;
 import org.xtest.XTestRunner;
+import org.xtest.ui.contentassist.XtestImportingTypesProposalProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider.Initializer;
 import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
@@ -63,6 +65,11 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
     @Override
     public Class<? extends ITemplateProposalProvider> bindITemplateProposalProvider() {
         return XtestTemplateProposalProvider.class;
+    }
+
+    @Override
+    public Class<? extends ITypesProposalProvider> bindITypesProposalProvider() {
+        return XtestImportingTypesProposalProvider.class;
     }
 
     /**
