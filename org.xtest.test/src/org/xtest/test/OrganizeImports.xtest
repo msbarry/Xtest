@@ -1,0 +1,67 @@
+/* File-specific parameters */
+runWhileEditing: false 
+import static org.junit.Assert.*
+import static org.^xtest.test.XTestRegressionTests.*
+import org.^xtest.XTestRunner
+import helpers.*
+
+xtest noImports {
+    val result = XTestRunner::parse('
+runWhileEditing: true
+xsuite test {
+	xtest case {
+		assert 1 == 1 
+	}
+}', injector)
+	val a = organizeImports.getOrganizedImportSection(result.eResource as org.eclipse.xtext.resource.XtextResource)
+	assertEquals('
+',a)
+}
+
+xtest splatToSingle {
+    val result = XTestRunner::parse('
+import java.util.*
+assert new ArrayList<String>() != null
+', injector)
+	val resource = result.eResource as org.eclipse.xtext.resource.XtextResource
+	val a = organizeImports.getOrganizedImportSection(resource)
+	assertEquals('import java.util.ArrayList
+
+',a)
+}
+
+xtest sameLine {
+    val result = XTestRunner::parse('
+runWhileEditing: true
+import java.util.*; assert new ArrayList<String>() != null
+', injector)
+	val resource = result.eResource as org.eclipse.xtext.resource.XtextResource
+	val a = organizeImports.getOrganizedImportSection(resource)
+	assertEquals('
+import java.util.ArrayList
+
+',a)
+}
+
+xtest javaLangNotImported {
+    val result = XTestRunner::parse('
+runWhileEditing: true
+import java.util.*; assert new String() != null
+', injector)
+	val resource = result.eResource as org.eclipse.xtext.resource.XtextResource
+	val a = organizeImports.getOrganizedImportSection(resource)
+	assertEquals('
+',a)
+}
+
+xtest lineBreakAtBeginning {
+    val result = XTestRunner::parse('
+runWhileEditing: true; import java.util.*; assert new ArrayList<String>() != null
+', injector)
+	val resource = result.eResource as org.eclipse.xtext.resource.XtextResource
+	val a = organizeImports.getOrganizedImportSection(resource)
+	assertEquals('
+import java.util.ArrayList
+
+',a)
+}

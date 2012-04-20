@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtend.core.formatting.OrganizeImports;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
@@ -38,6 +39,8 @@ public class XTestRegressionTests {
     private static Injector injector = XtestInjector.injector;
     private static XTestInterpreter interpreter = XtestInjector.injector
             .getInstance(XTestInterpreter.class);
+    private static OrganizeImports organizeImports = XtestInjector.injector
+            .getInstance(OrganizeImports.class);
     private static TypeConformanceComputer typeComputer = XtestInjector.injector
             .getInstance(TypeConformanceComputer.class);
     private static XTestTypeProvider typeProvider = XtestInjector.injector
