@@ -94,6 +94,16 @@ import helpers.SUT
 val a = new SUT',helper.apply(input))
 } 
 
+xtest escapedStaticImport {
+	val input = 
+'import static org.^xtest.test.XTestRegressionTests.*
+val a = interpreter'
+	assertEqualsNormalizeLinebreak(
+'import static org.^xtest.test.XTestRegressionTests.*
+
+val a = interpreter',helper.apply(input))
+}
+
 
 xtest empty {
 	val input = 

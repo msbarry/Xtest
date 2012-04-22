@@ -1,11 +1,11 @@
 package org.xtest.formatting;
 
-import java.util.Map;
+import java.util.List;
 
 import org.eclipse.xtend.core.formatting.OrganizeImports.ReferenceAcceptor;
-import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.xbase.conversion.XbaseQualifiedNameValueConverter;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -20,20 +20,25 @@ public class XtestReferenceAcceptor extends ReferenceAcceptor {
     private XbaseQualifiedNameValueConverter converter;
 
     @Override
-    protected void addType(Map<String, String> names, JvmDeclaredType type) {
-        String packageName = type.getPackageName();
-        String qualifiedName = converter.toString(type.getQualifiedName());
-        final String simpleName = packageName != null ? qualifiedName.substring(packageName
-                .length() + 1) : qualifiedName;
-        if (simpleName == null) {
-            return;
+    public List<String> getListofImportedTypeNames() {
+        return normalize(super.getListofImportedTypeNames());
+    }
+
+    @Override
+    public List<String> getListofStaticExtensionImports() {
+        return normalize(super.getListofStaticExtensionImports());
+    }
+
+    @Override
+    public List<String> getListofStaticImports() {
+        return normalize(super.getListofStaticImports());
+    }
+
+    private List<String> normalize(List<String> result) {
+        List<String> result2 = Lists.newArrayList();
+        for (String entry : result) {
+            result2.add(converter.toString(entry));
         }
-        if (!names.containsKey(simpleName)) {
-            final String identifier = type.getIdentifier();
-            if (identifier == null) {
-                return;
-            }
-            names.put(simpleName, converter.toString(identifier));
-        }
+        return result2;
     }
 }
