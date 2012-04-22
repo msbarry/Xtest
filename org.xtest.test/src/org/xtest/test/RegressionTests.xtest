@@ -149,3 +149,11 @@ a.getC()')
     assertValidationPassed(parse)
     assertEvaluatesTo(1, parse)
 }
+
+
+xtest exceptionInClosure {
+    val parse = parse('
+val a = [String s|throw new Exception]
+a.apply("c")')
+    assertValidationPassed(parse)
+}

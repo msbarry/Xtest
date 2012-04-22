@@ -285,6 +285,12 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
         return super.isResponsible(context, eObject);
     }
 
+    @Override
+    protected boolean supportsCheckedExceptions() {
+        // No need to check exceptions in xtest, they will be flagged as errors if thrown
+        return false;
+    }
+
     /**
      * Marks the errors from the test
      * 
