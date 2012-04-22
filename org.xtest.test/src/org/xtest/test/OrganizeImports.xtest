@@ -1,11 +1,10 @@
 /* File-specific parameters */
-runWhileEditing: false 
-import static org.junit.Assert.*
-import static org.^xtest.test.XTestRegressionTests.*
-import org.^xtest.XTestRunner 
-import helpers.*
+runWhileEditing: false
 import org.eclipse.xtext.resource.XtextResource
+import org.^xtest.XTestRunner
+
 import static org.^xtest.test.AssertHelpers.*
+import static org.^xtest.test.XTestRegressionTests.*
 
 val helper = [String input|{
     val result = try XTestRunner::parse(input, injector) catch (Exception e) null

@@ -1,10 +1,11 @@
 /* File-specific parameters */
-runWhileEditing: false 
+runWhileEditing: false
+import helpers.SUT
+import org.^xtest.XTestRunner
 
 import static org.junit.Assert.*
 import static org.^xtest.test.XTestRegressionTests.*
-import org.^xtest.XTestRunner
-import helpers.*
+
 xtest testBug1 {
     val result = XTestRunner::parse('
 xsuite test {
