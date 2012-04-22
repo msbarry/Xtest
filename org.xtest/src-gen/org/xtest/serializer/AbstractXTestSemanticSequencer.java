@@ -1206,7 +1206,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (actual=XExpression throws=JvmTypeReference?)
+	 *     (keepGoing?='verify'? actual=XExpression throws=JvmTypeReference?)
 	 */
 	protected void sequence_XAssertExpression(EObject context, XAssertExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

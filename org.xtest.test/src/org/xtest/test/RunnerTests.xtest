@@ -276,7 +276,7 @@ xtest testTopLevelAssert {
     val result = XTestRunner::run("assert false", injector);
     assertEquals("[]", result.getErrorMessages().toString());
     assertTrue(null == result.getEvaluationException());
-    assertTrue(null != result.getAssertException());
+    assertTrue(!result.getAssertExceptions().isEmpty());
     assertEquals(XTestState::FAIL, result.getState());
     assertEquals(0, result.getSubTests().size());
 }
@@ -316,7 +316,7 @@ xtest testTrueAssertInCaseInSuiteInSuite {
 
     val xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
     assertTrue(null == xTestCaseResult.getEvaluationException());
-    assertTrue(null == xTestCaseResult.getAssertException());
+    assertTrue(result.getAssertExceptions().isEmpty());
     assertEquals(XTestState::PASS, xTestCaseResult.getState());
     assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
 }
@@ -381,7 +381,7 @@ xtest useSUT {
     assertEquals(1, xTestSuiteResult.getSubTests().size());
 
     val caseResult = xTestSuiteResult.getSubTests().get(0);
-    assertTrue(null == caseResult.getAssertException());
+    assertTrue(result.getAssertExceptions().isEmpty());
     assertTrue(null == caseResult.getEvaluationException());
     assertEquals("suite.tcase", caseResult.getQualifiedName());
     assertEquals(XTestState::PASS, caseResult.getState());
@@ -407,7 +407,7 @@ xtest useSUTFail {
     assertEquals(1, xTestSuiteResult.getSubTests().size());
 
     val caseResult = xTestSuiteResult.getSubTests().get(0);
-    assertTrue(null != caseResult.getAssertException());
+    assertTrue(result.getAssertExceptions().isEmpty());
     assertTrue(null == caseResult.getEvaluationException());
     assertEquals("suite.tcase", caseResult.getQualifiedName());
     assertEquals(XTestState::FAIL, caseResult.getState());
@@ -443,4 +443,18 @@ xtest xtestInSuiteInSuite {
     val xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
     assertEquals(XTestState::PASS, xTestCaseResult.getState());
     assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
+} 
+
+
+xtest verify {
+    val result = XTestRunner::run('
+verify 1 == 2
+verify 1+1 throws Exception
+', injector);
+    assertEquals("[]", result.getErrorMessages().toString());
+    assertTrue(null == result.getEvaluationException());
+    assertEquals(XTestState::FAIL, result.getState());
+    assertEquals(0, result.getSubTests().size());
+    assertEquals("", result.getQualifiedName());
+    assertEquals(2, result.assertExceptions.size);
 }

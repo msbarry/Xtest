@@ -2,6 +2,7 @@ package org.xtest.validation;
 
 import static com.google.common.collect.Maps.newHashMap;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +33,6 @@ import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
-import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.XTestRunner.DontRunCheck;
@@ -303,9 +303,8 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                 error(run.getQualifiedName() + ": " + error, run.getEObject(), null,
                         TEST_RUN_FAILURE_INDEX);
             }
-            XTestAssertException assertException = run.getAssertException();
-            if (assertException != null) {
-                XAssertExpression expression = assertException.getExpression();
+            Collection<XAssertExpression> assertExceptions = run.getAssertExceptions();
+            for (XAssertExpression expression : assertExceptions) {
                 error(run.getQualifiedName() + ": Assertion Failed", expression, null,
                         TEST_RUN_FAILURE_INDEX);
             }

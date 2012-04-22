@@ -96,13 +96,13 @@ public class XTestInterpreter extends XbaseInterpreter {
             // normal assert
             Object result = internalEvaluate(resultExp, context, indicator);
             if (!(result instanceof Boolean) || !(Boolean) result) {
-                throw new XTestAssertException(assertExpression);
+                handleAssertionFailure(assertExpression);
             }
         } else {
             // assert exception
             try {
                 internalEvaluate(resultExp, context, indicator);
-                throw new XTestAssertException(assertExpression);
+                handleAssertionFailure(assertExpression);
             } catch (XTestEvaluationException exception) {
                 Throwable throwable = exception.getCause();
                 JvmTypeReference actual = typeReferences.getTypeForName(throwable.getClass(),
@@ -152,7 +152,7 @@ public class XTestInterpreter extends XbaseInterpreter {
             toReturn = e.returnValue;
             result.pass();
         } catch (XTestAssertException e) {
-            result.addFailedAssertion(e);
+            result.addFailedAssertion(e.getExpression());
         } catch (XTestEvaluationException e) {
             result.addEvaluationException(e);
         }
@@ -195,7 +195,7 @@ public class XTestInterpreter extends XbaseInterpreter {
         } catch (ReturnValue e) {
             subTest.pass();
         } catch (XTestAssertException e) {
-            subTest.addFailedAssertion(e);
+            subTest.addFailedAssertion(e.getExpression());
         } catch (XTestEvaluationException e) {
             subTest.addEvaluationException(e);
         }
@@ -281,6 +281,15 @@ public class XTestInterpreter extends XbaseInterpreter {
             }
         }
         return name;
+    }
+
+    private void handleAssertionFailure(XAssertExpression assertExpression) {
+        if (assertExpression.isKeepGoing()) {
+            XTestResult peek = stack.peek();
+            peek.addFailedAssertion(assertExpression);
+        } else {
+            throw new XTestAssertException(assertExpression);
+        }
     }
 
     private static class ReturnValue extends RuntimeException {

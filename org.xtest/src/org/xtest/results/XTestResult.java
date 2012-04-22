@@ -1,13 +1,14 @@
 package org.xtest.results;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.diagnostics.Severity;
-import org.xtest.XTestAssertException;
 import org.xtest.XTestEvaluationException;
 import org.xtest.validation.XTestJavaValidator;
 import org.xtest.xTest.Body;
+import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestExpression;
 
 import com.google.common.collect.HashMultimap;
@@ -24,7 +25,7 @@ public class XTestResult {
      */
     public static final String KEY = "XtestResult";
     private final EObject eObject;
-    private XTestAssertException exception;
+    private final Collection<XAssertExpression> exceptions = Lists.newArrayList();
     private XTestEvaluationException expression;
     private HashMultimap<Severity, EObject> issues = HashMultimap.create();
     private final String name;
@@ -68,9 +69,9 @@ public class XTestResult {
      * @param exception
      *            The failed assertion
      */
-    public void addFailedAssertion(XTestAssertException exception) {
+    public void addFailedAssertion(XAssertExpression exception) {
         fail();
-        this.exception = exception;
+        this.exceptions.add(exception);
     }
 
     /**
@@ -95,12 +96,12 @@ public class XTestResult {
     }
 
     /**
-     * Returns the failed assertion or null if empty
+     * Returns the failed assertions
      * 
-     * @return The failed assertion or null if empty
+     * @return The failed assertions
      */
-    public XTestAssertException getAssertException() {
-        return exception;
+    public Collection<XAssertExpression> getAssertExceptions() {
+        return exceptions;
     }
 
     /**

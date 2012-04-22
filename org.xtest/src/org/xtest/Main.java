@@ -2,6 +2,7 @@ package org.xtest;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.xtext.nodemodel.INode;
@@ -134,16 +135,17 @@ public class Main {
             }
             XTestEvaluationException evaluationException = test.getEvaluationException();
             List<String> errorMessages = test.getErrorMessages();
-            XTestAssertException assertException = test.getAssertException();
+            Collection<XAssertExpression> assertExceptions = test.getAssertExceptions();
             if (!errorMessages.isEmpty()) {
                 System.out.println(indent + "   Couldn't run because of syntax errors:");
                 for (String message : errorMessages) {
                     System.out.println(indent + "   " + message);
                 }
-            } else if (assertException != null) {
-                XAssertExpression expression = assertException.getExpression();
-                String line = getLineNumAndText(indent, expression);
-                System.out.println(indent + "    Assertion failed on line " + line);
+            } else if (!assertExceptions.isEmpty()) {
+                for (XAssertExpression expression : assertExceptions) {
+                    String line = getLineNumAndText(indent, expression);
+                    System.out.println(indent + "    Assertion failed on line " + line);
+                }
             } else if (evaluationException != null) {
                 printEvaluationException(indent, evaluationException);
             }

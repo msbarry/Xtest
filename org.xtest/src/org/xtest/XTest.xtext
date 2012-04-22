@@ -39,7 +39,7 @@ XTestExpression returns XExpression:
 	
 XAssertExpression returns XExpression:
 	{XAssertExpression}
-	'assert' actual=XExpression (=>'throws' throws=JvmTypeReference)?
+	('assert'|keepGoing?='verify') actual=XExpression (=>'throws' throws=JvmTypeReference)?
 ;
 
 // Hook our newly defined expressions into XBase as new kinds of expressions

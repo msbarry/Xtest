@@ -25,6 +25,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestExpression/expression"/>
     </genClasses>
     <genClasses ecoreClass="XTest.ecore#//XAssertExpression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//XAssertExpression/keepGoing"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XAssertExpression/actual"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XAssertExpression/throws"/>
     </genClasses>

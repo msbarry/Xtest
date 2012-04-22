@@ -36,17 +36,17 @@ import com.google.inject.Injector;
  */
 @SuppressWarnings("restriction")
 public class XTestRegressionTests {
+    protected static OrganizeImports organizeImports = XtestInjector.injector
+            .getInstance(OrganizeImports.class);
+    protected static TypeReferences typeRefs = XtestInjector.injector
+            .getInstance(TypeReferences.class);
     private static Injector injector = XtestInjector.injector;
     private static XTestInterpreter interpreter = XtestInjector.injector
             .getInstance(XTestInterpreter.class);
-    private static OrganizeImports organizeImports = XtestInjector.injector
-            .getInstance(OrganizeImports.class);
     private static TypeConformanceComputer typeComputer = XtestInjector.injector
             .getInstance(TypeConformanceComputer.class);
     private static XTestTypeProvider typeProvider = XtestInjector.injector
             .getInstance(XTestTypeProvider.class);
-    private static TypeReferences typeRefs = XtestInjector.injector
-            .getInstance(TypeReferences.class);
 
     protected static void assertEvaluatesTo(Object object, Body body) throws Exception {
         assertEquals(object, invokeXbaseExpression(body));

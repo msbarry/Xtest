@@ -2127,6 +2127,30 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__XAssertExpression__Alternatives_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getXAssertExpressionAccess().getAssertKeyword_1_0()); }
+
+	'assert' 
+
+{ after(grammarAccess.getXAssertExpressionAccess().getAssertKeyword_1_0()); }
+)
+
+    |(
+{ before(grammarAccess.getXAssertExpressionAccess().getKeepGoingAssignment_1_1()); }
+(rule__XAssertExpression__KeepGoingAssignment_1_1)
+{ after(grammarAccess.getXAssertExpressionAccess().getKeepGoingAssignment_1_1()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__XPrimaryExpression__Alternatives
     @init {
 		int stackSize = keepStackSize();
@@ -3932,11 +3956,9 @@ rule__XAssertExpression__Group__1__Impl
     }
 :
 (
-{ before(grammarAccess.getXAssertExpressionAccess().getAssertKeyword_1()); }
-
-	'assert' 
-
-{ after(grammarAccess.getXAssertExpressionAccess().getAssertKeyword_1()); }
+{ before(grammarAccess.getXAssertExpressionAccess().getAlternatives_1()); }
+(rule__XAssertExpression__Alternatives_1)
+{ after(grammarAccess.getXAssertExpressionAccess().getAlternatives_1()); }
 )
 
 ;
@@ -14662,6 +14684,29 @@ rule__XTestExpression__ExpressionAssignment_3
 (
 { before(grammarAccess.getXTestExpressionAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); }
 	ruleXBlockExpression{ after(grammarAccess.getXTestExpressionAccess().getExpressionXBlockExpressionParserRuleCall_3_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__XAssertExpression__KeepGoingAssignment_1_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getXAssertExpressionAccess().getKeepGoingVerifyKeyword_1_1_0()); }
+(
+{ before(grammarAccess.getXAssertExpressionAccess().getKeepGoingVerifyKeyword_1_1_0()); }
+
+	'verify' 
+
+{ after(grammarAccess.getXAssertExpressionAccess().getKeepGoingVerifyKeyword_1_1_0()); }
+)
+
+{ after(grammarAccess.getXAssertExpressionAccess().getKeepGoingVerifyKeyword_1_1_0()); }
 )
 
 ;

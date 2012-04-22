@@ -156,7 +156,12 @@
             <classifier xsi:type="ecore:EClass" href="http://www.xtest.org/#//XAssertExpression"/>
           </type>
         </elements>
-        <elements xsi:type="xtext:Keyword" value="assert"/>
+        <elements xsi:type="xtext:Alternatives">
+          <elements xsi:type="xtext:Keyword" value="assert"/>
+          <elements xsi:type="xtext:Assignment" feature="keepGoing" operator="?=">
+            <terminal xsi:type="xtext:Keyword" value="verify"/>
+          </elements>
+        </elements>
         <elements xsi:type="xtext:Assignment" feature="actual" operator="=">
           <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.0"/>
         </elements>

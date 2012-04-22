@@ -18,6 +18,7 @@ import org.eclipse.xtext.xbase.XExpression;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.xtest.xTest.XAssertExpression#isKeepGoing <em>Keep Going</em>}</li>
  *   <li>{@link org.xtest.xTest.XAssertExpression#getActual <em>Actual</em>}</li>
  *   <li>{@link org.xtest.xTest.XAssertExpression#getThrows <em>Throws</em>}</li>
  * </ul>
@@ -29,6 +30,32 @@ import org.eclipse.xtext.xbase.XExpression;
  */
 public interface XAssertExpression extends XExpression
 {
+	/**
+	 * Returns the value of the '<em><b>Keep Going</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Keep Going</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Keep Going</em>' attribute.
+	 * @see #setKeepGoing(boolean)
+	 * @see org.xtest.xTest.XTestPackage#getXAssertExpression_KeepGoing()
+	 * @model
+	 * @generated
+	 */
+	boolean isKeepGoing();
+
+	/**
+	 * Sets the value of the '{@link org.xtest.xTest.XAssertExpression#isKeepGoing <em>Keep Going</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Keep Going</em>' attribute.
+	 * @see #isKeepGoing()
+	 * @generated
+	 */
+	void setKeepGoing(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Actual</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

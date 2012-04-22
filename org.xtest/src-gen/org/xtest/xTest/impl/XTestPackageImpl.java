@@ -271,9 +271,19 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getXAssertExpression_KeepGoing()
+	{
+		return (EAttribute)xAssertExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EReference getXAssertExpression_Actual()
 	{
-		return (EReference)xAssertExpressionEClass.getEStructuralFeatures().get(0);
+		return (EReference)xAssertExpressionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -283,7 +293,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 */
 	public EReference getXAssertExpression_Throws()
 	{
-		return (EReference)xAssertExpressionEClass.getEStructuralFeatures().get(1);
+		return (EReference)xAssertExpressionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -333,6 +343,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		createEReference(xTestExpressionEClass, XTEST_EXPRESSION__EXPRESSION);
 
 		xAssertExpressionEClass = createEClass(XASSERT_EXPRESSION);
+		createEAttribute(xAssertExpressionEClass, XASSERT_EXPRESSION__KEEP_GOING);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__ACTUAL);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__THROWS);
 	}
@@ -393,6 +404,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		initEReference(getXTestExpression_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(xAssertExpressionEClass, XAssertExpression.class, "XAssertExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getXAssertExpression_KeepGoing(), ecorePackage.getEBoolean(), "keepGoing", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getXAssertExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getXAssertExpression_Throws(), theTypesPackage.getJvmTypeReference(), null, "throws", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

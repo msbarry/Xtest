@@ -230,13 +230,22 @@ public interface XTestPackage extends EPackage
 	int XASSERT_EXPRESSION = 4;
 
 	/**
+	 * The feature id for the '<em><b>Keep Going</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XASSERT_EXPRESSION__KEEP_GOING = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Actual</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int XASSERT_EXPRESSION__ACTUAL = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+	int XASSERT_EXPRESSION__ACTUAL = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Throws</b></em>' containment reference.
@@ -245,7 +254,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XASSERT_EXPRESSION__THROWS = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
+	int XASSERT_EXPRESSION__THROWS = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>XAssert Expression</em>' class.
@@ -254,7 +263,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XASSERT_EXPRESSION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
+	int XASSERT_EXPRESSION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 3;
 
 
 	/**
@@ -394,6 +403,17 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 */
 	EClass getXAssertExpression();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.xtest.xTest.XAssertExpression#isKeepGoing <em>Keep Going</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Keep Going</em>'.
+	 * @see org.xtest.xTest.XAssertExpression#isKeepGoing()
+	 * @see #getXAssertExpression()
+	 * @generated
+	 */
+	EAttribute getXAssertExpression_KeepGoing();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XAssertExpression#getActual <em>Actual</em>}'.
@@ -553,6 +573,14 @@ public interface XTestPackage extends EPackage
 		 * @generated
 		 */
 		EClass XASSERT_EXPRESSION = eINSTANCE.getXAssertExpression();
+
+		/**
+		 * The meta object literal for the '<em><b>Keep Going</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute XASSERT_EXPRESSION__KEEP_GOING = eINSTANCE.getXAssertExpression_KeepGoing();
 
 		/**
 		 * The meta object literal for the '<em><b>Actual</b></em>' containment reference feature.

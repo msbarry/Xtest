@@ -528,46 +528,62 @@ ruleXAssertExpression returns [EObject current=null]
             grammarAccess.getXAssertExpressionAccess().getXAssertExpressionAction_0(),
             $current);
     }
-)	otherlv_1='assert' 
+)(	otherlv_1='assert' 
     {
-    	newLeafNode(otherlv_1, grammarAccess.getXAssertExpressionAccess().getAssertKeyword_1());
+    	newLeafNode(otherlv_1, grammarAccess.getXAssertExpressionAccess().getAssertKeyword_1_0());
     }
+
+    |(
 (
+		lv_keepGoing_2_0=	'verify' 
+    {
+        newLeafNode(lv_keepGoing_2_0, grammarAccess.getXAssertExpressionAccess().getKeepGoingVerifyKeyword_1_1_0());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getXAssertExpressionRule());
+	        }
+       		setWithLastConsumed($current, "keepGoing", true, "verify");
+	    }
+
+)
+))(
 (
 		{ 
 	        newCompositeNode(grammarAccess.getXAssertExpressionAccess().getActualXExpressionParserRuleCall_2_0()); 
 	    }
-		lv_actual_2_0=ruleXExpression		{
+		lv_actual_3_0=ruleXExpression		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getXAssertExpressionRule());
 	        }
        		set(
        			$current, 
        			"actual",
-        		lv_actual_2_0, 
+        		lv_actual_3_0, 
         		"XExpression");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 )(((	'throws' 
-)=>	otherlv_3='throws' 
+)=>	otherlv_4='throws' 
     {
-    	newLeafNode(otherlv_3, grammarAccess.getXAssertExpressionAccess().getThrowsKeyword_3_0());
+    	newLeafNode(otherlv_4, grammarAccess.getXAssertExpressionAccess().getThrowsKeyword_3_0());
     }
 )(
 (
 		{ 
 	        newCompositeNode(grammarAccess.getXAssertExpressionAccess().getThrowsJvmTypeReferenceParserRuleCall_3_1_0()); 
 	    }
-		lv_throws_4_0=ruleJvmTypeReference		{
+		lv_throws_5_0=ruleJvmTypeReference		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getXAssertExpressionRule());
 	        }
        		set(
        			$current, 
        			"throws",
-        		lv_throws_4_0, 
+        		lv_throws_5_0, 
         		"JvmTypeReference");
 	        afterParserOrEnumRuleCall();
 	    }
