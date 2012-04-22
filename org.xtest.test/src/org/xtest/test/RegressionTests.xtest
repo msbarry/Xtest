@@ -157,3 +157,25 @@ val a = [String s|throw new Exception]
 a.apply("c")')
     assertValidationPassed(parse)
 }
+
+
+xtest testBug1 {
+    val result = XTestRunner::parse('
+assert 1 == 1', injector)
+    assertEquals("Boolean", typeProvider.getCommonReturnType(result, true).simpleName) 
+} 
+
+
+xtest testVerifyTrue {
+    val parse = parse('
+verify 1 == 1')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(true, parse)
+}
+
+xtest testVerifyFalse {
+    val parse = parse('
+verify 1 == 2')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(false, parse)
+}

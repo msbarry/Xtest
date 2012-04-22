@@ -458,3 +458,13 @@ verify 1+1 throws Exception
     assertEquals("", result.getQualifiedName());
     assertEquals(2, result.assertExceptions.size);
 }
+
+
+xtest testVerifyReturnVal {
+    val result = XTestRunner::run('
+if (!(verify 1 == 1)) verify 1 == 2
+', injector);
+    assertEquals("[]", result.getErrorMessages().toString());
+    assertTrue(null == result.getEvaluationException());
+    assertEquals(XTestState::PASS, result.getState());
+}

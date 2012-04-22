@@ -31,8 +31,10 @@ public class XTestTypeProvider extends XbaseTypeProvider {
     protected JvmTypeReference type(XExpression expression, JvmTypeReference rawExpectation,
             boolean rawType) {
         JvmTypeReference result;
-        if (expression instanceof XTestExpression || expression instanceof XAssertExpression) {
+        if (expression instanceof XTestExpression) {
             result = getPrimitiveVoid(expression);
+        } else if (expression instanceof XAssertExpression) {
+            result = typeRefs.getTypeForName(Boolean.class, expression);
         } else if (expression instanceof XFeatureCallImplCustom
                 && ((XFeatureCallImplCustom) expression).basicGetFeature() == null) {
             XFeatureCall call = (XFeatureCall) expression;

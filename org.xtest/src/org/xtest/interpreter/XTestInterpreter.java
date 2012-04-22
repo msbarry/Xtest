@@ -92,17 +92,20 @@ public class XTestInterpreter extends XbaseInterpreter {
             IEvaluationContext context, CancelIndicator indicator) {
         XExpression resultExp = assertExpression.getActual();
         JvmTypeReference expected = assertExpression.getThrows();
+        boolean returnVal = true;
         if (expected == null) {
             // normal assert
             Object result = internalEvaluate(resultExp, context, indicator);
             if (!(result instanceof Boolean) || !(Boolean) result) {
                 handleAssertionFailure(assertExpression);
+                returnVal = false;
             }
         } else {
             // assert exception
             try {
                 internalEvaluate(resultExp, context, indicator);
                 handleAssertionFailure(assertExpression);
+                returnVal = false;
             } catch (XTestEvaluationException exception) {
                 Throwable throwable = exception.getCause();
                 JvmTypeReference actual = typeReferences.getTypeForName(throwable.getClass(),
@@ -113,7 +116,7 @@ public class XTestInterpreter extends XbaseInterpreter {
             }
         }
 
-        return null;
+        return returnVal;
     }
 
     @Override
