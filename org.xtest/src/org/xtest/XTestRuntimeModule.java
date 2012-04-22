@@ -1,6 +1,7 @@
 package org.xtest;
 
 import org.eclipse.xtend.core.formatting.OrganizeImports;
+import org.eclipse.xtend.core.formatting.OrganizeImports.ReferenceAcceptor;
 import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
@@ -10,6 +11,7 @@ import org.eclipse.xtext.xbase.scoping.XbaseScopeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.StaticImplicitMethodsFeatureForTypeProvider;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.formatting.XtestOrganizeImports;
+import org.xtest.formatting.XtestReferenceAcceptor;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.linking.XtestFeatureCallChecker;
 import org.xtest.scoping.XTestScopeProvider;
@@ -48,6 +50,16 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends OrganizeImports> bindOrganizeImports() {
         return XtestOrganizeImports.class;
+    }
+
+    /**
+     * Bind {@link ReferenceAcceptor} to custom implementation that fixes a bug with escaped
+     * sequence names in imported type qualified names
+     * 
+     * @return {@link XtestReferenceAcceptor}
+     */
+    public Class<? extends ReferenceAcceptor> bindOrganizeImports$ReferenceAcceptor() {
+        return XtestReferenceAcceptor.class;
     }
 
     /**

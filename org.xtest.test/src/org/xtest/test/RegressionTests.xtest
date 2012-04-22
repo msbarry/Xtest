@@ -77,7 +77,7 @@ if (a == 1) true else {if (a != 1) true else false}')
     assertEquals(1, warningsRunTests.size())
 }
 
-
+ 
 xtest testGetClass {
     val parse = parse('System::class')
     assertValidationPassed(parse)

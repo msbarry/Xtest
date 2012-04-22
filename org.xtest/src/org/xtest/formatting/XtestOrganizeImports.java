@@ -53,49 +53,52 @@ public class XtestOrganizeImports extends OrganizeImports {
 
     @Override
     public void collectAllReferences(XtextResource resource, ReferenceAcceptor acceptor) {
-        Body xtendFile = getXtestFile(resource);
-        TreeIterator<EObject> contents = EcoreUtil.getAllContents(xtendFile, true);
-        while (contents.hasNext()) {
-            EObject next = contents.next();
-            if (next instanceof JvmTypeReference) {
-                acceptor.acceptType((JvmTypeReference) next);
-            } else if (next instanceof XAnnotation) {
-                acceptor.acceptType(((XAnnotation) next).getAnnotationType());
-            } else if (next instanceof XInstanceOfExpression) {
-                acceptor.acceptType(((XInstanceOfExpression) next).getType());
-            } else if (next instanceof XConstructorCall) {
-                acceptor.acceptType(((XConstructorCall) next).getConstructor().getDeclaringType());
-            } else if (next instanceof XTypeLiteral) {
-                acceptor.acceptType(((XTypeLiteral) next).getType());
-            } else if (next instanceof XFeatureCall) {
-                final XFeatureCall featureCall = (XFeatureCall) next;
-                if (featureCall.getDeclaringType() == null) {
+        Body xtestFile = getXtestFile(resource);
+        for (XExpression expression : xtestFile.getExpressions()) {
+            TreeIterator<EObject> contents = EcoreUtil.getAllContents(expression, true);
+            while (contents.hasNext()) {
+                EObject next = contents.next();
+                if (next instanceof JvmTypeReference) {
+                    acceptor.acceptType((JvmTypeReference) next);
+                } else if (next instanceof XAnnotation) {
+                    acceptor.acceptType(((XAnnotation) next).getAnnotationType());
+                } else if (next instanceof XInstanceOfExpression) {
+                    acceptor.acceptType(((XInstanceOfExpression) next).getType());
+                } else if (next instanceof XConstructorCall) {
+                    acceptor.acceptType(((XConstructorCall) next).getConstructor()
+                            .getDeclaringType());
+                } else if (next instanceof XTypeLiteral) {
+                    acceptor.acceptType(((XTypeLiteral) next).getType());
+                } else if (next instanceof XFeatureCall) {
+                    final XFeatureCall featureCall = (XFeatureCall) next;
+                    if (featureCall.getDeclaringType() == null) {
+                        final JvmIdentifiableElement member = featureCall.getFeature();
+                        if (member instanceof JvmOperation) {
+                            if (((JvmOperation) member).isStatic()) {
+                                acceptor.acceptStaticImport((JvmMember) member);
+                            }
+                        }
+                        if (member instanceof JvmField) {
+                            if (((JvmField) member).isStatic()) {
+                                acceptor.acceptStaticImport((JvmMember) member);
+                            }
+                        }
+                    } else {
+                        acceptor.acceptType(featureCall.getDeclaringType());
+                    }
+                } else if (next instanceof XMemberFeatureCall || next instanceof XBinaryOperation
+                        || next instanceof XUnaryOperation || next instanceof XAssignment) {
+                    final XAbstractFeatureCall featureCall = (XAbstractFeatureCall) next;
                     final JvmIdentifiableElement member = featureCall.getFeature();
                     if (member instanceof JvmOperation) {
                         if (((JvmOperation) member).isStatic()) {
-                            acceptor.acceptStaticImport((JvmMember) member);
+                            acceptor.acceptStaticExtensionImport((JvmMember) member);
                         }
                     }
                     if (member instanceof JvmField) {
                         if (((JvmField) member).isStatic()) {
-                            acceptor.acceptStaticImport((JvmMember) member);
+                            acceptor.acceptStaticExtensionImport((JvmMember) member);
                         }
-                    }
-                } else {
-                    acceptor.acceptType(featureCall.getDeclaringType());
-                }
-            } else if (next instanceof XMemberFeatureCall || next instanceof XBinaryOperation
-                    || next instanceof XUnaryOperation || next instanceof XAssignment) {
-                final XAbstractFeatureCall featureCall = (XAbstractFeatureCall) next;
-                final JvmIdentifiableElement member = featureCall.getFeature();
-                if (member instanceof JvmOperation) {
-                    if (((JvmOperation) member).isStatic()) {
-                        acceptor.acceptStaticExtensionImport((JvmMember) member);
-                    }
-                }
-                if (member instanceof JvmField) {
-                    if (((JvmField) member).isStatic()) {
-                        acceptor.acceptStaticExtensionImport((JvmMember) member);
                     }
                 }
             }
@@ -110,10 +113,15 @@ public class XtestOrganizeImports extends OrganizeImports {
         }
         List<INode> fileparams = NodeModelUtils.findNodesForFeature(xtestFile,
                 XTestPackage.Literals.BODY__FILEPARAM);
+        List<INode> imports = NodeModelUtils.findNodesForFeature(xtestFile,
+                XTestPackage.Literals.BODY__IMPORTS);
         int offset = 0;
         if (fileparams.size() >= 1) {
             INode last = Iterables.getLast(fileparams);
-            offset = last.getTotalOffset() + last.getLength();
+            offset = last.getOffset() + last.getLength();
+        } else if (imports.size() >= 1) {
+            INode last = Iterables.getLast(imports);
+            offset = last.getOffset();
         }
         EList<XExpression> expressions = xtestFile.getExpressions();
         int length = NodeModelUtils.findActualNodeFor(xtestFile).getLength() - offset;

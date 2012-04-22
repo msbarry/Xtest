@@ -2,13 +2,13 @@ package org.xtest.scoping;
 
 import static java.util.Collections.singletonList;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtend.core.scoping.XtendImportedNamespaceScopeProvider;
 import org.eclipse.xtend.core.xtend.XtendImport;
-import org.eclipse.xtext.common.types.JvmType;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
@@ -64,23 +64,20 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
     @Override
     protected List<ImportNormalizer> internalGetImportedNamespaceResolvers(final EObject context,
             boolean ignoreCase) {
+        if (!(context instanceof Body)) {
+            return Collections.emptyList();
+        }
+        Body file = (Body) context;
         List<ImportNormalizer> importedNamespaceResolvers = Lists.newArrayList();
-        if (context instanceof Body) {
-            for (XtendImport imported : ((Body) context).getImports()) {
-                if (!imported.isStatic()) {
-                    String value = imported.getImportedNamespace();
-                    JvmType typeImport = imported.getImportedType();
-                    if (value == null && typeImport != null) {
-                        value = typeImport.getQualifiedName();
-                    }
-
-                    if (value != null) {
-                        ImportNormalizer resolver = createImportedNamespaceResolver(value,
-                                ignoreCase);
-                        if (resolver != null) {
-                            importedNamespaceResolvers.add(resolver);
-                        }
-                    }
+        for (XtendImport imp : file.getImports()) {
+            if (!imp.isStatic()) {
+                String value = imp.getImportedNamespace();
+                if (value == null) {
+                    value = imp.getImportedTypeName();
+                }
+                ImportNormalizer resolver = createImportedNamespaceResolver(value, ignoreCase);
+                if (resolver != null) {
+                    importedNamespaceResolvers.add(resolver);
                 }
             }
         }
