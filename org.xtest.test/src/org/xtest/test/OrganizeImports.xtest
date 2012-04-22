@@ -7,7 +7,7 @@ import static org.^xtest.test.AssertHelpers.*
 import static org.^xtest.test.XTestRegressionTests.*
 
 val helper = [String input|{
-    val result = try XTestRunner::parse(input, injector) catch (Exception e) null
+    val result = XTestRunner::parse(input, injector)
 	val with = organizeImports.getOrganizedImportSection(result.eResource as XtextResource)
 	val region = organizeImports.computeRegion(result.eResource as XtextResource)
 	input.substring(0,region.getOffset)+with+input.substring(region.getOffset+region.getLength)
