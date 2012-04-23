@@ -528,30 +528,29 @@ ruleXAssertExpression returns [EObject current=null]
             grammarAccess.getXAssertExpressionAccess().getXAssertExpressionAction_0(),
             $current);
     }
-)(	otherlv_1='assert' 
+)	otherlv_1='assert' 
     {
-    	newLeafNode(otherlv_1, grammarAccess.getXAssertExpressionAccess().getAssertKeyword_1_0());
+    	newLeafNode(otherlv_1, grammarAccess.getXAssertExpressionAccess().getAssertKeyword_1());
     }
-
-    |(
 (
-		lv_keepGoing_2_0=	'verify' 
+(
+		lv_keepGoing_2_0=	'?' 
     {
-        newLeafNode(lv_keepGoing_2_0, grammarAccess.getXAssertExpressionAccess().getKeepGoingVerifyKeyword_1_1_0());
+        newLeafNode(lv_keepGoing_2_0, grammarAccess.getXAssertExpressionAccess().getKeepGoingQuestionMarkKeyword_2_0());
     }
  
 	    {
 	        if ($current==null) {
 	            $current = createModelElement(grammarAccess.getXAssertExpressionRule());
 	        }
-       		setWithLastConsumed($current, "keepGoing", true, "verify");
+       		setWithLastConsumed($current, "keepGoing", true, "?");
 	    }
 
 )
-))(
+)?(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getXAssertExpressionAccess().getActualXExpressionParserRuleCall_2_0()); 
+	        newCompositeNode(grammarAccess.getXAssertExpressionAccess().getActualXExpressionParserRuleCall_3_0()); 
 	    }
 		lv_actual_3_0=ruleXExpression		{
 	        if ($current==null) {
@@ -569,12 +568,12 @@ ruleXAssertExpression returns [EObject current=null]
 )(((	'throws' 
 )=>	otherlv_4='throws' 
     {
-    	newLeafNode(otherlv_4, grammarAccess.getXAssertExpressionAccess().getThrowsKeyword_3_0());
+    	newLeafNode(otherlv_4, grammarAccess.getXAssertExpressionAccess().getThrowsKeyword_4_0());
     }
 )(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getXAssertExpressionAccess().getThrowsJvmTypeReferenceParserRuleCall_3_1_0()); 
+	        newCompositeNode(grammarAccess.getXAssertExpressionAccess().getThrowsJvmTypeReferenceParserRuleCall_4_1_0()); 
 	    }
 		lv_throws_5_0=ruleJvmTypeReference		{
 	        if ($current==null) {

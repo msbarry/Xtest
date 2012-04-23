@@ -318,57 +318,53 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XAssertExpression");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cXAssertExpressionAction_0 = (Action)cGroup.eContents().get(0);
-		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Keyword cAssertKeyword_1_0 = (Keyword)cAlternatives_1.eContents().get(0);
-		private final Assignment cKeepGoingAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
-		private final Keyword cKeepGoingVerifyKeyword_1_1_0 = (Keyword)cKeepGoingAssignment_1_1.eContents().get(0);
-		private final Assignment cActualAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cActualXExpressionParserRuleCall_2_0 = (RuleCall)cActualAssignment_2.eContents().get(0);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Keyword cThrowsKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
-		private final Assignment cThrowsAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
-		private final RuleCall cThrowsJvmTypeReferenceParserRuleCall_3_1_0 = (RuleCall)cThrowsAssignment_3_1.eContents().get(0);
+		private final Keyword cAssertKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cKeepGoingAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final Keyword cKeepGoingQuestionMarkKeyword_2_0 = (Keyword)cKeepGoingAssignment_2.eContents().get(0);
+		private final Assignment cActualAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cActualXExpressionParserRuleCall_3_0 = (RuleCall)cActualAssignment_3.eContents().get(0);
+		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
+		private final Keyword cThrowsKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final Assignment cThrowsAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
+		private final RuleCall cThrowsJvmTypeReferenceParserRuleCall_4_1_0 = (RuleCall)cThrowsAssignment_4_1.eContents().get(0);
 		
 		//XAssertExpression returns XExpression:
 		//
-		//	{XAssertExpression} ("assert" | keepGoing?="verify") actual=XExpression ("throws" throws=JvmTypeReference)?;
+		//	{XAssertExpression} "assert" keepGoing?="?"? actual=XExpression ("throws" throws=JvmTypeReference)?;
 		public ParserRule getRule() { return rule; }
 
-		//{XAssertExpression} ("assert" | keepGoing?="verify") actual=XExpression ("throws" throws=JvmTypeReference)?
+		//{XAssertExpression} "assert" keepGoing?="?"? actual=XExpression ("throws" throws=JvmTypeReference)?
 		public Group getGroup() { return cGroup; }
 
 		//{XAssertExpression}
 		public Action getXAssertExpressionAction_0() { return cXAssertExpressionAction_0; }
 
-		//"assert" | keepGoing?="verify"
-		public Alternatives getAlternatives_1() { return cAlternatives_1; }
-
 		//"assert"
-		public Keyword getAssertKeyword_1_0() { return cAssertKeyword_1_0; }
+		public Keyword getAssertKeyword_1() { return cAssertKeyword_1; }
 
-		//keepGoing?="verify"
-		public Assignment getKeepGoingAssignment_1_1() { return cKeepGoingAssignment_1_1; }
+		//keepGoing?="?"?
+		public Assignment getKeepGoingAssignment_2() { return cKeepGoingAssignment_2; }
 
-		//"verify"
-		public Keyword getKeepGoingVerifyKeyword_1_1_0() { return cKeepGoingVerifyKeyword_1_1_0; }
+		//"?"
+		public Keyword getKeepGoingQuestionMarkKeyword_2_0() { return cKeepGoingQuestionMarkKeyword_2_0; }
 
 		//actual=XExpression
-		public Assignment getActualAssignment_2() { return cActualAssignment_2; }
+		public Assignment getActualAssignment_3() { return cActualAssignment_3; }
 
 		//XExpression
-		public RuleCall getActualXExpressionParserRuleCall_2_0() { return cActualXExpressionParserRuleCall_2_0; }
+		public RuleCall getActualXExpressionParserRuleCall_3_0() { return cActualXExpressionParserRuleCall_3_0; }
 
 		//(=> "throws" throws=JvmTypeReference)?
-		public Group getGroup_3() { return cGroup_3; }
+		public Group getGroup_4() { return cGroup_4; }
 
 		//=> "throws"
-		public Keyword getThrowsKeyword_3_0() { return cThrowsKeyword_3_0; }
+		public Keyword getThrowsKeyword_4_0() { return cThrowsKeyword_4_0; }
 
 		//throws=JvmTypeReference
-		public Assignment getThrowsAssignment_3_1() { return cThrowsAssignment_3_1; }
+		public Assignment getThrowsAssignment_4_1() { return cThrowsAssignment_4_1; }
 
 		//JvmTypeReference
-		public RuleCall getThrowsJvmTypeReferenceParserRuleCall_3_1_0() { return cThrowsJvmTypeReferenceParserRuleCall_3_1_0; }
+		public RuleCall getThrowsJvmTypeReferenceParserRuleCall_4_1_0() { return cThrowsJvmTypeReferenceParserRuleCall_4_1_0; }
 	}
 
 	public class XPrimaryExpressionElements extends AbstractParserRuleElementFinder {
@@ -777,7 +773,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 
 	//XAssertExpression returns XExpression:
 	//
-	//	{XAssertExpression} ("assert" | keepGoing?="verify") actual=XExpression ("throws" throws=JvmTypeReference)?;
+	//	{XAssertExpression} "assert" keepGoing?="?"? actual=XExpression ("throws" throws=JvmTypeReference)?;
 	public XAssertExpressionElements getXAssertExpressionAccess() {
 		return (pXAssertExpression != null) ? pXAssertExpression : (pXAssertExpression = new XAssertExpressionElements());
 	}

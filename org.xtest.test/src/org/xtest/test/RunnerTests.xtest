@@ -448,8 +448,8 @@ xtest xtestInSuiteInSuite {
 
 xtest testVerifyExpression {
     val result = XTestRunner::run('
-verify 1 == 2
-verify 1+1 throws Exception
+assert? 1 == 2
+assert? 1+1 throws Exception
 ', injector);
     assertEquals("[]", result.getErrorMessages().toString());
     assertTrue(null == result.getEvaluationException());
@@ -462,7 +462,7 @@ verify 1+1 throws Exception
 
 xtest testVerifyReturnVal {
     val result = XTestRunner::run('
-if (!(verify 1 == 1)) verify 1 == 2
+if (!(assert? 1 == 1)) assert? 1 == 2
 ', injector);
     assertEquals("[]", result.getErrorMessages().toString());
     assertTrue(null == result.getEvaluationException());
