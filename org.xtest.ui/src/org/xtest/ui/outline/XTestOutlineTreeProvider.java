@@ -9,10 +9,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.Position;
@@ -27,11 +23,9 @@ import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 import org.eclipse.xtext.ui.util.IssueUtil;
-import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.TextRegion;
-import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import org.xtest.preferences.PerFilePreferenceProvider;
@@ -40,6 +34,7 @@ import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
 import org.xtest.ui.internal.XtestPluginImages;
 import org.xtest.ui.mediator.XtestResultsCache;
+import org.xtest.ui.runner.BuildFinishedListener;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
@@ -66,6 +61,9 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     private IAnnotationModel model;
     @Inject
     private PerFilePreferenceProvider prefs;
+
+    @Inject
+    private BuildFinishedListener toUpdate;
 
     @Inject
     private IResourceValidator validator;
@@ -164,6 +162,13 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         }
     }
 
+    private IFile getFile(Body body) {
+        URI uri = body.eResource().getURI();
+        Iterable<Pair<IStorage, IProject>> storages = mapper.getStorages(uri);
+        IFile first = (IFile) storages.iterator().next().getFirst();
+        return first;
+    }
+
     private List<Issue> getIssues(Body body) {
         List<Issue> result = Lists.newArrayList();
         if (prefs.get(body, RuntimePref.RUN_WHILE_EDITING) && model != null) {
@@ -181,12 +186,9 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
             }
         } else {
             // use file markers
-            URI uri = body.eResource().getURI();
-            Iterable<Pair<IStorage, IProject>> storages = mapper.getStorages(uri);
-            IStorage first = storages.iterator().next().getFirst();
+            IFile first = getFile(body);
             try {
-                IMarker[] findMarkers = ((IFile) first).findMarkers(null, true,
-                        IResource.DEPTH_ZERO);
+                IMarker[] findMarkers = first.findMarkers(null, true, IResource.DEPTH_ZERO);
                 for (IMarker marker : findMarkers) {
                     Issue createIssue = issueUtil.createIssue(marker);
                     if (createIssue != null && createIssue.getOffset() >= 0
@@ -254,45 +256,6 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     private void scheduleValidation(EObject body) {
-        Job validateJob = new RefreshValidationJob(body, validator);
-        validateJob.schedule();
-    }
-
-    /**
-     * Job to kick off validation when outline tree requested and no results are available
-     * 
-     * @author Michael Barry
-     */
-    public static class RefreshValidationJob extends Job {
-
-        private final EObject body;
-        private final IResourceValidator validator;
-
-        /**
-         * Constructs a new {@link RefreshValidationJob}
-         * 
-         * @param body
-         *            The object to validate
-         * @param validator
-         *            The validator to invoke
-         */
-        public RefreshValidationJob(EObject body, IResourceValidator validator) {
-            super("Refresh validation");
-            this.body = body;
-            this.validator = validator;
-        }
-
-        @Override
-        protected IStatus run(final IProgressMonitor monitor) {
-            CancelIndicator cancelMonitor = new CancelIndicator() {
-                @Override
-                public boolean isCanceled() {
-                    return monitor.isCanceled();
-                }
-            };
-            validator.validate(body.eResource(), CheckMode.NORMAL_AND_FAST, cancelMonitor);
-            return Status.OK_STATUS;
-        }
-
+        toUpdate.schedule(getFile((Body) body));
     }
 }

@@ -1,5 +1,6 @@
 package org.xtest.ui.runner;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -41,6 +42,10 @@ public class BuildFinishedListener implements IResourceChangeListener {
         } else if ((event.getType() & (IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE)) > 0) {
             build(event);
         }
+    }
+
+    public void schedule(IFile file) {
+        runAll.addPendingTests(Collections.singleton(file));
     }
 
     private void build(IResourceChangeEvent event) {
