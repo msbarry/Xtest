@@ -5,6 +5,7 @@ import org.eclipse.xtext.common.types.xtext.ui.ITypesProposalProvider;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
+import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
@@ -15,6 +16,7 @@ import org.xtest.XTestRunner;
 import org.xtest.ui.contentassist.XtestImportingTypesProposalProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider.Initializer;
+import org.xtest.ui.editor.XtestDocumentProvider;
 import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
 import org.xtest.ui.editor.XtestPreferencePage;
 import org.xtest.ui.highlight.XtestHighlightingCalculator;
@@ -117,6 +119,10 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public Class<? extends XTestRunner> bindXTestRunner() {
         return UiXTestRunner.class;
+    }
+
+    public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
+        return XtestDocumentProvider.class;
     }
 
     /**

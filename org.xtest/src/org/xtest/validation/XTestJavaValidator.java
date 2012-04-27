@@ -33,6 +33,7 @@ import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
+import org.xtest.RunType;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.XTestRunner.DontRunCheck;
@@ -211,13 +212,16 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      * @param main
      *            The xtest expression model to run.
      */
+    @Check(CheckType.EXPENSIVE)
     public void doMagic(Body main) {
+        RunType weight = getCheckMode().shouldCheck(CheckType.FAST) ? RunType.LIGHTWEIGHT
+                : RunType.HEAVYWEIGHT;
         if (!(getCheckMode() instanceof XTestRunner.DontRunCheck)) {
             CancelIndicator indicator = cancelIndicators.get();
             if (indicator == null) {
                 indicator = CancelIndicator.NullImpl;
             }
-            XTestResult result = runner.run(main, indicator);
+            XTestResult result = runner.run(main, weight, indicator);
             markErrorsFromTest(result);
 
             if (preferenceProvider.get(main, RuntimePref.MARK_UNEXECUTED)) {
@@ -226,34 +230,6 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             }
             result.setIssues(issues.get());
             getContext().put(XTestResult.KEY, result);
-        }
-    }
-
-    /**
-     * Invoke {@link #doMagic(Body)} while editing an Xtest file if
-     * {@link RuntimePref#RUN_WHILE_EDITING} is true
-     * 
-     * @param main
-     *            Body of the xtest file
-     */
-    @Check(CheckType.FAST)
-    public void doMagicFast(Body main) {
-        if (preferenceProvider.get(main, RuntimePref.RUN_WHILE_EDITING)) {
-            doMagic(main);
-        }
-    }
-
-    /**
-     * Invoke {@link #doMagic(Body)} while building an Xtest file if
-     * {@link RuntimePref#RUN_WHILE_EDITING} is false
-     * 
-     * @param main
-     *            Body of the xtest file
-     */
-    @Check(CheckType.NORMAL)
-    public void doMagicNormal(Body main) {
-        if (!preferenceProvider.get(main, RuntimePref.RUN_WHILE_EDITING)) {
-            doMagic(main);
         }
     }
 

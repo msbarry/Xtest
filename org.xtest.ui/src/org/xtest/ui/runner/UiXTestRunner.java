@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.xtest.RunType;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
@@ -57,28 +58,14 @@ public class UiXTestRunner extends XTestRunner {
     private Provider<XTestInterpreter> interpreterProvider;
 
     @Override
-    public XTestResult run(final Body main, CancelIndicator monitor) {
+    public XTestResult run(final Body main, RunType weight, CancelIndicator monitor) {
         eventBus.post(new ValidationStartedEvent(main.eResource().getURI()));
-        String name = "Running " + ((BodyImplCustom) main).getFileName();
-        ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(1);
-        Job job = new TestRunnerJob(name, resultQueue, main);
-        job.schedule();
-        XTestResult jobResult = null;
-
-        // TODO should be able to specify a maximum allowed time for tests to run and cancel after
-        // that
-        while (jobResult == null) {
-            try {
-                jobResult = resultQueue.poll(DELAY_BETWEEN_CHECKS, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            if (monitor.isCanceled()) {
-                job.cancel();
-                break;
-            }
+        XTestResult result;
+        if (weight == RunType.LIGHTWEIGHT) {
+            result = runInSeparateThread(main, weight, monitor);
+        } else {
+            result = runInThisThread(main, weight, monitor);
         }
-        XTestResult result = jobResult == null ? new XTestResult(main) : jobResult;
         return result;
     }
 
@@ -172,6 +159,37 @@ public class UiXTestRunner extends XTestRunner {
         return interpreter;
     }
 
+    private XTestResult runInSeparateThread(final Body main, RunType weight, CancelIndicator monitor) {
+        XTestResult result;
+        String name = "Running " + ((BodyImplCustom) main).getFileName();
+        ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(1);
+        TestRunnerJob job = new TestRunnerJob(name, resultQueue, main);
+        job.schedule();
+        XTestResult jobResult = UiXTestRunner.super.run(main, weight, monitor);
+
+        // TODO should be able to specify a maximum allowed time for tests to run and cancel
+        // after
+        // that
+        while (jobResult == null) {
+            try {
+                jobResult = resultQueue.poll(DELAY_BETWEEN_CHECKS, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            if (monitor.isCanceled()) {
+                job.cancel();
+                break;
+            }
+        }
+        result = jobResult == null ? new XTestResult(main) : jobResult;
+        return result;
+    }
+
+    private XTestResult runInThisThread(final Body main, RunType weight, CancelIndicator monitor) {
+        XTestResult result = UiXTestRunner.super.run(main, weight, monitor);
+        return result;
+    }
+
     /**
      * {@link CancelIndicator} that delegates to an {@link IProgressMonitor}
      * 
@@ -216,7 +234,7 @@ public class UiXTestRunner extends XTestRunner {
             XTestResult xtestResult = new XTestResult(main);
             try {
                 CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
-                xtestResult = UiXTestRunner.super.run(main, indicator);
+                xtestResult = UiXTestRunner.super.run(main, RunType.LIGHTWEIGHT, indicator);
             } finally {
                 result.offer(xtestResult);
             }

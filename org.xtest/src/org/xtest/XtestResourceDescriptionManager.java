@@ -26,8 +26,8 @@ public class XtestResourceDescriptionManager extends DerivedStateAwareResourceDe
         // FAST
         boolean result;
         if (candidate != null && deltas != null
-                && candidate.getURI().fileExtension().equals("xtest") && !deltas.isEmpty()) {
-            result = true;
+                && candidate.getURI().fileExtension().equals("xtest")) {
+            result = false;
         } else {
             result = super.isAffected(deltas, candidate, context);
         }
