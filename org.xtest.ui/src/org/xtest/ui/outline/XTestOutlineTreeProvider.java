@@ -1,7 +1,14 @@
 package org.xtest.ui.outline;
 
 import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -11,7 +18,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelExtension2;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -19,19 +25,25 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
+import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 import org.eclipse.xtext.ui.util.IssueUtil;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.ITextRegion;
+import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.TextRegion;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+import org.xtest.preferences.PerFilePreferenceProvider;
+import org.xtest.preferences.RuntimePref;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
 import org.xtest.ui.internal.XtestPluginImages;
 import org.xtest.ui.mediator.XtestResultsCache;
+import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -47,9 +59,14 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     private IssueUtil issueUtil;
 
     @Inject
-    private XtestResultsCache mediator;
+    private IStorage2UriMapper mapper;
 
+    @Inject
+    private XtestResultsCache mediator;
     private IAnnotationModel model;
+    @Inject
+    private PerFilePreferenceProvider prefs;
+
     @Inject
     private IResourceValidator validator;
 
@@ -57,12 +74,13 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     public void createChildren(IOutlineNode parentNode, EObject body) {
         if (body instanceof BodyImplCustom) {
             String fileName = ((BodyImplCustom) body).getFileName();
+            List<Issue> issues = getIssues((Body) body);
             URI uri = body.eResource().getURI();
             XTestResult last = mediator.getLast(uri);
             if (last != null) {
                 Object text = parentNode.getText();
                 if (!fileName.equals(text)) {
-                    createNode(parentNode, last, fileName);
+                    createNode(parentNode, last, fileName, issues);
                 }
             } else {
                 scheduleValidation(body);
@@ -105,14 +123,14 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      * @return The new tree node
      */
     private EObjectNode createEObjectNode(IOutlineNode parentNode, XTestResult result,
-            String suggestedName) {
+            String suggestedName, List<Issue> issues) {
         EObject eObject = result.getEObject();
         String name = result.getName();
         if (name == null) {
             name = suggestedName;
         }
         Image image;
-        Severity severity = getSeverity(result);
+        Severity severity = getSeverity(result, issues);
         boolean isLeaf = result.getSubTests().isEmpty();
         if (isLeaf && parentNode.getParent() != null) {
             image = severity == null ? images.getTestImage() : images.getTestImage(severity);
@@ -138,11 +156,48 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      * @param suggestedName
      *            Name to use for the node
      */
-    private void createNode(IOutlineNode parentNode, XTestResult test, String suggestedName) {
-        EObjectNode thisNode = createEObjectNode(parentNode, test, suggestedName);
+    private void createNode(IOutlineNode parentNode, XTestResult test, String suggestedName,
+            List<Issue> issues) {
+        EObjectNode thisNode = createEObjectNode(parentNode, test, suggestedName, issues);
         for (XTestResult subTest : test.getSubTests()) {
-            createNode(thisNode, subTest, null);
+            createNode(thisNode, subTest, null, issues);
         }
+    }
+
+    private List<Issue> getIssues(Body body) {
+        List<Issue> result = Lists.newArrayList();
+        if (prefs.get(body, RuntimePref.RUN_WHILE_EDITING) && model != null) {
+            // use annotation model
+            Iterator<?> iterator;
+            iterator = model.getAnnotationIterator();
+            while (iterator.hasNext()) {
+                final Annotation a = (Annotation) iterator.next();
+                if (!a.isMarkedDeleted()) {
+                    Issue issue = issueUtil.getIssueFromAnnotation(a);
+                    if (issue != null) {
+                        result.add(issue);
+                    }
+                }
+            }
+        } else {
+            // use file markers
+            URI uri = body.eResource().getURI();
+            Iterable<Pair<IStorage, IProject>> storages = mapper.getStorages(uri);
+            IStorage first = storages.iterator().next().getFirst();
+            try {
+                IMarker[] findMarkers = ((IFile) first).findMarkers(null, true,
+                        IResource.DEPTH_ZERO);
+                for (IMarker marker : findMarkers) {
+                    Issue createIssue = issueUtil.createIssue(marker);
+                    if (createIssue != null && createIssue.getOffset() >= 0
+                            && createIssue.getLength() >= 0) {
+                        result.add(createIssue);
+                    }
+                }
+            } catch (CoreException e) {
+            }
+        }
+        return result;
     }
 
     private ITextRegion getRegion(IOutlineNode parentNode, EObject modelElement) {
@@ -157,31 +212,15 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         return region;
     }
 
-    private Severity getSeverity(final int offset, final int length) {
-        if (model == null) {
-            return Severity.INFO;
-        }
-        Iterator<?> iterator;
-        if (model instanceof IAnnotationModelExtension2) {
-            iterator = ((IAnnotationModelExtension2) model).getAnnotationIterator(offset, length,
-                    true, true);
-        } else {
-            iterator = model.getAnnotationIterator();
-        }
+    private Severity getSeverity(List<Issue> issues, final int offset, final int length) {
         boolean hasWarnings = false;
-        while (iterator.hasNext()) {
-            final Annotation a = (Annotation) iterator.next();
-            final Position p = model.getPosition(a);
-            if (p != null && p.overlapsWith(offset, length)) {
-                if (!a.isMarkedDeleted()) {
-                    Issue issue = issueUtil.getIssueFromAnnotation(a);
-                    if (issue != null) {
-                        if (issue.getSeverity() == Severity.ERROR) {
-                            return Severity.ERROR;
-                        } else if (issue.getSeverity() == Severity.WARNING) {
-                            hasWarnings = true;
-                        }
-                    }
+        for (Issue issue : issues) {
+            Position position = new Position(issue.getOffset(), issue.getLength());
+            if (position.overlapsWith(offset, length)) {
+                if (issue.getSeverity() == Severity.ERROR) {
+                    return Severity.ERROR;
+                } else if (issue.getSeverity() == Severity.WARNING) {
+                    hasWarnings = true;
                 }
             }
         }
@@ -200,7 +239,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
      *            The test result
      * @return The {@link Severity} of the node, or null if no issues and no tests have run
      */
-    private Severity getSeverity(XTestResult result) {
+    private Severity getSeverity(XTestResult result, List<Issue> issues) {
         Severity severity = null;
         XTestState state = result.getState();
         if (state == XTestState.FAIL) {
@@ -208,7 +247,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         } else {
             EObject eObject = result.getEObject();
             ICompositeNode node = NodeModelUtils.findActualNodeFor(eObject);
-            severity = getSeverity(node.getOffset(), node.getLength());
+            severity = getSeverity(issues, node.getOffset(), node.getLength());
         }
 
         return severity;

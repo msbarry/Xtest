@@ -44,6 +44,8 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
     @Override
     protected IOutlineNode refreshOutlineModel(IProgressMonitor monitor,
             OutlineTreeState formerState, OutlineTreeState newState) {
+        // TODO run while edit - refresh on annotation change
+        // TODO run on save - refresh on new result
         IOutlineNode refreshOutlineModel = super
                 .refreshOutlineModel(monitor, formerState, newState);
         if (!monitor.isCanceled()) {
