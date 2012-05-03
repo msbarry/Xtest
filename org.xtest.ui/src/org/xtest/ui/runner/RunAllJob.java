@@ -5,11 +5,15 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -60,6 +64,15 @@ public class RunAllJob extends Job {
 
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
+        // Wait for builds to finish
+        try {
+            getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD,
+                    new SubProgressMonitor(monitor, 1));
+            getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+                    new SubProgressMonitor(monitor, 1));
+        } catch (OperationCanceledException e) {
+        } catch (InterruptedException e) {
+        }
         Cache<IProject, ResourceSet> cache = CacheBuilder.newBuilder().build(
                 new CacheLoader<IProject, ResourceSet>() {
                     @Override
@@ -67,22 +80,21 @@ public class RunAllJob extends Job {
                         return resourceSetProvider.get(key);
                     }
                 });
-        monitor.beginTask("Xtest2", files.size());
-        System.err.println(files.size());
+        SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", files.size());
         while (!monitor.isCanceled() && !files.isEmpty()) {
-            FileWrapper poll = files.poll();
-            URI uri = mapper.getUri(poll.file);
-            ResourceSet resourceSet = cache.getUnchecked(poll.file.getProject());
+            FileWrapper peek = files.peek();
+            URI uri = mapper.getUri(peek.file);
+            ResourceSet resourceSet = cache.getUnchecked(peek.file.getProject());
             Resource resource = resourceSet.getResource(uri, true);
-            validator.updateValidationMarkers(poll.file, resource, CheckMode.ALL, monitor);
-            // TODO override validation job, make it run fast and expensive if run while editing
-            // enabled
-            // TODO clean up and check in
-            // TODO get dependencies from test execution
-            // sdfsd
-            monitor.worked(1);
+            convert.subTask(uri.lastSegment().replaceFirst("\\." + uri.fileExtension() + "$", ""));
+            validator.updateValidationMarkers(peek.file, resource, CheckMode.EXPENSIVE_ONLY,
+                    convert.newChild(1));
+            files.remove(peek);
+            try {
+                Thread.sleep(0);
+            } catch (InterruptedException e) {
+            }
         }
-        System.err.println("done");
         monitor.done();
         return Status.OK_STATUS;
     }

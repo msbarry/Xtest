@@ -54,6 +54,7 @@ public class BuildFinishedListener implements IResourceChangeListener {
         if (!changedFiles.isEmpty()) {
             runAll.addPendingTests(affected);
             System.err.println("Built " + changedFiles);
+            cancel();
             start();
         }
     }
@@ -156,9 +157,7 @@ public class BuildFinishedListener implements IResourceChangeListener {
     }
 
     private void start() {
-        if (runAll.getState() != Job.RUNNING) {
-            System.err.println("Starting");
-            runAll.schedule();
-        }
+        System.err.println("Starting");
+        runAll.schedule();
     }
 }
