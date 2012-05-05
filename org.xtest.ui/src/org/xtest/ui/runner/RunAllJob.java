@@ -81,19 +81,23 @@ public class RunAllJob extends Job {
                     }
                 });
         SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", files.size());
+        System.err.println("run " + files.size());
         while (!monitor.isCanceled() && !files.isEmpty()) {
             FileWrapper peek = files.peek();
             URI uri = mapper.getUri(peek.file);
             ResourceSet resourceSet = cache.getUnchecked(peek.file.getProject());
             Resource resource = resourceSet.getResource(uri, true);
             convert.subTask(uri.lastSegment().replaceFirst("\\." + uri.fileExtension() + "$", ""));
+            long start = System.nanoTime();
             validator.updateValidationMarkers(peek.file, resource, CheckMode.EXPENSIVE_ONLY,
                     convert.newChild(1));
-            files.remove(peek);
+            long end = System.nanoTime();
             try {
-                Thread.sleep(0);
-            } catch (InterruptedException e) {
+                peek.file.setPersistentProperty(new QualifiedName("org.xtest", "time"),
+                        Long.toString(end - start));
+            } catch (CoreException e) {
             }
+            files.remove(peek);
         }
         monitor.done();
         return Status.OK_STATUS;

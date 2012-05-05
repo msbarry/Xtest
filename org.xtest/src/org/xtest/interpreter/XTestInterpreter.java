@@ -40,6 +40,7 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
+    private ClassLoader classLoader;
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
     private XTestResult result;
     private final Stack<XTestResult> stack = new Stack<XTestResult>();
@@ -74,6 +75,12 @@ public class XTestInterpreter extends XbaseInterpreter {
      */
     public XTestResult getTestResult() {
         return result;
+    }
+
+    @Override
+    public void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        super.setClassLoader(classLoader);
     }
 
     /**
@@ -145,6 +152,7 @@ public class XTestInterpreter extends XbaseInterpreter {
             result = new XTestResult(main);
         }
         stack.push(result);
+        result.recordClassLoader(classLoader);
         Object toReturn = null;
         try {
             toReturn = super._evaluateBlockExpression(main, context, indicator);

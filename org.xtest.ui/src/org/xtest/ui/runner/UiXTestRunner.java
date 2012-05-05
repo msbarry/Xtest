@@ -2,19 +2,26 @@ package org.xtest.ui.runner;
 
 import static com.google.common.collect.Sets.newHashSet;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.Manifest;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -24,7 +31,9 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.Pair;
 import org.xtest.RunType;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
@@ -56,6 +65,8 @@ public class UiXTestRunner extends XTestRunner {
 
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
+    @Inject
+    private IStorage2UriMapper mapper;
 
     @Override
     public XTestResult run(final Body main, RunType weight, CancelIndicator monitor) {
@@ -65,7 +76,24 @@ public class UiXTestRunner extends XTestRunner {
             result = runInSeparateThread(main, weight, monitor);
         } else {
             result = runInThisThread(main, weight, monitor);
+            ClassLoader classLoader = result.getClassLoader();
+            if (classLoader instanceof RecordingClassLoader) {
+                Set<String> results = ((RecordingClassLoader) classLoader).results;
+                Iterable<Pair<IStorage, IProject>> storages = mapper.getStorages(main.eResource()
+                        .getURI());
+                for (Pair<IStorage, IProject> pair : storages) {
+                    IStorage first = pair.getFirst();
+                    if (first instanceof IFile) {
+                        try {
+                            ((IFile) first).setSessionProperty(new QualifiedName("org.xtest",
+                                    "affectedBy"), results);
+                        } catch (CoreException e) {
+                        }
+                    }
+                }
+            }
         }
+
         return result;
     }
 
@@ -148,7 +176,7 @@ public class UiXTestRunner extends XTestRunner {
                                 }
                             }
                         }
-                        cl = new URLClassLoader(urls.toArray(new URL[urls.size()]));
+                        cl = new RecordingClassLoader(urls.toArray(new URL[urls.size()]));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -205,6 +233,48 @@ public class UiXTestRunner extends XTestRunner {
         @Override
         public boolean isCanceled() {
             return monitor.isCanceled();
+        }
+    }
+
+    private static class RecordingClassLoader extends URLClassLoader {
+        Set<String> results = Sets.newLinkedHashSet();
+
+        public RecordingClassLoader(URL[] array) {
+            super(array);
+        }
+
+        @Override
+        public Class<?> loadClass(String arg0) throws ClassNotFoundException {
+            Class<?> loadClass = super.loadClass(arg0);
+            return loadClass;
+        }
+
+        @Override
+        protected Package definePackage(String name, Manifest man, URL url)
+                throws IllegalArgumentException {
+            // System.err.println(name + ": " + url);
+            return super.definePackage(name, man, url);
+        }
+
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            Class<?> loadClass = super.findClass(name);
+            String path = name.replace('.', '/').concat(".class");
+            URL res = findResource(path);
+            if (res != null) {
+                try {
+                    URI uri = res.toURI();
+                    if (uri.getScheme().equals("jar")) {
+                        String schemeSpecificPart = uri.getSchemeSpecificPart();
+                        int index = schemeSpecificPart.indexOf("!");
+                        results.add(schemeSpecificPart.substring(0, index));
+                    } else {
+                        results.add(uri.toString());
+                    }
+                } catch (URISyntaxException e) {
+                }
+            }
+            return loadClass;
         }
     }
 

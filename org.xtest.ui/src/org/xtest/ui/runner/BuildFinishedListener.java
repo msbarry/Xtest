@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -31,7 +32,7 @@ public class BuildFinishedListener implements IResourceChangeListener {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         workspace.addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD
                 | IResourceChangeEvent.PRE_BUILD);
-        runAll.setPriority(Job.BUILD);
+        runAll.setPriority(Job.LONG);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class BuildFinishedListener implements IResourceChangeListener {
     private void build(IResourceChangeEvent event) {
         Set<IFile> changedFiles = collectDeltas(event);
         Set<IFile> affected = getTestAffectedBy(changedFiles);
-        if (!changedFiles.isEmpty()) {
+        if (!affected.isEmpty()) {
             runAll.addPendingTests(affected);
             System.err.println("Built " + changedFiles);
             cancel();
@@ -66,8 +67,11 @@ public class BuildFinishedListener implements IResourceChangeListener {
 
     private void clean(IResourceChangeEvent event) {
         // TODO clear markers from each cleaned project
-        System.err.println("Clean");
         cancel();
+
+        if (event.getResource() instanceof IProject) {
+            System.err.println("Clean " + event.getResource());
+        }
         Set<IFile> xtestFiles = collectXtestFiles();
         for (IFile file : xtestFiles) {
             clearXtestFile(file);
@@ -121,16 +125,27 @@ public class BuildFinishedListener implements IResourceChangeListener {
         return xtestFiles;
     }
 
-    private boolean deltaAffectsTest(IFile delta, IFile xtestFile) {
+    private boolean deltaAffectsTest(Set<IFile> deltas, IFile xtestFile) {
+        Object sessionProperty = null;
         try {
-            Object sessionProperty = xtestFile.getSessionProperty(new QualifiedName("org.xtest",
+            sessionProperty = xtestFile.getSessionProperty(new QualifiedName("org.xtest",
                     "affectedBy"));
-            if (sessionProperty == null) {
-                return true;
-            } else if (sessionProperty instanceof Set) {
-                return ((Set<?>) sessionProperty).contains(delta.getFullPath().toString());
-            }
         } catch (CoreException e) {
+        }
+        if (sessionProperty == null) {
+            // Test not run yet, need to run
+            return true;
+        } else if (sessionProperty instanceof Set) {
+            for (IFile delta : deltas) {
+                Set<?> property = (Set<?>) sessionProperty;
+                if (delta.getLocationURI().equals(xtestFile.getLocationURI())) {
+                    // Test affects itself
+                    return true;
+                } else if (delta.getFileExtension() != null
+                        && delta.getFileExtension().equalsIgnoreCase("class")) {
+                    return property.contains(delta.getLocationURI().toString());
+                }
+            }
         }
         return false;
     }
@@ -138,22 +153,12 @@ public class BuildFinishedListener implements IResourceChangeListener {
     private Set<IFile> getTestAffectedBy(Set<IFile> changedFiles) {
         Set<IFile> xtestFiles = collectXtestFiles();
         Set<IFile> result = Sets.newHashSet();
-        for (IFile delta : changedFiles) {
-            for (IFile xtestFile : xtestFiles) {
-                if (deltaAffectsTest(delta, xtestFile)) {
-                    result.add(xtestFile);
-                }
+        for (IFile xtestFile : xtestFiles) {
+            if (deltaAffectsTest(changedFiles, xtestFile)) {
+                result.add(xtestFile);
             }
-            xtestFiles.removeAll(result);
         }
         return result;
-    }
-
-    private void preBuild(IResourceChangeEvent event) {
-        Set<IFile> collectDeltas = collectDeltas(event);
-        if (!collectDeltas.isEmpty()) {
-            cancel();
-        }
     }
 
     private void start() {
