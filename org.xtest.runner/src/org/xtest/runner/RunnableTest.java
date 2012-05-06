@@ -8,6 +8,7 @@ import org.xtest.runner.util.SerializationUtils;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.cache.LoadingCache;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 import com.google.common.primitives.Longs;
@@ -24,12 +25,14 @@ public class RunnableTest implements Comparable<RunnableTest> {
     private static final QualifiedName durationKey = new QualifiedName("org.xtest", "xduration");
     private static final QualifiedName numAffectedByKey = new QualifiedName("org.xtest",
             "xnumAffectedBy");
+    private static final QualifiedName pendingKey = new QualifiedName("org.xtest", "pending");
     private static final QualifiedName resultKey = new QualifiedName("org.xtest", "xresult");
     private final Optional<BloomFilter<String>> dependencies;
     private final Optional<Long> duration;
     private final IFile fFile;
     private final ITestType fTestType;
     private final Optional<Long> numDependencies;
+    private final Optional<String> pending;
     private final Optional<TestResult> result;
 
     public RunnableTest(IFile file, ITestType testType) {
@@ -40,6 +43,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
         numDependencies = getLong(numAffectedByKey);
         Optional<String> optional = get(resultKey);
         result = SerializationUtils.fromString(optional);
+        pending = get(pendingKey);
     }
 
     @Override
@@ -76,10 +80,11 @@ public class RunnableTest implements Comparable<RunnableTest> {
         return result.isPresent();
     }
 
-    public void invoke(SubMonitor convert) {
+    public void invoke(SubMonitor convert, LoadingCache<ITestType, ITestRunner> runnerCache) {
         long start = System.nanoTime();
         Acceptor acceptor = new Acceptor(dependencies, numDependencies);
-        TestResult result = fTestType.run(fFile, convert, acceptor);
+        ITestRunner testRunner = runnerCache.getUnchecked(fTestType);
+        TestResult result = testRunner.run(fFile, convert, acceptor);
         long end = System.nanoTime();
         storeResultsPersistently(result, acceptor, end - start);
     }
@@ -97,8 +102,16 @@ public class RunnableTest implements Comparable<RunnableTest> {
         return result;
     }
 
-    public boolean isFailing() {
-        return result.isPresent() && result.get() == TestResult.FAIL;
+    public boolean isPending() {
+        return pending.isPresent();
+    }
+
+    public void setPending() {
+        put(pendingKey, Optional.of(""));
+    }
+
+    private void clear(QualifiedName pendingkey2) {
+        put(pendingkey2, Optional.<String> absent());
     }
 
     private Optional<String> get(QualifiedName key) {
@@ -119,11 +132,10 @@ public class RunnableTest implements Comparable<RunnableTest> {
     }
 
     private void put(QualifiedName key, Optional<String> string) {
-        if (string.isPresent()) {
-            try {
-                fFile.setPersistentProperty(key, string.get());
-            } catch (CoreException e) {
-            }
+        try {
+            // null clears property
+            fFile.setPersistentProperty(key, string.orNull());
+        } catch (CoreException e) {
         }
     }
 
@@ -137,6 +149,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
         put(durationKey, SerializationUtils.toString(duration));
         put(numAffectedByKey, SerializationUtils.toString(dependencies.dependencies));
         put(resultKey, SerializationUtils.toString(result));
+        clear(pendingKey);
         System.err.println("Num affected: " + dependencies.dependencies);
     }
 

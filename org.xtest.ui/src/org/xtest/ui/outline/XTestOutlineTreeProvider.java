@@ -32,6 +32,8 @@ import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
+import org.xtest.runner.ContinuousTestRunner;
+import org.xtest.runner.RunAllJob;
 import org.xtest.ui.internal.XtestPluginImages;
 import org.xtest.ui.mediator.XtestResultsCache;
 import org.xtest.xTest.Body;
@@ -48,18 +50,22 @@ import com.google.inject.Inject;
 public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     @Inject
     private XtestPluginImages images;
-
     @Inject
     private IssueUtil issueUtil;
+    @Inject
+    private RunAllJob job;
 
     @Inject
     private IStorage2UriMapper mapper;
 
     @Inject
     private XtestResultsCache mediator;
+
     private IAnnotationModel model;
     @Inject
     private PerFilePreferenceProvider prefs;
+    @Inject
+    private ContinuousTestRunner runner;
 
     @Inject
     private IResourceValidator validator;
@@ -252,6 +258,12 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     private void scheduleValidation(EObject body) {
-        // TODO
+        Iterable<Pair<IStorage, IProject>> storages = mapper.getStorages(body.eResource().getURI());
+        for (Pair<IStorage, IProject> pair : storages) {
+            IStorage first = pair.getFirst();
+            if (first instanceof IFile) {
+                runner.schedule((IFile) first);
+            }
+        }
     }
 }

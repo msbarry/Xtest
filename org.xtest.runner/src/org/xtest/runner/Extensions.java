@@ -2,6 +2,7 @@ package org.xtest.runner;
 
 import java.util.Collection;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -17,7 +18,18 @@ public class Extensions {
     private static final String EXTENSION_POINT = "testType";
     private Collection<ITestType> types;
 
-    public synchronized Collection<ITestType> getAllTestTypes() {
+    public Collection<ITestType> getTestTypesFor(IFile file) {
+        Collection<ITestType> allTestTypes = getAllTestTypes();
+        Collection<ITestType> result = Lists.newArrayList();
+        for (ITestType testType : allTestTypes) {
+            if (testType.supports(file)) {
+                result.add(testType);
+            }
+        }
+        return result;
+    }
+
+    private synchronized Collection<ITestType> getAllTestTypes() {
         if (types == null) {
             types = Lists.newArrayList();
             IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -39,5 +51,4 @@ public class Extensions {
         }
         return types;
     }
-
 }

@@ -12,7 +12,7 @@ import com.google.inject.Inject;
 
 public class WorkspaceListener implements IResourceChangeListener {
     @Inject
-    private RunAllJob job;
+    private ContinuousTestRunner runner;
     @Inject
     private TestsProvider testProvider;
 
@@ -21,12 +21,9 @@ public class WorkspaceListener implements IResourceChangeListener {
         WorkspaceEvent wrapped = WorkspaceEvent.wrap(event);
         if (wrapped.isBuild()) {
             Set<IFile> deltas = wrapped.getDeltas();
-            System.err.println("deltas: " + deltas);
             Set<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
             if (toRun != null && !toRun.isEmpty()) {
-                job.cancel();
-                job.submit(toRun);
-                job.schedule();
+                runner.scheduleAll(toRun);
             }
         }
     }
