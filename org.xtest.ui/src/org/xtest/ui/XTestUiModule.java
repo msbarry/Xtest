@@ -2,6 +2,7 @@ package org.xtest.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.common.types.xtext.ui.ITypesProposalProvider;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
@@ -22,7 +23,7 @@ import org.xtest.ui.editor.XtestPreferencePage;
 import org.xtest.ui.highlight.XtestHighlightingCalculator;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
-import org.xtest.ui.runner.BuildFinishedListener;
+import org.xtest.ui.resource.XtestResource;
 import org.xtest.ui.runner.UiXTestRunner;
 import org.xtest.ui.templates.XtestTemplateProposalProvider;
 import org.xtest.ui.validation.XtestDiagnostician;
@@ -125,15 +126,8 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
         return XtestDocumentProvider.class;
     }
 
-    /**
-     * Configure {@link BuildFinishedListener} to be initialized at startup so it can start
-     * listening immediately on build finished events.
-     * 
-     * @param binder
-     *            The Guice Binder
-     */
-    public void configureBuildFinishedListener(com.google.inject.Binder binder) {
-        binder.bind(BuildFinishedListener.class).asEagerSingleton();
+    public Class<? extends XtextResource> bindXtextResource() {
+        return XtestResource.class;
     }
 
     /**

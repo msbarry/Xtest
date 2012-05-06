@@ -10,18 +10,13 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.jar.Manifest;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,16 +24,16 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.util.Pair;
 import org.xtest.RunType;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
+import org.xtest.runner.DependencyAcceptor;
 import org.xtest.ui.mediator.ValidationStartedEvent;
+import org.xtest.ui.resource.XtestResource;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
@@ -76,22 +71,6 @@ public class UiXTestRunner extends XTestRunner {
             result = runInSeparateThread(main, weight, monitor);
         } else {
             result = runInThisThread(main, weight, monitor);
-            ClassLoader classLoader = result.getClassLoader();
-            if (classLoader instanceof RecordingClassLoader) {
-                Set<String> results = ((RecordingClassLoader) classLoader).results;
-                Iterable<Pair<IStorage, IProject>> storages = mapper.getStorages(main.eResource()
-                        .getURI());
-                for (Pair<IStorage, IProject> pair : storages) {
-                    IStorage first = pair.getFirst();
-                    if (first instanceof IFile) {
-                        try {
-                            ((IFile) first).setSessionProperty(new QualifiedName("org.xtest",
-                                    "affectedBy"), results);
-                        } catch (CoreException e) {
-                        }
-                    }
-                }
-            }
         }
 
         return result;
@@ -104,7 +83,9 @@ public class UiXTestRunner extends XTestRunner {
         // in order to use the classloader of the java project in the running
         // instance of eclipse rather than the classloader of this class itself
         XTestInterpreter interpreter = interpreterProvider.get();
-        if (resource instanceof XtextResource) {
+        if (resource instanceof XtestResource) {
+            XtestResource xtestResource = (XtestResource) resource;
+            DependencyAcceptor acceptor = xtestResource.getAcceptor();
             ResourceSet set = resource.getResourceSet();
             ClassLoader cl = getClass().getClassLoader();
             if (set instanceof XtextResourceSet) {
@@ -176,7 +157,9 @@ public class UiXTestRunner extends XTestRunner {
                                 }
                             }
                         }
-                        cl = new RecordingClassLoader(urls.toArray(new URL[urls.size()]));
+                        URL[] array = urls.toArray(new URL[urls.size()]);
+                        cl = acceptor == null ? new URLClassLoader(array)
+                                : new RecordingClassLoader(array, acceptor);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -237,23 +220,11 @@ public class UiXTestRunner extends XTestRunner {
     }
 
     private static class RecordingClassLoader extends URLClassLoader {
-        Set<String> results = Sets.newLinkedHashSet();
+        private final DependencyAcceptor acceptor;
 
-        public RecordingClassLoader(URL[] array) {
+        public RecordingClassLoader(URL[] array, DependencyAcceptor acceptor) {
             super(array);
-        }
-
-        @Override
-        public Class<?> loadClass(String arg0) throws ClassNotFoundException {
-            Class<?> loadClass = super.loadClass(arg0);
-            return loadClass;
-        }
-
-        @Override
-        protected Package definePackage(String name, Manifest man, URL url)
-                throws IllegalArgumentException {
-            // System.err.println(name + ": " + url);
-            return super.definePackage(name, man, url);
+            this.acceptor = acceptor;
         }
 
         @Override
@@ -267,9 +238,9 @@ public class UiXTestRunner extends XTestRunner {
                     if (uri.getScheme().equals("jar")) {
                         String schemeSpecificPart = uri.getSchemeSpecificPart();
                         int index = schemeSpecificPart.indexOf("!");
-                        results.add(schemeSpecificPart.substring(0, index));
+                        acceptor.accept(schemeSpecificPart.substring(0, index));
                     } else {
-                        results.add(uri.toString());
+                        acceptor.accept(uri.toString());
                     }
                 } catch (URISyntaxException e) {
                 }

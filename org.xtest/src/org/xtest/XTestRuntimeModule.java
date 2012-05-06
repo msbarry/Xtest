@@ -4,7 +4,6 @@ import org.eclipse.xtend.core.formatting.OrganizeImports;
 import org.eclipse.xtend.core.formatting.OrganizeImports.ReferenceAcceptor;
 import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
 import org.eclipse.xtext.common.types.util.VisibilityService;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
@@ -15,7 +14,6 @@ import org.xtest.formatting.XtestOrganizeImports;
 import org.xtest.formatting.XtestReferenceAcceptor;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.linking.XtestFeatureCallChecker;
-import org.xtest.resource.XtestResource;
 import org.xtest.scoping.XTestScopeProvider;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
 import org.xtest.scoping.XtestStaticMethodsFeatureForTypeProvider;
@@ -119,10 +117,5 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends XbaseTypeProvider> bindXbaseTypeProvider() {
         return XTestTypeProvider.class;
-    }
-
-    @Override
-    public Class<? extends XtextResource> bindXtextResource() {
-        return XtestResource.class;
     }
 }

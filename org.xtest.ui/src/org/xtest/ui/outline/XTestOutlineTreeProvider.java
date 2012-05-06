@@ -34,7 +34,6 @@ import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
 import org.xtest.ui.internal.XtestPluginImages;
 import org.xtest.ui.mediator.XtestResultsCache;
-import org.xtest.ui.runner.BuildFinishedListener;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
@@ -61,9 +60,6 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     private IAnnotationModel model;
     @Inject
     private PerFilePreferenceProvider prefs;
-
-    @Inject
-    private BuildFinishedListener toUpdate;
 
     @Inject
     private IResourceValidator validator;
@@ -256,6 +252,6 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     private void scheduleValidation(EObject body) {
-        toUpdate.schedule(getFile((Body) body));
+        // TODO
     }
 }
