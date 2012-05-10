@@ -122,10 +122,20 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
         return UiXTestRunner.class;
     }
 
+    /**
+     * Binds {@link XtextDocumentProvider} implementation to custom {@link XtestDocumentProvider}
+     * 
+     * @return {@link XtestDocumentProvider} class
+     */
     public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
         return XtestDocumentProvider.class;
     }
 
+    /**
+     * Binds {@link XtextResource} implementation to custom {@link XtestResource}
+     * 
+     * @return {@link XtestResource} class
+     */
     public Class<? extends XtextResource> bindXtextResource() {
         return XtestResource.class;
     }

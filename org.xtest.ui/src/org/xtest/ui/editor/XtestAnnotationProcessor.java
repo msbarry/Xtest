@@ -19,6 +19,12 @@ import org.xtest.xTest.Body;
 
 import com.google.common.collect.Iterators;
 
+/**
+ * Custom {@link AnnotationIssueProcessor} for Xtest to hook into to hook in expensive test
+ * annotation clearing
+ * 
+ * @author Michael Barry
+ */
 public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
 
     private final IAnnotationModel fAnnotaionModel;

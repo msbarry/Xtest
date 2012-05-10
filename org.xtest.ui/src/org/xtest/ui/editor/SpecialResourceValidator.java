@@ -15,6 +15,12 @@ import org.xtest.xTest.Body;
 
 import com.google.inject.Inject;
 
+/**
+ * Custom {@link ResourceValidatorImpl} that adds the additional {@link CheckType#EXPENSIVE} if the
+ * run while editing preference is set on a file
+ * 
+ * @author Michael Barry
+ */
 public class SpecialResourceValidator extends ResourceValidatorImpl {
     @Inject
     private PerFilePreferenceProvider preferenceProvider;

@@ -4,16 +4,23 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.SubMonitor;
+import org.xtest.runner.external.DependencyAcceptor;
+import org.xtest.runner.external.ITestRunner;
+import org.xtest.runner.external.ITestType;
+import org.xtest.runner.external.TestResult;
 import org.xtest.runner.util.SerializationUtils;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import com.google.common.cache.Cache;
 import com.google.common.cache.LoadingCache;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 import com.google.common.primitives.Longs;
 
 /**
+ * Wrapper for a test file supported by a client contribution to the testType extension point
+ * 
  * The lifetime of this class is from workspace change to test run, and it is discarded after the
  * test is run.
  * 
@@ -35,6 +42,15 @@ public class RunnableTest implements Comparable<RunnableTest> {
     private final Optional<String> pending;
     private final Optional<TestResult> result;
 
+    /**
+     * Construct a new runnable test for the test file and test type provided
+     * 
+     * @param file
+     *            The file with tests to run
+     * @param testType
+     *            The contribution to the testType extension point that can handle running tests in
+     *            this file
+     */
     public RunnableTest(IFile file, ITestType testType) {
         fFile = file;
         fTestType = testType;
@@ -66,6 +82,11 @@ public class RunnableTest implements Comparable<RunnableTest> {
         return Objects.equal(fFile, other.fFile);
     }
 
+    /**
+     * Returns the name of this test file
+     * 
+     * @return The name of this test file
+     */
     public String getName() {
         String name = fFile.getName();
         return name;
@@ -76,10 +97,23 @@ public class RunnableTest implements Comparable<RunnableTest> {
         return Objects.hashCode(fFile);
     }
 
+    /**
+     * Returns true if this test has run before, false if not
+     * 
+     * @return true if this test has run before, false if not
+     */
     public boolean hasRun() {
         return result.isPresent();
     }
 
+    /**
+     * Runs the test
+     * 
+     * @param convert
+     *            Progress monitor
+     * @param runnerCache
+     *            {@link Cache} of runners for each test type
+     */
     public void invoke(SubMonitor convert, LoadingCache<ITestType, ITestRunner> runnerCache) {
         long start = System.nanoTime();
         Acceptor acceptor = new Acceptor(dependencies, numDependencies);
@@ -89,6 +123,13 @@ public class RunnableTest implements Comparable<RunnableTest> {
         storeResultsPersistently(result, acceptor, end - start);
     }
 
+    /**
+     * Returns true if this test file is affected by the file provided
+     * 
+     * @param delta
+     *            The file that has changed
+     * @return True if {@code delta} is a dependency of this test
+     */
     public boolean isAffectedBy(IFile delta) {
         boolean result = false;
         if (delta.equals(fFile)) {
@@ -102,10 +143,18 @@ public class RunnableTest implements Comparable<RunnableTest> {
         return result;
     }
 
+    /**
+     * Returns true if this test has been placed on a test-run queue but not run yet
+     * 
+     * @return true if this test has been placed on a test-run queue but not run yet, false if not
+     */
     public boolean isPending() {
         return pending.isPresent();
     }
 
+    /**
+     * Persistently mark that this test file has been scheduled
+     */
     public void setPending() {
         put(pendingKey, Optional.of(""));
     }

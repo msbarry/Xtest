@@ -11,8 +11,20 @@ import org.eclipse.core.runtime.CoreException;
 
 import com.google.common.collect.Sets;
 
+/**
+ * Wrapper for an {@link IResourceChangeEvent} in the workspace
+ * 
+ * @author Michael Barry
+ */
 public class WorkspaceEvent {
 
+    /**
+     * Wraps the event provided
+     * 
+     * @param event
+     *            The event to wrap
+     * @return A wrapper for {@code event}
+     */
     public static WorkspaceEvent wrap(IResourceChangeEvent event) {
         return new WorkspaceEvent(event);
     }
@@ -23,6 +35,11 @@ public class WorkspaceEvent {
         this.event = event;
     }
 
+    /**
+     * Returns the files that are affected by this delta
+     * 
+     * @return The files that are affected by this delta
+     */
     public Set<IFile> getDeltas() {
         final Set<IFile> deltas = Sets.newHashSet();
         try {
@@ -31,6 +48,7 @@ public class WorkspaceEvent {
                 @Override
                 public boolean visit(IResourceDelta delta) throws CoreException {
                     IResource resource = delta.getResource();
+                    // Only care about specific events
                     if (resource instanceof IFile
                             && (delta.getFlags() & (IResourceDelta.CONTENT
                                     | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO
@@ -45,6 +63,11 @@ public class WorkspaceEvent {
         return deltas;
     }
 
+    /**
+     * Returns true if this event has been triggered due to a build finishing
+     * 
+     * @return True if this event has been triggered due to a build finishing
+     */
     public boolean isBuild() {
         return (event.getType() & (IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE)) > 0;
     }

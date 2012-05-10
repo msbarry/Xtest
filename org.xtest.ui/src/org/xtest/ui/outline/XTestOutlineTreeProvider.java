@@ -31,7 +31,7 @@ import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
-import org.xtest.runner.ContinuousTestRunner;
+import org.xtest.runner.external.ContinuousTestRunner;
 import org.xtest.ui.internal.XtestPluginImages;
 import org.xtest.ui.mediator.XtestResultsCache;
 import org.xtest.xTest.Body;

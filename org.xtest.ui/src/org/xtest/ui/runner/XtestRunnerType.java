@@ -2,16 +2,17 @@ package org.xtest.ui.runner;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
-import org.xtest.runner.DependencyAcceptor;
-import org.xtest.runner.ITestRunner;
-import org.xtest.runner.ITestType;
-import org.xtest.runner.TestResult;
+import org.xtest.runner.external.DependencyAcceptor;
+import org.xtest.runner.external.ITestRunner;
+import org.xtest.runner.external.ITestType;
+import org.xtest.runner.external.TestResult;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -19,12 +20,17 @@ import com.google.common.cache.CacheLoader;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+/**
+ * Test runner that handles Xtest files
+ * 
+ * @author Michael Barry
+ */
 public class XtestRunnerType implements ITestType {
     @Inject
     private Provider<Runner> runnerProvider;
 
     @Override
-    public org.xtest.runner.ITestRunner provideNewRunner() {
+    public org.xtest.runner.external.ITestRunner provideNewRunner() {
         return runnerProvider.get();
     }
 
@@ -35,6 +41,11 @@ public class XtestRunnerType implements ITestType {
                 && fileExtension.equalsIgnoreCase("xtest");
     }
 
+    /**
+     * Single instance test runner for a batch test run. Caches resource sets per-project
+     * 
+     * @author Michael Barry
+     */
     public static class Runner implements ITestRunner {
         @Inject
         private IStorage2UriMapper mapper;
@@ -51,13 +62,14 @@ public class XtestRunnerType implements ITestType {
         private TestRunner validator;
 
         @Override
-        public TestResult run(IFile file, SubMonitor convert, DependencyAcceptor acceptor) {
+        public TestResult run(IFile file, IProgressMonitor monitor, DependencyAcceptor acceptor) {
             URI uri = mapper.getUri(file);
             TestResult runTests = TestResult.FAIL;
             if (uri != null) {
                 ResourceSet resourceSet = resourceSetProvider.getUnchecked(file.getProject());
                 Resource resource = resourceSet.getResource(uri, true);
-                runTests = validator.runTests(file, resource, acceptor, convert.newChild(1));
+                runTests = validator.runTests(file, resource, acceptor,
+                        SubMonitor.convert(monitor, 1));
             }
             return runTests;
         }

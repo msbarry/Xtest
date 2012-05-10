@@ -11,10 +11,14 @@ import com.google.inject.Injector;
  */
 public class Activator extends AbstractUIPlugin {
 
-    // The plug-in ID
+    /**
+     * The plug-in ID
+     */
     public static final String PLUGIN_ID = "org.xtest.runner"; //$NON-NLS-1$
 
-    // The shared instance
+    /**
+     * The shared instance
+     */
     private static Activator plugin;
 
     /**
@@ -34,11 +38,19 @@ public class Activator extends AbstractUIPlugin {
     public Activator() {
     }
 
+    /**
+     * Start up the plugin
+     */
     public void boot() {
         WorkspaceListener listener = injector.getInstance(WorkspaceListener.class);
         listener.startup();
     }
 
+    /**
+     * Returns the {@link Injector}
+     * 
+     * @return The injector for this plugin
+     */
     public Injector getInjector() {
         return injector;
     }

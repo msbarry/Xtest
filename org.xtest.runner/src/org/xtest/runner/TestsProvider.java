@@ -7,14 +7,27 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.xtest.runner.external.ITestType;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
+/**
+ * Provider for tests to run based on client contributions to the testType extension point
+ * 
+ * @author Michael Barry
+ */
 public class TestsProvider {
     @Inject
     private Extensions extensions;
 
+    /**
+     * Return tests that depend on the deltas provided
+     * 
+     * @param deltas
+     *            The list of changed files
+     * @return the set of tests that depend on {@code deltas}
+     */
     public Set<RunnableTest> getTestsFromDeltas(Set<IFile> deltas) {
         Set<RunnableTest> result = Sets.newHashSet();
         for (RunnableTest test : getAllTests()) {

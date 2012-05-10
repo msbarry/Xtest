@@ -25,18 +25,18 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.xtest.RunType;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
-import org.xtest.runner.DependencyAcceptor;
+import org.xtest.runner.external.DependencyAcceptor;
 import org.xtest.ui.mediator.ValidationStartedEvent;
 import org.xtest.ui.resource.XtestResource;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
@@ -49,7 +49,6 @@ import com.google.inject.Provider;
  * 
  * @author Michael Barry
  */
-@SuppressWarnings("restriction")
 public class UiXTestRunner extends XTestRunner {
     /**
      * Time to wait between checking the caller's cancel indicator.
@@ -60,8 +59,6 @@ public class UiXTestRunner extends XTestRunner {
 
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
-    @Inject
-    private IStorage2UriMapper mapper;
 
     @Override
     public XTestResult run(final Body main, RunType weight, CancelIndicator monitor) {
@@ -85,7 +82,7 @@ public class UiXTestRunner extends XTestRunner {
         XTestInterpreter interpreter = interpreterProvider.get();
         if (resource instanceof XtestResource) {
             XtestResource xtestResource = (XtestResource) resource;
-            DependencyAcceptor acceptor = xtestResource.getAcceptor();
+            Optional<DependencyAcceptor> acceptor = xtestResource.getAcceptor();
             ResourceSet set = resource.getResourceSet();
             ClassLoader cl = getClass().getClassLoader();
             if (set instanceof XtextResourceSet) {
@@ -158,8 +155,11 @@ public class UiXTestRunner extends XTestRunner {
                             }
                         }
                         URL[] array = urls.toArray(new URL[urls.size()]);
-                        cl = acceptor == null ? new URLClassLoader(array)
-                                : new RecordingClassLoader(array, acceptor);
+                        if (acceptor.isPresent()) {
+                            cl = new RecordingClassLoader(array, acceptor.get());
+                        } else {
+                            cl = new URLClassLoader(array);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

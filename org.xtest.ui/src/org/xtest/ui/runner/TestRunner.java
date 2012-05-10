@@ -12,17 +12,35 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.ui.validation.DefaultResourceUIValidatorExtension;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.Issue;
-import org.xtest.runner.DependencyAcceptor;
-import org.xtest.runner.TestResult;
+import org.xtest.runner.external.DependencyAcceptor;
+import org.xtest.runner.external.TestResult;
 import org.xtest.ui.editor.SpecialResourceValidator;
 import org.xtest.ui.resource.XtestResource;
 
 import com.google.inject.Inject;
 
+/**
+ * Runs Xtest files and adds error markers to the file for failed tests
+ * 
+ * @author Michael Barry
+ */
 public class TestRunner extends DefaultResourceUIValidatorExtension {
     @Inject
     private SpecialResourceValidator resourceValidator;
 
+    /**
+     * Run an xtest file
+     * 
+     * @param file
+     *            The xtest file to run
+     * @param resource
+     *            The EMF resource associated with that file
+     * @param acceptor
+     *            The dependency acceptor
+     * @param monitor
+     *            The progress monitor
+     * @return The test result, either pass or fail
+     */
     public TestResult runTests(IFile file, Resource resource, DependencyAcceptor acceptor,
             IProgressMonitor monitor) {
         TestResult result = TestResult.FAIL;

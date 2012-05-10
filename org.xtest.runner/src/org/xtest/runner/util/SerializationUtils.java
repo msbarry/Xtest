@@ -11,8 +11,21 @@ import org.eclipse.equinox.security.storage.EncodingUtils;
 
 import com.google.common.base.Optional;
 
+/**
+ * Utilities for serializing objects to/from strings
+ * 
+ * @author Michael Barry
+ */
 public class SerializationUtils {
 
+    /**
+     * Deserialize an object from the string provided, if present.
+     * 
+     * @param string
+     *            The serialized object to deserialize
+     * @return {@link Optional#absent()} if there was no string or deserialization failed, otherwise
+     *         set to the deserialized object
+     */
     @SuppressWarnings("unchecked")
     public static <T extends Serializable> Optional<T> fromString(Optional<String> string) {
         T result = null;
@@ -34,6 +47,14 @@ public class SerializationUtils {
         return Optional.fromNullable(result);
     }
 
+    /**
+     * Serialize an object to a string.
+     * 
+     * @param object
+     *            The object to serialize
+     * @return {@link Optional} containing the serialized object if serialization succeeded,
+     *         {@link Optional#absent()} if failed
+     */
     public static <T extends Serializable> Optional<String> toString(T object) {
         String result = null;
         if (object != null) {

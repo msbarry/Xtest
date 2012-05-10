@@ -11,21 +11,39 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.xtest.runner.external.ITestRunner;
+import org.xtest.runner.external.ITestType;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Singleton;
 
+/**
+ * Re-usable job that runs all scheduled tests
+ * 
+ * @author Michael Barry
+ */
 @Singleton
 public class RunAllJob extends Job {
     private final PriorityBlockingQueue<RunnableTest> files;
 
+    /**
+     * Constructs a new {@link RunAllJob}, should only be called by Guice.
+     */
     public RunAllJob() {
         super("Xtest");
         files = new PriorityBlockingQueue<RunnableTest>();
     }
 
+    /**
+     * Submits a set of {@link RunnableTest}s to the queue
+     * 
+     * @param toRun
+     *            The list of tests to schedule
+     * @return True if any of the tests were not already scheduled, false if no change was made to
+     *         scheduled test queue
+     */
     public boolean submit(Set<RunnableTest> toRun) {
         boolean scheduled = false;
         setPriority(Job.INTERACTIVE);

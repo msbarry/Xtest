@@ -11,6 +11,11 @@ import org.xtest.preferences.PerFilePreferenceProvider;
 
 import com.google.inject.Inject;
 
+/**
+ * Custom Xtest document provider for Xtest to hook into for customizing the {@link ValidationJob}
+ * 
+ * @author Michael Barry
+ */
 public class XtestDocumentProvider extends XtextDocumentProvider {
     @Inject
     private IssueResolutionProvider issueResolutionProvider;
