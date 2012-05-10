@@ -26,6 +26,8 @@ public class Activator extends AbstractUIPlugin {
         return plugin;
     }
 
+    private Injector injector;
+
     /**
      * The constructor
      */
@@ -33,10 +35,12 @@ public class Activator extends AbstractUIPlugin {
     }
 
     public void boot() {
-        XtestRunnerMudule xtestRunnerMudule = new XtestRunnerMudule();
-        Injector injector = Guice.createInjector(xtestRunnerMudule);
         WorkspaceListener listener = injector.getInstance(WorkspaceListener.class);
         listener.startup();
+    }
+
+    public Injector getInjector() {
+        return injector;
     }
 
     /*
@@ -47,6 +51,8 @@ public class Activator extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+        XtestRunnerModule xtestRunnerMudule = new XtestRunnerModule();
+        injector = Guice.createInjector(xtestRunnerMudule);
         plugin = this;
     }
 

@@ -6,15 +6,18 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 
 import com.google.common.collect.Sets;
-import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 public class ContinuousTestRunner {
-    @Inject
-    private Extensions extensions;
-    @Inject
-    private RunAllJob job;
+    private static final Extensions extensions;
+    private static final RunAllJob job;
+    static {
+        Injector injector = Activator.getDefault().getInjector();
+        extensions = injector.getInstance(Extensions.class);
+        job = injector.getInstance(RunAllJob.class);
+    }
 
-    public void schedule(IFile toRun) {
+    public static void schedule(IFile toRun) {
         Collection<ITestType> types = extensions.getTestTypesFor(toRun);
         Set<RunnableTest> tests = Sets.newHashSet();
         for (ITestType type : types) {
@@ -23,7 +26,7 @@ public class ContinuousTestRunner {
         scheduleAll(tests);
     }
 
-    public void scheduleAll(Set<RunnableTest> toRun) {
+    public static void scheduleAll(Set<RunnableTest> toRun) {
         if (job.submit(toRun)) {
             job.cancel();
             job.schedule();

@@ -26,14 +26,12 @@ import org.eclipse.xtext.ui.util.IssueUtil;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.TextRegion;
-import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
 import org.xtest.runner.ContinuousTestRunner;
-import org.xtest.runner.RunAllJob;
 import org.xtest.ui.internal.XtestPluginImages;
 import org.xtest.ui.mediator.XtestResultsCache;
 import org.xtest.xTest.Body;
@@ -53,22 +51,12 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     @Inject
     private IssueUtil issueUtil;
     @Inject
-    private RunAllJob job;
-
-    @Inject
     private IStorage2UriMapper mapper;
-
     @Inject
     private XtestResultsCache mediator;
-
     private IAnnotationModel model;
     @Inject
     private PerFilePreferenceProvider prefs;
-    @Inject
-    private ContinuousTestRunner runner;
-
-    @Inject
-    private IResourceValidator validator;
 
     @Override
     public void createChildren(IOutlineNode parentNode, EObject body) {
@@ -262,7 +250,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         for (Pair<IStorage, IProject> pair : storages) {
             IStorage first = pair.getFirst();
             if (first instanceof IFile) {
-                runner.schedule((IFile) first);
+                ContinuousTestRunner.schedule((IFile) first);
             }
         }
     }
