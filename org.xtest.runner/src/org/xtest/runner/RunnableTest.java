@@ -18,9 +18,9 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ComparisonChain;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
-import com.google.common.primitives.Longs;
 
 /**
  * Wrapper for a test file supported by a client contribution to the testType extension point
@@ -44,7 +44,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
     private final ITestType fTestType;
     private final Optional<Long> numDependencies;
     private final Optional<String> pending;
-    private final Optional<TestResult> result;
+    private final TestResult result;
 
     /**
      * Construct a new runnable test for the test file and test type provided
@@ -62,13 +62,16 @@ public class RunnableTest implements Comparable<RunnableTest> {
         duration = getLong(durationKey);
         numDependencies = getLong(numAffectedByKey);
         Optional<String> optional = get(resultKey);
-        result = SerializationUtils.fromString(optional);
+        result = SerializationUtils.<TestResult> fromString(optional).or(TestResult.NOT_RUN);
         pending = get(pendingKey);
     }
 
     @Override
     public int compareTo(RunnableTest o) {
-        return Longs.compare(duration.or(0L), o.duration.or(0L));
+        // Run failures, then not run, then passes
+        // Then sort by fastest first
+        return ComparisonChain.start().compare(result.getOrder(), o.result.getOrder())
+                .compare(duration.or(0L), o.duration.or(0L)).result();
     }
 
     @Override
@@ -107,7 +110,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
      * @return true if this test has run before, false if not
      */
     public boolean hasRun() {
-        return result.isPresent();
+        return result != TestResult.NOT_RUN;
     }
 
     /**
