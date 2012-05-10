@@ -1,6 +1,7 @@
 package org.xtest.runner;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -26,11 +27,17 @@ public class WorkspaceListener implements IResourceChangeListener {
     public void resourceChanged(IResourceChangeEvent event) {
         WorkspaceEvent wrapped = WorkspaceEvent.wrap(event);
         if (wrapped.isBuild()) {
+            long start = System.nanoTime();
             Set<IFile> deltas = wrapped.getDeltas();
-            logger.debug("Processing resource change event.  {} files changed", deltas.size());
-            Set<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
-            if (toRun != null && !toRun.isEmpty()) {
-                ContinuousTestRunner.scheduleAll(toRun);
+            if (!deltas.isEmpty()) {
+                logger.debug("Processing resource change event for changes: {}", deltas);
+                Set<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
+                if (toRun != null && !toRun.isEmpty()) {
+                    ContinuousTestRunner.scheduleAll(toRun);
+                    long end = System.nanoTime();
+                    logger.debug("Test selection took {} ms",
+                            TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS));
+                }
             }
         }
     }

@@ -99,6 +99,15 @@ public class RunnableTest implements Comparable<RunnableTest> {
         return name;
     }
 
+    /**
+     * Returns the state of this test
+     * 
+     * @return pass, fail, or not run;
+     */
+    public TestResult getState() {
+        return result;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(fFile);

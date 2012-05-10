@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.ITestType;
+import org.xtest.runner.external.TestResult;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -41,6 +42,9 @@ public class TestsProvider {
             } else if (test.isPending()) {
                 result.add(test);
                 logger.debug("Scheduling {} because it was pending", test.getName());
+            } else if (TestResult.FAIL == test.getState()) {
+                result.add(test);
+                logger.debug("Scheduling {} because it is failing", test.getName());
             } else {
                 for (IFile delta : deltas) {
                     if (test.isAffectedBy(delta)) {
