@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.ContinuousTestRunner;
 
 import com.google.inject.Inject;
@@ -17,8 +18,7 @@ import com.google.inject.Inject;
  * @author Michael Barry
  */
 public class WorkspaceListener implements IResourceChangeListener {
-    @Inject
-    private ContinuousTestRunner runner;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WorkspaceListener.class);
     @Inject
     private TestsProvider testProvider;
 
@@ -27,6 +27,7 @@ public class WorkspaceListener implements IResourceChangeListener {
         WorkspaceEvent wrapped = WorkspaceEvent.wrap(event);
         if (wrapped.isBuild()) {
             Set<IFile> deltas = wrapped.getDeltas();
+            logger.debug("Processing resource change event.  {} files changed", deltas.size());
             Set<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
             if (toRun != null && !toRun.isEmpty()) {
                 ContinuousTestRunner.scheduleAll(toRun);

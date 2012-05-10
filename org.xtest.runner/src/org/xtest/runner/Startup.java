@@ -1,7 +1,8 @@
 package org.xtest.runner;
 
-import org.apache.log4j.Logger;
 import org.eclipse.ui.IStartup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class that gets called by Eclipse on startup to intialize the Xtest runner
@@ -9,7 +10,7 @@ import org.eclipse.ui.IStartup;
  * @author Michael Barry
  */
 public class Startup implements IStartup {
-    private static final Logger logger = Logger.getLogger(Startup.class);
+    private static final Logger logger = LoggerFactory.getLogger(Startup.class);
 
     @Override
     public void earlyStartup() {

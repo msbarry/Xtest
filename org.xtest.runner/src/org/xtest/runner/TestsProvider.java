@@ -7,6 +7,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.ITestType;
 
 import com.google.common.collect.Sets;
@@ -20,6 +22,7 @@ import com.google.inject.Inject;
 public class TestsProvider {
     @Inject
     private Extensions extensions;
+    private final Logger logger = LoggerFactory.getLogger(TestsProvider.class);
 
     /**
      * Return tests that depend on the deltas provided
@@ -31,12 +34,18 @@ public class TestsProvider {
     public Set<RunnableTest> getTestsFromDeltas(Set<IFile> deltas) {
         Set<RunnableTest> result = Sets.newHashSet();
         for (RunnableTest test : getAllTests()) {
-            if (!test.hasRun() || test.isPending()) {
+            if (!test.hasRun()) {
                 // Always re-run failing or unexecuted tests
                 result.add(test);
+                logger.debug("Scheduling {} because it has not run before", test.getName());
+            } else if (test.isPending()) {
+                result.add(test);
+                logger.debug("Scheduling {} because it was pending", test.getName());
             } else {
                 for (IFile delta : deltas) {
                     if (test.isAffectedBy(delta)) {
+                        logger.debug("Scheduling {} because dependency changed: {}",
+                                test.getName(), delta.getName());
                         result.add(test);
                         break;
                     }

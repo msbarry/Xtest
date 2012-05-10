@@ -1,9 +1,13 @@
 package org.xtest.runner;
 
+import java.util.concurrent.TimeUnit;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.SubMonitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.DependencyAcceptor;
 import org.xtest.runner.external.ITestRunner;
 import org.xtest.runner.external.ITestType;
@@ -27,9 +31,9 @@ import com.google.common.primitives.Longs;
  * @author Michael Barry
  */
 public class RunnableTest implements Comparable<RunnableTest> {
-
     private static final QualifiedName affectedByKey = new QualifiedName("org.xtest", "xaffectedBy");
     private static final QualifiedName durationKey = new QualifiedName("org.xtest", "xduration");
+    private static final Logger logger = LoggerFactory.getLogger(RunnableTest.class);
     private static final QualifiedName numAffectedByKey = new QualifiedName("org.xtest",
             "xnumAffectedBy");
     private static final QualifiedName pendingKey = new QualifiedName("org.xtest", "pending");
@@ -115,11 +119,16 @@ public class RunnableTest implements Comparable<RunnableTest> {
      *            {@link Cache} of runners for each test type
      */
     public void invoke(SubMonitor convert, LoadingCache<ITestType, ITestRunner> runnerCache) {
+        logger.debug("Starting to run {}", getName());
         long start = System.nanoTime();
         Acceptor acceptor = new Acceptor(dependencies, numDependencies);
         ITestRunner testRunner = runnerCache.getUnchecked(fTestType);
         TestResult result = testRunner.run(fFile, convert, acceptor);
         long end = System.nanoTime();
+        logger.debug(
+                "{} has {} dependencies and took {} ns",
+                new Object[] { getName(), acceptor.dependencies,
+                        TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) });
         storeResultsPersistently(result, acceptor, end - start);
     }
 
@@ -199,7 +208,6 @@ public class RunnableTest implements Comparable<RunnableTest> {
         put(numAffectedByKey, SerializationUtils.toString(dependencies.dependencies));
         put(resultKey, SerializationUtils.toString(result));
         clear(pendingKey);
-        System.err.println("Num affected: " + dependencies.dependencies);
     }
 
     private static class Acceptor implements DependencyAcceptor {
@@ -214,8 +222,8 @@ public class RunnableTest implements Comparable<RunnableTest> {
 
         @Override
         public void accept(String dependency) {
-            dependencies++;
-            if (dependency != null) {
+            if (dependency != null && !filter.mightContain(dependency)) {
+                dependencies++;
                 filter.put(dependency);
             }
         }

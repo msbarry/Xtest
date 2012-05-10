@@ -2,6 +2,7 @@ package org.xtest.runner;
 
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -11,6 +12,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.ITestRunner;
 import org.xtest.runner.external.ITestType;
 
@@ -26,6 +29,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunAllJob extends Job {
+    private static final Logger logger = LoggerFactory.getLogger(RunAllJob.class);
     private final PriorityBlockingQueue<RunnableTest> files;
 
     /**
@@ -46,7 +50,6 @@ public class RunAllJob extends Job {
      */
     public boolean submit(Set<RunnableTest> toRun) {
         boolean scheduled = false;
-        setPriority(Job.INTERACTIVE);
         for (RunnableTest file : toRun) {
             if (file != null && !files.contains(file)) {
                 file.setPending();
@@ -65,7 +68,7 @@ public class RunAllJob extends Job {
 
     @Override
     protected IStatus run(IProgressMonitor monitor) {
-        // Wait for builds to finish
+        logger.debug("Waiting for build to finish...");
         try {
             getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD,
                     new SubProgressMonitor(monitor, 1));
@@ -74,9 +77,10 @@ public class RunAllJob extends Job {
         } catch (OperationCanceledException e) {
         } catch (InterruptedException e) {
         }
-        long start = System.currentTimeMillis();
-        SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", files.size());
-        System.err.println("running " + files.size());
+        long start = System.nanoTime();
+        int size = files.size();
+        SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", size);
+        logger.info("Running {} tests", size);
         LoadingCache<ITestType, ITestRunner> runnerCache = CacheBuilder.newBuilder().build(
                 new CacheLoader<ITestType, ITestRunner>() {
                     @Override
@@ -90,7 +94,8 @@ public class RunAllJob extends Job {
             files.remove(peek);
         }
         monitor.done();
-        System.err.println(System.currentTimeMillis() - start + " millis");
+        logger.info("Running {} tests took {} ms", size,
+                TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
         return Status.OK_STATUS;
     }
 

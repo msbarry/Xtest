@@ -3,8 +3,9 @@ package org.xtest.runner.external;
 import java.util.Collection;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtest.runner.Activator;
 import org.xtest.runner.Extensions;
 import org.xtest.runner.RunAllJob;
@@ -21,7 +22,7 @@ import com.google.inject.Injector;
 public class ContinuousTestRunner {
     private static final Extensions extensions;
     private static final RunAllJob job;
-    private static final Logger logger = Logger.getLogger(ContinuousTestRunner.class);
+    private static final Logger logger = LoggerFactory.getLogger(ContinuousTestRunner.class);
     static {
         Injector injector = Activator.getDefault().getInjector();
         extensions = injector.getInstance(Extensions.class);
@@ -51,7 +52,7 @@ public class ContinuousTestRunner {
      */
     public static void scheduleAll(Set<RunnableTest> toRun) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Scheduling " + toRun + "tests to run");
+            logger.debug("Scheduling {} tests to run", toRun.size());
         }
         if (job.submit(toRun)) {
             job.cancel();
