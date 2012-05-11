@@ -21,7 +21,7 @@ public class URIUtil {
      */
     public static String getStringFromURI(URI uri) {
         String result;
-        if (uri.getScheme().equals("jar")) {
+        if (uri.getScheme().equalsIgnoreCase("jar")) {
             String schemeSpecificPart = uri.getRawSchemeSpecificPart();
             int index = schemeSpecificPart.indexOf("!");
             result = schemeSpecificPart.substring(0, index);
