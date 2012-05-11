@@ -1,5 +1,11 @@
 package org.xtest.runner;
 
+import static org.eclipse.core.resources.IResourceDelta.ADDED;
+import static org.eclipse.core.resources.IResourceDelta.CONTENT;
+import static org.eclipse.core.resources.IResourceDelta.LOCAL_CHANGED;
+import static org.eclipse.core.resources.IResourceDelta.REMOVED;
+import static org.eclipse.core.resources.IResourceDelta.REPLACED;
+
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -52,9 +58,8 @@ public class WorkspaceEvent {
                     IResource resource = delta.getResource();
                     // Only care about specific events
                     if (resource instanceof IFile
-                            && (delta.getFlags() & (IResourceDelta.CONTENT
-                                    | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO
-                                    | IResourceDelta.ADDED | IResourceDelta.REMOVED | IResourceDelta.LOCAL_CHANGED)) > 0) {
+                            && ((delta.getKind() & (ADDED | REMOVED)) > 0 || (delta.getFlags() & (CONTENT
+                                    | REPLACED | LOCAL_CHANGED)) > 0)) {
                         deltas.add((IFile) resource);
                     }
                     return true;

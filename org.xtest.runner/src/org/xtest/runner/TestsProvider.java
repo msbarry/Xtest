@@ -35,7 +35,7 @@ public class TestsProvider {
     public Set<RunnableTest> getAllTests() {
         final Set<RunnableTest> tests = Sets.newHashSet();
         try {
-            ResourcesPlugin.getWorkspace().getRoot().accept(new TestFinder(tests, extensions));
+            ResourcesPlugin.getWorkspace().getRoot().accept(testFinder(tests));
         } catch (CoreException e) {
         }
         return tests;
@@ -85,10 +85,14 @@ public class TestsProvider {
     public Set<RunnableTest> getTestsIn(IProject project) {
         final Set<RunnableTest> tests = Sets.newHashSet();
         try {
-            project.accept(new TestFinder(tests, extensions));
+            project.accept(testFinder(tests));
         } catch (CoreException e) {
         }
         return tests;
+    }
+
+    private TestFinder testFinder(Set<RunnableTest> tests) {
+        return new TestFinder(tests, extensions);
     }
 
     private static class TestFinder implements IResourceVisitor {

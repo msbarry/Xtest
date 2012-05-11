@@ -68,7 +68,6 @@ public class RunAllJob extends Job {
 
     @Override
     protected IStatus run(IProgressMonitor monitor) {
-        logger.debug("Waiting for build to finish...");
         try {
             getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD,
                     new SubProgressMonitor(monitor, 1));
@@ -93,9 +92,14 @@ public class RunAllJob extends Job {
             invokeAndRecord(peek, runnerCache, convert);
             files.remove(peek);
         }
+        if (monitor.isCanceled()) {
+            logger.info("!!!!!!!!!!! Canceled with {} tests left took {} ms", files.size(),
+                    TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
+        } else {
+            logger.info("==========> Finished {} tests took {} ms", size,
+                    TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
+        }
         monitor.done();
-        logger.info("==========> Finished {} tests took {} ms", size,
-                TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
         return Status.OK_STATUS;
     }
 

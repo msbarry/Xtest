@@ -47,15 +47,14 @@ public class WorkspaceListener implements IResourceChangeListener {
         long start = System.nanoTime();
         Set<IFile> deltas = wrapped.getDeltas();
         if (!deltas.isEmpty()) {
-            logger.debug("Changes: {}", deltas);
+            logger.debug("---> Changes: {}", deltas);
             Set<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
-            logger.debug(" To run: {}", toRun);
             if (toRun != null && !toRun.isEmpty()) {
                 ContinuousTestRunner.scheduleAll(toRun);
             }
             long end = System.nanoTime();
             // TODO if test selection starts taking a long time, push it into the worker thread
-            logger.debug("Test selection took {} ms",
+            logger.debug("---> Test selection took {} ms",
                     TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS));
         }
     }
@@ -65,7 +64,7 @@ public class WorkspaceListener implements IResourceChangeListener {
         long start = System.nanoTime();
         for (IProject project : projects) {
             Set<RunnableTest> tests = testProvider.getTestsIn(project);
-            logger.debug("Cleaning test in {}: {}", project.getName(), tests);
+            logger.info("Cleaning test in {}: {}", project.getName(), tests);
             for (RunnableTest test : tests) {
                 test.clean();
             }

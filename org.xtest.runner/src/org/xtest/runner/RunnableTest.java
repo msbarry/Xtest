@@ -145,7 +145,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
         TestResult result = testRunner.run(fFile, convert, acceptor);
         long end = System.nanoTime();
         logger.debug(
-                "Finish {} {} dependencies {} ns",
+                "Finish {} {} dependencies {} ms",
                 new Object[] { getName(), acceptor.dependencies,
                         TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) });
         storeResultsPersistently(result, acceptor, end - start);
