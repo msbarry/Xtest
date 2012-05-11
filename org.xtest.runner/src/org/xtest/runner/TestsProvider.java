@@ -3,6 +3,7 @@ package org.xtest.runner;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -23,7 +24,22 @@ import com.google.inject.Inject;
 public class TestsProvider {
     @Inject
     private Extensions extensions;
+
     private final Logger logger = LoggerFactory.getLogger(TestsProvider.class);
+
+    /**
+     * Get all tests in the workspace
+     * 
+     * @return All tests in the workspace
+     */
+    public Set<RunnableTest> getAllTests() {
+        final Set<RunnableTest> tests = Sets.newHashSet();
+        try {
+            ResourcesPlugin.getWorkspace().getRoot().accept(new TestFinder(tests, extensions));
+        } catch (CoreException e) {
+        }
+        return tests;
+    }
 
     /**
      * Return tests that depend on the deltas provided
@@ -59,23 +75,41 @@ public class TestsProvider {
         return result;
     }
 
-    private Set<RunnableTest> getAllTests() {
+    /**
+     * Returns the tests in the project provided
+     * 
+     * @param project
+     *            The project to search
+     * @return The tests in that project
+     */
+    public Set<RunnableTest> getTestsIn(IProject project) {
         final Set<RunnableTest> tests = Sets.newHashSet();
         try {
-            ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {
-                @Override
-                public boolean visit(IResource resource) throws CoreException {
-                    if (resource instanceof IFile) {
-                        IFile file = (IFile) resource;
-                        for (ITestType testType : extensions.getTestTypesFor(file)) {
-                            tests.add(new RunnableTest(file, testType));
-                        }
-                    }
-                    return true;
-                }
-            });
+            project.accept(new TestFinder(tests, extensions));
         } catch (CoreException e) {
         }
         return tests;
     }
+
+    private static class TestFinder implements IResourceVisitor {
+        private final Extensions extensions;
+        private final Set<RunnableTest> tests;
+
+        private TestFinder(Set<RunnableTest> tests, Extensions extensions) {
+            this.tests = tests;
+            this.extensions = extensions;
+        }
+
+        @Override
+        public boolean visit(IResource resource) throws CoreException {
+            if (resource instanceof IFile) {
+                IFile file = (IFile) resource;
+                for (ITestType testType : extensions.getTestTypesFor(file)) {
+                    tests.add(new RunnableTest(file, testType));
+                }
+            }
+            return true;
+        }
+    }
+
 }

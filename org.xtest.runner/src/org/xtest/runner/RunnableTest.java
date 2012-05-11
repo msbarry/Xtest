@@ -66,6 +66,13 @@ public class RunnableTest implements Comparable<RunnableTest> {
         pending = get(pendingKey);
     }
 
+    /**
+     * Clear test results for this test
+     */
+    public void clean() {
+        clear(resultKey);
+    }
+
     @Override
     public int compareTo(RunnableTest o) {
         // Run failures, then not run, then passes
@@ -131,14 +138,14 @@ public class RunnableTest implements Comparable<RunnableTest> {
      *            {@link Cache} of runners for each test type
      */
     public void invoke(SubMonitor convert, LoadingCache<ITestType, ITestRunner> runnerCache) {
-        logger.debug("Starting to run {}", getName());
+        logger.debug("Start  {}", getName());
         long start = System.nanoTime();
         Acceptor acceptor = new Acceptor(dependencies, numDependencies);
         ITestRunner testRunner = runnerCache.getUnchecked(fTestType);
         TestResult result = testRunner.run(fFile, convert, acceptor);
         long end = System.nanoTime();
         logger.debug(
-                "{} has {} dependencies and took {} ns",
+                "Finish {} {} dependencies {} ns",
                 new Object[] { getName(), acceptor.dependencies,
                         TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) });
         storeResultsPersistently(result, acceptor, end - start);
@@ -178,6 +185,11 @@ public class RunnableTest implements Comparable<RunnableTest> {
      */
     public void setPending() {
         put(pendingKey, Optional.of(""));
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
     private void clear(QualifiedName pendingkey2) {

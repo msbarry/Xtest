@@ -3,10 +3,12 @@ package org.xtest.runner;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 
 import com.google.common.collect.Sets;
@@ -64,12 +66,49 @@ public class WorkspaceEvent {
     }
 
     /**
+     * Returns the projects affected by this event
+     * 
+     * @return The projects affected by this event
+     */
+    public Set<IProject> getProjects() {
+        IResourceDelta delta = event.getDelta();
+        final Set<IProject> projects = Sets.newHashSet();
+        try {
+            delta.accept(new IResourceDeltaVisitor() {
+
+                @Override
+                public boolean visit(IResourceDelta delta) throws CoreException {
+                    IResource resource = delta.getResource();
+                    boolean deeper = true;
+                    if (resource instanceof IProject) {
+                        projects.add((IProject) resource);
+                        deeper = false;
+                    }
+                    return deeper;
+                }
+            });
+        } catch (CoreException e) {
+        }
+        return projects;
+    }
+
+    /**
      * Returns true if this event has been triggered due to a build finishing
      * 
      * @return True if this event has been triggered due to a build finishing
      */
     public boolean isBuild() {
-        return (event.getType() & (IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE)) > 0;
+        return event.getBuildKind() != IncrementalProjectBuilder.CLEAN_BUILD
+                && (event.getType() & (IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE)) > 0;
     }
 
+    /**
+     * Returns true if this event has been triggered due to a clean event
+     * 
+     * @return True if this event has been triggered due to a clean event
+     */
+    public boolean isClean() {
+        return event.getBuildKind() == IncrementalProjectBuilder.CLEAN_BUILD
+                && (event.getType() & IResourceChangeEvent.POST_BUILD) > 0;
+    }
 }

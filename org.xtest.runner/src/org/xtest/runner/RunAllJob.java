@@ -80,7 +80,7 @@ public class RunAllJob extends Job {
         long start = System.nanoTime();
         int size = files.size();
         SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", size);
-        logger.info("Running {} tests", size);
+        logger.info("==========> Starting {} tests", size);
         LoadingCache<ITestType, ITestRunner> runnerCache = CacheBuilder.newBuilder().build(
                 new CacheLoader<ITestType, ITestRunner>() {
                     @Override
@@ -94,7 +94,7 @@ public class RunAllJob extends Job {
             files.remove(peek);
         }
         monitor.done();
-        logger.info("Running {} tests took {} ms", size,
+        logger.info("==========> Finished {} tests took {} ms", size,
                 TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
         return Status.OK_STATUS;
     }

@@ -22,7 +22,6 @@ import com.google.inject.Injector;
 public class ContinuousTestRunner {
     private static final Extensions extensions;
     private static final RunAllJob job;
-    private static final Logger logger = LoggerFactory.getLogger(ContinuousTestRunner.class);
     static {
         Injector injector = Activator.getDefault().getInjector();
         extensions = injector.getInstance(Extensions.class);
@@ -51,9 +50,6 @@ public class ContinuousTestRunner {
      *            The list of tests to be run
      */
     public static void scheduleAll(Set<RunnableTest> toRun) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Scheduling {} tests to run", toRun.size());
-        }
         if (job.submit(toRun)) {
             job.cancel();
             job.schedule();

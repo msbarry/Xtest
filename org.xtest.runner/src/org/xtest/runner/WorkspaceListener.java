@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
@@ -27,18 +28,9 @@ public class WorkspaceListener implements IResourceChangeListener {
     public void resourceChanged(IResourceChangeEvent event) {
         WorkspaceEvent wrapped = WorkspaceEvent.wrap(event);
         if (wrapped.isBuild()) {
-            long start = System.nanoTime();
-            Set<IFile> deltas = wrapped.getDeltas();
-            if (!deltas.isEmpty()) {
-                logger.debug("Processing resource change event for changes: {}", deltas);
-                Set<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
-                if (toRun != null && !toRun.isEmpty()) {
-                    ContinuousTestRunner.scheduleAll(toRun);
-                    long end = System.nanoTime();
-                    logger.debug("Test selection took {} ms",
-                            TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS));
-                }
-            }
+            build(wrapped);
+        } else if (wrapped.isClean()) {
+            clean(wrapped);
         }
     }
 
@@ -49,6 +41,38 @@ public class WorkspaceListener implements IResourceChangeListener {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         workspace.addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD
                 | IResourceChangeEvent.POST_CHANGE);
+    }
+
+    private void build(WorkspaceEvent wrapped) {
+        long start = System.nanoTime();
+        Set<IFile> deltas = wrapped.getDeltas();
+        if (!deltas.isEmpty()) {
+            logger.debug("Changes: {}", deltas);
+            Set<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
+            logger.debug(" To run: {}", toRun);
+            if (toRun != null && !toRun.isEmpty()) {
+                ContinuousTestRunner.scheduleAll(toRun);
+            }
+            long end = System.nanoTime();
+            // TODO if test selection starts taking a long time, push it into the worker thread
+            logger.debug("Test selection took {} ms",
+                    TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS));
+        }
+    }
+
+    private void clean(WorkspaceEvent wrapped) {
+        Set<IProject> projects = wrapped.getProjects();
+        long start = System.nanoTime();
+        for (IProject project : projects) {
+            Set<RunnableTest> tests = testProvider.getTestsIn(project);
+            logger.debug("Cleaning test in {}: {}", project.getName(), tests);
+            for (RunnableTest test : tests) {
+                test.clean();
+            }
+        }
+        long end = System.nanoTime();
+        logger.debug("Clean took {} ms",
+                TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS));
     }
 
 }
