@@ -10,6 +10,15 @@ import org.eclipse.core.resources.IFile;
  */
 public interface ITestType {
     /**
+     * Tests if the client cares about the changed file
+     * 
+     * @param resource
+     *            The changed file
+     * @return True if this test type cares about the file, false otherwise
+     */
+    boolean caresAboutDelta(IFile resource);
+
+    /**
      * Returns a new test runner for a batch run-all job
      * 
      * @return The test runner

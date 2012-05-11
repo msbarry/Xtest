@@ -25,18 +25,14 @@ import com.google.inject.Inject;
 public class WorkspaceListener implements IResourceChangeListener, IElementChangedListener {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WorkspaceListener.class);
     @Inject
+    private Extensions extensions;
+    @Inject
     private TestsProvider testProvider;
 
     @Override
     public void elementChanged(ElementChangedEvent event) {
         JavaModelEvent wrapped = JavaModelEvent.wrap(event);
         classpath(wrapped);
-    }
-
-    private void classpath(JavaModelEvent wrapped) {
-        long start = System.nanoTime();
-        Set<IFile> classpathChanges = wrapped.getClasspathChanges();
-        handleDeltas(start, classpathChanges);
     }
 
     @Override
@@ -61,8 +57,14 @@ public class WorkspaceListener implements IResourceChangeListener, IElementChang
 
     private void build(WorkspaceEvent wrapped) {
         long start = System.nanoTime();
-        Set<IFile> deltas = wrapped.getDeltas();
+        Set<IFile> deltas = wrapped.getDeltas(extensions);
         handleDeltas(start, deltas);
+    }
+
+    private void classpath(JavaModelEvent wrapped) {
+        long start = System.nanoTime();
+        Set<IFile> classpathChanges = wrapped.getClasspathChanges();
+        handleDeltas(start, classpathChanges);
     }
 
     private void clean(WorkspaceEvent wrapped) {

@@ -25,6 +25,24 @@ public class Extensions {
     private Collection<ITestType> types;
 
     /**
+     * Returns true if any test type extension cares about the delta
+     * 
+     * @param resource
+     *            The changed file
+     * @return True if any test type cares about the changed file, false if not
+     */
+    public boolean careAboutDelta(IFile resource) {
+        Collection<ITestType> allTestTypes = getAllTestTypes();
+        boolean result = false;
+        for (ITestType testType : allTestTypes) {
+            if (testType.supports(resource) || testType.caresAboutDelta(resource)) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    /**
      * Returns the {@link ITestType} contributions to the testType extension point that support the
      * file provided
      * 

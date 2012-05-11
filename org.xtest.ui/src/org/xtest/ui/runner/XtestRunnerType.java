@@ -30,6 +30,13 @@ public class XtestRunnerType implements ITestType {
     private Provider<Runner> runnerProvider;
 
     @Override
+    public boolean caresAboutDelta(IFile resource) {
+        String fileExtension = resource.getFileExtension();
+        return resource.isDerived() && fileExtension != null
+                && fileExtension.equalsIgnoreCase("class");
+    }
+
+    @Override
     public org.xtest.runner.external.ITestRunner provideNewRunner() {
         return runnerProvider.get();
     }

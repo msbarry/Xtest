@@ -56,7 +56,12 @@ public class TestRunner extends DefaultResourceUIValidatorExtension {
             }
             subMonitor.worked(1);
             deleteMarkers(file, CheckMode.EXPENSIVE_ONLY, subMonitor);
-            createMarkers(file, list, subMonitor);
+            if (file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR) {
+                // don't bother running tests because there is already an error
+                // lets us report failure to user quicker
+            } else {
+                createMarkers(file, list, subMonitor);
+            }
             // Any errors? test failed!
             result = file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR ? TestResult.FAIL
                     : TestResult.PASS;

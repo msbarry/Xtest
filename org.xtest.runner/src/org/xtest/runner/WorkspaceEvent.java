@@ -46,9 +46,12 @@ public class WorkspaceEvent {
     /**
      * Returns the files that are affected by this delta
      * 
+     * @param extensions
+     *            Extensions that tell us if test types care about each delta
+     * 
      * @return The files that are affected by this delta
      */
-    public Set<IFile> getDeltas() {
+    public Set<IFile> getDeltas(final Extensions extensions) {
         final Set<IFile> deltas = Sets.newHashSet();
         try {
             event.getDelta().accept(new IResourceDeltaVisitor() {
@@ -58,6 +61,7 @@ public class WorkspaceEvent {
                     IResource resource = delta.getResource();
                     // Only care about specific events
                     if (resource instanceof IFile
+                            && extensions.careAboutDelta((IFile) resource)
                             && ((delta.getKind() & (ADDED | REMOVED)) > 0 || (delta.getFlags() & (CONTENT
                                     | REPLACED | LOCAL_CHANGED)) > 0)) {
                         deltas.add((IFile) resource);
