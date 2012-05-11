@@ -1,6 +1,8 @@
 package org.xtest.ui.outline;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.xtext.ui.editor.IXtextEditorAware;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -19,7 +21,9 @@ import com.google.inject.Inject;
  * 
  * @author Michael Barry
  */
-public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtextEditorAware {
+public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtextEditorAware,
+        IAnnotationModelListener {
+    private IAnnotationModel annotationModel;
     @Inject
     private EventBus eventBus;
 
@@ -34,6 +38,14 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
     public void dispose() {
         super.dispose();
         eventBus.unregister(this);
+        if (annotationModel != null) {
+            annotationModel.removeAnnotationModelListener(this);
+        }
+    }
+
+    @Override
+    public void modelChanged(IAnnotationModel model) {
+        showValidationFinished();
     }
 
     @Override
@@ -47,6 +59,13 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
         XtestOutlineRefreshJob refreshJob = (XtestOutlineRefreshJob) getRefreshJob();
         refreshJob.setOutlinePage(this);
         refreshJob.schedule();
+        IAnnotationModel model = editor.getInternalSourceViewer().getAnnotationModel();
+        if (editor.getInternalSourceViewer() != null
+                && editor.getInternalSourceViewer().getAnnotationModel() != null) {
+            model.addAnnotationModelListener(this);
+            annotationModel = model;
+            ((XTestOutlineTreeProvider) getTreeProvider()).setAnnotationModel(annotationModel);
+        }
     }
 
     /**
@@ -60,7 +79,7 @@ public class ValidationTriggeredOutlinePage extends OutlinePage implements IXtex
         if (event.getUri().equals(getUri())) {
             showValidationFinished();
         }
-    };
+    }
 
     /**
      * Invoked by event bus when validation started event is published

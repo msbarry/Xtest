@@ -4,14 +4,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.xtest.XTestEvaluationException;
 import org.xtest.validation.XTestJavaValidator;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestExpression;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 
 /**
@@ -27,7 +25,7 @@ public class XTestResult {
     private final EObject eObject;
     private final Collection<XAssertExpression> exceptions = Lists.newArrayList();
     private XTestEvaluationException expression;
-    private HashMultimap<Severity, EObject> issues = HashMultimap.create();
+    private ClassLoader loader = getClass().getClassLoader();
     private final String name;
     private final XTestResult parent;
     private XTestState state = XTestState.NOT_RUN;
@@ -104,6 +102,10 @@ public class XTestResult {
         return exceptions;
     }
 
+    public ClassLoader getClassLoader() {
+        return loader;
+    }
+
     /**
      * Returns the {@link EObject} associated with this result
      * 
@@ -129,15 +131,6 @@ public class XTestResult {
      */
     public XTestEvaluationException getEvaluationException() {
         return expression;
-    }
-
-    /**
-     * Returns the list of validation issues
-     * 
-     * @return The list of validation issues
-     */
-    public HashMultimap<Severity, EObject> getIssues() {
-        return issues;
     }
 
     /**
@@ -194,14 +187,8 @@ public class XTestResult {
         }
     }
 
-    /**
-     * Sets the list of validation issues
-     * 
-     * @param hashMultimap
-     *            The list of validation issues
-     */
-    public void setIssues(HashMultimap<Severity, EObject> hashMultimap) {
-        this.issues = hashMultimap;
+    public void recordClassLoader(ClassLoader loader) {
+        this.loader = loader;
     }
 
     /**

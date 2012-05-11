@@ -480,4 +480,10 @@
             id="org.xtest.XTEST_CONTAINER">
       </classpathContainerPage>
    </extension>
+ <extension
+       point="org.xtest.runner.testType">
+    <testType
+          class="org.xtest.ui.XTestExecutableExtensionFactory:org.xtest.ui.runner.XtestRunnerType">
+    </testType>
+ </extension>
 </plugin>

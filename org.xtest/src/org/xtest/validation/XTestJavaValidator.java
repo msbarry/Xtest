@@ -6,12 +6,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtend.core.validation.IssueCodes;
 import org.eclipse.xtend.core.xtend.XtendImport;
 import org.eclipse.xtext.CrossReference;
@@ -22,7 +20,6 @@ import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.TypesPackage;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -33,6 +30,7 @@ import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
+import org.xtest.RunType;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.XTestRunner.DontRunCheck;
@@ -42,9 +40,7 @@ import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestPackage;
-import org.xtest.xTest.impl.BodyImplCustom;
 
-import com.google.common.collect.HashMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -62,7 +58,6 @@ import com.google.inject.Singleton;
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private static final int TEST_RUN_FAILURE_INDEX = Integer.MAX_VALUE;
     private final ThreadLocal<CancelIndicator> cancelIndicators = new ThreadLocal<CancelIndicator>();
-    private final ThreadLocal<HashMultimap<Severity, EObject>> issues = new ThreadLocal<HashMultimap<Severity, EObject>>();
     @Inject
     private PerFilePreferenceProvider preferenceProvider;
     @Inject
@@ -115,7 +110,14 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
         }
     }
 
-    // From Xtend 2.3
+    /**
+     * Validate imports for an Xtest file
+     * 
+     * From Xtend 2.3
+     * 
+     * @param file
+     *            The Xtest file
+     */
     @Check
     public void checkImports(Body file) {
         final Map<JvmType, XtendImport> imports = newHashMap();
@@ -211,77 +213,30 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      * @param main
      *            The xtest expression model to run.
      */
+    @Check(CheckType.EXPENSIVE)
     public void doMagic(Body main) {
+        RunType weight = getCheckMode().shouldCheck(CheckType.FAST) ? RunType.LIGHTWEIGHT
+                : RunType.HEAVYWEIGHT;
         if (!(getCheckMode() instanceof XTestRunner.DontRunCheck)) {
             CancelIndicator indicator = cancelIndicators.get();
             if (indicator == null) {
                 indicator = CancelIndicator.NullImpl;
             }
-            XTestResult result = runner.run(main, indicator);
+            XTestResult result = runner.run(main, weight, indicator);
             markErrorsFromTest(result);
 
             if (preferenceProvider.get(main, RuntimePref.MARK_UNEXECUTED)) {
                 Set<XExpression> unexecutedExpressions = runner.getUnexecutedExpressions(main);
                 markUnexecuted(main, unexecutedExpressions);
             }
-            result.setIssues(issues.get());
             getContext().put(XTestResult.KEY, result);
         }
-    }
-
-    /**
-     * Invoke {@link #doMagic(Body)} while editing an Xtest file if
-     * {@link RuntimePref#RUN_WHILE_EDITING} is true
-     * 
-     * @param main
-     *            Body of the xtest file
-     */
-    @Check(CheckType.FAST)
-    public void doMagicFast(Body main) {
-        if (preferenceProvider.get(main, RuntimePref.RUN_WHILE_EDITING)) {
-            doMagic(main);
-        }
-    }
-
-    /**
-     * Invoke {@link #doMagic(Body)} while building an Xtest file if
-     * {@link RuntimePref#RUN_WHILE_EDITING} is false
-     * 
-     * @param main
-     *            Body of the xtest file
-     */
-    @Check(CheckType.NORMAL)
-    public void doMagicNormal(Body main) {
-        if (!preferenceProvider.get(main, RuntimePref.RUN_WHILE_EDITING)) {
-            doMagic(main);
-        }
-    }
-
-    @Override
-    protected Diagnostic createDiagnostic(Severity severity, String message, EObject object,
-            EStructuralFeature feature, int index, String code, String... issueData) {
-        // Hook into issue storing
-        if (index != TEST_RUN_FAILURE_INDEX) {
-            storeIssue(severity, object);
-        }
-        return super.createDiagnostic(severity, message, object, feature, index, code, issueData);
-    }
-
-    @Override
-    protected Diagnostic createDiagnostic(Severity severity, String message, EObject object,
-            int offset, int length, String code, String... issueData) {
-        // Hook into issue storing
-        storeIssue(severity, object);
-        return super.createDiagnostic(severity, message, object, offset, length, code, issueData);
     }
 
     @Override
     protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
         cancelIndicators.set((CancelIndicator) context
                 .get(CancelableDiagnostician.CANCEL_INDICATOR));
-        if (eObject instanceof Body) {
-            issues.set(HashMultimap.<Severity, EObject> create());
-        }
         return super.isResponsible(context, eObject);
     }
 
@@ -347,26 +302,6 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private void markUnexecuted(Body main, Set<XExpression> unexecuted) {
         for (XExpression expression : unexecuted) {
             warning("Expression never reached", expression, null, 10);
-        }
-    }
-
-    /**
-     * Store validation issue into the top-level {@link Body} EObject
-     * 
-     * @param severity
-     *            The severity of the issue
-     * @param object
-     *            The object with the issue
-     */
-    private void storeIssue(Severity severity, EObject object) {
-        BodyImplCustom body = null;
-        for (EObject cursor = object; cursor != null; cursor = cursor.eContainer()) {
-            if (cursor instanceof BodyImplCustom) {
-                body = (BodyImplCustom) cursor;
-            }
-        }
-        if (body != null && (severity == Severity.ERROR || severity == Severity.WARNING)) {
-            issues.get().put(severity, object);
         }
     }
 }

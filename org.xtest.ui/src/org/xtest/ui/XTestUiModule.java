@@ -2,9 +2,11 @@ package org.xtest.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.common.types.xtext.ui.ITypesProposalProvider;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
+import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
@@ -15,11 +17,13 @@ import org.xtest.XTestRunner;
 import org.xtest.ui.contentassist.XtestImportingTypesProposalProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider.Initializer;
+import org.xtest.ui.editor.XtestDocumentProvider;
 import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
 import org.xtest.ui.editor.XtestPreferencePage;
 import org.xtest.ui.highlight.XtestHighlightingCalculator;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
+import org.xtest.ui.resource.XtestResource;
 import org.xtest.ui.runner.UiXTestRunner;
 import org.xtest.ui.templates.XtestTemplateProposalProvider;
 import org.xtest.ui.validation.XtestDiagnostician;
@@ -116,6 +120,24 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public Class<? extends XTestRunner> bindXTestRunner() {
         return UiXTestRunner.class;
+    }
+
+    /**
+     * Binds {@link XtextDocumentProvider} implementation to custom {@link XtestDocumentProvider}
+     * 
+     * @return {@link XtestDocumentProvider} class
+     */
+    public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
+        return XtestDocumentProvider.class;
+    }
+
+    /**
+     * Binds {@link XtextResource} implementation to custom {@link XtestResource}
+     * 
+     * @return {@link XtestResource} class
+     */
+    public Class<? extends XtextResource> bindXtextResource() {
+        return XtestResource.class;
     }
 
     /**

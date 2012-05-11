@@ -79,7 +79,7 @@ public class XTestRunner {
                 }
             }
             if (result.getState() != XTestState.FAIL) {
-                result = injector.getInstance(XTestRunner.class).run(parse,
+                result = injector.getInstance(XTestRunner.class).run(parse, RunType.HEAVYWEIGHT,
                         CancelIndicator.NullImpl);
             }
         } catch (Exception e) {
@@ -137,7 +137,7 @@ public class XTestRunner {
      *            The progress monitor to tell if canceled
      * @return The test result
      */
-    public XTestResult run(Body main, CancelIndicator monitor) {
+    public XTestResult run(Body main, RunType weight, CancelIndicator monitor) {
         XTestInterpreter interpreter = getInterpreter(main.eResource());
         boolean failed = false;
         try {
