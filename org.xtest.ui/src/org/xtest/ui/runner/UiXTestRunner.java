@@ -234,15 +234,7 @@ public class UiXTestRunner extends XTestRunner {
             if (res != null) {
                 try {
                     URI uri = res.toURI();
-                    if (uri.getScheme().equals("jar")) {
-                        String schemeSpecificPart = uri.getRawSchemeSpecificPart();
-                        int index = schemeSpecificPart.indexOf("!");
-                        String substring = schemeSpecificPart.substring(0, index);
-                        acceptor.accept(substring);
-                    } else {
-                        String string = uri.toString();
-                        acceptor.accept(string);
-                    }
+                    acceptor.accept(uri);
                 } catch (URISyntaxException e) {
                 }
             }

@@ -9,10 +9,10 @@ import java.net.URI;
  */
 public interface DependencyAcceptor {
     /**
-     * Accept {@link URI#toString()} of a file that the test being run depends on
+     * Accept {@link URI} of a file that the test being run depends on
      * 
      * @param dependency
-     *            The {@link URI#toString()} of the dependency
+     *            The {@link URI} of the dependency
      */
-    void accept(String dependency);
+    void accept(URI dependency);
 }

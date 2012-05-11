@@ -14,6 +14,7 @@ import org.xtest.runner.external.ITestRunner;
 import org.xtest.runner.external.ITestType;
 import org.xtest.runner.external.TestResult;
 import org.xtest.runner.util.SerializationUtils;
+import org.xtest.runner.util.URIUtil;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
@@ -165,14 +166,11 @@ public class RunnableTest implements Comparable<RunnableTest> {
             // Changes to a test affect that test
             result = true;
         } else if (dependencies.isPresent()) {
-            URI locationURI = delta.getLocationURI();
-            if (locationURI == null) {
-                locationURI = delta.getFullPath().toFile().toURI();
-            }
-            if (locationURI != null) {
-                String string = locationURI.toString();
+            URI uri = URIUtil.getURIForFile(delta);
+            String name = URIUtil.getStringFromURI(uri);
+            if (name != null) {
                 BloomFilter<String> bloomFilter = dependencies.get();
-                result = bloomFilter.mightContain(string);
+                result = bloomFilter.mightContain(name);
             }
         }
         return result;
@@ -252,11 +250,11 @@ public class RunnableTest implements Comparable<RunnableTest> {
         }
 
         @Override
-        public void accept(String dependency) {
-            if (dependency != null && !filter.mightContain(dependency)) {
+        public void accept(URI dependency) {
+            String value = URIUtil.getStringFromURI(dependency);
+            if (dependency != null && !filter.mightContain(value)) {
                 dependencies++;
-                System.err.println("DEPENDENCY: " + dependency);
-                filter.put(dependency);
+                filter.put(value);
             }
         }
     }
