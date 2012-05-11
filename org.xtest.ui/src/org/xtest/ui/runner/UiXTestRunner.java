@@ -31,6 +31,7 @@ import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
 import org.xtest.runner.external.DependencyAcceptor;
+import org.xtest.runner.util.ClasspathUtils;
 import org.xtest.ui.mediator.ValidationStartedEvent;
 import org.xtest.ui.resource.XtestResource;
 import org.xtest.xTest.Body;
@@ -147,9 +148,7 @@ public class UiXTestRunner extends XTestRunner {
                                 } else {
                                     IPath path = entry.getPath();
                                     // Local libs will have project-relative path
-                                    if (root.exists(path)) {
-                                        path = root.getLocation().append(path);
-                                    }
+                                    path = ClasspathUtils.normalizePath(root, path);
                                     urls.add(path.toFile().toURI().toURL());
                                 }
                             }
@@ -236,11 +235,13 @@ public class UiXTestRunner extends XTestRunner {
                 try {
                     URI uri = res.toURI();
                     if (uri.getScheme().equals("jar")) {
-                        String schemeSpecificPart = uri.getSchemeSpecificPart();
+                        String schemeSpecificPart = uri.getRawSchemeSpecificPart();
                         int index = schemeSpecificPart.indexOf("!");
-                        acceptor.accept(schemeSpecificPart.substring(0, index));
+                        String substring = schemeSpecificPart.substring(0, index);
+                        acceptor.accept(substring);
                     } else {
-                        acceptor.accept(uri.toString());
+                        String string = uri.toString();
+                        acceptor.accept(string);
                     }
                 } catch (URISyntaxException e) {
                 }

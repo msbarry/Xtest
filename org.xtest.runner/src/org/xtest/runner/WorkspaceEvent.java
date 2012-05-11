@@ -104,7 +104,7 @@ public class WorkspaceEvent {
      */
     public boolean isBuild() {
         return event.getBuildKind() != IncrementalProjectBuilder.CLEAN_BUILD
-                && (event.getType() & (IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE)) > 0;
+                && (event.getType() & IResourceChangeEvent.POST_CHANGE) > 0;
     }
 
     /**

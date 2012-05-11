@@ -1,5 +1,6 @@
 package org.xtest.runner;
 
+import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
@@ -164,9 +165,15 @@ public class RunnableTest implements Comparable<RunnableTest> {
             // Changes to a test affect that test
             result = true;
         } else if (dependencies.isPresent()) {
-            String string = delta.getLocationURI().toString();
-            BloomFilter<String> bloomFilter = dependencies.get();
-            result = bloomFilter.mightContain(string);
+            URI locationURI = delta.getLocationURI();
+            if (locationURI == null) {
+                locationURI = delta.getFullPath().toFile().toURI();
+            }
+            if (locationURI != null) {
+                String string = locationURI.toString();
+                BloomFilter<String> bloomFilter = dependencies.get();
+                result = bloomFilter.mightContain(string);
+            }
         }
         return result;
     }
@@ -248,6 +255,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
         public void accept(String dependency) {
             if (dependency != null && !filter.mightContain(dependency)) {
                 dependencies++;
+                System.err.println("DEPENDENCY: " + dependency);
                 filter.put(dependency);
             }
         }
