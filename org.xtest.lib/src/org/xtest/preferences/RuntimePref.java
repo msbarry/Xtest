@@ -11,6 +11,8 @@ public enum RuntimePref {
     /** Enable marking unexecuted code in xtest files as warnings */
     MARK_UNEXECUTED("markUnexecuted", "Enable marking unexecuted code in xtest files as warnings",
             true),
+    /** Enable running tests after every save */
+    RUN_ON_SAVE("runOnSave", "Enable running tests after every save", true),
     /** Enable running tests while you edit them */
     RUN_WHILE_EDITING("runWhileEditing", "Enable running tests while you edit them", true);
 

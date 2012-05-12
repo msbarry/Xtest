@@ -12,10 +12,13 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.ui.validation.DefaultResourceUIValidatorExtension;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.Issue;
+import org.xtest.preferences.PerFilePreferenceProvider;
+import org.xtest.preferences.RuntimePref;
 import org.xtest.runner.external.DependencyAcceptor;
 import org.xtest.runner.external.TestResult;
 import org.xtest.ui.editor.SpecialResourceValidator;
 import org.xtest.ui.resource.XtestResource;
+import org.xtest.xTest.Body;
 
 import com.google.inject.Inject;
 
@@ -25,6 +28,9 @@ import com.google.inject.Inject;
  * @author Michael Barry
  */
 public class TestRunner extends DefaultResourceUIValidatorExtension {
+    @Inject
+    private PerFilePreferenceProvider prefProvider;
+
     @Inject
     private SpecialResourceValidator resourceValidator;
 
@@ -43,32 +49,36 @@ public class TestRunner extends DefaultResourceUIValidatorExtension {
      */
     public TestResult runTests(IFile file, Resource resource, DependencyAcceptor acceptor,
             IProgressMonitor monitor) {
-        TestResult result = TestResult.FAIL;
+        TestResult result = TestResult.NOT_RUN;
         SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
         try {
+            Body body = null;
             if (resource instanceof XtestResource) {
-                ((XtestResource) resource).setAcceptor(acceptor);
+                XtestResource resource2 = (XtestResource) resource;
+                resource2.setAcceptor(acceptor);
+                body = (Body) resource2.getContents().get(0);
             }
-            List<Issue> list = resourceValidator.validate(resource, CheckMode.EXPENSIVE_ONLY,
-                    getCancelIndicator(subMonitor));
-            if (subMonitor.isCanceled()) {
-                throw new OperationCanceledException();
+            if (body == null || prefProvider.get(body, RuntimePref.RUN_ON_SAVE)) {
+                List<Issue> list = resourceValidator.validate(resource, CheckMode.EXPENSIVE_ONLY,
+                        getCancelIndicator(subMonitor));
+                if (subMonitor.isCanceled()) {
+                    throw new OperationCanceledException();
+                }
+                subMonitor.worked(1);
+                deleteMarkers(file, CheckMode.EXPENSIVE_ONLY, subMonitor);
+                if (file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR) {
+                    // don't bother running tests because there is already an error
+                    // lets us report failure to user quicker
+                } else {
+                    createMarkers(file, list, subMonitor);
+                }
+                // Any errors? test failed!
+                result = file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR ? TestResult.FAIL
+                        : TestResult.PASS;
             }
-            subMonitor.worked(1);
-            deleteMarkers(file, CheckMode.EXPENSIVE_ONLY, subMonitor);
-            if (file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR) {
-                // don't bother running tests because there is already an error
-                // lets us report failure to user quicker
-            } else {
-                createMarkers(file, list, subMonitor);
-            }
-            // Any errors? test failed!
-            result = file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR ? TestResult.FAIL
-                    : TestResult.PASS;
         } catch (CoreException e) {
         }
 
         return result;
     }
-
 }

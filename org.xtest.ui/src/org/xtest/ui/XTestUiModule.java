@@ -14,6 +14,7 @@ import org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.xbase.ui.highlighting.XbaseHighlightingCalculator;
 import org.xtest.XTestRunner;
+import org.xtest.preferences.DefaultPreferenceProvider;
 import org.xtest.ui.contentassist.XtestImportingTypesProposalProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider.Initializer;
@@ -55,6 +56,10 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
     @SingletonBinding
     public Class<? extends CancelableDiagnostician> bindCancelableDiagnostician() {
         return XtestDiagnostician.class;
+    }
+
+    public Class<? extends DefaultPreferenceProvider> bindDefaultPreferenceProvider() {
+        return UIDefaultPreferenceProvider.class;
     }
 
     /**

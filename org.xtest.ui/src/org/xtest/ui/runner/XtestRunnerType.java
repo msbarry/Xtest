@@ -3,7 +3,6 @@ package org.xtest.ui.runner;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -75,8 +74,7 @@ public class XtestRunnerType implements ITestType {
             if (uri != null) {
                 ResourceSet resourceSet = resourceSetProvider.getUnchecked(file.getProject());
                 Resource resource = resourceSet.getResource(uri, true);
-                runTests = validator.runTests(file, resource, acceptor,
-                        SubMonitor.convert(monitor, 1));
+                runTests = validator.runTests(file, resource, acceptor, monitor);
             }
             return runTests;
         }

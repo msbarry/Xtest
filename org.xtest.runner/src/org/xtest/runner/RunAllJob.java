@@ -89,7 +89,7 @@ public class RunAllJob extends Job {
                 });
         while (!monitor.isCanceled() && !files.isEmpty()) {
             RunnableTest peek = files.peek();
-            invokeAndRecord(peek, runnerCache, convert);
+            invokeAndRecord(peek, runnerCache, convert.newChild(1));
             files.remove(peek);
         }
         if (monitor.isCanceled()) {
