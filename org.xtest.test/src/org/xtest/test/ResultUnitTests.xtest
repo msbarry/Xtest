@@ -4,7 +4,7 @@ import org.^xtest.results.XTestResult
 import org.^xtest.results.XTestState
 
 import static org.junit.Assert.*
-
+ 
 xtest test2CasesInSuiteFailPass {
     val suite = new XTestResult(null)
     val test = suite.subTest("test", null)
