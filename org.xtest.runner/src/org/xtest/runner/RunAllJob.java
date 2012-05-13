@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.ITestRunner;
 import org.xtest.runner.external.ITestType;
 
+import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.inject.Singleton;
 
 /**
@@ -80,7 +80,7 @@ public class RunAllJob extends Job {
         int size = files.size();
         SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", size);
         logger.info("==========> Starting {} tests", size);
-        LoadingCache<ITestType, ITestRunner> runnerCache = CacheBuilder.newBuilder().build(
+        Cache<ITestType, ITestRunner> runnerCache = CacheBuilder.newBuilder().build(
                 new CacheLoader<ITestType, ITestRunner>() {
                     @Override
                     public ITestRunner load(ITestType arg0) throws Exception {
@@ -103,8 +103,8 @@ public class RunAllJob extends Job {
         return Status.OK_STATUS;
     }
 
-    private void invokeAndRecord(RunnableTest peek,
-            LoadingCache<ITestType, ITestRunner> runnerCache, SubMonitor convert) {
+    private void invokeAndRecord(RunnableTest peek, Cache<ITestType, ITestRunner> runnerCache,
+            SubMonitor convert) {
         String name = peek.getName();
         convert.subTask(name);
         peek.invoke(convert, runnerCache);

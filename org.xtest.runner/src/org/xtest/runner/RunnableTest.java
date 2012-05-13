@@ -19,7 +19,6 @@ import org.xtest.runner.util.URIUtil;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
@@ -139,7 +138,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
      * @param runnerCache
      *            {@link Cache} of runners for each test type
      */
-    public void invoke(SubMonitor convert, LoadingCache<ITestType, ITestRunner> runnerCache) {
+    public void invoke(SubMonitor convert, Cache<ITestType, ITestRunner> runnerCache) {
         logger.debug("Start  {}", getName());
         long start = System.nanoTime();
         Acceptor acceptor = new Acceptor(dependencies, numDependencies);
