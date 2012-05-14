@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xtest.runner.Activator;
 import org.xtest.runner.Extensions;
 import org.xtest.runner.RunAllJob;
@@ -53,6 +51,8 @@ public class ContinuousTestRunner {
         if (job.submit(toRun)) {
             job.cancel();
             job.schedule();
+        } else {
+            job.scheduleIfNecessary();
         }
     }
 }

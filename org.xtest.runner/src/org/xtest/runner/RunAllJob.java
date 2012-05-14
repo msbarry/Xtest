@@ -41,6 +41,15 @@ public class RunAllJob extends Job {
     }
 
     /**
+     * Schedules the job if it has pending transactions and is not running
+     */
+    public void scheduleIfNecessary() {
+        if (!files.isEmpty() && getState() != Job.RUNNING) {
+            schedule();
+        }
+    }
+
+    /**
      * Submits a set of {@link RunnableTest}s to the queue
      * 
      * @param toRun
