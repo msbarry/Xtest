@@ -9,4 +9,6 @@ The Xtest plugin for Eclipse lets you write ".xtest" files directly in an Eclips
 
 See the [Wiki](https://github.com/msbarry/Xtest/wiki) for documentation and installation instructions.
 
+Xtest follows a modified version of the branching strategy described [here](http://nvie.com/posts/a-successful-git-branching-model/), except that development occurs in the 'master' branch and every commit to the 'release' branch is considered a new Xtest release.
+
 Distributed under [Eclipse Public License - v 1.0](http://www.eclipse.org/legal/epl-v10.html) which is available at the root of this project as ``license.html``.
