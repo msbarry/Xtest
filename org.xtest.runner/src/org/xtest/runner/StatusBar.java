@@ -74,6 +74,7 @@ public class StatusBar extends WorkbenchWindowControlContribution {
     public void dispose() {
         bus.unregister(this);
         super.dispose();
+        pending.dispose();
         progress.dispose();
         red.dispose();
         green.dispose();
