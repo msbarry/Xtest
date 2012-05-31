@@ -8,5 +8,18 @@
             class="org.xtest.runner.Startup">
       </startup>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.trim.status">
+         <toolbar
+               id="org.eclipse.ui.examples.contributions.contributedTrim">
+            <control
+                  class="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.StatusBar"
+                  id="contributions.controlContrib1">
+            </control>
+         </toolbar>
+      </menuContribution>
+   </extension>
 
 </plugin>

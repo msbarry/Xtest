@@ -1,6 +1,7 @@
 package org.xtest.runner;
 
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -24,8 +25,9 @@ import com.google.inject.Inject;
 public class TestsProvider {
     @Inject
     private Extensions extensions;
-
     private final Logger logger = LoggerFactory.getLogger(TestsProvider.class);
+
+    private final AtomicInteger numTotalTests = new AtomicInteger(-1);
 
     /**
      * Get all tests in the workspace
@@ -38,7 +40,20 @@ public class TestsProvider {
             ResourcesPlugin.getWorkspace().getRoot().accept(testFinder(tests));
         } catch (CoreException e) {
         }
+        numTotalTests.set(tests.size());
         return tests;
+    }
+
+    /**
+     * Returns the total number of test files
+     * 
+     * @return The total number of test files
+     */
+    public int getNumTotalTests() {
+        if (numTotalTests.get() < 0) {
+            getAllTests();
+        }
+        return numTotalTests.get();
     }
 
     /**

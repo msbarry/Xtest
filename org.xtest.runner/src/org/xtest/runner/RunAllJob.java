@@ -14,12 +14,15 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xtest.runner.events.Events;
 import org.xtest.runner.external.ITestRunner;
 import org.xtest.runner.external.ITestType;
+import org.xtest.runner.external.TestResult;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -30,6 +33,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class RunAllJob extends Job {
     private static final Logger logger = LoggerFactory.getLogger(RunAllJob.class);
+    @Inject
+    private Events events;
     private final PriorityBlockingQueue<RunnableTest> files;
 
     /**
@@ -66,6 +71,9 @@ public class RunAllJob extends Job {
                 scheduled = true;
             }
         }
+        // Post a "canceled" event where the number of events scheduled is the size of the queue
+        events.cancelAndSchedule(files.size());
+
         return scheduled;
     }
 
@@ -88,6 +96,7 @@ public class RunAllJob extends Job {
         long start = System.nanoTime();
         int size = files.size();
         SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", size);
+        events.startTests(size);
         logger.info("==========> Starting {} tests", size);
         Cache<ITestType, ITestRunner> runnerCache = CacheBuilder.newBuilder().build(
                 new CacheLoader<ITestType, ITestRunner>() {
@@ -96,15 +105,23 @@ public class RunAllJob extends Job {
                         return arg0.provideNewRunner();
                     }
                 });
+
+        // Run each test
         while (!monitor.isCanceled() && !files.isEmpty()) {
             RunnableTest peek = files.peek();
-            invokeAndRecord(peek, runnerCache, convert.newChild(1));
+            TestResult result = invokeAndRecord(peek, runnerCache, convert.newChild(1));
             files.remove(peek);
+            if (!monitor.isCanceled()) {
+                events.finishTest(result);
+            }
         }
+
         if (monitor.isCanceled()) {
             logger.info("!!!!!!!!!!! Canceled with {} tests left took {} ms", files.size(),
                     TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
         } else {
+            // Only post finished event if not canceled
+            events.finishTests();
             logger.info("==========> Finished {} tests took {} ms", size,
                     TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
         }
@@ -112,10 +129,10 @@ public class RunAllJob extends Job {
         return Status.OK_STATUS;
     }
 
-    private void invokeAndRecord(RunnableTest peek, Cache<ITestType, ITestRunner> runnerCache,
-            SubMonitor convert) {
+    private TestResult invokeAndRecord(RunnableTest peek,
+            Cache<ITestType, ITestRunner> runnerCache, SubMonitor convert) {
         String name = peek.getName();
         convert.subTask(name);
-        peek.invoke(convert, runnerCache);
+        return peek.invoke(convert, runnerCache);
     }
 }

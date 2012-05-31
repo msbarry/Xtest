@@ -137,8 +137,9 @@ public class RunnableTest implements Comparable<RunnableTest> {
      *            Progress monitor
      * @param runnerCache
      *            {@link Cache} of runners for each test type
+     * @return The result of the test
      */
-    public void invoke(SubMonitor convert, Cache<ITestType, ITestRunner> runnerCache) {
+    public TestResult invoke(SubMonitor convert, Cache<ITestType, ITestRunner> runnerCache) {
         logger.debug("Start  {}", getName());
         long start = System.nanoTime();
         Acceptor acceptor = new Acceptor(dependencies, numDependencies);
@@ -150,6 +151,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
                 new Object[] { getName(), acceptor.dependencies,
                         TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) });
         storeResultsPersistently(result, acceptor, end - start);
+        return result;
     }
 
     /**
