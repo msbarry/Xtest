@@ -189,6 +189,6 @@ public class StatusBar extends WorkbenchWindowControlContribution {
 
     private void updateColor() {
         setColor(passing ? green : red);
-        setProgress(total == 0 ? 1.0 : worked * 1.0 / total);
+        setProgress(total == 0 ? 0.0 : worked * 1.0 / total);
     }
 }
