@@ -2,13 +2,16 @@ package org.xtest.runner;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.xtest.runner.events.TestFinished;
 import org.xtest.runner.events.TestsCanceled;
@@ -30,14 +33,15 @@ import com.google.inject.Inject;
 public class StatusBar extends WorkbenchWindowControlContribution {
     private static final int WIDTH = 50;
     private final EventBus bus;
+    private Canvas canvas;
     private Color green;
+    private int lastWidth = 0;
     private boolean passing;
-    private Label pending;
-    private Label progress;
+
     private Color red;
+
     @Inject
     private TestsProvider testProvider;
-
     private int total;
 
     private int worked;
@@ -74,8 +78,7 @@ public class StatusBar extends WorkbenchWindowControlContribution {
     public void dispose() {
         bus.unregister(this);
         super.dispose();
-        pending.dispose();
-        progress.dispose();
+        canvas.dispose();
         red.dispose();
         green.dispose();
     }
@@ -125,28 +128,31 @@ public class StatusBar extends WorkbenchWindowControlContribution {
         red = new Color(Display.getDefault(), new RGB(0xbd, 0x36, 0x2f));
 
         // Create components
-        final Composite composite = new Composite(parent, SWT.NONE);
+        // final Composite composite = new Composite(parent, SWT.NONE);
+        //
+        // // Apply layout
+        // GridLayout layout = new GridLayout(1, false);
+        // layout.horizontalSpacing = 0;
+        // layout.verticalSpacing = 0;
+        // layout.marginTop = 0;
+        // layout.marginBottom = 0;
+        // layout.marginLeft = 0;
+        // layout.marginRight = 0;
+        // composite.setLayout(layout);
 
-        // Apply layout
-        GridLayout layout = new GridLayout(2, false);
-        layout.horizontalSpacing = 0;
-        layout.verticalSpacing = 0;
-        layout.marginTop = 0;
-        layout.marginBottom = 0;
-        layout.marginLeft = 0;
-        layout.marginRight = 0;
-        composite.setLayout(layout);
+        canvas = new Canvas(parent, SWT.NONE);
+        GridDataFactory.fillDefaults().indent(5, 5).minSize(WIDTH, 0).hint(WIDTH, 0)
+                .align(SWT.CENTER, SWT.CENTER).applyTo(canvas);
+        canvas.addPaintListener(new PaintListener() {
 
-        progress = new Label(composite, SWT.SINGLE);
-        setBarLayout(SWT.BEGINNING, 0, progress);
-
-        pending = new Label(composite, SWT.SINGLE);
-        setBarLayout(SWT.END, WIDTH, pending);
-
-        pending.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+            @Override
+            public void paintControl(PaintEvent e) {
+                paint(e.gc);
+            }
+        });
 
         initializeProgressBar();
-        return composite;
+        return canvas;
     }
 
     private void initializeProgressBar() {
@@ -159,36 +165,49 @@ public class StatusBar extends WorkbenchWindowControlContribution {
         updateColor();
     }
 
-    private void setBarLayout(int hAlign, int width, Control control) {
-        GridDataFactory.fillDefaults().indent(0, 0).minSize(width, 0).hint(width, 15)
-                .align(hAlign, SWT.CENTER).applyTo(control);
+    private void paint(GC gc) {
+        double completionRatio = total == 0 ? 0.0 : worked * 1.0 / total;
+        Color color = passing ? green : red;
+        Rectangle bounds = canvas.getBounds();
+        int pixelWidth = (int) (completionRatio * bounds.width);
+        int remainder = bounds.width - pixelWidth;
+        boolean growing = pixelWidth > lastWidth;
+        lastWidth = pixelWidth;
+        if (growing) {
+            // left first ...
+            gc.setBackground(color);
+            gc.fillRectangle(0, 0, pixelWidth, bounds.height);
+            // .. then right
+            gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+            gc.fillRectangle(pixelWidth, 0, remainder, bounds.height);
+        } else {
+            // right first ...
+            gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+            gc.fillRectangle(pixelWidth, 0, remainder, bounds.height);
+            // ... then left
+            gc.setBackground(color);
+            gc.fillRectangle(0, 0, pixelWidth, bounds.height);
+        }
+        gc.drawText("Xtest", bounds.width / 2 - 15, bounds.height / 2 - 8, true);
     }
 
-    private void setColor(final Color color) {
+    private void setProgress() {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
-                progress.setBackground(color);
-            }
-        });
-    }
 
-    private void setProgress(final double completionRatio) {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                int pixelWidth = (int) (completionRatio * WIDTH);
-
-                setBarLayout(SWT.LEFT, pixelWidth, progress);
-                progress.getParent().pack(true);
-                setBarLayout(SWT.LEFT, WIDTH - pixelWidth, pending);
-                pending.getParent().pack(true);
+                GC gc = new GC(canvas);
+                try {
+                    paint(gc);
+                } finally {
+                    gc.dispose();
+                }
             }
+
         });
     }
 
     private void updateColor() {
-        setColor(passing ? green : red);
-        setProgress(total == 0 ? 0.0 : worked * 1.0 / total);
+        setProgress();
     }
 }
