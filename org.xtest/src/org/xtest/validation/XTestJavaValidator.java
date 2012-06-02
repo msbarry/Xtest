@@ -277,8 +277,8 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      *            The test that failed
      */
     private void markEvaluationExceptions(XTestResult run) {
-        XTestEvaluationException exception = run.getEvaluationException();
-        if (exception != null) {
+        Collection<XTestEvaluationException> exceptions = run.getEvaluationException();
+        for (XTestEvaluationException exception : exceptions) {
             Throwable cause = exception.getCause();
             XExpression expression = exception.getExpression();
             StringBuilder builder = new StringBuilder(run.getQualifiedName() + ": "

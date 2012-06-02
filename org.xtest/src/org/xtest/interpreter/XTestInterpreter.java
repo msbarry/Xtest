@@ -9,6 +9,8 @@ import org.eclipse.xtext.common.types.JvmVoid;
 import org.eclipse.xtext.common.types.access.impl.ClassFinder;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
@@ -27,6 +29,7 @@ import org.xtest.results.XTestState;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 
 import com.google.common.collect.Sets;
@@ -40,8 +43,9 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
-    private ClassLoader classLoader;
+    // TODO move some of this stuff into custom context
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
+    private boolean inSafeBlock = false;
     private XTestResult result;
     private final Stack<XTestResult> stack = new Stack<XTestResult>();
     @Inject
@@ -75,12 +79,6 @@ public class XTestInterpreter extends XbaseInterpreter {
      */
     public XTestResult getTestResult() {
         return result;
-    }
-
-    @Override
-    public void setClassLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-        super.setClassLoader(classLoader);
     }
 
     /**
@@ -152,7 +150,6 @@ public class XTestInterpreter extends XbaseInterpreter {
             result = new XTestResult(main);
         }
         stack.push(result);
-        result.recordClassLoader(classLoader);
         Object toReturn = null;
         try {
             toReturn = super._evaluateBlockExpression(main, context, indicator);
@@ -179,6 +176,15 @@ public class XTestInterpreter extends XbaseInterpreter {
         throw new ReturnValue(returnValue);
     }
 
+    protected Object _evaluateSafeExpression(XSafeExpression assertExpression,
+            IEvaluationContext context, CancelIndicator indicator) {
+        XExpression actual = assertExpression.getActual();
+        inSafeBlock = true;
+        Object result = actual == null ? null : internalEvaluate(actual, context, indicator);
+        inSafeBlock = false;
+        return result;
+    }
+
     /**
      * Evaluates the test. Catches any evaluation exceptions thrown and adds them to the test.
      * 
@@ -193,7 +199,7 @@ public class XTestInterpreter extends XbaseInterpreter {
     protected Object _evaluateTestExpression(XTestExpression test, IEvaluationContext context,
             CancelIndicator indicator) {
         UniqueName name = test.getName();
-        String nameStr = getName(name, context, indicator);
+        String nameStr = getName(name, test, context, indicator);
         XExpression expression = test.getExpression();
         XTestResult peek = stack.peek();
         XTestResult subTest = peek.subTest(nameStr, test);
@@ -264,7 +270,8 @@ public class XTestInterpreter extends XbaseInterpreter {
                 while (cause instanceof RuntimeException && cause.getCause() != null) {
                     cause = cause.getCause();
                 }
-                throw new XTestEvaluationException(cause, expression);
+                internalEvaluate = null;
+                handleEvaluationException(new XTestEvaluationException(cause, expression));
             }
         }
         return internalEvaluate;
@@ -275,31 +282,58 @@ public class XTestInterpreter extends XbaseInterpreter {
      * 
      * @param uniqueName
      *            The {@link UniqueName} object of the test
+     * @param test
+     *            The test expression for if no name is given
      * @param context
      *            The evaluation context
      * @param indicator
      *            The cancel indicator
      * @return The name derived from uniqueName
      */
-    private String getName(UniqueName uniqueName, IEvaluationContext context,
+    private String getName(UniqueName uniqueName, XTestExpression test, IEvaluationContext context,
             CancelIndicator indicator) {
         String name = uniqueName.getName();
         XExpression uidExp = uniqueName.getIdentifier();
         if (uidExp != null) {
             Object nameObj = internalEvaluate(uidExp, context, indicator);
             if (nameObj != null) {
-                name += " (" + nameObj.toString() + ")";
+                if (name == null) {
+                    // no ID specified
+                    name = nameObj.toString();
+                } else {
+                    name += " (" + nameObj.toString() + ")";
+                }
+            }
+        }
+        if (name == null) {
+            ICompositeNode node = NodeModelUtils.findActualNodeFor(test.getExpression());
+            if (node != null) {
+                // Grab the first line of text from inside the test
+                // TODO maybe there is something better to call it?
+                name = node.getText().replaceAll("^(\\{|\\s)*", "").replaceAll("[\n\r].*$", "")
+                        .trim().replaceAll("\\}$", "");
+            } else {
+                name = "";
             }
         }
         return name;
     }
 
     private void handleAssertionFailure(XAssertExpression assertExpression) {
-        if (assertExpression.isKeepGoing()) {
+        if (inSafeBlock) {
             XTestResult peek = stack.peek();
             peek.addFailedAssertion(assertExpression);
         } else {
             throw new XTestAssertException(assertExpression);
+        }
+    }
+
+    private void handleEvaluationException(XTestEvaluationException evaluationException) {
+        if (inSafeBlock) {
+            XTestResult peek = stack.peek();
+            peek.addEvaluationException(evaluationException);
+        } else {
+            throw evaluationException;
         }
     }
 

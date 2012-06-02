@@ -133,7 +133,8 @@ public class Main {
             if (!forcePrintChildren) {
                 System.out.println(indent + "+NG " + test.getQualifiedName());
             }
-            XTestEvaluationException evaluationException = test.getEvaluationException();
+            Collection<XTestEvaluationException> evaluationExceptions = test
+                    .getEvaluationException();
             List<String> errorMessages = test.getErrorMessages();
             Collection<XAssertExpression> assertExceptions = test.getAssertExceptions();
             if (!errorMessages.isEmpty()) {
@@ -146,8 +147,10 @@ public class Main {
                     String line = getLineNumAndText(indent, expression);
                     System.out.println(indent + "    Assertion failed on line " + line);
                 }
-            } else if (evaluationException != null) {
-                printEvaluationException(indent, evaluationException);
+            } else if (!evaluationExceptions.isEmpty()) {
+                for (XTestEvaluationException evaluationException : evaluationExceptions) {
+                    printEvaluationException(indent, evaluationException);
+                }
             }
             printChildrenOfTest(indent, test);
             break;

@@ -116,8 +116,16 @@
         <classifier xsi:type="ecore:EClass" href="http://www.xtest.org/#//UniqueName"/>
       </type>
       <alternatives xsi:type="xtext:Group">
-        <elements xsi:type="xtext:Assignment" feature="name" operator="=">
-          <terminal xsi:type="xtext:RuleCall" rule="/2/@rules.11"/>
+        <elements xsi:type="xtext:Action">
+          <type metamodel="/0/@metamodelDeclarations.0">
+            <classifier xsi:type="ecore:EClass" href="http://www.xtest.org/#//UniqueName"/>
+          </type>
+        </elements>
+        <elements xsi:type="xtext:Assignment" cardinality="?" feature="name" operator="=">
+          <terminal xsi:type="xtext:Alternatives">
+            <elements xsi:type="xtext:RuleCall" rule="/2/@rules.12"/>
+            <elements xsi:type="xtext:RuleCall" rule="/2/@rules.11"/>
+          </terminal>
         </elements>
         <elements xsi:type="xtext:Assignment" cardinality="?" feature="identifier" operator="=">
           <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.27"/>
@@ -157,9 +165,6 @@
           </type>
         </elements>
         <elements xsi:type="xtext:Keyword" value="assert"/>
-        <elements xsi:type="xtext:Assignment" cardinality="?" feature="keepGoing" operator="?=">
-          <terminal xsi:type="xtext:Keyword" value="?"/>
-        </elements>
         <elements xsi:type="xtext:Assignment" feature="actual" operator="=">
           <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.0"/>
         </elements>
@@ -171,6 +176,22 @@
         </elements>
       </alternatives>
     </rules>
+    <rules xsi:type="xtext:ParserRule" name="XSafeExpression">
+      <type metamodel="/0/@metamodelDeclarations.2">
+        <classifier xsi:type="ecore:EClass" href="http://www.eclipse.org/xtext/xbase/Xbase#//XExpression"/>
+      </type>
+      <alternatives xsi:type="xtext:Group">
+        <elements xsi:type="xtext:Action">
+          <type metamodel="/0/@metamodelDeclarations.0">
+            <classifier xsi:type="ecore:EClass" href="http://www.xtest.org/#//XSafeExpression"/>
+          </type>
+        </elements>
+        <elements xsi:type="xtext:Keyword" value="?"/>
+        <elements xsi:type="xtext:Assignment" feature="actual" operator="=">
+          <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.0"/>
+        </elements>
+      </alternatives>
+    </rules>
     <rules xsi:type="xtext:ParserRule" name="XPrimaryExpression">
       <type metamodel="/0/@metamodelDeclarations.2">
         <classifier xsi:type="ecore:EClass" href="http://www.eclipse.org/xtext/xbase/Xbase#//XExpression"/>
@@ -179,7 +200,7 @@
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.42"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.34"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.29"/>
-        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.9"/>
+        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.10"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.23"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.28"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.31"/>
@@ -191,6 +212,7 @@
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.27"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.5"/>
         <elements xsi:type="xtext:RuleCall" rule="/0/@rules.6"/>
+        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.7"/>
       </alternatives>
     </rules>
     <rules xsi:type="xtext:ParserRule" name="StaticEquals">
@@ -272,7 +294,7 @@
               <classifier xsi:type="ecore:EClass" href="http://www.eclipse.org/xtext/xbase/Xbase#//XAssignment"/>
             </type>
           </elements>
-          <elements xsi:type="xtext:RuleCall" rule="/0/@rules.8"/>
+          <elements xsi:type="xtext:RuleCall" rule="/0/@rules.9"/>
           <elements xsi:type="xtext:Assignment" feature="value" operator="=">
             <terminal xsi:type="xtext:RuleCall" rule="/1/@rules.1"/>
           </elements>
@@ -711,7 +733,7 @@
         <classifier xsi:type="ecore:EClass" href="http://www.eclipse.org/xtext/xbase/Xbase#//XExpression"/>
       </type>
       <alternatives xsi:type="xtext:Group">
-        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.7"/>
+        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.8"/>
         <elements xsi:type="xtext:Alternatives" cardinality="*">
           <elements xsi:type="xtext:Group">
             <elements xsi:type="xtext:Group" predicated="true">
@@ -814,7 +836,7 @@
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.42"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.34"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.29"/>
-        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.9"/>
+        <elements xsi:type="xtext:RuleCall" rule="/0/@rules.10"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.23"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.28"/>
         <elements xsi:type="xtext:RuleCall" rule="/1/@rules.31"/>
