@@ -25,7 +25,7 @@ public class XTestRunnerUnitTests {
     protected static void assertXtestPasses(String test) {
         XTestResult result = XTestRunner.run(test, injector);
         assertEquals("[]", result.getErrorMessages().toString());
-        assertTrue(null == result.getEvaluationException());
+        assertTrue(result.getEvaluationException().isEmpty());
         assertEquals(XTestState.PASS, result.getState());
     }
 

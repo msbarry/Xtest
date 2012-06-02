@@ -24,8 +24,7 @@ public class XTestResult {
     public static final String KEY = "XtestResult";
     private final EObject eObject;
     private final Collection<XAssertExpression> exceptions = Lists.newArrayList();
-    private XTestEvaluationException expression;
-    private ClassLoader loader = getClass().getClassLoader();
+    private final Collection<XTestEvaluationException> expressions = Lists.newArrayList();
     private final String name;
     private final XTestResult parent;
     private XTestState state = XTestState.NOT_RUN;
@@ -58,7 +57,7 @@ public class XTestResult {
      */
     public void addEvaluationException(XTestEvaluationException exception) {
         fail();
-        this.expression = exception;
+        expressions.add(exception);
     }
 
     /**
@@ -102,10 +101,6 @@ public class XTestResult {
         return exceptions;
     }
 
-    public ClassLoader getClassLoader() {
-        return loader;
-    }
-
     /**
      * Returns the {@link EObject} associated with this result
      * 
@@ -129,8 +124,8 @@ public class XTestResult {
      * 
      * @return the evaluation exception for this result, or null if there was none
      */
-    public XTestEvaluationException getEvaluationException() {
-        return expression;
+    public Collection<XTestEvaluationException> getEvaluationException() {
+        return expressions;
     }
 
     /**
@@ -185,10 +180,6 @@ public class XTestResult {
         if (parent != null && parent.getState() == XTestState.NOT_RUN) {
             parent.pass();
         }
-    }
-
-    public void recordClassLoader(ClassLoader loader) {
-        this.loader = loader;
     }
 
     /**

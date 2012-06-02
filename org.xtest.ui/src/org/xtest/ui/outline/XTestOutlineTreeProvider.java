@@ -239,7 +239,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
         } else {
             EObject eObject = result.getEObject();
             ICompositeNode node = NodeModelUtils.findActualNodeFor(eObject);
-            severity = getSeverity(issues, node.getOffset(), node.getLength());
+            severity = getSeverity(issues, node.getOffset(), node.getTotalLength());
         }
 
         return severity;

@@ -10,6 +10,7 @@ import org.eclipse.xtext.xbase.XFeatureCall;
 import org.eclipse.xtext.xbase.impl.XFeatureCallImplCustom;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 
 import com.google.inject.Inject;
@@ -35,6 +36,10 @@ public class XTestTypeProvider extends XbaseTypeProvider {
             result = getPrimitiveVoid(expression);
         } else if (expression instanceof XAssertExpression) {
             result = typeRefs.getTypeForName(Boolean.class, expression);
+        } else if (expression instanceof XSafeExpression) {
+            XExpression actual = ((XSafeExpression) expression).getActual();
+            result = actual == null ? getPrimitiveVoid(expression) : type(actual, rawExpectation,
+                    rawType);
         } else if (expression instanceof XFeatureCallImplCustom
                 && ((XFeatureCallImplCustom) expression).basicGetFeature() == null) {
             XFeatureCall call = (XFeatureCall) expression;

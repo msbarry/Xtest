@@ -30,7 +30,6 @@ import org.xtest.xTest.XTestPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.xtest.xTest.impl.XAssertExpressionImpl#isKeepGoing <em>Keep Going</em>}</li>
  *   <li>{@link org.xtest.xTest.impl.XAssertExpressionImpl#getActual <em>Actual</em>}</li>
  *   <li>{@link org.xtest.xTest.impl.XAssertExpressionImpl#getThrows <em>Throws</em>}</li>
  * </ul>
@@ -40,26 +39,6 @@ import org.xtest.xTest.XTestPackage;
  */
 public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExpression
 {
-	/**
-	 * The default value of the '{@link #isKeepGoing() <em>Keep Going</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isKeepGoing()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean KEEP_GOING_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isKeepGoing() <em>Keep Going</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isKeepGoing()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean keepGoing = KEEP_GOING_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getActual() <em>Actual</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -99,29 +78,6 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	protected EClass eStaticClass()
 	{
 		return XTestPackage.Literals.XASSERT_EXPRESSION;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isKeepGoing()
-	{
-		return keepGoing;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setKeepGoing(boolean newKeepGoing)
-	{
-		boolean oldKeepGoing = keepGoing;
-		keepGoing = newKeepGoing;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, XTestPackage.XASSERT_EXPRESSION__KEEP_GOING, oldKeepGoing, keepGoing));
 	}
 
 	/**
@@ -248,8 +204,6 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XASSERT_EXPRESSION__KEEP_GOING:
-				return isKeepGoing();
 			case XTestPackage.XASSERT_EXPRESSION__ACTUAL:
 				return getActual();
 			case XTestPackage.XASSERT_EXPRESSION__THROWS:
@@ -268,9 +222,6 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XASSERT_EXPRESSION__KEEP_GOING:
-				setKeepGoing((Boolean)newValue);
-				return;
 			case XTestPackage.XASSERT_EXPRESSION__ACTUAL:
 				setActual((XExpression)newValue);
 				return;
@@ -291,9 +242,6 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XASSERT_EXPRESSION__KEEP_GOING:
-				setKeepGoing(KEEP_GOING_EDEFAULT);
-				return;
 			case XTestPackage.XASSERT_EXPRESSION__ACTUAL:
 				setActual((XExpression)null);
 				return;
@@ -314,31 +262,12 @@ public class XAssertExpressionImpl extends XExpressionImpl implements XAssertExp
 	{
 		switch (featureID)
 		{
-			case XTestPackage.XASSERT_EXPRESSION__KEEP_GOING:
-				return keepGoing != KEEP_GOING_EDEFAULT;
 			case XTestPackage.XASSERT_EXPRESSION__ACTUAL:
 				return actual != null;
 			case XTestPackage.XASSERT_EXPRESSION__THROWS:
 				return throws_ != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString()
-	{
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (keepGoing: ");
-		result.append(keepGoing);
-		result.append(')');
-		return result.toString();
 	}
 
 } //XAssertExpressionImpl
