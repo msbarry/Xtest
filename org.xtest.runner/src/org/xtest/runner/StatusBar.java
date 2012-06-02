@@ -1,6 +1,7 @@
 package org.xtest.runner;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -127,22 +128,14 @@ public class StatusBar extends WorkbenchWindowControlContribution {
         green = new Color(Display.getDefault(), new RGB(0x51, 0xa3, 0x51));
         red = new Color(Display.getDefault(), new RGB(0xbd, 0x36, 0x2f));
 
-        // Create components
-        // final Composite composite = new Composite(parent, SWT.NONE);
-        //
-        // // Apply layout
-        // GridLayout layout = new GridLayout(1, false);
-        // layout.horizontalSpacing = 0;
-        // layout.verticalSpacing = 0;
-        // layout.marginTop = 0;
-        // layout.marginBottom = 0;
-        // layout.marginLeft = 0;
-        // layout.marginRight = 0;
-        // composite.setLayout(layout);
+        // create components and apply layout
+        final Composite composite = new Composite(parent, SWT.NONE);
+        GridLayoutFactory.fillDefaults().margins(0, 0).extendedMargins(0, 4, 0, 0)
+                .applyTo(composite);
 
-        canvas = new Canvas(parent, SWT.NONE);
-        GridDataFactory.fillDefaults().indent(5, 5).minSize(WIDTH, 0).hint(WIDTH, 0)
-                .align(SWT.CENTER, SWT.CENTER).applyTo(canvas);
+        canvas = new Canvas(composite, SWT.NONE);
+        GridDataFactory.fillDefaults().indent(0, 0).minSize(WIDTH, 22).hint(WIDTH, 22).span(1, 1)
+                .grab(true, true).align(SWT.CENTER, SWT.CENTER).applyTo(canvas);
         canvas.addPaintListener(new PaintListener() {
 
             @Override
@@ -152,7 +145,7 @@ public class StatusBar extends WorkbenchWindowControlContribution {
         });
 
         initializeProgressBar();
-        return canvas;
+        return composite;
     }
 
     private void initializeProgressBar() {
