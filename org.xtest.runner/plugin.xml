@@ -14,6 +14,20 @@
             locationURI="toolbar:org.eclipse.ui.trim.status">
          <toolbar
                id="org.eclipse.ui.examples.contributions.contributedTrim">
+            <command
+                  commandId="org.xtest.runner.stop"
+                  icon="icons/stop.gif"
+                  id="stop"
+                  label=""
+                  tooltip="Cancel currently running tests">
+            </command>
+            <command
+                  commandId="org.xtest.runner.runall"
+                  icon="icons/run.gif"
+                  id="run_all"
+                  label=""
+                  tooltip="Run all tests">
+            </command>
             <control
                   class="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.StatusBar"
                   id="contributions.controlContrib1">
@@ -21,5 +35,16 @@
          </toolbar>
       </menuContribution>
    </extension>
-
+   <extension point="org.eclipse.ui.commands">
+      <command
+            id="org.xtest.runner.runall"
+            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.RunAllHandler"
+            name="Run all tests">
+      </command>
+      <command
+            id="org.xtest.runner.stop"
+            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.StopHandler"
+            name="Stop running tests">
+      </command>
+   </extension>
 </plugin>
