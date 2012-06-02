@@ -23,6 +23,7 @@ import org.xtest.xTest.Body;
 import org.xtest.xTest.FileParam;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestFactory;
 import org.xtest.xTest.XTestPackage;
@@ -69,6 +70,13 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * @generated
 	 */
 	private EClass xAssertExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass xSafeExpressionEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -271,19 +279,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getXAssertExpression_KeepGoing()
-	{
-		return (EAttribute)xAssertExpressionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getXAssertExpression_Actual()
 	{
-		return (EReference)xAssertExpressionEClass.getEStructuralFeatures().get(1);
+		return (EReference)xAssertExpressionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -293,7 +291,27 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 */
 	public EReference getXAssertExpression_Throws()
 	{
-		return (EReference)xAssertExpressionEClass.getEStructuralFeatures().get(2);
+		return (EReference)xAssertExpressionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getXSafeExpression()
+	{
+		return xSafeExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getXSafeExpression_Actual()
+	{
+		return (EReference)xSafeExpressionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -343,9 +361,11 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		createEReference(xTestExpressionEClass, XTEST_EXPRESSION__EXPRESSION);
 
 		xAssertExpressionEClass = createEClass(XASSERT_EXPRESSION);
-		createEAttribute(xAssertExpressionEClass, XASSERT_EXPRESSION__KEEP_GOING);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__ACTUAL);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__THROWS);
+
+		xSafeExpressionEClass = createEClass(XSAFE_EXPRESSION);
+		createEReference(xSafeExpressionEClass, XSAFE_EXPRESSION__ACTUAL);
 	}
 
 	/**
@@ -385,6 +405,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		bodyEClass.getESuperTypes().add(theXbasePackage.getXBlockExpression());
 		xTestExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xAssertExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
+		xSafeExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(fileParamEClass, FileParam.class, "FileParam", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -404,9 +425,11 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		initEReference(getXTestExpression_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(xAssertExpressionEClass, XAssertExpression.class, "XAssertExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getXAssertExpression_KeepGoing(), ecorePackage.getEBoolean(), "keepGoing", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getXAssertExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getXAssertExpression_Throws(), theTypesPackage.getJvmTypeReference(), null, "throws", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(xSafeExpressionEClass, XSafeExpression.class, "XSafeExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getXSafeExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XSafeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

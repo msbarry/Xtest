@@ -29,6 +29,7 @@ import org.xtest.results.XTestState;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 
 import com.google.common.collect.Sets;
@@ -42,8 +43,9 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
-    private ClassLoader classLoader;
+    // TODO move some of this stuff into custom context
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
+    private boolean inSafeBlock = false;
     private XTestResult result;
     private final Stack<XTestResult> stack = new Stack<XTestResult>();
     @Inject
@@ -77,12 +79,6 @@ public class XTestInterpreter extends XbaseInterpreter {
      */
     public XTestResult getTestResult() {
         return result;
-    }
-
-    @Override
-    public void setClassLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-        super.setClassLoader(classLoader);
     }
 
     /**
@@ -154,7 +150,6 @@ public class XTestInterpreter extends XbaseInterpreter {
             result = new XTestResult(main);
         }
         stack.push(result);
-        result.recordClassLoader(classLoader);
         Object toReturn = null;
         try {
             toReturn = super._evaluateBlockExpression(main, context, indicator);
@@ -179,6 +174,15 @@ public class XTestInterpreter extends XbaseInterpreter {
         // handle return exception but I don't have access to package-protected ReturnValue
         Object returnValue = internalEvaluate(returnExpr.getExpression(), context, indicator);
         throw new ReturnValue(returnValue);
+    }
+
+    protected Object _evaluateSafeExpression(XSafeExpression assertExpression,
+            IEvaluationContext context, CancelIndicator indicator) {
+        XExpression actual = assertExpression.getActual();
+        inSafeBlock = true;
+        Object result = actual == null ? null : internalEvaluate(actual, context, indicator);
+        inSafeBlock = false;
+        return result;
     }
 
     /**
@@ -266,7 +270,8 @@ public class XTestInterpreter extends XbaseInterpreter {
                 while (cause instanceof RuntimeException && cause.getCause() != null) {
                     cause = cause.getCause();
                 }
-                throw new XTestEvaluationException(cause, expression);
+                internalEvaluate = null;
+                handleEvaluationException(new XTestEvaluationException(cause, expression));
             }
         }
         return internalEvaluate;
@@ -315,11 +320,20 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     private void handleAssertionFailure(XAssertExpression assertExpression) {
-        if (assertExpression.isKeepGoing()) {
+        if (inSafeBlock) {
             XTestResult peek = stack.peek();
             peek.addFailedAssertion(assertExpression);
         } else {
             throw new XTestAssertException(assertExpression);
+        }
+    }
+
+    private void handleEvaluationException(XTestEvaluationException evaluationException) {
+        if (inSafeBlock) {
+            XTestResult peek = stack.peek();
+            peek.addEvaluationException(evaluationException);
+        } else {
+            throw evaluationException;
         }
     }
 
