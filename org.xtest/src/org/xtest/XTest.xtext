@@ -30,7 +30,7 @@ FileParam:
 
 
 UniqueName:
-	name=ID (identifier=XParenthesizedExpression)?
+	{UniqueName} (name=(STRING|ID))? (identifier=XParenthesizedExpression)?
 ;
 
 XTestExpression returns XExpression:

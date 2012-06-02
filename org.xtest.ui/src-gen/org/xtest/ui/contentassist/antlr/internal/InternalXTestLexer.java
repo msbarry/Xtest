@@ -39,7 +39,7 @@ public class InternalXTestLexer extends Lexer {
     public static final int T__56=56;
     public static final int T__19=19;
     public static final int T__57=57;
-    public static final int RULE_HEX=5;
+    public static final int RULE_HEX=6;
     public static final int T__58=58;
     public static final int T__16=16;
     public static final int T__51=51;
@@ -52,8 +52,8 @@ public class InternalXTestLexer extends Lexer {
     public static final int T__14=14;
     public static final int T__13=13;
     public static final int T__59=59;
-    public static final int RULE_INT=6;
-    public static final int RULE_DECIMAL=7;
+    public static final int RULE_INT=7;
+    public static final int RULE_DECIMAL=8;
     public static final int T__50=50;
     public static final int T__42=42;
     public static final int T__43=43;
@@ -72,7 +72,7 @@ public class InternalXTestLexer extends Lexer {
     public static final int T__30=30;
     public static final int T__31=31;
     public static final int T__32=32;
-    public static final int RULE_STRING=8;
+    public static final int RULE_STRING=5;
     public static final int T__33=33;
     public static final int T__71=71;
     public static final int T__34=34;
@@ -1537,10 +1537,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_HEX;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:10: ( ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )? )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:12: ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:10: ( ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )? )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:12: ( '0x' | '0X' ) ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+ ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:12: ( '0x' | '0X' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:12: ( '0x' | '0X' )
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -1568,7 +1568,7 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:13: '0x'
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:13: '0x'
                     {
                     match("0x"); 
 
@@ -1576,7 +1576,7 @@ public class InternalXTestLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:18: '0X'
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:18: '0X'
                     {
                     match("0X"); 
 
@@ -1586,7 +1586,7 @@ public class InternalXTestLexer extends Lexer {
 
             }
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:24: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:24: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' | '_' )+
             int cnt2=0;
             loop2:
             do {
@@ -1624,7 +1624,7 @@ public class InternalXTestLexer extends Lexer {
                 cnt2++;
             } while (true);
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:58: ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:58: ( '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) ) )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -1633,10 +1633,10 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt4) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:59: '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:59: '#' ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
                     {
                     match('#'); 
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:63: ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:63: ( ( 'b' | 'B' ) ( 'i' | 'I' ) | ( 'l' | 'L' ) )
                     int alt3=2;
                     int LA3_0 = input.LA(1);
 
@@ -1654,7 +1654,7 @@ public class InternalXTestLexer extends Lexer {
                     }
                     switch (alt3) {
                         case 1 :
-                            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:64: ( 'b' | 'B' ) ( 'i' | 'I' )
+                            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:64: ( 'b' | 'B' ) ( 'i' | 'I' )
                             {
                             if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
                                 input.consume();
@@ -1678,7 +1678,7 @@ public class InternalXTestLexer extends Lexer {
                             }
                             break;
                         case 2 :
-                            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16573:84: ( 'l' | 'L' )
+                            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16629:84: ( 'l' | 'L' )
                             {
                             if ( input.LA(1)=='L'||input.LA(1)=='l' ) {
                                 input.consume();
@@ -1717,11 +1717,11 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16575:10: ( '0' .. '9' ( '0' .. '9' | '_' )* )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16575:12: '0' .. '9' ( '0' .. '9' | '_' )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16631:10: ( '0' .. '9' ( '0' .. '9' | '_' )* )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16631:12: '0' .. '9' ( '0' .. '9' | '_' )*
             {
             matchRange('0','9'); 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16575:21: ( '0' .. '9' | '_' )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16631:21: ( '0' .. '9' | '_' )*
             loop5:
             do {
                 int alt5=2;
@@ -1770,11 +1770,11 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_DECIMAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16577:14: ( RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )? )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16577:16: RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16633:14: ( RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )? )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16633:16: RULE_INT ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )? ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
             {
             mRULE_INT(); 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16577:25: ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16633:25: ( ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT )?
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -1783,7 +1783,7 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt7) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16577:26: ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16633:26: ( 'e' | 'E' ) ( '+' | '-' )? RULE_INT
                     {
                     if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                         input.consume();
@@ -1794,7 +1794,7 @@ public class InternalXTestLexer extends Lexer {
                         recover(mse);
                         throw mse;}
 
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16577:36: ( '+' | '-' )?
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16633:36: ( '+' | '-' )?
                     int alt6=2;
                     int LA6_0 = input.LA(1);
 
@@ -1827,7 +1827,7 @@ public class InternalXTestLexer extends Lexer {
 
             }
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16577:58: ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16633:58: ( ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' ) | ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' ) )?
             int alt8=3;
             int LA8_0 = input.LA(1);
 
@@ -1839,7 +1839,7 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt8) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16577:59: ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' )
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16633:59: ( 'b' | 'B' ) ( 'i' | 'I' | 'd' | 'D' )
                     {
                     if ( input.LA(1)=='B'||input.LA(1)=='b' ) {
                         input.consume();
@@ -1863,7 +1863,7 @@ public class InternalXTestLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16577:87: ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' )
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16633:87: ( 'l' | 'L' | 'd' | 'D' | 'f' | 'F' )
                     {
                     if ( input.LA(1)=='D'||input.LA(1)=='F'||input.LA(1)=='L'||input.LA(1)=='d'||input.LA(1)=='f'||input.LA(1)=='l' ) {
                         input.consume();
@@ -1896,10 +1896,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16579:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )* )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16579:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16635:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )* )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16635:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16579:11: ( '^' )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16635:11: ( '^' )?
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -1908,7 +1908,7 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt9) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16579:11: '^'
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16635:11: '^'
                     {
                     match('^'); 
 
@@ -1926,7 +1926,7 @@ public class InternalXTestLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16579:44: ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16635:44: ( 'a' .. 'z' | 'A' .. 'Z' | '$' | '_' | '0' .. '9' )*
             loop10:
             do {
                 int alt10=2;
@@ -1975,10 +1975,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt13=2;
             int LA13_0 = input.LA(1);
 
@@ -1996,10 +1996,10 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt13) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop11:
                     do {
                         int alt11=3;
@@ -2015,7 +2015,7 @@ public class InternalXTestLexer extends Lexer {
 
                         switch (alt11) {
                     	case 1 :
-                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -2031,7 +2031,7 @@ public class InternalXTestLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:66: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:66: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -2056,10 +2056,10 @@ public class InternalXTestLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop12:
                     do {
                         int alt12=3;
@@ -2075,7 +2075,7 @@ public class InternalXTestLexer extends Lexer {
 
                         switch (alt12) {
                     	case 1 :
-                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -2091,7 +2091,7 @@ public class InternalXTestLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16581:137: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16637:137: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -2134,12 +2134,12 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_ML_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16583:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16583:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16639:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16639:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16583:24: ( options {greedy=false; } : . )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16639:24: ( options {greedy=false; } : . )*
             loop14:
             do {
                 int alt14=2;
@@ -2164,7 +2164,7 @@ public class InternalXTestLexer extends Lexer {
 
                 switch (alt14) {
             	case 1 :
-            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16583:52: .
+            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16639:52: .
             	    {
             	    matchAny(); 
 
@@ -2194,12 +2194,12 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16585:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16585:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16641:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16641:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16585:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16641:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop15:
             do {
                 int alt15=2;
@@ -2212,7 +2212,7 @@ public class InternalXTestLexer extends Lexer {
 
                 switch (alt15) {
             	case 1 :
-            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16585:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16641:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2232,7 +2232,7 @@ public class InternalXTestLexer extends Lexer {
                 }
             } while (true);
 
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16585:40: ( ( '\\r' )? '\\n' )?
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16641:40: ( ( '\\r' )? '\\n' )?
             int alt17=2;
             int LA17_0 = input.LA(1);
 
@@ -2241,9 +2241,9 @@ public class InternalXTestLexer extends Lexer {
             }
             switch (alt17) {
                 case 1 :
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16585:41: ( '\\r' )? '\\n'
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16641:41: ( '\\r' )? '\\n'
                     {
-                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16585:41: ( '\\r' )?
+                    // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16641:41: ( '\\r' )?
                     int alt16=2;
                     int LA16_0 = input.LA(1);
 
@@ -2252,7 +2252,7 @@ public class InternalXTestLexer extends Lexer {
                     }
                     switch (alt16) {
                         case 1 :
-                            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16585:41: '\\r'
+                            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16641:41: '\\r'
                             {
                             match('\r'); 
 
@@ -2284,10 +2284,10 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16587:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16587:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16643:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16643:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16587:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16643:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt18=0;
             loop18:
             do {
@@ -2341,8 +2341,8 @@ public class InternalXTestLexer extends Lexer {
         try {
             int _type = RULE_ANY_OTHER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16589:16: ( . )
-            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16589:18: .
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16645:16: ( . )
+            // ../org.xtest.ui/src-gen/org/xtest/ui/contentassist/antlr/internal/InternalXTest.g:16645:18: .
             {
             matchAny(); 
 

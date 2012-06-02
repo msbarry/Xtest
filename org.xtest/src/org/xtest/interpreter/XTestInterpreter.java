@@ -9,6 +9,8 @@ import org.eclipse.xtext.common.types.JvmVoid;
 import org.eclipse.xtext.common.types.access.impl.ClassFinder;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
@@ -193,7 +195,7 @@ public class XTestInterpreter extends XbaseInterpreter {
     protected Object _evaluateTestExpression(XTestExpression test, IEvaluationContext context,
             CancelIndicator indicator) {
         UniqueName name = test.getName();
-        String nameStr = getName(name, context, indicator);
+        String nameStr = getName(name, test, context, indicator);
         XExpression expression = test.getExpression();
         XTestResult peek = stack.peek();
         XTestResult subTest = peek.subTest(nameStr, test);
@@ -275,20 +277,38 @@ public class XTestInterpreter extends XbaseInterpreter {
      * 
      * @param uniqueName
      *            The {@link UniqueName} object of the test
+     * @param test
+     *            The test expression for if no name is given
      * @param context
      *            The evaluation context
      * @param indicator
      *            The cancel indicator
      * @return The name derived from uniqueName
      */
-    private String getName(UniqueName uniqueName, IEvaluationContext context,
+    private String getName(UniqueName uniqueName, XTestExpression test, IEvaluationContext context,
             CancelIndicator indicator) {
         String name = uniqueName.getName();
         XExpression uidExp = uniqueName.getIdentifier();
         if (uidExp != null) {
             Object nameObj = internalEvaluate(uidExp, context, indicator);
             if (nameObj != null) {
-                name += " (" + nameObj.toString() + ")";
+                if (name == null) {
+                    // no ID specified
+                    name = nameObj.toString();
+                } else {
+                    name += " (" + nameObj.toString() + ")";
+                }
+            }
+        }
+        if (name == null) {
+            ICompositeNode node = NodeModelUtils.findActualNodeFor(test.getExpression());
+            if (node != null) {
+                // Grab the first line of text from inside the test
+                // TODO maybe there is something better to call it?
+                name = node.getText().replaceAll("^(\\{|\\s)*", "").replaceAll("[\n\r].*$", "")
+                        .trim().replaceAll("\\}$", "");
+            } else {
+                name = "";
             }
         }
         return name;

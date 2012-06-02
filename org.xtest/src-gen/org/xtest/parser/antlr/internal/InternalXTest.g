@@ -394,10 +394,17 @@ ruleUniqueName returns [EObject current=null]
     }
     @after { leaveRule(); }:
 ((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getUniqueNameAccess().getUniqueNameAction_0(),
+            $current);
+    }
+)(
 (
-		lv_name_0_0=RULE_ID
+(
+		lv_name_1_1=RULE_STRING
 		{
-			newLeafNode(lv_name_0_0, grammarAccess.getUniqueNameAccess().getNameIDTerminalRuleCall_0_0()); 
+			newLeafNode(lv_name_1_1, grammarAccess.getUniqueNameAccess().getNameSTRINGTerminalRuleCall_1_0_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -406,24 +413,41 @@ ruleUniqueName returns [EObject current=null]
        		setWithLastConsumed(
        			$current, 
        			"name",
-        		lv_name_0_0, 
+        		lv_name_1_1, 
+        		"STRING");
+	    }
+
+    |		lv_name_1_2=RULE_ID
+		{
+			newLeafNode(lv_name_1_2, grammarAccess.getUniqueNameAccess().getNameIDTerminalRuleCall_1_0_1()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getUniqueNameRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_1_2, 
         		"ID");
 	    }
 
 )
-)(
+
+)
+)?(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getUniqueNameAccess().getIdentifierXParenthesizedExpressionParserRuleCall_1_0()); 
+	        newCompositeNode(grammarAccess.getUniqueNameAccess().getIdentifierXParenthesizedExpressionParserRuleCall_2_0()); 
 	    }
-		lv_identifier_1_0=ruleXParenthesizedExpression		{
+		lv_identifier_2_0=ruleXParenthesizedExpression		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getUniqueNameRule());
 	        }
        		set(
        			$current, 
        			"identifier",
-        		lv_identifier_1_0, 
+        		lv_identifier_2_0, 
         		"XParenthesizedExpression");
 	        afterParserOrEnumRuleCall();
 	    }

@@ -1179,7 +1179,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (name=ID identifier=XParenthesizedExpression?)
+	 *     ((name=STRING | name=ID)? identifier=XParenthesizedExpression?)
 	 */
 	protected void sequence_UniqueName(EObject context, UniqueName semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

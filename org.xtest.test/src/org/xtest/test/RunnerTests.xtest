@@ -2,7 +2,7 @@
 runWhileEditing: false
 // TODO - when Guice fixes memory leak, re-enable running on save
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
-runOnSave: false 
+runOnSave: false
 import org.^xtest.XTestRunner
 import org.^xtest.results.XTestState
 
@@ -468,6 +468,58 @@ xtest testVerifyReturnVal {
 if (!(assert? 1 == 1)) assert? 1 == 2
 ', injector);
     assertEquals("[]", result.getErrorMessages().toString());
+    assertTrue(null == result.getEvaluationException());
+    assertEquals(XTestState::PASS, result.getState());
+}
+
+
+xtest allowStringDescription {
+    val result = XTestRunner::run('
+xtest "string description" {assert true}
+', injector);
+    assertEquals("string description", result.getSubTests.get(0).getName);
+    assertTrue(null == result.getEvaluationException());
+    assertEquals(XTestState::PASS, result.getState());
+}
+
+
+xtest allowNoDesciption {
+    val result = XTestRunner::run('
+xtest {assert true}
+', injector);
+    assertEquals("assert true", result.getSubTests.get(0).getName);
+    assertTrue(null == result.getEvaluationException());
+    assertEquals(XTestState::PASS, result.getState());
+}
+
+xtest allowNoDesciptionOnlyTakesFirstLine {
+    val result = XTestRunner::run('
+xtest {assert true 
+assert true}
+', injector);
+    assertEquals("assert true", result.getSubTests.get(0).getName);
+    assertTrue(null == result.getEvaluationException());
+    assertEquals(XTestState::PASS, result.getState());
+}
+
+xtest allowNoDesciptionIgnoresPrecedingWhitespace {
+    val result = XTestRunner::run('
+xtest {
+  
+assert true 
+assert true}
+', injector);
+    assertEquals("assert true", result.getSubTests.get(0).getName);
+    assertTrue(null == result.getEvaluationException());
+    assertEquals(XTestState::PASS, result.getState());
+}
+
+xtest allowNoDesciptionAndParenthesis {
+    val result = XTestRunner::run('
+xtest (1) {assert true 
+assert true}
+', injector);
+    assertEquals("1", result.getSubTests.get(0).getName);
     assertTrue(null == result.getEvaluationException());
     assertEquals(XTestState::PASS, result.getState());
 }

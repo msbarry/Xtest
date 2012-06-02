@@ -38,6 +38,7 @@ public class XTestParser extends AbstractContentAssistParser {
 				private static final long serialVersionUID = 1L;
 				{
 					put(grammarAccess.getImportAccess().getAlternatives_1(), "rule__Import__Alternatives_1");
+					put(grammarAccess.getUniqueNameAccess().getNameAlternatives_1_0(), "rule__UniqueName__NameAlternatives_1_0");
 					put(grammarAccess.getXTestExpressionAccess().getAlternatives_1(), "rule__XTestExpression__Alternatives_1");
 					put(grammarAccess.getXPrimaryExpressionAccess().getAlternatives(), "rule__XPrimaryExpression__Alternatives");
 					put(grammarAccess.getXFeatureCallAccess().getAlternatives_3(), "rule__XFeatureCall__Alternatives_3");
@@ -227,8 +228,8 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getImportAccess().getImportedNamespaceAssignment_1_2(), "rule__Import__ImportedNamespaceAssignment_1_2");
 					put(grammarAccess.getFileParamAccess().getFeatureAssignment_0(), "rule__FileParam__FeatureAssignment_0");
 					put(grammarAccess.getFileParamAccess().getValueAssignment_2(), "rule__FileParam__ValueAssignment_2");
-					put(grammarAccess.getUniqueNameAccess().getNameAssignment_0(), "rule__UniqueName__NameAssignment_0");
-					put(grammarAccess.getUniqueNameAccess().getIdentifierAssignment_1(), "rule__UniqueName__IdentifierAssignment_1");
+					put(grammarAccess.getUniqueNameAccess().getNameAssignment_1(), "rule__UniqueName__NameAssignment_1");
+					put(grammarAccess.getUniqueNameAccess().getIdentifierAssignment_2(), "rule__UniqueName__IdentifierAssignment_2");
 					put(grammarAccess.getXTestExpressionAccess().getNameAssignment_2(), "rule__XTestExpression__NameAssignment_2");
 					put(grammarAccess.getXTestExpressionAccess().getExpressionAssignment_3(), "rule__XTestExpression__ExpressionAssignment_3");
 					put(grammarAccess.getXAssertExpressionAccess().getKeepGoingAssignment_2(), "rule__XAssertExpression__KeepGoingAssignment_2");

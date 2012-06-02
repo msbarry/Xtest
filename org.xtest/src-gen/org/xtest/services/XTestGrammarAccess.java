@@ -243,30 +243,42 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	public class UniqueNameElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "UniqueName");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cNameIDTerminalRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
-		private final Assignment cIdentifierAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cIdentifierXParenthesizedExpressionParserRuleCall_1_0 = (RuleCall)cIdentifierAssignment_1.eContents().get(0);
+		private final Action cUniqueNameAction_0 = (Action)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Alternatives cNameAlternatives_1_0 = (Alternatives)cNameAssignment_1.eContents().get(0);
+		private final RuleCall cNameSTRINGTerminalRuleCall_1_0_0 = (RuleCall)cNameAlternatives_1_0.eContents().get(0);
+		private final RuleCall cNameIDTerminalRuleCall_1_0_1 = (RuleCall)cNameAlternatives_1_0.eContents().get(1);
+		private final Assignment cIdentifierAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cIdentifierXParenthesizedExpressionParserRuleCall_2_0 = (RuleCall)cIdentifierAssignment_2.eContents().get(0);
 		
 		//UniqueName:
 		//
-		//	name=ID identifier=XParenthesizedExpression?;
+		//	{UniqueName} name=(STRING | ID)? identifier=XParenthesizedExpression?;
 		public ParserRule getRule() { return rule; }
 
-		//name=ID identifier=XParenthesizedExpression?
+		//{UniqueName} name=(STRING | ID)? identifier=XParenthesizedExpression?
 		public Group getGroup() { return cGroup; }
 
-		//name=ID
-		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
+		//{UniqueName}
+		public Action getUniqueNameAction_0() { return cUniqueNameAction_0; }
+
+		//name=(STRING | ID)?
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+
+		//STRING | ID
+		public Alternatives getNameAlternatives_1_0() { return cNameAlternatives_1_0; }
+
+		//STRING
+		public RuleCall getNameSTRINGTerminalRuleCall_1_0_0() { return cNameSTRINGTerminalRuleCall_1_0_0; }
 
 		//ID
-		public RuleCall getNameIDTerminalRuleCall_0_0() { return cNameIDTerminalRuleCall_0_0; }
+		public RuleCall getNameIDTerminalRuleCall_1_0_1() { return cNameIDTerminalRuleCall_1_0_1; }
 
 		//identifier=XParenthesizedExpression?
-		public Assignment getIdentifierAssignment_1() { return cIdentifierAssignment_1; }
+		public Assignment getIdentifierAssignment_2() { return cIdentifierAssignment_2; }
 
 		//XParenthesizedExpression
-		public RuleCall getIdentifierXParenthesizedExpressionParserRuleCall_1_0() { return cIdentifierXParenthesizedExpressionParserRuleCall_1_0; }
+		public RuleCall getIdentifierXParenthesizedExpressionParserRuleCall_2_0() { return cIdentifierXParenthesizedExpressionParserRuleCall_2_0; }
 	}
 
 	public class XTestExpressionElements extends AbstractParserRuleElementFinder {
@@ -751,7 +763,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 
 	//UniqueName:
 	//
-	//	name=ID identifier=XParenthesizedExpression?;
+	//	{UniqueName} name=(STRING | ID)? identifier=XParenthesizedExpression?;
 	public UniqueNameElements getUniqueNameAccess() {
 		return (pUniqueName != null) ? pUniqueName : (pUniqueName = new UniqueNameElements());
 	}
