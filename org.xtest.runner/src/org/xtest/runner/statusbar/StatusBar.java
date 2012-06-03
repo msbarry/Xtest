@@ -3,16 +3,17 @@ package org.xtest.runner.statusbar;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.xtest.runner.TestsProvider;
 import org.xtest.runner.events.TestFinished;
@@ -30,19 +31,15 @@ import com.google.inject.Inject;
  * @author Michael Barry
  */
 public class StatusBar extends WorkbenchWindowControlContribution {
-    private static final int WIDTH = 50;
     private final EventBus bus;
-    private Canvas canvas;
-    private Color green;
-    private int lastWidth = 0;
+    private Composite composite;
+    private final RGB green = new RGB(0x51, 0xa3, 0x51);
     private boolean passing;
-
-    private Color red;
-
+    private Image progressBackground;
+    private final RGB red = new RGB(0xbd, 0x36, 0x2f);
     @Inject
     private TestsProvider testProvider;
     private int total;
-
     private int worked;
 
     /**
@@ -77,9 +74,6 @@ public class StatusBar extends WorkbenchWindowControlContribution {
     public void dispose() {
         bus.unregister(this);
         super.dispose();
-        canvas.dispose();
-        red.dispose();
-        green.dispose();
     }
 
     /**
@@ -123,26 +117,25 @@ public class StatusBar extends WorkbenchWindowControlContribution {
     @Override
     protected Control createControl(Composite parent) {
         // initialize colors
-        green = new Color(Display.getDefault(), new RGB(0x51, 0xa3, 0x51));
-        red = new Color(Display.getDefault(), new RGB(0xbd, 0x36, 0x2f));
 
         // create components and apply layout
-        final Composite composite = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.fillDefaults().margins(0, 0).extendedMargins(0, 4, 0, 0)
-                .applyTo(composite);
-
-        canvas = new Canvas(composite, SWT.NONE);
-        GridDataFactory.fillDefaults().indent(0, 0).minSize(WIDTH, 22).hint(WIDTH, 22).span(1, 1)
-                .grab(true, true).align(SWT.CENTER, SWT.CENTER).applyTo(canvas);
-        canvas.addPaintListener(new PaintListener() {
-
+        composite = parent;
+        composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
+        // GridLayoutFactory.fillDefaults().margins(0, 0).extendedMargins(0, 4, 0, 0)
+        // .applyTo(composite);
+        composite.addListener(SWT.Resize, new Listener() {
             @Override
-            public void paintControl(PaintEvent e) {
-                paint(e.gc);
+            public void handleEvent(Event e) {
+                paint();
             }
         });
 
         initializeProgressBar();
+        Composite composite = new Composite(parent, SWT.NONE);
+        GridLayoutFactory.fillDefaults().numColumns(1).margins(3, 3).applyTo(composite);
+        Label label = new Label(composite, SWT.BOLD);
+        label.setText("Xtest");
+        GridDataFactory.fillDefaults().applyTo(label);
         return composite;
     }
 
@@ -151,43 +144,68 @@ public class StatusBar extends WorkbenchWindowControlContribution {
         updateColor();
     }
 
-    private void paint(GC gc) {
-        double completionRatio = total == 0 ? 0.0 : worked * 1.0 / total;
-        Color color = passing ? green : red;
-        Rectangle bounds = canvas.getBounds();
-        int pixelWidth = (int) (completionRatio * bounds.width);
-        int remainder = bounds.width - pixelWidth;
-        boolean growing = pixelWidth > lastWidth;
-        lastWidth = pixelWidth;
-        if (growing) {
-            // left first ...
-            gc.setBackground(color);
-            gc.fillRectangle(0, 0, pixelWidth, bounds.height);
-            // .. then right
-            gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
-            gc.fillRectangle(pixelWidth, 0, remainder, bounds.height);
-        } else {
-            // right first ...
-            gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
-            gc.fillRectangle(pixelWidth, 0, remainder, bounds.height);
-            // ... then left
-            gc.setBackground(color);
-            gc.fillRectangle(0, 0, pixelWidth, bounds.height);
+    private void paint() {
+        Image oldImage = progressBackground;
+        Display display = composite.getDisplay();
+        Rectangle rect = composite.getClientArea();
+        boolean horizontal = rect.width > rect.height;
+        int boundWidth = rect.width;
+        int boundHeight = rect.height;
+        if (horizontal) {
+            boundWidth -= 1;
         }
-        gc.drawText("Xtest", bounds.width / 2 - 15, bounds.height / 2 - 8, true);
+        progressBackground = new Image(display, rect.width, rect.height);
+        GC gc = new GC(progressBackground);
+        try {
+            RGB rgb = passing ? green : red;
+            Color color = new Color(Display.getDefault(), rgb);
+            try {
+                double completionRatio = total == 0 ? 0.0 : worked * 1.0 / total;
+
+                Rectangle progress;
+                Rectangle unknown;
+                if (horizontal) {
+                    int horizontalDivide = (int) (completionRatio * boundWidth);
+                    int remainder = boundWidth - horizontalDivide;
+                    progress = new Rectangle(0, 0, horizontalDivide, boundHeight);
+                    unknown = new Rectangle(horizontalDivide, 0, remainder, boundHeight);
+                } else {
+                    int verticalDivide = (int) (completionRatio * boundHeight);
+                    int remainder = boundHeight - verticalDivide;
+                    progress = new Rectangle(0, remainder, boundWidth, verticalDivide);
+                    unknown = new Rectangle(0, 0, boundWidth, remainder);
+                }
+
+                gc.setBackground(color);
+                gc.fillRectangle(progress);
+
+                gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+                gc.fillRectangle(unknown);
+
+                if (horizontal) {
+                    gc.setBackground(Display.getDefault().getSystemColor(
+                            SWT.COLOR_WIDGET_BACKGROUND));
+                    gc.fillRectangle(boundWidth, 0, 4, boundHeight);
+                }
+            } finally {
+                color.dispose();
+            }
+        } finally {
+            gc.dispose();
+        }
+        composite.setBackgroundImage(progressBackground);
+
+        // If there was an old image, get rid of it now
+        if (oldImage != null) {
+            oldImage.dispose();
+        }
     }
 
     private void setProgress() {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
-
-                GC gc = new GC(canvas);
-                try {
-                    paint(gc);
-                } finally {
-                    gc.dispose();
-                }
+                paint();
             }
 
         });
