@@ -14,7 +14,8 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 /**
- * Handler for stop-test events
+ * Handler for stop-test button events and events that influence whether that button is enabled or
+ * not.
  * 
  * @author Michael Barry
  */
@@ -23,6 +24,14 @@ public class StopHandler extends AbstractHandler {
     private boolean enabled = false;
     private final RunAllJob job;
 
+    /**
+     * SHOULD ONLY BE CALLED BY GUICE
+     * 
+     * @param job
+     *            {@link RunAllJob} instance provided by Guice
+     * @param bus
+     *            {@link EventBus} instance provided by Guice
+     */
     @Inject
     public StopHandler(RunAllJob job, EventBus bus) {
         this.bus = bus;
@@ -30,12 +39,24 @@ public class StopHandler extends AbstractHandler {
         this.job = job;
     }
 
+    /**
+     * SHOULD ONLY BE CALLED BY {@link EventBus}
+     * 
+     * @param canceled
+     *            Tests canceled event
+     */
     @Subscribe
     public void disable(TestsCanceled canceled) {
         enabled = false;
         fireHandlerChanged(new HandlerEvent(this, true, false));
     }
 
+    /**
+     * SHOULD ONLY BE CALLED BY {@link EventBus}
+     * 
+     * @param finished
+     *            Tests finished event
+     */
     @Subscribe
     public void disable(TestsFinished finished) {
         enabled = false;
@@ -48,6 +69,12 @@ public class StopHandler extends AbstractHandler {
         bus.unregister(this);
     }
 
+    /**
+     * SHOULD ONLY BE CALLED BY {@link EventBus}
+     * 
+     * @param started
+     *            Tests started event
+     */
     @Subscribe
     public void enable(TestsStarted started) {
         enabled = true;
