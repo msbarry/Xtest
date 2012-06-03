@@ -91,6 +91,7 @@ public class UiXTestRunner extends XTestRunner {
                 if (context instanceof IJavaProject) {
                     try {
                         final IJavaProject jp = (IJavaProject) context;
+
                         ArrayList<IClasspathEntry> classpath = Lists.newArrayList(jp
                                 .getResolvedClasspath(true));
                         Set<IPath> visited = Sets.newHashSet();
@@ -129,7 +130,9 @@ public class UiXTestRunner extends XTestRunner {
                                         }
                                         if (project != null) {
                                             IJavaProject javaProject = JavaCore.create(project);
-                                            outputLocation = javaProject.getOutputLocation();
+                                            if (javaProject.exists()) {
+                                                outputLocation = javaProject.getOutputLocation();
+                                            }
                                         }
                                     }
                                     // Added null check for safety

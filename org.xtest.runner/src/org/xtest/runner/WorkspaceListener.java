@@ -1,5 +1,6 @@
 package org.xtest.runner;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -85,7 +86,7 @@ public class WorkspaceListener implements IResourceChangeListener, IElementChang
     private void handleDeltas(long start, Set<IFile> deltas) {
         if (!deltas.isEmpty()) {
             logger.debug("---> Changes: {}", deltas);
-            Set<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
+            Collection<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
             if (toRun != null && !toRun.isEmpty()) {
                 ContinuousTestRunner.scheduleAll(toRun);
             } else {

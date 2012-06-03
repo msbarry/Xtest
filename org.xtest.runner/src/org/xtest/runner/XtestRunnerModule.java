@@ -1,5 +1,6 @@
 package org.xtest.runner;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
@@ -12,6 +13,6 @@ public class XtestRunnerModule implements Module {
 
     @Override
     public void configure(Binder binder) {
-        // insert custom bindings here when necessary
+        binder.bind(EventBus.class).toInstance(new EventBus("Xtest Runner Event Bus"));
     }
 }

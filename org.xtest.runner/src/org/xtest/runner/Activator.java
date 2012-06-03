@@ -1,6 +1,12 @@
 package org.xtest.runner;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import com.google.inject.Guice;
@@ -10,7 +16,10 @@ import com.google.inject.Injector;
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
-
+    /**
+     * Error file icon ID
+     */
+    public static final String ERROR_FILE_ICON = "org.xtest.runner.icons.errorfile";
     /**
      * The plug-in ID
      */
@@ -47,6 +56,15 @@ public class Activator extends AbstractUIPlugin {
     }
 
     /**
+     * Returns an {@link ImageDescriptor} for the error file icon
+     * 
+     * @return An {@link ImageDescriptor} for the error file icon
+     */
+    public ImageDescriptor getErrorFileImage() {
+        return getImageRegistry().getDescriptor(ERROR_FILE_ICON);
+    }
+
+    /**
      * Returns the {@link Injector}
      * 
      * @return The injector for this plugin
@@ -77,6 +95,16 @@ public class Activator extends AbstractUIPlugin {
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         super.stop(context);
+    }
+
+    @Override
+    protected void initializeImageRegistry(ImageRegistry registry) {
+        super.initializeImageRegistry(registry);
+        Bundle bundle = Platform.getBundle(PLUGIN_ID);
+
+        ImageDescriptor myImage = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path(
+                "icons/error.gif"), null));
+        registry.put(ERROR_FILE_ICON, myImage);
     }
 
 }

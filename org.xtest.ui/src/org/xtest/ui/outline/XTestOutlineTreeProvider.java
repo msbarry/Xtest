@@ -169,7 +169,8 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
                 final Annotation a = (Annotation) iterator.next();
                 if (!a.isMarkedDeleted()) {
                     Issue issue = issueUtil.getIssueFromAnnotation(a);
-                    if (issue != null) {
+                    if (issue != null && issue.getSeverity() != Severity.INFO
+                            && issue.getOffset() >= 0) {
                         result.add(issue);
                     }
                 }

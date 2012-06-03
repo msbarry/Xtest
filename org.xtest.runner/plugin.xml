@@ -8,5 +8,56 @@
             class="org.xtest.runner.Startup">
       </startup>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.trim.status">
+         <toolbar
+               id="org.eclipse.ui.examples.contributions.contributedTrim">
+            <command
+                  commandId="org.xtest.runner.stop"
+                  disabledIcon="icons/transparent.gif"
+                  icon="icons/stop.gif"
+                  id="stop"
+                  tooltip="Cancel currently running tests">
+            </command>
+            <command
+                  commandId="org.xtest.runner.runall"
+                  disabledIcon="icons/transparent.gif"
+                  icon="icons/run.gif"
+                  id="run_all"
+                  tooltip="Run all tests">
+            </command>
+            <control
+                  class="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.statusbar.StatusBar"
+                  id="org.xtest.runner.statusbar.progress">
+            </control>
+            <command
+                  commandId="org.xtest.runner.errors"
+                  disabledIcon="icons/transparent.gif"
+                  icon="icons/error.gif"
+                  id="org.xtest.runner.errors"
+                  style="push"
+                  tooltip="Navigate to failed tests">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension point="org.eclipse.ui.commands">
+      <command
+            id="org.xtest.runner.runall"
+            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.statusbar.RunAllHandler"
+            name="Run all tests">
+      </command>
+      <command
+            id="org.xtest.runner.stop"
+            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.statusbar.StopHandler"
+            name="Stop running tests">
+      </command>
+      <command
+            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.statusbar.FailedTestsHandler"
+            id="org.xtest.runner.errors"
+            name="Failed tests">
+      </command>
+   </extension>
 </plugin>

@@ -47,7 +47,7 @@ public class ContinuousTestRunner {
      * @param toRun
      *            The list of tests to be run
      */
-    public static void scheduleAll(Set<RunnableTest> toRun) {
+    public static void scheduleAll(Collection<RunnableTest> toRun) {
         if (job.submit(toRun)) {
             job.cancel();
             job.schedule();
