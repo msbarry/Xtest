@@ -1,9 +1,10 @@
-package org.xtest.runner;
+package org.xtest.runner.statusbar;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.HandlerEvent;
+import org.xtest.runner.RunAllJob;
 import org.xtest.runner.events.TestsCanceled;
 import org.xtest.runner.events.TestsFinished;
 import org.xtest.runner.events.TestsStarted;

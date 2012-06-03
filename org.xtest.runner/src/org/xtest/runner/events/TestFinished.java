@@ -1,5 +1,6 @@
 package org.xtest.runner.events;
 
+import org.eclipse.core.resources.IFile;
 import org.xtest.runner.external.TestResult;
 
 /**
@@ -9,6 +10,7 @@ import org.xtest.runner.external.TestResult;
  */
 public class TestFinished {
 
+    private final IFile file;
     private final TestResult state;
 
     /**
@@ -17,8 +19,18 @@ public class TestFinished {
      * @param state
      *            The state of the test
      */
-    TestFinished(TestResult state) {
+    TestFinished(TestResult state, IFile file) {
         this.state = state;
+        this.file = file;
+    }
+
+    /**
+     * Returns the file that finished running
+     * 
+     * @return The file that finished running
+     */
+    public IFile getFile() {
+        return file;
     }
 
     /**

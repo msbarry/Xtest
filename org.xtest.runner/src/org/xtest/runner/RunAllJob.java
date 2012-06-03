@@ -1,6 +1,6 @@
 package org.xtest.runner;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -62,7 +62,7 @@ public class RunAllJob extends Job {
      * @return True if any of the tests were not already scheduled, false if no change was made to
      *         scheduled test queue
      */
-    public boolean submit(Set<RunnableTest> toRun) {
+    public boolean submit(Collection<RunnableTest> toRun) {
         boolean scheduled = false;
         for (RunnableTest file : toRun) {
             if (file != null && !files.contains(file)) {
@@ -71,8 +71,6 @@ public class RunAllJob extends Job {
                 scheduled = true;
             }
         }
-        // Post a "canceled" event where the number of events scheduled is the size of the queue
-        events.cancelAndSchedule(files.size());
 
         return scheduled;
     }
@@ -112,18 +110,22 @@ public class RunAllJob extends Job {
             TestResult result = invokeAndRecord(peek, runnerCache, convert.newChild(1));
             files.remove(peek);
             if (!monitor.isCanceled()) {
-                events.finishTest(result);
+                events.finishTest(result, peek.getFile());
             }
         }
 
         if (monitor.isCanceled()) {
             logger.info("!!!!!!!!!!! Canceled with {} tests left took {} ms", files.size(),
                     TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
+
+            // Post a "canceled" event where the number of events scheduled is the size of the queue
+            events.cancelAndSchedule(files.size());
         } else {
-            // Only post finished event if not canceled
-            events.finishTests();
             logger.info("==========> Finished {} tests took {} ms", size,
                     TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
+
+            // Only post finished event if not canceled
+            events.finishTests();
         }
         monitor.done();
         return Status.OK_STATUS;

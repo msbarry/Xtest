@@ -1,5 +1,6 @@
 package org.xtest.runner.events;
 
+import org.eclipse.core.resources.IFile;
 import org.xtest.runner.external.TestResult;
 
 import com.google.common.eventbus.EventBus;
@@ -32,9 +33,11 @@ public class Events {
      * 
      * @param state
      *            The state of the test
+     * @param file
+     *            The test file
      */
-    public void finishTest(TestResult state) {
-        bus.post(new TestFinished(state));
+    public void finishTest(TestResult state, IFile file) {
+        bus.post(new TestFinished(state, file));
     }
 
     /**

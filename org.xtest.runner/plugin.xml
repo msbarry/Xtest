@@ -23,28 +23,41 @@
             </command>
             <command
                   commandId="org.xtest.runner.runall"
+                  disabledIcon=" "
                   icon="icons/run.gif"
                   id="run_all"
-                  label=""
                   tooltip="Run all tests">
             </command>
             <control
-                  class="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.StatusBar"
+                  class="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.statusbar.StatusBar"
                   id="contributions.controlContrib1">
             </control>
+            <command
+                  commandId="org.xtest.runner.errors"
+                  disabledIcon="icons/passed.gif"
+                  icon="icons/error.gif"
+                  id="org.xtest.runner.errors"
+                  style="push"
+                  tooltip="Navigate to failed tests">
+            </command>
          </toolbar>
       </menuContribution>
    </extension>
    <extension point="org.eclipse.ui.commands">
       <command
             id="org.xtest.runner.runall"
-            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.RunAllHandler"
+            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.statusbar.RunAllHandler"
             name="Run all tests">
       </command>
       <command
             id="org.xtest.runner.stop"
-            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.StopHandler"
+            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.statusbar.StopHandler"
             name="Stop running tests">
+      </command>
+      <command
+            defaultHandler="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.statusbar.FailedTestsHandler"
+            id="org.xtest.runner.errors"
+            name="Failed tests">
       </command>
    </extension>
 </plugin>

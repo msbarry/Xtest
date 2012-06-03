@@ -98,6 +98,15 @@ public class RunnableTest implements Comparable<RunnableTest> {
     }
 
     /**
+     * Returns the {@link IFile} that this wraps
+     * 
+     * @return The {@link IFile} that this wraps
+     */
+    public IFile getFile() {
+        return fFile;
+    }
+
+    /**
      * Returns the name of this test file
      * 
      * @return The name of this test file

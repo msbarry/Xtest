@@ -1,4 +1,4 @@
-package org.xtest.runner;
+package org.xtest.runner.statusbar;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -14,14 +14,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
+import org.xtest.runner.TestsProvider;
 import org.xtest.runner.events.TestFinished;
 import org.xtest.runner.events.TestsCanceled;
 import org.xtest.runner.events.TestsFinished;
 import org.xtest.runner.events.TestsStarted;
-import org.xtest.runner.external.TestResult;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -149,12 +147,7 @@ public class StatusBar extends WorkbenchWindowControlContribution {
     }
 
     private void initializeProgressBar() {
-        passing = !Iterables.any(testProvider.getAllTests(), new Predicate<RunnableTest>() {
-            @Override
-            public boolean apply(RunnableTest input) {
-                return input.getState() == TestResult.FAIL;
-            }
-        });
+        passing = testProvider.areAllTestsPassing();
         updateColor();
     }
 

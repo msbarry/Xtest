@@ -1,8 +1,9 @@
-package org.xtest.runner;
+package org.xtest.runner.statusbar;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.xtest.runner.TestsProvider;
 import org.xtest.runner.external.ContinuousTestRunner;
 
 import com.google.inject.Inject;

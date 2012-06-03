@@ -1,5 +1,7 @@
 package org.xtest.runner;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.ITestType;
 import org.xtest.runner.external.TestResult;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -30,11 +35,25 @@ public class TestsProvider {
     private final AtomicInteger numTotalTests = new AtomicInteger(-1);
 
     /**
+     * Returns true if all tests are passing, false if not
+     * 
+     * @return True if alltests are passing, false if not
+     */
+    public boolean areAllTestsPassing() {
+        return !Iterables.any(getAllTests(), new Predicate<RunnableTest>() {
+            @Override
+            public boolean apply(RunnableTest input) {
+                return input.getState() == TestResult.FAIL;
+            }
+        });
+    }
+
+    /**
      * Get all tests in the workspace
      * 
      * @return All tests in the workspace
      */
-    public Set<RunnableTest> getAllTests() {
+    public Collection<RunnableTest> getAllTests() {
         final Set<RunnableTest> tests = Sets.newHashSet();
         try {
             ResourcesPlugin.getWorkspace().getRoot().accept(testFinder(tests));
@@ -63,7 +82,7 @@ public class TestsProvider {
      *            The list of changed files
      * @return the set of tests that depend on {@code deltas}
      */
-    public Set<RunnableTest> getTestsFromDeltas(Set<IFile> deltas) {
+    public Collection<RunnableTest> getTestsFromDeltas(Set<IFile> deltas) {
         Set<RunnableTest> result = Sets.newHashSet();
         for (RunnableTest test : getAllTests()) {
             if (!test.hasRun()) {
@@ -106,6 +125,25 @@ public class TestsProvider {
         return tests;
     }
 
+    /**
+     * Returns all of the test files of a given state
+     * 
+     * @param state
+     *            The state of the test files to find
+     * @return All of the test files of a given state
+     */
+    public Collection<IFile> getTestFilesWithState(TestResult state) {
+        List<IFile> results = Lists.newArrayList();
+
+        for (RunnableTest test : getAllTests()) {
+            if (test.getState() == state) {
+                results.add(test.getFile());
+            }
+        }
+
+        return results;
+    }
+
     private TestFinder testFinder(Set<RunnableTest> tests) {
         return new TestFinder(tests, extensions);
     }
@@ -130,5 +168,4 @@ public class TestsProvider {
             return true;
         }
     }
-
 }
