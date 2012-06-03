@@ -23,7 +23,6 @@
             </command>
             <command
                   commandId="org.xtest.runner.runall"
-                  disabledIcon=" "
                   icon="icons/run.gif"
                   id="run_all"
                   tooltip="Run all tests">
