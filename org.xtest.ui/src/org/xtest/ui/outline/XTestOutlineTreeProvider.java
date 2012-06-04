@@ -26,6 +26,7 @@ import org.eclipse.xtext.ui.util.IssueUtil;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.TextRegion;
+import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue;
 import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
@@ -170,7 +171,7 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
                 if (!a.isMarkedDeleted()) {
                     Issue issue = issueUtil.getIssueFromAnnotation(a);
                     if (issue != null && issue.getSeverity() != Severity.INFO
-                            && issue.getOffset() >= 0) {
+                            && issue.getOffset() >= 0 && issue.getType() != CheckType.EXPENSIVE) {
                         result.add(issue);
                     }
                 }
@@ -183,7 +184,8 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
                 for (IMarker marker : findMarkers) {
                     Issue createIssue = issueUtil.createIssue(marker);
                     if (createIssue != null && createIssue.getOffset() >= 0
-                            && createIssue.getLength() >= 0) {
+                            && createIssue.getLength() >= 0 && createIssue.getOffset() >= 0
+                            && createIssue.getType() != CheckType.EXPENSIVE) {
                         result.add(createIssue);
                     }
                 }
