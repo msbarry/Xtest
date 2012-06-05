@@ -146,58 +146,60 @@ public class StatusBar extends WorkbenchWindowControlContribution {
 
     private void paint() {
         Image oldImage = progressBackground;
-        Display display = composite.getDisplay();
-        Rectangle rect = composite.getClientArea();
-        boolean horizontal = rect.width > rect.height;
-        int boundWidth = rect.width;
-        int boundHeight = rect.height;
-        if (horizontal) {
-            boundWidth -= 1;
-        }
-        progressBackground = new Image(display, rect.width, rect.height);
-        GC gc = new GC(progressBackground);
-        try {
-            RGB rgb = passing ? green : red;
-            Color color = new Color(Display.getDefault(), rgb);
+        if (!composite.isDisposed()) {
+            Display display = composite.getDisplay();
+            Rectangle rect = composite.getClientArea();
+            boolean horizontal = rect.width > rect.height;
+            int boundWidth = rect.width;
+            int boundHeight = rect.height;
+            if (horizontal) {
+                boundWidth -= 1;
+            }
+            progressBackground = new Image(display, rect.width, rect.height);
+            GC gc = new GC(progressBackground);
             try {
-                double completionRatio = total == 0 ? 0.0 : worked * 1.0 / total;
+                RGB rgb = passing ? green : red;
+                Color color = new Color(Display.getDefault(), rgb);
+                try {
+                    double completionRatio = total == 0 ? 0.0 : worked * 1.0 / total;
 
-                Rectangle progress;
-                Rectangle unknown;
-                if (horizontal) {
-                    int horizontalDivide = (int) (completionRatio * boundWidth);
-                    int remainder = boundWidth - horizontalDivide;
-                    progress = new Rectangle(0, 0, horizontalDivide, boundHeight);
-                    unknown = new Rectangle(horizontalDivide, 0, remainder, boundHeight);
-                } else {
-                    int verticalDivide = (int) (completionRatio * boundHeight);
-                    int remainder = boundHeight - verticalDivide;
-                    progress = new Rectangle(0, remainder, boundWidth, verticalDivide);
-                    unknown = new Rectangle(0, 0, boundWidth, remainder);
-                }
+                    Rectangle progress;
+                    Rectangle unknown;
+                    if (horizontal) {
+                        int horizontalDivide = (int) (completionRatio * boundWidth);
+                        int remainder = boundWidth - horizontalDivide;
+                        progress = new Rectangle(0, 0, horizontalDivide, boundHeight);
+                        unknown = new Rectangle(horizontalDivide, 0, remainder, boundHeight);
+                    } else {
+                        int verticalDivide = (int) (completionRatio * boundHeight);
+                        int remainder = boundHeight - verticalDivide;
+                        progress = new Rectangle(0, remainder, boundWidth, verticalDivide);
+                        unknown = new Rectangle(0, 0, boundWidth, remainder);
+                    }
 
-                gc.setBackground(color);
-                gc.fillRectangle(progress);
+                    gc.setBackground(color);
+                    gc.fillRectangle(progress);
 
-                gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
-                gc.fillRectangle(unknown);
+                    gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+                    gc.fillRectangle(unknown);
 
-                if (horizontal) {
-                    gc.setBackground(Display.getDefault().getSystemColor(
-                            SWT.COLOR_WIDGET_BACKGROUND));
-                    gc.fillRectangle(boundWidth, 0, 4, boundHeight);
+                    if (horizontal) {
+                        gc.setBackground(Display.getDefault().getSystemColor(
+                                SWT.COLOR_WIDGET_BACKGROUND));
+                        gc.fillRectangle(boundWidth, 0, 4, boundHeight);
+                    }
+                } finally {
+                    color.dispose();
                 }
             } finally {
-                color.dispose();
+                gc.dispose();
             }
-        } finally {
-            gc.dispose();
-        }
-        composite.setBackgroundImage(progressBackground);
+            composite.setBackgroundImage(progressBackground);
 
-        // If there was an old image, get rid of it now
-        if (oldImage != null) {
-            oldImage.dispose();
+            // If there was an old image, get rid of it now
+            if (oldImage != null) {
+                oldImage.dispose();
+            }
         }
     }
 
