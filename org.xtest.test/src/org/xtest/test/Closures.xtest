@@ -1,0 +1,73 @@
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: false
+import org.^xtest.XTestRunner
+
+import static org.junit.Assert.*
+import static org.^xtest.test.XTestRunnerUnitTests.*
+import static org.^xtest.test.TestUtils.*
+
+xtest "assert in closure" {
+    val result = XTestRunner::run('[|assert false].apply', injector);
+    assertEquals("[]",result.evaluationException.toString)
+    assertEquals(1, result.assertExceptions.size)
+    assertEquals("assert false", textOf(result.assertExceptions.head))
+}
+
+xtest "exception in closure" {
+    val result = XTestRunner::run('[|1/0].apply', injector);
+    assertEquals("[]", result.assertExceptions.toString)
+    assertEquals(1,result.evaluationException.size)
+    assertEquals("1/0", textOf(result.evaluationException.head.getExpression))
+}
+
+xtest "exception in closure called through variable" {
+    val result = XTestRunner::run('val a = [|1/0]; a.apply', injector);
+    assertEquals("[]", result.assertExceptions.toString)
+    assertEquals(1,result.evaluationException.size)
+    assertEquals("1/0", textOf(result.evaluationException.head.getExpression))
+}
+
+// TODO Other examples...
+
+//xtest "assert in closure in closure" {
+//    val result = XTestRunner::run('
+//	val assertion = [int a|assert a < 5]
+//	(1..10).forEach[assertion.apply(it)] ', injector);
+//    assertEquals("[]", result.assertExceptions.toString)
+//    assertEquals(1,result.evaluationException.size)
+//    assertEquals("1/0", textOf(result.evaluationException.head.getExpression))
+//}
+//
+//xtest testCaseInAssert {
+//    val result = XTestRunner::run('
+//{ /* wrong!!! */
+//	val assertion = [int a|assert a < 5]
+//	(1..10).forEach[assertion.apply(it)] 
+//}
+//', injector);
+//}
+//
+//{ /* wrong!!! */
+//	val assertion = [int a|assert a < 5]
+//	(1..10).forEach[assertion.apply(it)] 
+//}
+//
+//{ /* error in wrong place! */
+//	val assertion = [int a|?assert a < 5]
+//	(1..10).forEach[assertion.apply(it)]
+//} 
+//
+//{ /* error in wrong place! */
+//	val assertion = [int a|xtest {assert a < 5}]
+//	(1..10).forEach[assertion.apply(it)]
+//} 
+//
+//// OK
+//(1..10).forEach[?assert it < 5]
+//(1..10).forEach[xtest {assert it < 5}]
+//
+//// assertion failure in wrong place!
+//(1..10).forEach[assert it < 5]

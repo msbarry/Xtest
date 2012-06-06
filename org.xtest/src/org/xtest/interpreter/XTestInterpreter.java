@@ -13,6 +13,7 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.XAssignment;
+import org.eclipse.xtext.xbase.XClosure;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.XFeatureCall;
 import org.eclipse.xtext.xbase.XReturnExpression;
@@ -57,7 +58,13 @@ public class XTestInterpreter extends XbaseInterpreter {
     public IEvaluationResult evaluate(XExpression expression, IEvaluationContext context,
             CancelIndicator indicator) {
         try {
-            return super.evaluate(expression, context, indicator);
+            IEvaluationResult evaluate;
+            if (expression.eContainer() instanceof XClosure) {
+                evaluate = evaluateInsideOfClosure(expression, context, indicator);
+            } else {
+                evaluate = super.evaluate(expression, context, indicator);
+            }
+            return evaluate;
         } catch (ReturnValue e) {
             return new DefaultEvaluationResult(e.returnValue, null);
         }
@@ -267,14 +274,38 @@ public class XTestInterpreter extends XbaseInterpreter {
                 throw (RuntimeException) e;
             } else {
                 Throwable cause = e;
-                while (cause instanceof RuntimeException && cause.getCause() != null) {
+                while (cause instanceof RuntimeException
+                        && !(cause instanceof XTestEvaluationException) && cause.getCause() != null) {
                     cause = cause.getCause();
+                }
+                if (cause instanceof XTestAssertException
+                        || cause instanceof XTestEvaluationException) {
+                    throw (RuntimeException) cause;
                 }
                 internalEvaluate = null;
                 handleEvaluationException(new XTestEvaluationException(cause, expression));
             }
         }
         return internalEvaluate;
+    }
+
+    private IEvaluationResult evaluateInsideOfClosure(XExpression expression,
+            IEvaluationContext context, CancelIndicator indicator) {
+        // Same as super.internalEvaluate ...
+        try {
+            Object result = internalEvaluate(expression, context, indicator != null ? indicator
+                    : CancelIndicator.NullImpl);
+            return new DefaultEvaluationResult(result, null);
+        } catch (ReturnValue e) {
+            return new DefaultEvaluationResult(e.returnValue, null);
+        } catch (XTestEvaluationException e) {
+            // ... except throw Xtest evaluation exceptions to be handled by outer expression
+            throw e;
+        } catch (EvaluationException e) {
+            return new DefaultEvaluationResult(null, e.getCause());
+        } catch (InterpreterCanceledException e) {
+            return null;
+        }
     }
 
     /**

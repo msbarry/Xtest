@@ -16,13 +16,12 @@ import org.xtest.results.XTestState;
  * 
  * @author Michael Barry
  */
-public class XTestResultUnitTests {
+public class Closures {
 
     @Test
     public void runXTest() throws IOException {
         // TODO Get rid of this, eventually wean off of Junit tests
-        BufferedReader in = new BufferedReader(new FileReader(
-                "src/org/xtest/test/ResultUnitTests.xtest"));
+        BufferedReader in = new BufferedReader(new FileReader("src/org/xtest/test/Closures.xtest"));
         String line;
         StringBuilder builder = new StringBuilder();
         while ((line = in.readLine()) != null) {
