@@ -9,7 +9,6 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.xbase.XExpression;
 import org.xtest.results.XTestResult;
-import org.xtest.xTest.XAssertExpression;
 
 import com.google.inject.Injector;
 
@@ -136,16 +135,10 @@ public class Main {
             Collection<XTestEvaluationException> evaluationExceptions = test
                     .getEvaluationException();
             List<String> errorMessages = test.getErrorMessages();
-            Collection<XAssertExpression> assertExceptions = test.getAssertExceptions();
             if (!errorMessages.isEmpty()) {
                 System.out.println(indent + "   Couldn't run because of syntax errors:");
                 for (String message : errorMessages) {
                     System.out.println(indent + "   " + message);
-                }
-            } else if (!assertExceptions.isEmpty()) {
-                for (XAssertExpression expression : assertExceptions) {
-                    String line = getLineNumAndText(indent, expression);
-                    System.out.println(indent + "    Assertion failed on line " + line);
                 }
             } else if (!evaluationExceptions.isEmpty()) {
                 for (XTestEvaluationException evaluationException : evaluationExceptions) {

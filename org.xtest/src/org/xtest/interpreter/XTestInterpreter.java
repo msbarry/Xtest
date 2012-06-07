@@ -23,7 +23,7 @@ import org.eclipse.xtext.xbase.interpreter.impl.DefaultEvaluationResult;
 import org.eclipse.xtext.xbase.interpreter.impl.EvaluationException;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
-import org.xtest.XTestAssertException;
+import org.xtest.XTestAssertionFailure;
 import org.xtest.XTestEvaluationException;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
@@ -44,11 +44,12 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
+    private final Stack<XExpression> callStack = new Stack<XExpression>();
     // TODO move some of this stuff into custom context
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
-    private boolean inSafeBlock = false;
+    private int inSafeBlock = 0;
     private XTestResult result;
-    private final Stack<XTestResult> stack = new Stack<XTestResult>();
+    private final Stack<XTestResult> testStack = new Stack<XTestResult>();
     @Inject
     private TypeConformanceComputer typeConformanceComputer;
     @Inject
@@ -89,8 +90,8 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     /**
-     * Evaluates an assert expression. Throws an {@link XTestAssertException} if the assert does not
-     * succeed
+     * Evaluates an assert expression. Throws an {@link XTestAssertionFailure} if the assert does
+     * not succeed
      * 
      * @param assertExpression
      *            The expression to evaluate
@@ -123,7 +124,7 @@ public class XTestInterpreter extends XbaseInterpreter {
                 JvmTypeReference actual = typeReferences.getTypeForName(throwable.getClass(),
                         assertExpression);
                 if (!typeConformanceComputer.isConformant(expected, actual)) {
-                    throw new XTestAssertException(assertExpression);
+                    throw new XTestAssertionFailure("Assertion failed");
                 }
             }
         }
@@ -156,7 +157,7 @@ public class XTestInterpreter extends XbaseInterpreter {
             // In case this is called outside of the context of XtestDiagnostician
             result = new XTestResult(main);
         }
-        stack.push(result);
+        testStack.push(result);
         Object toReturn = null;
         try {
             toReturn = super._evaluateBlockExpression(main, context, indicator);
@@ -166,8 +167,6 @@ public class XTestInterpreter extends XbaseInterpreter {
         } catch (ReturnValue e) {
             toReturn = e.returnValue;
             result.pass();
-        } catch (XTestAssertException e) {
-            result.addFailedAssertion(e.getExpression());
         } catch (XTestEvaluationException e) {
             result.addEvaluationException(e);
         }
@@ -183,12 +182,28 @@ public class XTestInterpreter extends XbaseInterpreter {
         throw new ReturnValue(returnValue);
     }
 
-    protected Object _evaluateSafeExpression(XSafeExpression assertExpression,
+    /**
+     * Evaluates an expression inside an exception-safe block that marks exceptions in containing
+     * tests but continues execution if an exception occurs
+     * 
+     * @param expression
+     *            The expression to evaluate
+     * @param context
+     *            The context of evaluation
+     * @param indicator
+     *            The cancel indicator
+     * @return The result of evaluation the expression, or null if exception was thrown
+     */
+    protected Object _evaluateSafeExpression(XSafeExpression expression,
             IEvaluationContext context, CancelIndicator indicator) {
-        XExpression actual = assertExpression.getActual();
-        inSafeBlock = true;
-        Object result = actual == null ? null : internalEvaluate(actual, context, indicator);
-        inSafeBlock = false;
+        XExpression actual = expression.getActual();
+        inSafeBlock++;
+        Object result = null;
+        try {
+            result = actual == null ? null : internalEvaluate(actual, context, indicator);
+        } finally {
+            inSafeBlock--;
+        }
         return result;
     }
 
@@ -208,9 +223,9 @@ public class XTestInterpreter extends XbaseInterpreter {
         UniqueName name = test.getName();
         String nameStr = getName(name, test, context, indicator);
         XExpression expression = test.getExpression();
-        XTestResult peek = stack.peek();
+        XTestResult peek = testStack.peek();
         XTestResult subTest = peek.subTest(nameStr, test);
-        stack.push(subTest);
+        testStack.push(subTest);
         try {
             internalEvaluate(expression, context, indicator);
             if (subTest.getState() != XTestState.FAIL) {
@@ -218,12 +233,10 @@ public class XTestInterpreter extends XbaseInterpreter {
             }
         } catch (ReturnValue e) {
             subTest.pass();
-        } catch (XTestAssertException e) {
-            subTest.addFailedAssertion(e.getExpression());
         } catch (XTestEvaluationException e) {
             subTest.addEvaluationException(e);
         }
-        stack.pop();
+        testStack.pop();
         return null;
     }
 
@@ -264,13 +277,24 @@ public class XTestInterpreter extends XbaseInterpreter {
         Object internalEvaluate;
         executedExpressions.add(expression);
         try {
-            internalEvaluate = super.internalEvaluate(expression, context, indicator);
+            // replace top of stack with current expression
+            XExpression previous = null;
+            if (!callStack.empty()) {
+                previous = callStack.pop();
+            }
+            callStack.push(expression);
+            try {
+                internalEvaluate = super.internalEvaluate(expression, context, indicator);
+            } finally {
+                callStack.pop();
+                callStack.push(previous != null ? previous : expression);
+            }
         } catch (ReturnValue value) {
             throw value;
         } catch (InterpreterCanceledException e) {
             throw e;
         } catch (Throwable e) {
-            if (e instanceof XTestAssertException || e instanceof XTestEvaluationException) {
+            if (e instanceof XTestEvaluationException) {
                 throw (RuntimeException) e;
             } else {
                 Throwable cause = e;
@@ -278,12 +302,12 @@ public class XTestInterpreter extends XbaseInterpreter {
                         && !(cause instanceof XTestEvaluationException) && cause.getCause() != null) {
                     cause = cause.getCause();
                 }
-                if (cause instanceof XTestAssertException
-                        || cause instanceof XTestEvaluationException) {
+                if (cause instanceof XTestEvaluationException) {
                     throw (RuntimeException) cause;
                 }
                 internalEvaluate = null;
-                handleEvaluationException(new XTestEvaluationException(cause, expression));
+                handleEvaluationException(new XTestEvaluationException(cause,
+                        callStack.firstElement()));
             }
         }
         return internalEvaluate;
@@ -292,6 +316,8 @@ public class XTestInterpreter extends XbaseInterpreter {
     private IEvaluationResult evaluateInsideOfClosure(XExpression expression,
             IEvaluationContext context, CancelIndicator indicator) {
         // Same as super.internalEvaluate ...
+        // push this layer onto the call stack
+        callStack.push(expression);
         try {
             Object result = internalEvaluate(expression, context, indicator != null ? indicator
                     : CancelIndicator.NullImpl);
@@ -305,6 +331,8 @@ public class XTestInterpreter extends XbaseInterpreter {
             return new DefaultEvaluationResult(null, e.getCause());
         } catch (InterpreterCanceledException e) {
             return null;
+        } finally {
+            callStack.pop();
         }
     }
 
@@ -351,17 +379,12 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     private void handleAssertionFailure(XAssertExpression assertExpression) {
-        if (inSafeBlock) {
-            XTestResult peek = stack.peek();
-            peek.addFailedAssertion(assertExpression);
-        } else {
-            throw new XTestAssertException(assertExpression);
-        }
+        throw new XTestAssertionFailure("Assertion Failed");
     }
 
     private void handleEvaluationException(XTestEvaluationException evaluationException) {
-        if (inSafeBlock) {
-            XTestResult peek = stack.peek();
+        if (inSafeBlock > 0) {
+            XTestResult peek = testStack.peek();
             peek.addEvaluationException(evaluationException);
         } else {
             throw evaluationException;

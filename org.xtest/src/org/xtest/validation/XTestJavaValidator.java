@@ -258,11 +258,6 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                 error(run.getQualifiedName() + ": " + error, run.getEObject(), null,
                         TEST_RUN_FAILURE_INDEX);
             }
-            Collection<XAssertExpression> assertExceptions = run.getAssertExceptions();
-            for (XAssertExpression expression : assertExceptions) {
-                error(run.getQualifiedName() + ": Assertion Failed", expression, null,
-                        TEST_RUN_FAILURE_INDEX);
-            }
             markEvaluationExceptions(run);
             for (XTestResult test : run.getSubTests()) {
                 markErrorsFromTest(test);

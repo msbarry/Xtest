@@ -7,7 +7,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.xtest.XTestEvaluationException;
 import org.xtest.validation.XTestJavaValidator;
 import org.xtest.xTest.Body;
-import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XTestExpression;
 
 import com.google.common.collect.Lists;
@@ -23,7 +22,6 @@ public class XTestResult {
      */
     public static final String KEY = "XtestResult";
     private final EObject eObject;
-    private final Collection<XAssertExpression> exceptions = Lists.newArrayList();
     private final Collection<XTestEvaluationException> expressions = Lists.newArrayList();
     private final String name;
     private final XTestResult parent;
@@ -61,17 +59,6 @@ public class XTestResult {
     }
 
     /**
-     * Fails the test and all of its parents, adding the failed assertion.
-     * 
-     * @param exception
-     *            The failed assertion
-     */
-    public void addFailedAssertion(XAssertExpression exception) {
-        fail();
-        this.exceptions.add(exception);
-    }
-
-    /**
      * Fails this test and all of its parents and adds a syntax error for this test.
      * 
      * @param string
@@ -90,15 +77,6 @@ public class XTestResult {
         if (parent != null) {
             parent.fail();
         }
-    }
-
-    /**
-     * Returns the failed assertions
-     * 
-     * @return The failed assertions
-     */
-    public Collection<XAssertExpression> getAssertExceptions() {
-        return exceptions;
     }
 
     /**
@@ -176,9 +154,11 @@ public class XTestResult {
      * Passes this result. Only passes its parent if the parent has not been run yet.
      */
     public void pass() {
-        state = XTestState.PASS;
-        if (parent != null && parent.getState() == XTestState.NOT_RUN) {
-            parent.pass();
+        if (state == XTestState.NOT_RUN) {
+            state = XTestState.PASS;
+            if (parent != null && parent.getState() == XTestState.NOT_RUN) {
+                parent.pass();
+            }
         }
     }
 

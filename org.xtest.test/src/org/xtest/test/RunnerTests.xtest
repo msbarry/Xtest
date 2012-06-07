@@ -2,7 +2,7 @@
 runWhileEditing: false
 // TODO - when Guice fixes memory leak, re-enable running on save
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
-runOnSave: false
+runOnSave: true
 import org.^xtest.XTestRunner
 import org.^xtest.results.XTestState
 
@@ -19,7 +19,7 @@ xtest testCaseInAssert {
     assertEquals("", result.getQualifiedName());
 
     val xTestSuiteResult = result.getSubTests().get(0);
-    assertTrue(xTestSuiteResult.getEvaluationException().empty);
+    assertTrue(!xTestSuiteResult.getEvaluationException().empty);
     assertEquals(XTestState::FAIL, xTestSuiteResult.getState());
     assertEquals("b", xTestSuiteResult.getQualifiedName());
     assertEquals(0, xTestSuiteResult.getSubTests().size());
@@ -278,8 +278,7 @@ xtest testThrowsWrongException {
 xtest testTopLevelAssert {
     val result = XTestRunner::run("assert false", injector);
     assertEquals("[]", result.getErrorMessages().toString());
-    assertTrue(result.getEvaluationException().isEmpty);
-    assertTrue(!result.getAssertExceptions().isEmpty());
+    assertTrue(!result.getEvaluationException().isEmpty);
     assertEquals(XTestState::FAIL, result.getState());
     assertEquals(0, result.getSubTests().size());
 }
@@ -319,7 +318,6 @@ xtest testTrueAssertInCaseInSuiteInSuite {
 
     val xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
     assertTrue(xTestCaseResult.getEvaluationException().empty);
-    assertTrue(result.getAssertExceptions().isEmpty());
     assertEquals(XTestState::PASS, xTestCaseResult.getState());
     assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
 }
@@ -384,7 +382,6 @@ xtest useSUT {
     assertEquals(1, xTestSuiteResult.getSubTests().size());
  
     val caseResult = xTestSuiteResult.getSubTests().get(0);
-    assertTrue(result.getAssertExceptions().isEmpty());
     assertTrue(caseResult.getEvaluationException().empty);
     assertEquals("suite.tcase", caseResult.getQualifiedName());
     assertEquals(XTestState::PASS, caseResult.getState());
@@ -410,8 +407,7 @@ xtest useSUTFail {
     assertEquals(1, xTestSuiteResult.getSubTests().size());
 
     val caseResult = xTestSuiteResult.getSubTests().get(0);
-    assertTrue(result.getAssertExceptions().isEmpty());
-    assertTrue(caseResult.getEvaluationException().empty);
+    assertTrue(!caseResult.getEvaluationException().empty);
     assertEquals("suite.tcase", caseResult.getQualifiedName());
     assertEquals(XTestState::FAIL, caseResult.getState());
 }
@@ -455,11 +451,10 @@ xtest testVerifyExpression {
 ?assert 1+1 throws Exception
 ', injector);
     assertEquals("[]", result.getErrorMessages().toString());
-    assertTrue(result.getEvaluationException().isEmpty);
     assertEquals(XTestState::FAIL, result.getState());
     assertEquals(0, result.getSubTests().size());
     assertEquals("", result.getQualifiedName());
-    assertEquals(2, result.assertExceptions.size);
+    assertEquals(2, result.evaluationException.size);
 }
 
 
@@ -469,7 +464,6 @@ xtest testSafeExpressionGuardsExceptions {
 ?1/0
 ', injector);
     assertEquals("[]", result.getErrorMessages().toString());
-    assertTrue(result.assertExceptions.isEmpty);
     assertEquals(XTestState::FAIL, result.getState());
     assertEquals(0, result.getSubTests().size());
     assertEquals("", result.getQualifiedName());
@@ -526,4 +520,22 @@ assert true}
     assertEquals("1", result.getSubTests.get(0).getName);
     assertTrue(result.getEvaluationException().isEmpty);
     assertEquals(XTestState::PASS, result.getState());
+}
+
+xtest "return after caught exception doesnt pass" {
+    val result = XTestRunner::run('
+?assert false
+return true
+', injector);
+    assertEquals(XTestState::FAIL, result.getState());
+}
+
+xtest "return after caught exception in subtest doesnt pass" {
+    val result = XTestRunner::run('
+xtest {
+?assert false
+return true
+}', injector);
+    assertEquals(XTestState::FAIL, result.getState());
+    assertEquals(XTestState::FAIL, result.getSubTests.head.getState());
 }

@@ -8,26 +8,38 @@ import org.^xtest.XTestRunner
 import static org.junit.Assert.*
 import static org.^xtest.test.XTestRunnerUnitTests.*
 import static org.^xtest.test.TestUtils.*
+import static org.hamcrest.CoreMatchers.*
 
 xtest "assert in closure" {
     val result = XTestRunner::run('[|assert false].apply', injector);
-    assertEquals("[]",result.evaluationException.toString)
-    assertEquals(1, result.assertExceptions.size)
-    assertEquals("assert false", textOf(result.assertExceptions.head))
+    assertEquals(1, result.evaluationException.size)
+    assertEquals("[|assert false].apply", textOf(result.evaluationException.head.getExpression))
 }
 
 xtest "exception in closure" {
     val result = XTestRunner::run('[|1/0].apply', injector);
-    assertEquals("[]", result.assertExceptions.toString)
     assertEquals(1,result.evaluationException.size)
-    assertEquals("1/0", textOf(result.evaluationException.head.getExpression))
+    assertEquals("[|1/0].apply", textOf(result.evaluationException.head.getExpression))
 }
 
 xtest "exception in closure called through variable" {
     val result = XTestRunner::run('val a = [|1/0]; a.apply', injector);
-    assertEquals("[]", result.assertExceptions.toString)
     assertEquals(1,result.evaluationException.size)
-    assertEquals("1/0", textOf(result.evaluationException.head.getExpression))
+    assertEquals("a.apply", textOf(result.evaluationException.head.getExpression))
+}
+
+xtest "exception in test defined in closure" {
+    val result = XTestRunner::run('val a = [|xtest {1/0}]; a.apply', injector);
+    val mappedBottom = result.getSubTests.head.evaluationException.map[textOf(it.getExpression)].toSet
+    assertEquals(0, result.evaluationException.size)
+    ?assertSetEquals(mappedBottom, "a.apply")
+}
+
+xtest "assert failed in test defined in closure" {
+    val result = XTestRunner::run('val a = [|xtest {assert false}]; a.apply', injector);
+    val mappedBottom = result.getSubTests.head.evaluationException.map[textOf(it.getExpression)].toSet
+    ?assertEquals(0, result.evaluationException.size)
+    ?assertSetEquals(mappedBottom, "a.apply")
 }
 
 // TODO Other examples...
