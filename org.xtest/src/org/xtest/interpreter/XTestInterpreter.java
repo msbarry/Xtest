@@ -276,19 +276,14 @@ public class XTestInterpreter extends XbaseInterpreter {
             CancelIndicator indicator) throws EvaluationException {
         Object internalEvaluate;
         executedExpressions.add(expression);
+        XExpression previous = null;
+        if (!callStack.empty()) {
+            previous = callStack.pop();
+        }
+        callStack.push(expression);
         try {
             // replace top of stack with current expression
-            XExpression previous = null;
-            if (!callStack.empty()) {
-                previous = callStack.pop();
-            }
-            callStack.push(expression);
-            try {
-                internalEvaluate = super.internalEvaluate(expression, context, indicator);
-            } finally {
-                callStack.pop();
-                callStack.push(previous != null ? previous : expression);
-            }
+            internalEvaluate = super.internalEvaluate(expression, context, indicator);
         } catch (ReturnValue value) {
             throw value;
         } catch (InterpreterCanceledException e) {
@@ -306,9 +301,11 @@ public class XTestInterpreter extends XbaseInterpreter {
                     throw (RuntimeException) cause;
                 }
                 internalEvaluate = null;
-                handleEvaluationException(new XTestEvaluationException(cause,
-                        callStack.firstElement()));
+                handleEvaluationException(cause, expression);
             }
+        } finally {
+            callStack.pop();
+            callStack.push(previous != null ? previous : expression);
         }
         return internalEvaluate;
     }
@@ -382,12 +379,23 @@ public class XTestInterpreter extends XbaseInterpreter {
         throw new XTestAssertionFailure("Assertion Failed");
     }
 
-    private void handleEvaluationException(XTestEvaluationException evaluationException) {
+    private void handleEvaluationException(Throwable toWrap, XExpression expression) {
+        // Start from the root of the stack and work down until a call has been made that jumps
+        // locations in the file, want to drill down to the most specific expression contained
+        // within the top-level expression that caused the exception
+        XExpression cause = callStack.firstElement();
+        for (XExpression element : callStack) {
+            if (!org.eclipse.xtext.EcoreUtil2.isAncestor(cause, element)) {
+                break;
+            }
+            cause = element;
+        }
+        XTestEvaluationException toThrow = new XTestEvaluationException(toWrap, cause);
         if (inSafeBlock > 0) {
             XTestResult peek = testStack.peek();
-            peek.addEvaluationException(evaluationException);
+            peek.addEvaluationException(toThrow);
         } else {
-            throw evaluationException;
+            throw toThrow;
         }
     }
 

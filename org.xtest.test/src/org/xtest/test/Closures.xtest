@@ -13,13 +13,13 @@ import static org.hamcrest.CoreMatchers.*
 xtest "assert in closure" {
     val result = XTestRunner::run('[|assert false].apply', injector);
     assertEquals(1, result.evaluationException.size)
-    assertEquals("[|assert false].apply", textOf(result.evaluationException.head.getExpression))
+    assertEquals("assert false", textOf(result.evaluationException.head.getExpression))
 }
 
 xtest "exception in closure" {
     val result = XTestRunner::run('[|1/0].apply', injector);
     assertEquals(1,result.evaluationException.size)
-    assertEquals("[|1/0].apply", textOf(result.evaluationException.head.getExpression))
+    assertEquals("1/0", textOf(result.evaluationException.head.getExpression))
 }
 
 xtest "exception in closure called through variable" {
@@ -42,44 +42,9 @@ xtest "assert failed in test defined in closure" {
     ?assertSetEquals(mappedBottom, "a.apply")
 }
 
-// TODO Other examples...
-
-//xtest "assert in closure in closure" {
-//    val result = XTestRunner::run('
-//	val assertion = [int a|assert a < 5]
-//	(1..10).forEach[assertion.apply(it)] ', injector);
-//    assertEquals("[]", result.assertExceptions.toString)
-//    assertEquals(1,result.evaluationException.size)
-//    assertEquals("1/0", textOf(result.evaluationException.head.getExpression))
-//}
-//
-//xtest testCaseInAssert {
-//    val result = XTestRunner::run('
-//{ /* wrong!!! */
-//	val assertion = [int a|assert a < 5]
-//	(1..10).forEach[assertion.apply(it)] 
-//}
-//', injector);
-//}
-//
-//{ /* wrong!!! */
-//	val assertion = [int a|assert a < 5]
-//	(1..10).forEach[assertion.apply(it)] 
-//}
-//
-//{ /* error in wrong place! */
-//	val assertion = [int a|?assert a < 5]
-//	(1..10).forEach[assertion.apply(it)]
-//} 
-//
-//{ /* error in wrong place! */
-//	val assertion = [int a|xtest {assert a < 5}]
-//	(1..10).forEach[assertion.apply(it)]
-//} 
-//
-//// OK
-//(1..10).forEach[?assert it < 5]
-//(1..10).forEach[xtest {assert it < 5}]
-//
-//// assertion failure in wrong place!
-//(1..10).forEach[assert it < 5]
+xtest "assert failed in test defined in closure" {
+    val result = XTestRunner::run('val a = [|xtest {assert false}; 1]; println(newArrayList(1).map[a.apply])', injector);
+    val mappedBottom = result.getSubTests.head.evaluationException.map[textOf(it.getExpression)].toSet
+    ?assertEquals(0, result.evaluationException.size)
+    ?assertSetEquals(mappedBottom, "a.apply")
+}
