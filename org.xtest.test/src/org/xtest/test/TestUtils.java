@@ -38,7 +38,7 @@ public class TestUtils {
         assertEquals("class name", className, element.getClassName());
         assertEquals("method name", methodName, element.getMethodName());
         assertEquals("file name", fileName, element.getFileName());
-        assertEquals("class name", lineNumber, element.getLineNumber());
+        assertEquals("line number", lineNumber, element.getLineNumber());
     }
 
     public static void assertXtestStackTrace(StackTraceElement element, String methodName,

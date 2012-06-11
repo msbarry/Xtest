@@ -1,5 +1,5 @@
 runWhileEditing: false
-runOnSave: true
+runOnSave: false
 
 import org.^xtest.XTestRunner
 
@@ -43,4 +43,13 @@ xtest "nested exception in inline closure" {
     ?stackTrace.get(0).assertXtestStackTrace("1/0", 1)
     ?stackTrace.get(1).assertProxyStackTrace
     ?stackTrace.get(2).assertXtestStackTrace("[|{{1/0}}].apply", 1)
+}
+
+xtest "assert with comment before shouldn't include comment" { 
+    val result = XTestRunner::run('// comment
+assert false', injector);
+    val exception = result.evaluationException.head
+    val stackTrace = exception.getCause.getStackTrace
+    assertEquals(1, stackTrace.size)
+    ?stackTrace.get(0).assertXtestStackTrace("assert false", 2)
 }

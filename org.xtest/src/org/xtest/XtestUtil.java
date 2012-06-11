@@ -8,7 +8,9 @@ import java.util.concurrent.Callable;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
 
 import com.google.common.base.Predicate;
@@ -79,10 +81,15 @@ public class XtestUtil {
      */
     public static String getText(XExpression expression) {
         String name;
-        ICompositeNode node = NodeModelUtils.findActualNodeFor(expression);
+        while (expression instanceof XBlockExpression
+                && !((XBlockExpression) expression).getExpressions().isEmpty()) {
+            expression = ((XBlockExpression) expression).getExpressions().get(0);
+        }
+
+        ICompositeNode node = NodeModelUtils.getNode(expression);
         if (node != null) {
-            name = node.getText().replaceAll("^(\\{|\\s)*", "").replaceAll("[\n\r].*$", "").trim()
-                    .replaceAll("\\}$", "");
+            name = getNodeWithoutComments(node).replaceAll("^(\\{|\\s)*", "")
+                    .replaceAll("[\n\r].*$", "").trim().replaceAll("\\}$", "");
         } else {
             name = "";
         }
@@ -102,6 +109,16 @@ public class XtestUtil {
      */
     public static <T> T runOnNewLevelOfXtestStack(Callable<T> callable) throws Exception {
         return XtestStackMarker.run(callable);
+    }
+
+    private static String getNodeWithoutComments(ICompositeNode node) {
+        INode rootNode = node.getRootNode();
+        if (rootNode != null) {
+            int offset = node.getOffset();
+            int length = node.getLength();
+            return rootNode.getText().substring(offset, offset + length);
+        }
+        return null;
     }
 
     private static StackTraceElement getTraceForExpression(XExpression expression) {

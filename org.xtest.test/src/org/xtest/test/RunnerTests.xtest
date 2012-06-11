@@ -512,6 +512,16 @@ assert true}
     assertEquals(XTestState::PASS, result.getState());
 }
 
+xtest "comment is ignored in test name" {
+    val result = XTestRunner::run('
+xtest {
+// comment
+assert true 
+assert true}
+', injector);
+    assertEquals("assert true", result.getSubTests.get(0).getName);
+}
+
 xtest allowNoDesciptionAndParenthesis {
     val result = XTestRunner::run('
 xtest (1) {assert true 
