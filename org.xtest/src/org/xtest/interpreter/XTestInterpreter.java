@@ -2,6 +2,7 @@ package org.xtest.interpreter;
 
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.Callable;
 
 import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmTypeReference;
@@ -9,8 +10,6 @@ import org.eclipse.xtext.common.types.JvmVoid;
 import org.eclipse.xtext.common.types.access.impl.ClassFinder;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
-import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XClosure;
@@ -23,6 +22,7 @@ import org.eclipse.xtext.xbase.interpreter.impl.DefaultEvaluationResult;
 import org.eclipse.xtext.xbase.interpreter.impl.EvaluationException;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
+import org.xtest.XtestUtil;
 import org.xtest.XTestAssertionFailure;
 import org.xtest.XTestEvaluationException;
 import org.xtest.results.XTestResult;
@@ -49,6 +49,7 @@ public class XTestInterpreter extends XbaseInterpreter {
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
     private int inSafeBlock = 0;
     private XTestResult result;
+    private StackTraceElement[] startTrace = null;
     private final Stack<XTestResult> testStack = new Stack<XTestResult>();
     @Inject
     private TypeConformanceComputer typeConformanceComputer;
@@ -63,6 +64,7 @@ public class XTestInterpreter extends XbaseInterpreter {
             if (expression.eContainer() instanceof XClosure) {
                 evaluate = evaluateInsideOfClosure(expression, context, indicator);
             } else {
+                startTrace = Thread.currentThread().getStackTrace();
                 evaluate = super.evaluate(expression, context, indicator);
             }
             return evaluate;
@@ -310,14 +312,19 @@ public class XTestInterpreter extends XbaseInterpreter {
         return internalEvaluate;
     }
 
-    private IEvaluationResult evaluateInsideOfClosure(XExpression expression,
-            IEvaluationContext context, CancelIndicator indicator) {
+    private IEvaluationResult evaluateInsideOfClosure(final XExpression expression,
+            final IEvaluationContext context, final CancelIndicator indicator) {
         // Same as super.internalEvaluate ...
         // push this layer onto the call stack
         callStack.push(expression);
         try {
-            Object result = internalEvaluate(expression, context, indicator != null ? indicator
-                    : CancelIndicator.NullImpl);
+            Object result = XtestUtil.runOnNewLevelOfXtestStack(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    return internalEvaluate(expression, context, indicator != null ? indicator
+                            : CancelIndicator.NullImpl);
+                }
+            });
             return new DefaultEvaluationResult(result, null);
         } catch (ReturnValue e) {
             return new DefaultEvaluationResult(e.returnValue, null);
@@ -328,6 +335,8 @@ public class XTestInterpreter extends XbaseInterpreter {
             return new DefaultEvaluationResult(null, e.getCause());
         } catch (InterpreterCanceledException e) {
             return null;
+        } catch (Exception e) {
+            return new DefaultEvaluationResult(null, e);
         } finally {
             callStack.pop();
         }
@@ -362,15 +371,8 @@ public class XTestInterpreter extends XbaseInterpreter {
             }
         }
         if (name == null) {
-            ICompositeNode node = NodeModelUtils.findActualNodeFor(test.getExpression());
-            if (node != null) {
-                // Grab the first line of text from inside the test
-                // TODO maybe there is something better to call it?
-                name = node.getText().replaceAll("^(\\{|\\s)*", "").replaceAll("[\n\r].*$", "")
-                        .trim().replaceAll("\\}$", "");
-            } else {
-                name = "";
-            }
+            XExpression expression = test.getExpression();
+            name = XtestUtil.getText(expression);
         }
         return name;
     }
@@ -390,7 +392,11 @@ public class XTestInterpreter extends XbaseInterpreter {
             }
             cause = element;
         }
+        toWrap = XtestUtil.getRootCause(toWrap);
         XTestEvaluationException toThrow = new XTestEvaluationException(toWrap, cause);
+        StackTraceElement[] generatedStack = XtestUtil.generateXtestStackTrace(startTrace,
+                toWrap.getStackTrace(), callStack);
+        toWrap.setStackTrace(generatedStack);
         if (inSafeBlock > 0) {
             XTestResult peek = testStack.peek();
             peek.addEvaluationException(toThrow);

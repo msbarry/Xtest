@@ -22,6 +22,10 @@ import com.google.inject.Injector;
 public class XTestRunnerUnitTests {
     private static Injector injector = XtestInjector.injector;
 
+    public static XTestResult getResult(String input) {
+        return XTestRunner.run(input, injector);
+    }
+
     protected static void assertXtestPasses(String test) {
         XTestResult result = XTestRunner.run(test, injector);
         assertEquals("[]", result.getErrorMessages().toString());
