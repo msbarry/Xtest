@@ -4,7 +4,6 @@ runOnSave: false
 import org.^xtest.XTestRunner
 
 import static org.junit.Assert.*
-import static org.^xtest.test.XTestRunnerUnitTests.*
 import static extension org.^xtest.test.TestUtils.*
 import static org.hamcrest.CoreMatchers.*
  

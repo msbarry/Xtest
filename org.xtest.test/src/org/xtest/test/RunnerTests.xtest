@@ -7,7 +7,7 @@ import org.^xtest.XTestRunner
 import org.^xtest.results.XTestState
 
 import static org.junit.Assert.*
-import static org.^xtest.test.XTestRunnerUnitTests.*
+import static org.^xtest.test.TestUtils.*
 
 xtest testCaseInAssert {
     val result = XTestRunner::run(

@@ -5,9 +5,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ XTestResultUnitTests.class, XTestXBaseRegressionTests.class,
-        XTestRunnerUnitTests.class, XTestRegressionTests.class, XtestOrganizeImportsTest.class,
-        Closures.class, StackTraces.class })
+@SuiteClasses({ XTestResultUnitTests.class, XTestXBaseRegressionTests.class, AllXtestFiles.class })
 public class AllTests {
-
 }

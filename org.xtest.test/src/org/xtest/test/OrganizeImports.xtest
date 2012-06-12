@@ -6,8 +6,7 @@ runOnSave: false
 import org.eclipse.xtext.resource.XtextResource
 import org.^xtest.XTestRunner
 
-import static org.^xtest.test.AssertHelpers.*
-import static org.^xtest.test.XTestRegressionTests.*
+import static org.^xtest.test.TestUtils.*
 
 val helper = [String input|{
     val result = XTestRunner::parse(input, injector)
@@ -98,10 +97,10 @@ val a = new SUT',helper.apply(input))
 
 xtest escapedStaticImport {
 	val input = 
-'import static org.^xtest.test.XTestRegressionTests.*
+'import static org.^xtest.test.TestUtils.*
 val a = interpreter'
 	assertEqualsNormalizeLinebreak(
-'import static org.^xtest.test.XTestRegressionTests.*
+'import static org.^xtest.test.TestUtils.*
 
 val a = interpreter',helper.apply(input))
 }
