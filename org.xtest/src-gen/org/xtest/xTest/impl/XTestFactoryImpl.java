@@ -72,6 +72,9 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 			case XTestPackage.UNIQUE_NAME: return createUniqueName();
 			case XTestPackage.BODY: return createBody();
 			case XTestPackage.XTEST_EXPRESSION: return createXTestExpression();
+			case XTestPackage.PARAMETER: return createParameter();
+			case XTestPackage.JVM_VAR_ARG_ARRAY: return createJvmVarArgArray();
+			case XTestPackage.XMETHOD_DEF: return createXMethodDef();
 			case XTestPackage.XASSERT_EXPRESSION: return createXAssertExpression();
 			case XTestPackage.XSAFE_EXPRESSION: return createXSafeExpression();
 			default:
@@ -121,6 +124,39 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	{
 		XTestExpressionImpl xTestExpression = new XTestExpressionImpl();
 		return xTestExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Parameter createParameter()
+	{
+		ParameterImpl parameter = new ParameterImpl();
+		return parameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JvmVarArgArray createJvmVarArgArray()
+	{
+		JvmVarArgArrayImplCustom jvmVarArgArray = new JvmVarArgArrayImplCustom();
+		return jvmVarArgArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XMethodDef createXMethodDef()
+	{
+		XMethodDefImpl xMethodDef = new XMethodDefImpl();
+		return xMethodDef;
 	}
 
 	/**

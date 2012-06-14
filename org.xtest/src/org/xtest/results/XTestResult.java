@@ -126,7 +126,7 @@ public class XTestResult {
         for (XTestResult cursor = parent; cursor != null; cursor = cursor.parent) {
             if (cursor.getName() != null) {
                 builder.insert(0, '.');
-                builder.insert(0, cursor.getQualifiedName());
+                builder.insert(0, cursor.getName());
             }
         }
         return builder.toString();

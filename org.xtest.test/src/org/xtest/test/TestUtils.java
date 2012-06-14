@@ -58,6 +58,17 @@ public class TestUtils {
         assertEquals(object, invokeXbaseExpression(body));
     }
 
+    public static void assertInvalidSyntax(String script) throws Exception {
+        Body val = parse(script);
+        assertValidationFailed(val);
+    }
+
+    public static void assertIsValidAndEvaluatesTo(Object object, String script) throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+        assertEvaluatesTo(object, val);
+    }
+
     public static void assertProxyStackTrace(StackTraceElement element) {
         assertEquals("method name", "apply", element.getMethodName());
         assertTrue("proxy class", element.getClassName().startsWith("$Proxy"));
@@ -92,6 +103,20 @@ public class TestUtils {
         assertEquals("line number", lineNumber, element.getLineNumber());
     }
 
+    public static void assertValidationFailed(Body parse) throws Exception {
+        IResourceValidator instance = injector.getInstance(IResourceValidator.class);
+        Resource eResource = parse.eResource();
+        List<Issue> validate = instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN,
+                CancelIndicator.NullImpl);
+        List<Issue> errors = Lists.newArrayList();
+        for (Issue issue : validate) {
+            if (issue.getSeverity() == Severity.ERROR) {
+                errors.add(issue);
+            }
+        }
+        assertTrue("expected to find errors but did not", !errors.isEmpty());
+    }
+
     public static void assertValidationPassed(Body parse) throws Exception {
         IResourceValidator instance = injector.getInstance(IResourceValidator.class);
         Resource eResource = parse.eResource();
@@ -106,6 +131,11 @@ public class TestUtils {
         assertEquals("[]", errors.toString());
     }
 
+    public static void assertValidSyntax(String script) throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+    }
+
     public static void assertXtestPasses(String test) {
         XTestResult result = XTestRunner.run(test, injector);
         assertEquals("[]", result.getErrorMessages().toString());
@@ -115,7 +145,8 @@ public class TestUtils {
 
     public static void assertXtestPreEvalFailure(String test) {
         XTestResult result = XTestRunner.run(test, injector);
-        assertTrue(!"[]".equals(result.getErrorMessages().toString()));
+        assertTrue(result.getErrorMessages().toString(),
+                !"[]".equals(result.getErrorMessages().toString()));
         assertEquals(XTestState.FAIL, result.getState());
     }
 

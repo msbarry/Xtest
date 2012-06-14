@@ -36,6 +36,24 @@ UniqueName:
 XTestExpression returns XExpression:
 	{XTestExpression}
 	('xsuite'|'xtest') name=UniqueName (expression=XBlockExpression);
+
+Parameter returns JvmFormalParameter:
+	{Parameter} parameterType=JvmVarArgTypeReference name=ValidID;
+	
+JvmVarArgArray returns JvmGenericArrayTypeReference:
+	{JvmVarArgArray};
+	
+JvmVarArgTypeReference returns JvmTypeReference:
+    JvmTypeReference =>({JvmVarArgArray.componentType=current} '...')?;
+	
+XMethodDef returns XExpression:
+	{XMethodDef}
+	'def'
+	('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')?
+	 (returnType=JvmTypeReference)?
+	 name=ValidID 
+	 ('(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')')?
+	 expression=XBlockExpression;
 	
 XAssertExpression returns XExpression:
 	{XAssertExpression}
@@ -64,7 +82,8 @@ XPrimaryExpression returns XExpression:
 	// Add new expressions
 	XTestExpression |
 	XAssertExpression |
-	XSafeExpression;
+	XSafeExpression |
+	XMethodDef;
 
 // Add static member setting support to Xbase
 StaticEquals:':=';

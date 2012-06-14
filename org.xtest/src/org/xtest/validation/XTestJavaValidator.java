@@ -1,12 +1,16 @@
 package org.xtest.validation;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static org.eclipse.xtext.xbase.validation.IssueCodes.INCOMPATIBLE_RETURN_TYPE;
+import static org.eclipse.xtext.xbase.validation.IssueCodes.INVALID_USE_OF_TYPE;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -14,8 +18,10 @@ import org.eclipse.xtend.core.validation.IssueCodes;
 import org.eclipse.xtend.core.xtend.XtendImport;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.common.types.JvmField;
+import org.eclipse.xtext.common.types.JvmFormalParameter;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmType;
+import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.TypesPackage;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
@@ -27,6 +33,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
@@ -38,9 +45,17 @@ import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
+import org.xtest.xTest.JvmVarArgArray;
+import org.xtest.xTest.Parameter;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XTestPackage;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.TreeMultiset;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -207,6 +222,91 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     }
 
     /**
+     * Checks that method parameter names don't collide with eachother or other local variables
+     * 
+     * @param def
+     *            The method def
+     */
+    @Check
+    public void checkMethodParametersUnique(XMethodDef def) {
+        for (JvmFormalParameter parameter : def.getParameters()) {
+            checkDeclaredVariableName(def, parameter,
+                    TypesPackage.Literals.JVM_FORMAL_PARAMETER__NAME);
+        }
+        checkParameterNames(def.getParameters(), TypesPackage.Literals.JVM_FORMAL_PARAMETER__NAME);
+    }
+
+    /**
+     * Checks that method parameter types are not void
+     * 
+     * @param param
+     *            The method def parameter
+     */
+    @Check
+    public void checkMethodParemeterNotVoid(Parameter param) {
+        if (typeReferences.is(param.getParameterType(), Void.TYPE)) {
+            error("Argument type cannot be void", param.getParameterType(), null,
+                    INVALID_USE_OF_TYPE);
+        }
+    }
+
+    /**
+     * Checks that the declared return type of a method matches the actual return type, if specified
+     * 
+     * @param def
+     *            The method def
+     */
+    @Check
+    public void checkMethodReturnType(XMethodDef def) {
+        JvmTypeReference declaredReturnType = def.getReturnType();
+        if (declaredReturnType != null) {
+            JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(
+                    def.getExpression(), true);
+            if (!typeConformanceComputer.isConformant(declaredReturnType, commonReturnType)) {
+                error("Incompatible return type. Declared " + getNameOfTypes(declaredReturnType)
+                        + " but was " + canonicalName(commonReturnType), def,
+                        XTestPackage.Literals.XMETHOD_DEF__RETURN_TYPE,
+                        ValidationMessageAcceptor.INSIGNIFICANT_INDEX, INCOMPATIBLE_RETURN_TYPE);
+            }
+        }
+    }
+
+    /**
+     * Checks that method def type parameter names are unique
+     * 
+     * @param def
+     *            The method def
+     */
+    @Check
+    public void checkMethodTypeParametersUnique(XMethodDef def) {
+        for (JvmTypeParameter parameter : def.getTypeParameters()) {
+            checkTypeParameter(def, parameter, TypesPackage.Literals.JVM_TYPE_PARAMETER__NAME);
+        }
+
+        checkParameterNames(def.getTypeParameters(), TypesPackage.Literals.JVM_TYPE_PARAMETER__NAME);
+    }
+
+    /**
+     * Checks that var-arg parameter is last, if present
+     * 
+     * @param def
+     *            The method def
+     */
+    @Check
+    public void checkVarArgIsLast(XMethodDef def) {
+        EList<JvmFormalParameter> parameters = def.getParameters();
+        List<JvmFormalParameter> reversedParams = Lists.reverse(parameters);
+        boolean first = true;
+        for (JvmFormalParameter parameter : reversedParams) {
+            if (first) {
+                first = false;
+            } else if (parameter.getParameterType() instanceof JvmVarArgArray) {
+                error("Only last paremeter can be var arg", parameter, null, 0);
+            }
+        }
+    }
+
+    /**
      * Runs the unit test as long as the {@link CheckType} is not {@link DontRunCheck} and marks any
      * failed expressions.
      * 
@@ -231,6 +331,29 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             }
             getContext().put(XTestResult.KEY, result);
         }
+    }
+
+    protected void checkParameterNames(EList<? extends EObject> typeParameters,
+            final EAttribute nameAttr) {
+        Multiset<String> typeParamNames = TreeMultiset.create(Iterables.transform(typeParameters,
+                new Function<EObject, String>() {
+                    @Override
+                    public String apply(EObject input) {
+                        return (String) input.eGet(nameAttr);
+                    }
+                }));
+        for (EObject typeParam : typeParameters) {
+            String name = (String) typeParam.eGet(nameAttr);
+            if (typeParamNames.count(name) > 1) {
+                error("Duplicate type parameter name '" + name + "'", typeParam, nameAttr,
+                        org.eclipse.xtext.xbase.validation.IssueCodes.VARIABLE_NAME_SHADOWING);
+            }
+        }
+    }
+
+    protected void checkTypeParameter(EObject nameDeclarator, EObject attributeHolder,
+            EAttribute attr) {
+        // TODO check that type paremter names do not collide with any other types
     }
 
     @Override

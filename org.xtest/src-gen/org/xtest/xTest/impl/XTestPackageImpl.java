@@ -21,8 +21,11 @@ import org.eclipse.xtext.xbase.XbasePackage;
 
 import org.xtest.xTest.Body;
 import org.xtest.xTest.FileParam;
+import org.xtest.xTest.JvmVarArgArray;
+import org.xtest.xTest.Parameter;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestFactory;
@@ -63,6 +66,27 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * @generated
 	 */
 	private EClass xTestExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass parameterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jvmVarArgArrayEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass xMethodDefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -269,6 +293,86 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getParameter()
+	{
+		return parameterEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJvmVarArgArray()
+	{
+		return jvmVarArgArrayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getXMethodDef()
+	{
+		return xMethodDefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getXMethodDef_TypeParameters()
+	{
+		return (EReference)xMethodDefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getXMethodDef_ReturnType()
+	{
+		return (EReference)xMethodDefEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getXMethodDef_Name()
+	{
+		return (EAttribute)xMethodDefEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getXMethodDef_Parameters()
+	{
+		return (EReference)xMethodDefEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getXMethodDef_Expression()
+	{
+		return (EReference)xMethodDefEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getXAssertExpression()
 	{
 		return xAssertExpressionEClass;
@@ -360,6 +464,17 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		createEReference(xTestExpressionEClass, XTEST_EXPRESSION__NAME);
 		createEReference(xTestExpressionEClass, XTEST_EXPRESSION__EXPRESSION);
 
+		parameterEClass = createEClass(PARAMETER);
+
+		jvmVarArgArrayEClass = createEClass(JVM_VAR_ARG_ARRAY);
+
+		xMethodDefEClass = createEClass(XMETHOD_DEF);
+		createEReference(xMethodDefEClass, XMETHOD_DEF__TYPE_PARAMETERS);
+		createEReference(xMethodDefEClass, XMETHOD_DEF__RETURN_TYPE);
+		createEAttribute(xMethodDefEClass, XMETHOD_DEF__NAME);
+		createEReference(xMethodDefEClass, XMETHOD_DEF__PARAMETERS);
+		createEReference(xMethodDefEClass, XMETHOD_DEF__EXPRESSION);
+
 		xAssertExpressionEClass = createEClass(XASSERT_EXPRESSION);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__ACTUAL);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__THROWS);
@@ -404,6 +519,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		// Add supertypes to classes
 		bodyEClass.getESuperTypes().add(theXbasePackage.getXBlockExpression());
 		xTestExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
+		parameterEClass.getESuperTypes().add(theTypesPackage.getJvmFormalParameter());
+		jvmVarArgArrayEClass.getESuperTypes().add(theTypesPackage.getJvmGenericArrayTypeReference());
+		xMethodDefEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xAssertExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xSafeExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 
@@ -423,6 +541,17 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		initEClass(xTestExpressionEClass, XTestExpression.class, "XTestExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getXTestExpression_Name(), this.getUniqueName(), null, "name", null, 0, 1, XTestExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getXTestExpression_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(jvmVarArgArrayEClass, JvmVarArgArray.class, "JvmVarArgArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(xMethodDefEClass, XMethodDef.class, "XMethodDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getXMethodDef_TypeParameters(), theTypesPackage.getJvmTypeParameter(), null, "typeParameters", null, 0, -1, XMethodDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getXMethodDef_ReturnType(), theTypesPackage.getJvmTypeReference(), null, "returnType", null, 0, 1, XMethodDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getXMethodDef_Name(), ecorePackage.getEString(), "name", null, 0, 1, XMethodDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getXMethodDef_Parameters(), theTypesPackage.getJvmFormalParameter(), null, "parameters", null, 0, -1, XMethodDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getXMethodDef_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XMethodDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(xAssertExpressionEClass, XAssertExpression.class, "XAssertExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getXAssertExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -79,6 +79,7 @@ Workflow {
     }
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
 		srcPath = "platform:/resource/org.xtest/src"
+		srcPath = "platform:/resource/org.eclipse.xtext.common.types/src"
 		genModel = "platform:/resource/org.xtest/src-gen/org/xtest/XTest.genmodel"
 	}
 }

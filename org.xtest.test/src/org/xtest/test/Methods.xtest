@@ -1,0 +1,130 @@
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: true
+ 
+import static org.junit.Assert.*
+import static extension org.^xtest.test.TestUtils.*
+
+xtest "method def validation" {
+	xtest "no arg, empty" {
+		xtest { assertValidSyntax('def function {}') }
+		
+		xtest { assertInvalidSyntax('def {}') }
+		xtest { assertInvalidSyntax('def function') }
+	}
+	
+	xtest "no arg, with body" {
+		xtest { assertValidSyntax('def function {return 0}') }
+		xtest { assertValidSyntax('def function {0}') }
+		
+		xtest { assertInvalidSyntax('def {return 0}') }
+	}
+	
+	xtest "with args" {
+		xtest { assertValidSyntax('def function() {}') }
+		xtest { assertValidSyntax('def function(int... i) {}') }
+		xtest { assertValidSyntax('def function(int i) {}') }
+		xtest { assertValidSyntax('def function(int i) {i+1}') } 
+		xtest { assertValidSyntax('def function(int i, String a) {}') }
+		xtest { assertValidSyntax('def function(String a) {a.toUpperCase}') }
+		xtest { assertValidSyntax  ('def function(java.util.List<String> a) {a.map[it.toUpperCase]}') }
+		
+		xtest { assertInvalidSyntax('def function(int i) {j+1}') }
+		xtest { assertInvalidSyntax('def function(int a) {a.toUpperCase}') }
+		xtest { assertInvalidSyntax('def function(int i, String a)') }
+		xtest { assertInvalidSyntax('def function(void i) {}') }
+		
+		xtest "duplicate variable name" {
+			 assertValidSyntax  ('def function(int i, String j) {}') 
+			 assertInvalidSyntax('def function(int i, String i) {}') 
+		}
+
+		xtest "can only shadow 'it' keyword" {
+			 assertValidSyntax('def function(int a) {}') 
+			 assertValidSyntax("def function(int it) {}") 
+			 assertInvalidSyntax("def function(int this) {}") 
+			 assertInvalidSyntax("def function(int super) {}") 
+		}
+
+		xtest "var name conflicts with outside var name" {
+			 assertValidSyntax('val i = 1; def function(int a) {}')
+			 assertInvalidSyntax('val i = 1; def function(int i) {}') 
+		}
+		xtest "inside var name conflicts with param name" {
+			 assertValidSyntax('def function(int a) {val i = 1; return i}')
+			 assertInvalidSyntax('def function(int i) {val i = 1; return i}') 
+		}
+		xtest "insde var conflicts with outside var" {
+			 assertInvalidSyntax('def function(int i, String i)') 
+		}
+	}
+	
+	xtest "with return type" {
+		xtest { assertValidSyntax('def Integer function() {0}') }
+		
+		xtest { assertValidSyntax('def String function() {return "a"}') }
+		
+		xtest { assertInvalidSyntax('def String function()') }
+		
+		xtest "return type doesnt match" { 
+			assertValidSyntax('def int function() {return 1}')
+			assertInvalidSyntax('def String function() {return 1}')
+		}
+		
+		xtest "inferred return type doesnt match" { 
+			assertValidSyntax('def int function() {1}')
+			assertInvalidSyntax('def String function() {1}')
+		}
+	}
+	
+	xtest "with type parameter" {
+		xtest { assertValidSyntax('def <T> T function(T input) {}') }
+		xtest { assertValidSyntax('def <T extends Number> T function(T input) {1 as T}') }
+		xtest { assertValidSyntax('def <T extends Comparable<? super String>> T function(T input) {return null as T}') }
+		xtest { assertValidSyntax('def <T extends String> function(T input) {}') }
+		xtest { assertValidSyntax('def <T extends String, U extends Integer> function(T input, U input2) {}') }
+		xtest { assertValidSyntax('def <T> T method(T t) {}') }
+		xtest { assertValidSyntax('def <T> method(T t) {}') }
+		
+		xtest { assertInvalidSyntax('def <T> T function(T input)') }
+		xtest { assertInvalidSyntax('def <T> T function(U input) {}') }
+		xtest { assertInvalidSyntax('def <T> U function(T input) {}') }
+		xtest { assertInvalidSyntax('def <T extends String, T extends Integer> function(T input, T input2) {}') }
+		
+		xtest "use type parameter" {
+			assertValidSyntax('def <T> method(T t) {val T i = t}')
+			assertInvalidSyntax('def <T> method(T t) {val U i = t}')
+		}
+		
+		xtest "nested method uses type parameter" {
+			assertValidSyntax('def <T> method(T t) {def T nestedMethod(T t2) {}}')
+			assertInvalidSyntax('def <T> method(T t) {def U nestedMethod(U t2) {}}')
+		}
+		
+		xtest "nested method with conflicting type parameter" {
+			assertValidSyntax('def <T> method(T t) {def <U> U nestedMethod(U u) {}}')
+			assertInvalidSyntax('def <T> method(T t) {def <T> T nestedMethod(T u) {}}')
+		}
+		xtest "type parameter only available inside method def" {
+			assertValidSyntax('def <T> method(T t) {}')
+			assertValidSyntax('def <T> method(T t) {}; def <T> method2(T t) {}')
+			assertInvalidSyntax('val T a = null; def <T> method(T t) {}')
+			assertInvalidSyntax('def <T> method(T t) {}; val T a = null')
+		}
+	}
+	
+	xtest "varargs" { 
+		xtest { assertValidSyntax  ('def function(int[] a) {}') } 
+		xtest { assertValidSyntax  ('def function(int[] a, String b) {}') }
+		xtest { assertValidSyntax  ('def function(int a, String[] b) {}') }
+		xtest { assertValidSyntax  ('def function(int i, String... a) {}') }
+		xtest { assertInvalidSyntax('def function(int... i, String a) {}') }
+		
+		xtest { assertValidSyntax  ('def function(String... a) {a.map[it.toUpperCase]}') } 
+		xtest { assertInvalidSyntax('def function(String a) {a.map[it.toUpperCase]}') }
+		xtest { assertValidSyntax  ('def function(String[] a) {a.map[it.toUpperCase]}') } 
+	}
+//	NEXT?
+}
