@@ -12,6 +12,7 @@ import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmEnumerationLiteral;
 import org.eclipse.xtext.common.types.JvmEnumerationType;
 import org.eclipse.xtext.common.types.JvmFormalParameter;
+import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -181,10 +182,27 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         }
     }
 
+    /**
+     * Adds function parameters to the scope of a function's body
+     * 
+     * @param def
+     *            The method def
+     * @param parentScope
+     *            The parent scope
+     * @return Scope for the function's body containing the method's parameters
+     */
     protected IScope createLocalVarScopeForMethodDef(XMethodDef def, IScope parentScope) {
         List<IValidatedEObjectDescription> descriptions = Lists.newArrayList();
-        EList<JvmFormalParameter> params = def.getParameters();
-        for (JvmFormalParameter p : params) {
+        for (JvmFormalParameter p : def.getParameters()) {
+            String name = p.getName();
+            if (name != null) {
+                QualifiedName create = QualifiedName.create(name);
+                IValidatedEObjectDescription desc;
+                desc = new LocalVarDescription(create, p);
+                descriptions.add(desc);
+            }
+        }
+        for (JvmTypeParameter p : def.getTypeParameters()) {
             String name = p.getName();
             if (name != null) {
                 QualifiedName create = QualifiedName.create(name);

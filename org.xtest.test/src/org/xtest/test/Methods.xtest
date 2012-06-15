@@ -7,8 +7,8 @@ runOnSave: true
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
 
-xtest "method def validation" {
-	xtest "no arg, empty" {
+xtest "validation" {
+	xtest "no arg, no body" {
 		xtest { assertValidSyntax('def function {}') }
 		
 		xtest { assertInvalidSyntax('def {}') }
@@ -22,7 +22,7 @@ xtest "method def validation" {
 		xtest { assertInvalidSyntax('def {return 0}') }
 	}
 	
-	xtest "with args" {
+	xtest "args" {
 		xtest { assertValidSyntax('def function() {}') }
 		xtest { assertValidSyntax('def function(int... i) {}') }
 		xtest { assertValidSyntax('def function(int i) {}') }
@@ -61,7 +61,7 @@ xtest "method def validation" {
 		}
 	}
 	
-	xtest "with return type" {
+	xtest "return type" {
 		xtest { assertValidSyntax('def Integer function() {0}') }
 		
 		xtest { assertValidSyntax('def String function() {return "a"}') }
@@ -79,7 +79,7 @@ xtest "method def validation" {
 		}
 	}
 	
-	xtest "with type parameter" {
+	xtest "type parameter" {
 		xtest { assertValidSyntax('def <T> T function(T input) {}') }
 		xtest { assertValidSyntax('def <T extends Number> T function(T input) {1 as T}') }
 		xtest { assertValidSyntax('def <T extends Comparable<? super String>> T function(T input) {return null as T}') }
@@ -103,9 +103,9 @@ xtest "method def validation" {
 			assertInvalidSyntax('def <T> method(T t) {def U nestedMethod(U t2) {}}')
 		}
 		
-		xtest "nested method with conflicting type parameter" {
+		xtest "nested method with conflicting type parameter is allowed, like java" {
 			assertValidSyntax('def <T> method(T t) {def <U> U nestedMethod(U u) {}}')
-			assertInvalidSyntax('def <T> method(T t) {def <T> T nestedMethod(T u) {}}')
+			assertValidSyntax('def <T> method(T t) {def <T> T nestedMethod(T u) {}}')
 		}
 		xtest "type parameter only available inside method def" {
 			assertValidSyntax('def <T> method(T t) {}')
@@ -126,5 +126,5 @@ xtest "method def validation" {
 		xtest { assertInvalidSyntax('def function(String a) {a.map[it.toUpperCase]}') }
 		xtest { assertValidSyntax  ('def function(String[] a) {a.map[it.toUpperCase]}') } 
 	}
-//	NEXT?
+	
 }

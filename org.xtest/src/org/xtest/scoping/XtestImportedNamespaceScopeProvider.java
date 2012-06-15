@@ -3,20 +3,30 @@ package org.xtest.scoping;
 import static java.util.Collections.singletonList;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtend.core.scoping.XtendImportedNamespaceScopeProvider;
 import org.eclipse.xtend.core.xtend.XtendImport;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
+import org.eclipse.xtext.scoping.impl.MultimapBasedSelectable;
 import org.eclipse.xtext.scoping.impl.ScopeBasedSelectable;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.xtest.xTest.Body;
+import org.xtest.xTest.XMethodDef;
+import org.xtest.xTest.XTestPackage;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 /**
@@ -58,7 +68,29 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
             result = createImportScope(result, singletonList(localNormalizer), allDescriptions,
                     reference.getEReferenceType(), isIgnoreCase(reference));
         }
+        if (context instanceof XMethodDef
+                && reference != XTestPackage.Literals.XMETHOD_DEF__TYPE_PARAMETERS) {
+            result = Scopes.scopeFor(((XMethodDef) context).getTypeParameters(), result);
+        }
         return result;
+    }
+
+    @Override
+    protected ISelectable internalGetAllDescriptions(final Resource resource) {
+        Iterable<EObject> allContents = Iterables.filter(new Iterable<EObject>() {
+            @Override
+            public Iterator<EObject> iterator() {
+                return EcoreUtil.getAllContents(resource, false);
+            }
+        }, new Predicate<EObject>() {
+            @Override
+            public boolean apply(EObject input) {
+                return input.eContainer() == null || !(input.eContainer() instanceof XMethodDef);
+            }
+        });
+        Iterable<IEObjectDescription> allDescriptions = Scopes.scopedElementsFor(allContents,
+                getQualifiedNameProvider());
+        return new MultimapBasedSelectable(allDescriptions);
     }
 
     @Override

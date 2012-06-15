@@ -21,7 +21,6 @@ import org.eclipse.xtext.common.types.JvmField;
 import org.eclipse.xtext.common.types.JvmFormalParameter;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmType;
-import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.TypesPackage;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
@@ -279,10 +278,6 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      */
     @Check
     public void checkMethodTypeParametersUnique(XMethodDef def) {
-        for (JvmTypeParameter parameter : def.getTypeParameters()) {
-            checkTypeParameter(def, parameter, TypesPackage.Literals.JVM_TYPE_PARAMETER__NAME);
-        }
-
         checkParameterNames(def.getTypeParameters(), TypesPackage.Literals.JVM_TYPE_PARAMETER__NAME);
     }
 
@@ -333,6 +328,14 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
         }
     }
 
+    /**
+     * Checks that a parameter name is only used once
+     * 
+     * @param typeParameters
+     *            List of parameters
+     * @param nameAttr
+     *            Attribute containing the name
+     */
     protected void checkParameterNames(EList<? extends EObject> typeParameters,
             final EAttribute nameAttr) {
         Multiset<String> typeParamNames = TreeMultiset.create(Iterables.transform(typeParameters,
@@ -349,11 +352,6 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                         org.eclipse.xtext.xbase.validation.IssueCodes.VARIABLE_NAME_SHADOWING);
             }
         }
-    }
-
-    protected void checkTypeParameter(EObject nameDeclarator, EObject attributeHolder,
-            EAttribute attr) {
-        // TODO check that type paremter names do not collide with any other types
     }
 
     @Override

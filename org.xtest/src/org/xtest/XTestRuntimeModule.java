@@ -5,6 +5,7 @@ import org.eclipse.xtend.core.formatting.OrganizeImports.ReferenceAcceptor;
 import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelInferrer;
 import org.eclipse.xtext.xbase.linking.FeatureCallChecker;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.eclipse.xtext.xbase.scoping.XbaseScopeProvider;
@@ -13,6 +14,7 @@ import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.formatting.XtestOrganizeImports;
 import org.xtest.formatting.XtestReferenceAcceptor;
 import org.xtest.interpreter.XTestInterpreter;
+import org.xtest.jvmmodel.XTestJvmModelInferrer;
 import org.xtest.linking.XtestFeatureCallChecker;
 import org.xtest.scoping.XTestScopeProvider;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
@@ -35,6 +37,10 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends FeatureCallChecker> bindFeatureCallChecker() {
         return XtestFeatureCallChecker.class;
+    }
+
+    public Class<? extends IJvmModelInferrer> bindIJvmModelInferrer() {
+        return XTestJvmModelInferrer.class;
     }
 
     @Override
