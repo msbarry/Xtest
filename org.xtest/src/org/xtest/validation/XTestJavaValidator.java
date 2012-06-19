@@ -228,9 +228,11 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      */
     @Check
     public void checkMethodParametersUnique(XMethodDef def) {
-        for (JvmFormalParameter parameter : def.getParameters()) {
-            checkDeclaredVariableName(def, parameter,
-                    TypesPackage.Literals.JVM_FORMAL_PARAMETER__NAME);
+        if (!def.isStatic()) {
+            for (JvmFormalParameter parameter : def.getParameters()) {
+                checkDeclaredVariableName(def, parameter,
+                        TypesPackage.Literals.JVM_FORMAL_PARAMETER__NAME);
+            }
         }
         checkParameterNames(def.getParameters(), TypesPackage.Literals.JVM_FORMAL_PARAMETER__NAME);
     }

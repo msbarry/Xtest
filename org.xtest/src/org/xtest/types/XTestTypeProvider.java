@@ -1,5 +1,8 @@
 package org.xtest.types;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.common.types.JvmAnyTypeReference;
 import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
@@ -10,8 +13,10 @@ import org.eclipse.xtext.xbase.XFeatureCall;
 import org.eclipse.xtext.xbase.impl.XFeatureCallImplCustom;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
+import org.xtest.xTest.XTestPackage;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -27,6 +32,17 @@ import com.google.inject.Singleton;
 public class XTestTypeProvider extends XbaseTypeProvider {
     @Inject
     private TypeReferences typeRefs;
+
+    @Override
+    protected JvmTypeReference expectedType(EObject container, EReference reference, int index,
+            boolean rawType) {
+        if (container instanceof XMethodDef
+                && reference == XTestPackage.Literals.XMETHOD_DEF__EXPRESSION) {
+            return _expectedType((XMethodDef) container);
+        } else {
+            return super.expectedType(container, reference, index, rawType);
+        }
+    }
 
     @Override
     protected JvmTypeReference type(XExpression expression, JvmTypeReference rawExpectation,
@@ -50,6 +66,8 @@ public class XTestTypeProvider extends XbaseTypeProvider {
             } else {
                 result = typeRefs.getTypeForName(Class.class, expression);
             }
+        } else if (expression instanceof XMethodDef) {
+            result = getPrimitiveVoid(expression);
         } else {
             result = super.type(expression, rawExpectation, rawType);
         }
@@ -69,5 +87,27 @@ public class XTestTypeProvider extends XbaseTypeProvider {
             result = super.typeForIdentifiable(identifiable, rawType);
         }
         return result;
+    }
+
+    private JvmTypeReference _expectedType(XMethodDef function) {
+        JvmTypeReference declaredOrInferredReturnType = function.getReturnType();
+        if (declaredOrInferredReturnType == null) {
+            declaredOrInferredReturnType = getCommonReturnType(function.getExpression(), true);
+            // if (declaredOrInferredReturnType != null &&
+            // !earlyExitComputer.isEarlyExit(function.getExpression())) {
+            // if (!getTypeReferences().is(declaredOrInferredReturnType, Void.TYPE))
+            // declaredOrInferredReturnType =
+            // primitives.asWrapperTypeIfPrimitive(declaredOrInferredReturnType);
+            // }
+        }
+        if (declaredOrInferredReturnType == null
+                || getTypeReferences().is(declaredOrInferredReturnType, Void.TYPE)) {
+            return null;
+        }
+        if (declaredOrInferredReturnType instanceof JvmAnyTypeReference) {
+            declaredOrInferredReturnType = getTypeReferences().getTypeForName(Object.class,
+                    function);
+        }
+        return declaredOrInferredReturnType;
     }
 }

@@ -12,14 +12,17 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtend.core.scoping.XtendImportedNamespaceScopeProvider;
 import org.eclipse.xtend.core.xtend.XtendImport;
+import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.scoping.impl.FilteringScope;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.scoping.impl.MultimapBasedSelectable;
 import org.eclipse.xtext.scoping.impl.ScopeBasedSelectable;
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XMethodDef;
@@ -28,6 +31,7 @@ import org.xtest.xTest.XTestPackage;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 
 /**
  * Change {@link XbaseImportedNamespaceScopeProvider} so that it does not process static imports.
@@ -37,6 +41,9 @@ import com.google.common.collect.Lists;
  */
 @SuppressWarnings("restriction")
 public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceScopeProvider {
+
+    @Inject
+    private IJvmModelAssociations associations;
 
     @Override
     protected IScope getLocalElementsScope(IScope parent, final EObject context,
@@ -68,8 +75,20 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
             result = createImportScope(result, singletonList(localNormalizer), allDescriptions,
                     reference.getEReferenceType(), isIgnoreCase(reference));
         }
+
+        // Add method type parameters to LOCAL scope
         if (context instanceof XMethodDef
                 && reference != XTestPackage.Literals.XMETHOD_DEF__TYPE_PARAMETERS) {
+            if (((XMethodDef) context).isStatic()) {
+
+                // Except if method is static, it loses surrounding type parameter scope
+                result = new FilteringScope(result, new Predicate<IEObjectDescription>() {
+                    @Override
+                    public boolean apply(IEObjectDescription input) {
+                        return !(input.getEObjectOrProxy() instanceof JvmTypeParameter);
+                    }
+                });
+            }
             result = Scopes.scopeFor(((XMethodDef) context).getTypeParameters(), result);
         }
         return result;
@@ -77,6 +96,7 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
 
     @Override
     protected ISelectable internalGetAllDescriptions(final Resource resource) {
+        // Filter out meythod type parameter declarations from global scope
         Iterable<EObject> allContents = Iterables.filter(new Iterable<EObject>() {
             @Override
             public Iterator<EObject> iterator() {
@@ -85,7 +105,8 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
         }, new Predicate<EObject>() {
             @Override
             public boolean apply(EObject input) {
-                return input.eContainer() == null || !(input.eContainer() instanceof XMethodDef);
+                return input.eContainer() == null || !(input.eContainer() instanceof XMethodDef)
+                        && associations.getPrimarySourceElement(input) == null;
             }
         });
         Iterable<IEObjectDescription> allDescriptions = Scopes.scopedElementsFor(allContents,

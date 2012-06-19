@@ -306,13 +306,22 @@ public interface XTestPackage extends EPackage
 	int XMETHOD_DEF = 6;
 
 	/**
+	 * The feature id for the '<em><b>Static</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__STATIC = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Type Parameters</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int XMETHOD_DEF__TYPE_PARAMETERS = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+	int XMETHOD_DEF__TYPE_PARAMETERS = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Return Type</b></em>' containment reference.
@@ -321,7 +330,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XMETHOD_DEF__RETURN_TYPE = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
+	int XMETHOD_DEF__RETURN_TYPE = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -330,7 +339,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XMETHOD_DEF__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
+	int XMETHOD_DEF__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
@@ -339,7 +348,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XMETHOD_DEF__PARAMETERS = XbasePackage.XEXPRESSION_FEATURE_COUNT + 3;
+	int XMETHOD_DEF__PARAMETERS = XbasePackage.XEXPRESSION_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -348,7 +357,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XMETHOD_DEF__EXPRESSION = XbasePackage.XEXPRESSION_FEATURE_COUNT + 4;
+	int XMETHOD_DEF__EXPRESSION = XbasePackage.XEXPRESSION_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>XMethod Def</em>' class.
@@ -357,7 +366,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XMETHOD_DEF_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 5;
+	int XMETHOD_DEF_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.xtest.xTest.impl.XAssertExpressionImpl <em>XAssert Expression</em>}' class.
@@ -582,6 +591,17 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 */
 	EClass getXMethodDef();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.xtest.xTest.XMethodDef#isStatic <em>Static</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Static</em>'.
+	 * @see org.xtest.xTest.XMethodDef#isStatic()
+	 * @see #getXMethodDef()
+	 * @generated
+	 */
+	EAttribute getXMethodDef_Static();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.xtest.xTest.XMethodDef#getTypeParameters <em>Type Parameters</em>}'.
@@ -847,6 +867,14 @@ public interface XTestPackage extends EPackage
 		 * @generated
 		 */
 		EClass XMETHOD_DEF = eINSTANCE.getXMethodDef();
+
+		/**
+		 * The meta object literal for the '<em><b>Static</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute XMETHOD_DEF__STATIC = eINSTANCE.getXMethodDef_Static();
 
 		/**
 		 * The meta object literal for the '<em><b>Type Parameters</b></em>' containment reference list feature.

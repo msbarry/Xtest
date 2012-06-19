@@ -409,7 +409,10 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XMethodDef");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Action cXMethodDefAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cDefKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final UnorderedGroup cUnorderedGroup_1 = (UnorderedGroup)cGroup.eContents().get(1);
+		private final Keyword cDefKeyword_1_0 = (Keyword)cUnorderedGroup_1.eContents().get(0);
+		private final Assignment cStaticAssignment_1_1 = (Assignment)cUnorderedGroup_1.eContents().get(1);
+		private final Keyword cStaticStaticKeyword_1_1_0 = (Keyword)cStaticAssignment_1_1.eContents().get(0);
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
 		private final Keyword cLessThanSignKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
 		private final Assignment cTypeParametersAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
@@ -438,16 +441,16 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//XMethodDef returns XExpression:
 		//
-		//	{XMethodDef} "def" ("<" typeParameters+=JvmTypeParameter ("," typeParameters+=JvmTypeParameter)* ">")?
+		//	{XMethodDef} ("def" & static?="static"?) ("<" typeParameters+=JvmTypeParameter (","
 		//
-		//	returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter ("," parameters+=Parameter)*)? ")")?
+		//	typeParameters+=JvmTypeParameter)* ">")? returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter (","
 		//
-		//	expression=XBlockExpression;
+		//	parameters+=Parameter)*)? ")")? expression=XBlockExpression;
 		public ParserRule getRule() { return rule; }
 
-		//{XMethodDef} "def" ("<" typeParameters+=JvmTypeParameter ("," typeParameters+=JvmTypeParameter)* ">")?
+		//{XMethodDef} ("def" & static?="static"?) ("<" typeParameters+=JvmTypeParameter ("," typeParameters+=JvmTypeParameter)*
 		//
-		//returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter ("," parameters+=Parameter)*)? ")")?
+		//">")? returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter ("," parameters+=Parameter)*)? ")")?
 		//
 		//expression=XBlockExpression
 		public Group getGroup() { return cGroup; }
@@ -455,8 +458,17 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//{XMethodDef}
 		public Action getXMethodDefAction_0() { return cXMethodDefAction_0; }
 
+		//"def" & static?="static"?
+		public UnorderedGroup getUnorderedGroup_1() { return cUnorderedGroup_1; }
+
 		//"def"
-		public Keyword getDefKeyword_1() { return cDefKeyword_1; }
+		public Keyword getDefKeyword_1_0() { return cDefKeyword_1_0; }
+
+		//static?="static"?
+		public Assignment getStaticAssignment_1_1() { return cStaticAssignment_1_1; }
+
+		//"static"
+		public Keyword getStaticStaticKeyword_1_1_0() { return cStaticStaticKeyword_1_1_0; }
 
 		//("<" typeParameters+=JvmTypeParameter ("," typeParameters+=JvmTypeParameter)* ">")?
 		public Group getGroup_2() { return cGroup_2; }
@@ -1060,11 +1072,11 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 
 	//XMethodDef returns XExpression:
 	//
-	//	{XMethodDef} "def" ("<" typeParameters+=JvmTypeParameter ("," typeParameters+=JvmTypeParameter)* ">")?
+	//	{XMethodDef} ("def" & static?="static"?) ("<" typeParameters+=JvmTypeParameter (","
 	//
-	//	returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter ("," parameters+=Parameter)*)? ")")?
+	//	typeParameters+=JvmTypeParameter)* ">")? returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter (","
 	//
-	//	expression=XBlockExpression;
+	//	parameters+=Parameter)*)? ")")? expression=XBlockExpression;
 	public XMethodDefElements getXMethodDefAccess() {
 		return (pXMethodDef != null) ? pXMethodDef : (pXMethodDef = new XMethodDefElements());
 	}

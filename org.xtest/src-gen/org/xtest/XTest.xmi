@@ -210,7 +210,12 @@
             <classifier xsi:type="ecore:EClass" href="http://www.xtest.org/#//XMethodDef"/>
           </type>
         </elements>
-        <elements xsi:type="xtext:Keyword" value="def"/>
+        <elements xsi:type="xtext:UnorderedGroup">
+          <elements xsi:type="xtext:Keyword" value="def"/>
+          <elements xsi:type="xtext:Assignment" cardinality="?" feature="static" operator="?=">
+            <terminal xsi:type="xtext:Keyword" value="static"/>
+          </elements>
+        </elements>
         <elements xsi:type="xtext:Group" cardinality="?">
           <elements xsi:type="xtext:Keyword" value="&lt;"/>
           <elements xsi:type="xtext:Assignment" feature="typeParameters" operator="+=">

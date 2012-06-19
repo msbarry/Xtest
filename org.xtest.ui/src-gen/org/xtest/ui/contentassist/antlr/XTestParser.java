@@ -245,6 +245,7 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getXTestExpressionAccess().getExpressionAssignment_3(), "rule__XTestExpression__ExpressionAssignment_3");
 					put(grammarAccess.getParameterAccess().getParameterTypeAssignment_1(), "rule__Parameter__ParameterTypeAssignment_1");
 					put(grammarAccess.getParameterAccess().getNameAssignment_2(), "rule__Parameter__NameAssignment_2");
+					put(grammarAccess.getXMethodDefAccess().getStaticAssignment_1_1(), "rule__XMethodDef__StaticAssignment_1_1");
 					put(grammarAccess.getXMethodDefAccess().getTypeParametersAssignment_2_1(), "rule__XMethodDef__TypeParametersAssignment_2_1");
 					put(grammarAccess.getXMethodDefAccess().getTypeParametersAssignment_2_2_1(), "rule__XMethodDef__TypeParametersAssignment_2_2_1");
 					put(grammarAccess.getXMethodDefAccess().getReturnTypeAssignment_3(), "rule__XMethodDef__ReturnTypeAssignment_3");
@@ -371,6 +372,7 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getJvmTypeParameterAccess().getConstraintsAssignment_1_0_0(), "rule__JvmTypeParameter__ConstraintsAssignment_1_0_0");
 					put(grammarAccess.getJvmTypeParameterAccess().getConstraintsAssignment_1_0_1(), "rule__JvmTypeParameter__ConstraintsAssignment_1_0_1");
 					put(grammarAccess.getJvmTypeParameterAccess().getConstraintsAssignment_1_1(), "rule__JvmTypeParameter__ConstraintsAssignment_1_1");
+					put(grammarAccess.getXMethodDefAccess().getUnorderedGroup_1(), "rule__XMethodDef__UnorderedGroup_1");
 				}
 			};
 		}

@@ -10,10 +10,15 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -109,6 +114,35 @@ public class XtestUtil {
      */
     public static <T> T runOnNewLevelOfXtestStack(Callable<T> callable) throws Exception {
         return XtestStackMarker.run(callable);
+    }
+
+    /**
+     * Converts any string to java upper-camel-case format. Non java letter-or-digits are dropped
+     * and used to tokenize. Leading non-java letters are dropped entirely.
+     * 
+     * @param input
+     *            The input
+     * @return The upper-camel-case output
+     */
+    public static String toUpperCamel(String input) {
+        String result = "";
+        if (input != null) {
+            // 1. Trim non-java letters from start of the input
+            input = CharMatcher.JAVA_LETTER.negate().trimLeadingFrom(input);
+            // 2. Split on non-java or digit characters
+            Iterable<String> split = Splitter.on(CharMatcher.JAVA_LETTER_OR_DIGIT.negate()).split(
+                    input);
+            // 3. Convert the first character of each token to upper case
+            split = Iterables.transform(split, new Function<String, String>() {
+                @Override
+                public String apply(String input) {
+                    return Strings.toFirstUpper(input.toLowerCase());
+                }
+            });
+            // 4. Pack them back together
+            result = Joiner.on("").join(split);
+        }
+        return result;
     }
 
     private static String getNodeWithoutComments(ICompositeNode node) {

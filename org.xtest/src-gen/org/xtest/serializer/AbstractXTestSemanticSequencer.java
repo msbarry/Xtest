@@ -1511,6 +1511,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	/**
 	 * Constraint:
 	 *     (
+	 *         static?='static'? 
 	 *         (typeParameters+=JvmTypeParameter typeParameters+=JvmTypeParameter*)? 
 	 *         returnType=JvmTypeReference? 
 	 *         name=ValidID 

@@ -7,9 +7,12 @@ runOnSave: true
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
 
-xtest "validation" {
+assertInvalidSyntax('def static <T> method(T t) {def static <U> nestedMethod(U u) {null as T}}')
+xtest "validation" { 
 	xtest "no arg, no body" {
 		xtest { assertValidSyntax('def function {}') }
+		xtest { assertValidSyntax('def static function {}') }
+		xtest { assertValidSyntax('static def function {}') }
 		
 		xtest { assertInvalidSyntax('def {}') }
 		xtest { assertInvalidSyntax('def function') }
@@ -18,6 +21,10 @@ xtest "validation" {
 	xtest "no arg, with body" {
 		xtest { assertValidSyntax('def function {return 0}') }
 		xtest { assertValidSyntax('def function {0}') }
+		xtest "static does not inherit outer scope" {
+			assertValidSyntax('val i = 1; def function {i}')
+			assertInvalidSyntax('val i = 1; def static function {i}')
+		}
 		
 		xtest { assertInvalidSyntax('def {return 0}') }
 	}
@@ -40,6 +47,11 @@ xtest "validation" {
 			 assertValidSyntax  ('def function(int i, String j) {}') 
 			 assertInvalidSyntax('def function(int i, String i) {}') 
 		}
+		
+		xtest "duplicate variable name static" {
+			 assertValidSyntax  ('def static function(int i, String j) {}') 
+			 assertInvalidSyntax('def static function(int i, String i) {}') 
+		}
 
 		xtest "can only shadow 'it' keyword" {
 			 assertValidSyntax('def function(int a) {}') 
@@ -48,14 +60,21 @@ xtest "validation" {
 			 assertInvalidSyntax("def function(int super) {}") 
 		}
 
-		xtest "var name conflicts with outside var name" {
+		xtest "var name conflicts with outside var name non-static" {
 			 assertValidSyntax('val i = 1; def function(int a) {}')
 			 assertInvalidSyntax('val i = 1; def function(int i) {}') 
 		}
+
+		xtest "var name conflicts with outside var name static" {
+			 assertValidSyntax('val i = 1; def static function(int a) {}')
+			 assertValidSyntax('val i = 1; def static function(int i) {}') 
+		}
+		
 		xtest "inside var name conflicts with param name" {
 			 assertValidSyntax('def function(int a) {val i = 1; return i}')
 			 assertInvalidSyntax('def function(int i) {val i = 1; return i}') 
 		}
+		
 		xtest "insde var conflicts with outside var" {
 			 assertInvalidSyntax('def function(int i, String i)') 
 		}
@@ -98,7 +117,7 @@ xtest "validation" {
 			assertInvalidSyntax('def <T> method(T t) {val U i = t}')
 		}
 		
-		xtest "nested method uses type parameter" {
+		xtest "nested method uses type parameter NOT OK for non-static" {
 			assertValidSyntax('def <T> method(T t) {def T nestedMethod(T t2) {}}')
 			assertInvalidSyntax('def <T> method(T t) {def U nestedMethod(U t2) {}}')
 		}
@@ -107,11 +126,17 @@ xtest "validation" {
 			assertValidSyntax('def <T> method(T t) {def <U> U nestedMethod(U u) {}}')
 			assertValidSyntax('def <T> method(T t) {def <T> T nestedMethod(T u) {}}')
 		}
+		
 		xtest "type parameter only available inside method def" {
 			assertValidSyntax('def <T> method(T t) {}')
 			assertValidSyntax('def <T> method(T t) {}; def <T> method2(T t) {}')
-			assertInvalidSyntax('val T a = null; def <T> method(T t) {}')
 			assertInvalidSyntax('def <T> method(T t) {}; val T a = null')
+			assertInvalidSyntax('val T a = null\ndef <T> method(T t) {}')
+		}
+		
+		xtest "type parameter valid inside nested method for non-static only" {
+			assertValidSyntax('def <T> method(T t) {def <U> nestedMethod(U u) {null as T}}')
+			assertInvalidSyntax('def static <T> method(T t) {def static <U> nestedMethod(U u) {null as T}}')
 		}
 	}
 	
@@ -127,4 +152,14 @@ xtest "validation" {
 		xtest { assertValidSyntax  ('def function(String[] a) {a.map[it.toUpperCase]}') } 
 	}
 	
+	xtest "use method" {
+		xtest "static valid anywhere" { 
+			assertValidSyntax    ('def static function(int i) {i}; function(1)')
+			assertValidSyntax    ('function(1); def static function(int i) {i}')
+		}
+		xtest "non-static only valid after def" { 
+			assertValidSyntax    ('def function(int i) {i}; function(1)')
+			assertInvalidSyntax  ('function(1); def function(int i) {i}')
+		}
+	}
 }

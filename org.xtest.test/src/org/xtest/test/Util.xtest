@@ -1,0 +1,16 @@
+import org.^xtest.XtestUtil
+import static junit.framework.Assert.*
+
+xtest toUpperCamel {
+	xtest {assertEquals("",XtestUtil::toUpperCamel(null))}
+	xtest {assertEquals("",XtestUtil::toUpperCamel(""))}
+	xtest {assertEquals("Abc",XtestUtil::toUpperCamel("abc"))}
+	xtest {assertEquals("A",XtestUtil::toUpperCamel("	a 	"))}
+	xtest {assertEquals("AbC",XtestUtil::toUpperCamel("ab c"))}
+	xtest {assertEquals("ThisIsASentence",XtestUtil::toUpperCamel("This is a sentence"))}
+	xtest {assertEquals("SentenceWithAcronym",XtestUtil::toUpperCamel("Sentence with ACRONYM"))}
+	xtest {assertEquals("ABCde",XtestUtil::toUpperCamel("A\nB\nCDE"))}
+	xtest {assertEquals("ABCde",XtestUtil::toUpperCamel("A-B-CDE"))}
+	xtest {assertEquals("",XtestUtil::toUpperCamel("-------"))}
+	xtest {assertEquals("A",XtestUtil::toUpperCamel("999a"))}
+}

@@ -39,6 +39,7 @@ import org.xtest.xTest.XTestPackage;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.xtest.xTest.impl.XMethodDefImpl#isStatic <em>Static</em>}</li>
  *   <li>{@link org.xtest.xTest.impl.XMethodDefImpl#getTypeParameters <em>Type Parameters</em>}</li>
  *   <li>{@link org.xtest.xTest.impl.XMethodDefImpl#getReturnType <em>Return Type</em>}</li>
  *   <li>{@link org.xtest.xTest.impl.XMethodDefImpl#getName <em>Name</em>}</li>
@@ -51,6 +52,26 @@ import org.xtest.xTest.XTestPackage;
  */
 public class XMethodDefImpl extends XExpressionImpl implements XMethodDef
 {
+	/**
+	 * The default value of the '{@link #isStatic() <em>Static</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isStatic()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean STATIC_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isStatic() <em>Static</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isStatic()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean static_ = STATIC_EDEFAULT;
+
 	/**
 	 * The cached value of the '{@link #getTypeParameters() <em>Type Parameters</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -130,6 +151,29 @@ public class XMethodDefImpl extends XExpressionImpl implements XMethodDef
 	protected EClass eStaticClass()
 	{
 		return XTestPackage.Literals.XMETHOD_DEF;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isStatic()
+	{
+		return static_;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setStatic(boolean newStatic)
+	{
+		boolean oldStatic = static_;
+		static_ = newStatic;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, XTestPackage.XMETHOD_DEF__STATIC, oldStatic, static_));
 	}
 
 	/**
@@ -311,6 +355,8 @@ public class XMethodDefImpl extends XExpressionImpl implements XMethodDef
 	{
 		switch (featureID)
 		{
+			case XTestPackage.XMETHOD_DEF__STATIC:
+				return isStatic();
 			case XTestPackage.XMETHOD_DEF__TYPE_PARAMETERS:
 				return getTypeParameters();
 			case XTestPackage.XMETHOD_DEF__RETURN_TYPE:
@@ -336,6 +382,9 @@ public class XMethodDefImpl extends XExpressionImpl implements XMethodDef
 	{
 		switch (featureID)
 		{
+			case XTestPackage.XMETHOD_DEF__STATIC:
+				setStatic((Boolean)newValue);
+				return;
 			case XTestPackage.XMETHOD_DEF__TYPE_PARAMETERS:
 				getTypeParameters().clear();
 				getTypeParameters().addAll((Collection<? extends JvmTypeParameter>)newValue);
@@ -367,6 +416,9 @@ public class XMethodDefImpl extends XExpressionImpl implements XMethodDef
 	{
 		switch (featureID)
 		{
+			case XTestPackage.XMETHOD_DEF__STATIC:
+				setStatic(STATIC_EDEFAULT);
+				return;
 			case XTestPackage.XMETHOD_DEF__TYPE_PARAMETERS:
 				getTypeParameters().clear();
 				return;
@@ -396,6 +448,8 @@ public class XMethodDefImpl extends XExpressionImpl implements XMethodDef
 	{
 		switch (featureID)
 		{
+			case XTestPackage.XMETHOD_DEF__STATIC:
+				return static_ != STATIC_EDEFAULT;
 			case XTestPackage.XMETHOD_DEF__TYPE_PARAMETERS:
 				return typeParameters != null && !typeParameters.isEmpty();
 			case XTestPackage.XMETHOD_DEF__RETURN_TYPE:
@@ -421,7 +475,9 @@ public class XMethodDefImpl extends XExpressionImpl implements XMethodDef
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (name: ");
+		result.append(" (static: ");
+		result.append(static_);
+		result.append(", name: ");
 		result.append(name);
 		result.append(')');
 		return result.toString();

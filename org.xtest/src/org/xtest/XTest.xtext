@@ -36,7 +36,16 @@ UniqueName:
 XTestExpression returns XExpression:
 	{XTestExpression}
 	('xsuite'|'xtest') name=UniqueName (expression=XBlockExpression);
+	
+XAssertExpression returns XExpression:
+	{XAssertExpression}
+	'assert' actual=XExpression (=>'throws' throws=JvmTypeReference)?
+;
+XSafeExpression returns XExpression:
+	{XSafeExpression} '?' actual=XExpression
+;
 
+// Methods
 Parameter returns JvmFormalParameter:
 	{Parameter} parameterType=JvmVarArgTypeReference name=ValidID;
 	
@@ -48,20 +57,12 @@ JvmVarArgTypeReference returns JvmTypeReference:
 	
 XMethodDef returns XExpression:
 	{XMethodDef}
-	'def'
+	('def' & (static?='static')?)
 	('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')?
 	 (returnType=JvmTypeReference)?
 	 name=ValidID 
 	 ('(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')')?
 	 expression=XBlockExpression;
-	
-XAssertExpression returns XExpression:
-	{XAssertExpression}
-	'assert' actual=XExpression (=>'throws' throws=JvmTypeReference)?
-;
-XSafeExpression returns XExpression:
-	{XSafeExpression} '?' actual=XExpression
-;
 
 // Hook our newly defined expressions into XBase as new kinds of expressions
 XPrimaryExpression returns XExpression:
