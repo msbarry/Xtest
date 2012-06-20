@@ -55,12 +55,15 @@ public class XtestStaticMethodsFeatureForTypeProvider extends StaticallyImported
                 }
             }
             // defensive copy
-            result = Maps.newHashMap(result);
             Collection<JvmTypeReference> collection = result.get(null);
+            result = Maps.newLinkedHashMap(result);
             if (collection == null) {
                 result.put(null, typeName);
             } else {
-                result.put(null, Lists.newArrayList(Iterables.concat(typeName, collection)));
+                result.put(
+                        null,
+                        Lists.newArrayList(Iterables.concat(typeName,
+                                Lists.newArrayList(collection))));
             }
         }
 

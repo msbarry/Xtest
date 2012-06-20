@@ -7,15 +7,16 @@ runOnSave: true
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
 
-assertInvalidSyntax('def static <T> method(T t) {def static <U> nestedMethod(U u) {null as T}}')
 xtest "validation" { 
 	xtest "no arg, no body" {
 		xtest { assertValidSyntax('def function {}') }
+		xtest { assertValidSyntax('def function {}; def function {}') }
 		xtest { assertValidSyntax('def static function {}') }
 		xtest { assertValidSyntax('static def function {}') }
 		
 		xtest { assertInvalidSyntax('def {}') }
 		xtest { assertInvalidSyntax('def function') }
+		xtest { assertInvalidSyntax('def static function {}; def static function {}') }
 	}
 	
 	xtest "no arg, with body" {
@@ -152,14 +153,19 @@ xtest "validation" {
 		xtest { assertValidSyntax  ('def function(String[] a) {a.map[it.toUpperCase]}') } 
 	}
 	
-	xtest "use method" {
-		xtest "static valid anywhere" { 
-			assertValidSyntax    ('def static function(int i) {i}; function(1)')
-			assertValidSyntax    ('function(1); def static function(int i) {i}')
-		}
-		xtest "non-static only valid after def" { 
-			assertValidSyntax    ('def function(int i) {i}; function(1)')
-			assertInvalidSyntax  ('function(1); def function(int i) {i}')
-		}
+	xtest "use static method" {
+		xtest "static valid after"  {  assertValidSyntax ('def static function(int i) {i}; function(1)') }
+		xtest "static valid before" {  assertValidSyntax ('function(1); def static function(int i) {i}') }
+		xtest "static valid inside" {  assertValidSyntax ('def static function(int i) {function(1)}') }
+		xtest "use var-args w/ 0" {  assertValidSyntax ('def static function(int... i) {i}; function()') }
+		xtest "use var-args w/ 1" {  assertValidSyntax ('def static function(int... i) {i}; function(1)') }
+		xtest "use var-args w/ multiple" {  assertValidSyntax ('def static function(int... i) {i}; function(1, 2, 3)') }
+		xtest "non var-args w/ multiple invalid" {  assertInvalidSyntax ('def static function(int i) {i}; function(1, 2, 3)') }
+	}
+	
+	xtest "use non-static method" {
+		xtest "non-static valid after"  {  assertValidSyntax ('def function(int i) {i}; function(1)') }
+		xtest "non-static valid inside"  {  assertValidSyntax ('def function(int i) {function(1)}') }
+		xtest "non-static invalid before"  {  assertInvalidSyntax ('function(1); def function(int i) {i}') }
 	}
 }

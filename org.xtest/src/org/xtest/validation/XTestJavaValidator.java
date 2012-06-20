@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
@@ -29,6 +30,7 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
@@ -281,6 +283,31 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     @Check
     public void checkMethodTypeParametersUnique(XMethodDef def) {
         checkParameterNames(def.getTypeParameters(), TypesPackage.Literals.JVM_TYPE_PARAMETER__NAME);
+    }
+
+    /**
+     * Checks that method def type parameter names are unique
+     * 
+     * @param def
+     *            The method def
+     */
+    @Check
+    public void checkStaticMethodNameUnique(XMethodDef def) {
+        final TreeIterator<EObject> allContents = def.eResource().getAllContents();
+        Iterable<EObject> objects = new Iterable<EObject>() {
+            @Override
+            public java.util.Iterator<EObject> iterator() {
+                return allContents;
+            };
+        };
+        Iterable<XMethodDef> filter = Iterables.filter(objects, XMethodDef.class);
+        for (XMethodDef other : filter) {
+            if (other != def && other.isStatic() && def.isStatic()
+                    && Strings.equal(def.getName(), other.getName())) {
+                error("Conflicting static method name", def,
+                        XTestPackage.Literals.XMETHOD_DEF__NAME, 0);
+            }
+        }
     }
 
     /**

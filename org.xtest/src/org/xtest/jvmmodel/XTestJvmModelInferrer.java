@@ -10,11 +10,13 @@ import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.JvmVisibility;
 import org.eclipse.xtext.common.types.TypesFactory;
+import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
+import org.xtest.xTest.JvmVarArgArray;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.impl.BodyImplCustom;
 
@@ -34,9 +36,10 @@ public class XTestJvmModelInferrer extends XtendJvmModelInferrer {
     private JvmTypesBuilder builder;
     @Inject
     private ITypeProvider computer;
-
     @Inject
     private TypesFactory factory;
+    @Inject
+    private TypeReferences typeRefs;
 
     @Override
     public void infer(EObject e, IJvmDeclaredTypeAcceptor acceptor, boolean preIndexingPhase) {
@@ -62,24 +65,31 @@ public class XTestJvmModelInferrer extends XtendJvmModelInferrer {
     }
 
     protected void translate(JvmGenericType type, final XMethodDef def) {
-        JvmOperation op = factory.createJvmOperation();
-        type.getMembers().add(op);
-        op.setSimpleName(def.getName());
-        op.setVisibility(JvmVisibility.PUBLIC);
-        JvmTypeReference returnType = def.getReturnType();
-        returnType = returnType == null ? getTypeProxy(op) : builder.cloneWithProxies(returnType);
-        op.setReturnType(returnType);
-        op.setStatic(true);
-        String documentation = builder.getDocumentation(def);
-        builder.setDocumentation(op, documentation);
-        for (JvmFormalParameter param : def.getParameters()) {
-            op.getParameters().add(builder.cloneWithProxies(param));
-            associator.associatePrimary(op, param);
-        }
-        copyAndFixTypeParameters(def.getTypeParameters(), op);
+        if (def.getName() != null) {
+            JvmOperation op = factory.createJvmOperation();
+            type.getMembers().add(op);
+            op.setSimpleName(def.getName());
+            op.setVisibility(JvmVisibility.PUBLIC);
+            JvmTypeReference returnType = def.getReturnType();
+            returnType = returnType == null ? getTypeProxy(op) : builder
+                    .cloneWithProxies(returnType);
+            op.setReturnType(returnType);
+            op.setStatic(def.isStatic());
+            String documentation = builder.getDocumentation(def);
+            builder.setDocumentation(op, documentation);
+            for (JvmFormalParameter param : def.getParameters()) {
+                JvmFormalParameter cloneWithProxies = builder.cloneWithProxies(param);
+                op.getParameters().add(cloneWithProxies);
+                associator.associatePrimary(op, param);
+                if (param.getParameterType() instanceof JvmVarArgArray) {
+                    op.setVarArgs(true);
+                }
+            }
+            copyAndFixTypeParameters(def.getTypeParameters(), op);
 
-        builder.setBody(op, def.getExpression());
-        associator.associatePrimary(def, op);
+            builder.setBody(op, def.getExpression());
+            associator.associatePrimary(def, op);
+        }
     }
 
     private void initializeType(final BodyImplCustom body, JvmGenericType type) {
