@@ -11,7 +11,7 @@ import com.google.common.base.Optional;
  * @author Michael Barry
  */
 @SuppressWarnings("restriction")
-public class XtestResource extends XtendResource {
+public class XtestDependencyAcceptingResource extends XtendResource {
     private DependencyAcceptor acceptor;
 
     /**

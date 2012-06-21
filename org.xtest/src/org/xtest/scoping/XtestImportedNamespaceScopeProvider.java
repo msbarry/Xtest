@@ -85,7 +85,9 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
                 result = new FilteringScope(result, new Predicate<IEObjectDescription>() {
                     @Override
                     public boolean apply(IEObjectDescription input) {
-                        return !(input.getEObjectOrProxy() instanceof JvmTypeParameter);
+                        EObject eObjectOrProxy = input.getEObjectOrProxy();
+                        return !(eObjectOrProxy instanceof JvmTypeParameter)
+                                && associations.getPrimarySourceElement(eObjectOrProxy) == null;
                     }
                 });
             }

@@ -57,7 +57,7 @@ public class XTestJvmModelInferrer extends XtendJvmModelInferrer {
         Iterable<EObject> contents = new Iterable<EObject>() {
             @Override
             public Iterator<EObject> iterator() {
-                return body.eContents().iterator();
+                return body.eAllContents();
             }
         };
         Iterable<XMethodDef> defs = Iterables.filter(contents, XMethodDef.class);

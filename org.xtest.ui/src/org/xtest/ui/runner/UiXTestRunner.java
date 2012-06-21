@@ -33,7 +33,7 @@ import org.xtest.results.XTestResult;
 import org.xtest.runner.external.DependencyAcceptor;
 import org.xtest.runner.util.ClasspathUtils;
 import org.xtest.ui.mediator.ValidationStartedEvent;
-import org.xtest.ui.resource.XtestResource;
+import org.xtest.ui.resource.XtestDependencyAcceptingResource;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
@@ -74,6 +74,7 @@ public class UiXTestRunner extends XTestRunner {
         return result;
     }
 
+    @SuppressWarnings("restriction")
     @Override
     protected XTestInterpreter getInterpreter(Resource resource) {
         // BORROWED FROM
@@ -81,8 +82,8 @@ public class UiXTestRunner extends XTestRunner {
         // in order to use the classloader of the java project in the running
         // instance of eclipse rather than the classloader of this class itself
         XTestInterpreter interpreter = interpreterProvider.get();
-        if (resource instanceof XtestResource) {
-            XtestResource xtestResource = (XtestResource) resource;
+        if (resource instanceof XtestDependencyAcceptingResource) {
+            XtestDependencyAcceptingResource xtestResource = (XtestDependencyAcceptingResource) resource;
             Optional<DependencyAcceptor> acceptor = xtestResource.getAcceptor();
             ResourceSet set = resource.getResourceSet();
             ClassLoader cl = getClass().getClassLoader();

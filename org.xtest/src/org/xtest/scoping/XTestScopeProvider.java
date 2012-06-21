@@ -20,6 +20,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.impl.FilteringScope;
 import org.eclipse.xtext.scoping.impl.MapBasedScope;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.xbase.XBlockExpression;
@@ -28,6 +29,7 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider;
 import org.eclipse.xtext.xbase.scoping.LocalVariableScopeContext;
 import org.eclipse.xtext.xbase.scoping.XbaseScopeProvider;
+import org.eclipse.xtext.xbase.scoping.featurecalls.IFeaturesForTypeProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.IJvmFeatureDescriptionProvider;
 import org.eclipse.xtext.xbase.scoping.featurecalls.IValidatedEObjectDescription;
 import org.eclipse.xtext.xbase.scoping.featurecalls.JvmFeatureScope;
@@ -36,6 +38,7 @@ import org.xtest.preferences.RuntimePref;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XTestPackage;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -54,9 +57,9 @@ public class XTestScopeProvider extends XbaseScopeProvider {
     private static final int IMPORTED_STATIC_FEATURE_PRIORITY = 50;
 
     private static final int STATIC_EXTENSION_PRIORITY_OFFSET = 220;
+
     @Inject
     private IJvmModelAssociations associations;
-
     @Inject
     private ILogicalContainerProvider logicalContainerProvider;
 
@@ -65,6 +68,44 @@ public class XTestScopeProvider extends XbaseScopeProvider {
 
     @Inject
     private TypeReferences typeRefs;
+
+    @Override
+    public IScope createImplicitFeatureCallScope(EObject call, Resource resource, IScope parent,
+            IScope localVariableScope) {
+        JvmFeatureScopeAcceptor featureScopeDescriptions = new JvmFeatureScopeAcceptor();
+        addFeatureCallScopes(call, localVariableScope, featureScopeDescriptions);
+
+        JvmDeclaredType contextType = getContextType(call);
+        IAcceptor<IJvmFeatureDescriptionProvider> acceptorWithoutContext = featureScopeDescriptions
+                .curry(null, call);
+        addStaticFeatureDescriptionProviders(resource, contextType, acceptorWithoutContext);
+        if (contextType != null) {
+            IAcceptor<IJvmFeatureDescriptionProvider> acceptorWithContext = featureScopeDescriptions
+                    .curry(typeRefs.createTypeRef(contextType), call);
+            addFeatureDescriptionProviders(contextType, null, null, null,
+                    getImplicitStaticFeaturePriority(), true, acceptorWithContext);
+        }
+        addNonStaticMethodsScope(contextType, localVariableScope, acceptorWithoutContext);
+
+        IScope result = featureScopeDescriptions.createScope(parent);
+        return result;
+    }
+
+    @Override
+    public IScope createSimpleFeatureCallScope(EObject context, EReference reference,
+            Resource resource, boolean includeCurrentBlock, int idx) {
+        // Now that the actual feature call has been added to the scope, remove the local variable
+        // holding the method signature for local scoping
+        IScope createSimpleFeatureCallScope = super.createSimpleFeatureCallScope(context,
+                reference, resource, includeCurrentBlock, idx);
+        return new FilteringScope(createSimpleFeatureCallScope,
+                new Predicate<IEObjectDescription>() {
+                    @Override
+                    public boolean apply(IEObjectDescription input) {
+                        return !(input instanceof MethodScopingLocalVarDescription);
+                    }
+                });
+    }
 
     @Override
     public IScope getScope(EObject context, EReference reference) {
@@ -173,22 +214,6 @@ public class XTestScopeProvider extends XbaseScopeProvider {
     }
 
     @Override
-    protected IScope createImplicitFeatureCallScope(EObject call, Resource resource, IScope parent,
-            IScope localVariableScope) {
-        parent = super.createImplicitFeatureCallScope(call, resource, parent, localVariableScope);
-        // JvmFeatureScopeAcceptor featureScopeDescriptions = new JvmFeatureScopeAcceptor();
-        // JvmDeclaredType contextType = getContextType(call);
-        //
-        // IAcceptor<IJvmFeatureDescriptionProvider> acceptorWithContext = featureScopeDescriptions
-        // .curry(typeRefs.createTypeRef(contextType), call);
-        // addFeatureDescriptionProviders(contextType, null, null, null,
-        // getImplicitStaticFeaturePriority(), true, acceptorWithContext);
-        //
-        // IScope result = featureScopeDescriptions.createScope(parent);
-        return parent;
-    }
-
-    @Override
     protected LocalVariableScopeContext createLocalVariableScopeContext(final EObject context,
             EReference reference, boolean includeCurrentBlock, int idx) {
         return new LocalVariableScopeContextAllowsMethods(context, reference, includeCurrentBlock,
@@ -225,8 +250,7 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         parentScope = super.createLocalVarScopeForBlock(block, indexOfContextExpressionInBlock,
                 referredFromClosure, parentScope);
         List<IValidatedEObjectDescription> descriptions = Lists.newArrayList();
-        // TODO add back in for scope of non-static method defs
-        for (int i = 0; i < indexOfContextExpressionInBlock; i++) {
+        for (int i = 0; i <= indexOfContextExpressionInBlock && i < block.getExpressions().size(); i++) {
             XExpression expression = block.getExpressions().get(i);
             if (expression instanceof XMethodDef) {
                 XMethodDef methDef = (XMethodDef) expression;
@@ -236,8 +260,8 @@ public class XTestScopeProvider extends XbaseScopeProvider {
                 if (methDef.getName() != null) {
                     for (JvmOperation op : jvmElements) {
                         if (!op.isStatic()) {
-                            descriptions.add(new LocalVarDescription(QualifiedName.create(op
-                                    .getSimpleName()), op));
+                            // Add non-static method calls to local var scope
+                            descriptions.add(new MethodScopingLocalVarDescription(op));
                         }
                     }
                 }
@@ -261,7 +285,12 @@ public class XTestScopeProvider extends XbaseScopeProvider {
     protected IScope createLocalVarScopeForMethodDef(XMethodDef def, IScope parentScope) {
         List<IValidatedEObjectDescription> descriptions = Lists.newArrayList();
         if (def.isStatic()) {
-            parentScope = IScope.NULLSCOPE;
+            parentScope = new FilteringScope(parentScope, new Predicate<IEObjectDescription>() {
+                @Override
+                public boolean apply(IEObjectDescription input) {
+                    return !(input instanceof LocalVarDescription);
+                }
+            });
         }
         for (JvmFormalParameter p : def.getParameters()) {
             String name = p.getName();
@@ -280,6 +309,14 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         return super.createTypeScope(context, reference);
     }
 
+    private void addNonStaticMethodsScope(JvmDeclaredType contextType, IScope localVariableScope,
+            IAcceptor<IJvmFeatureDescriptionProvider> acceptor) {
+        IFeaturesForTypeProvider implicitMethodsProvider = new MethodScopeFeaturesForTypeProvider(
+                localVariableScope);
+        addFeatureDescriptionProviders(contextType, implicitMethodsProvider, null, null,
+                getImplicitStaticFeaturePriority(), true, acceptor);
+    }
+
     private static class LocalVariableScopeContextAllowsMethods extends LocalVariableScopeContext {
 
         private final ILogicalContainerProvider expressionContext;
@@ -293,12 +330,25 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         }
 
         @Override
+        public boolean canSpawnForContainer() {
+            return super.canSpawnForContainer();
+        }
+
+        @Override
         public LocalVariableScopeContext spawnForContainer() {
             if (getContext() instanceof XMethodDef) {
                 return new LocalVariableScopeContextAllowsMethods(getLogicalOrRealContainer(),
                         getReference(), false, -1, true, expressionContext);
             }
             return super.spawnForContainer();
+        }
+
+    }
+
+    private static class MethodScopingLocalVarDescription extends LocalVarDescription {
+
+        public MethodScopingLocalVarDescription(JvmOperation op) {
+            super(QualifiedName.create(op.getSimpleName()), op);
         }
 
     }

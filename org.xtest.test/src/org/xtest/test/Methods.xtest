@@ -22,9 +22,15 @@ xtest "validation" {
 	xtest "no arg, with body" {
 		xtest { assertValidSyntax('def function {return 0}') }
 		xtest { assertValidSyntax('def function {0}') }
-		xtest "static does not inherit outer scope" {
+		
+		xtest "static does not inherit outer var scope" {
 			assertValidSyntax('val i = 1; def function {i}')
 			assertInvalidSyntax('val i = 1; def static function {i}')
+		}
+		
+		xtest "static does not inherit outer method scope" {
+			assertValidSyntax('def static meth {}; def static function {meth()}')
+			assertInvalidSyntax('def meth {}; def static function {meth()}')
 		}
 		
 		xtest { assertInvalidSyntax('def {return 0}') }
@@ -156,16 +162,26 @@ xtest "validation" {
 	xtest "use static method" {
 		xtest "static valid after"  {  assertValidSyntax ('def static function(int i) {i}; function(1)') }
 		xtest "static valid before" {  assertValidSyntax ('function(1); def static function(int i) {i}') }
+		
 		xtest "static valid inside" {  assertValidSyntax ('def static function(int i) {function(1)}') }
 		xtest "use var-args w/ 0" {  assertValidSyntax ('def static function(int... i) {i}; function()') }
 		xtest "use var-args w/ 1" {  assertValidSyntax ('def static function(int... i) {i}; function(1)') }
 		xtest "use var-args w/ multiple" {  assertValidSyntax ('def static function(int... i) {i}; function(1, 2, 3)') }
 		xtest "non var-args w/ multiple invalid" {  assertInvalidSyntax ('def static function(int i) {i}; function(1, 2, 3)') }
 	}
-	
 	xtest "use non-static method" {
-		xtest "non-static valid after"  {  assertValidSyntax ('def function(int i) {i}; function(1)') }
-		xtest "non-static valid inside"  {  assertValidSyntax ('def function(int i) {function(1)}') }
-		xtest "non-static invalid before"  {  assertInvalidSyntax ('function(1); def function(int i) {i}') }
+		xtest "non-static valid after"  {  assertValidSyntax ('def function() {}; function()') }
+		xtest "non-static valid inside"  {  assertValidSyntax ('def function() {function()}') }
+		xtest "non-static invalid before"  {  assertInvalidSyntax ('function(); def function() {}') }
+		xtest "2 non-statics valid inside1"  {  assertValidSyntax ('def function() {def function2(){}; function()}') }
+		xtest "2 non-statics valid inside2"  {  assertValidSyntax ('def function() {def function2(){}; function2()}') }
+		xtest "2 non-statics valid inside3"  {  assertValidSyntax ('def function() {def function2(){function2()}}') }
+		xtest "2 non-statics valid inside4"  {  assertValidSyntax ('def function() {def function2(){function()}}') }
+		
+		xtest "use var-args w/ 0" {  assertValidSyntax ('def function(int... i) {}; function()') }
+		xtest "use var-args w/ 1" {  assertValidSyntax ('def function(int... i) {}; function(1)') }
+		xtest "use var-args w/ 2" {  assertValidSyntax ('def function(int... i) {}; function(1,2)') }
+		xtest "non var-args w/ 1" {  assertValidSyntax ('def function(int i) {}; function(1)') }
+		xtest "non var-args w/ multiple invalid" {  assertInvalidSyntax ('def function(int i) {}; function(1, 2, 3)') }
 	}
 }

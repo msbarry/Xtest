@@ -5,6 +5,7 @@ import org.eclipse.xtend.core.formatting.OrganizeImports.ReferenceAcceptor;
 import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.generator.IGenerator;
+import org.eclipse.xtext.xbase.impl.FeatureCallToJavaMapping;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelInferrer;
 import org.eclipse.xtext.xbase.jvmmodel.JvmModelAssociator;
@@ -21,6 +22,7 @@ import org.xtest.jvmmodel.XTestJvmModelInferrer;
 import org.xtest.jvmmodel.XtestJvmModelAssociator;
 import org.xtest.linking.XtestFeatureCallChecker;
 import org.xtest.scoping.XTestScopeProvider;
+import org.xtest.scoping.XtestFeatureCallMapping;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
 import org.xtest.scoping.XtestStaticMethodsFeatureForTypeProvider;
 import org.xtest.scoping.XtestVisibilityService;
@@ -41,6 +43,16 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends FeatureCallChecker> bindFeatureCallChecker() {
         return XtestFeatureCallChecker.class;
+    }
+
+    /**
+     * Bind {@link FeatureCallToJavaMapping} to custom implementation that understands local method
+     * scoping
+     * 
+     * @return {@link XtestFeatureCallMapping}
+     */
+    public Class<? extends FeatureCallToJavaMapping> bindFeatureCallToJavaMapping() {
+        return XtestFeatureCallMapping.class;
     }
 
     @Override
