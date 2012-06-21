@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
  * @author Michael Barry
  */
 @SuppressWarnings("restriction")
-public class MethodScopeFeaturesForTypeProvider implements IFeaturesForTypeProvider {
+public class LocalMethodScopeFeaturesForTypeProvider implements IFeaturesForTypeProvider {
 
     private final Iterable<IEObjectDescription> descriptions;
 
@@ -30,7 +30,7 @@ public class MethodScopeFeaturesForTypeProvider implements IFeaturesForTypeProvi
      * @param localVariableScope
      *            Local variable scope to retrieve locally-scoped methods from
      */
-    public MethodScopeFeaturesForTypeProvider(IScope localVariableScope) {
+    public LocalMethodScopeFeaturesForTypeProvider(IScope localVariableScope) {
         this.descriptions = Lists.newArrayList(localVariableScope.getAllElements());
     }
 
@@ -54,7 +54,7 @@ public class MethodScopeFeaturesForTypeProvider implements IFeaturesForTypeProvi
 
     @Override
     public boolean isExtensionProvider() {
-        return false;
+        return true;
     }
 
     private Iterable<EObject> getEObjectsInScope() {

@@ -128,7 +128,9 @@ public class TestUtils {
                 errors.add(issue);
             }
         }
-        assertEquals("[]", errors.toString());
+        if (!errors.isEmpty()) {
+            fail(errors.toString());
+        }
     }
 
     public static void assertValidSyntax(String script) throws Exception {

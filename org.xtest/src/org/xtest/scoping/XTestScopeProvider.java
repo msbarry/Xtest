@@ -1,5 +1,6 @@
 package org.xtest.scoping;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,7 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
 import org.eclipse.xtext.scoping.impl.MapBasedScope;
 import org.eclipse.xtext.util.IAcceptor;
+import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
@@ -72,6 +74,7 @@ public class XTestScopeProvider extends XbaseScopeProvider {
     @Override
     public IScope createImplicitFeatureCallScope(EObject call, Resource resource, IScope parent,
             IScope localVariableScope) {
+        // Same as XbaseScopeProvider.createImplicitFeatureCallScope...
         JvmFeatureScopeAcceptor featureScopeDescriptions = new JvmFeatureScopeAcceptor();
         addFeatureCallScopes(call, localVariableScope, featureScopeDescriptions);
 
@@ -79,13 +82,16 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         IAcceptor<IJvmFeatureDescriptionProvider> acceptorWithoutContext = featureScopeDescriptions
                 .curry(null, call);
         addStaticFeatureDescriptionProviders(resource, contextType, acceptorWithoutContext);
+
         if (contextType != null) {
             IAcceptor<IJvmFeatureDescriptionProvider> acceptorWithContext = featureScopeDescriptions
                     .curry(typeRefs.createTypeRef(contextType), call);
             addFeatureDescriptionProviders(contextType, null, null, null,
-                    getImplicitStaticFeaturePriority(), true, acceptorWithContext);
+                    getImplicitStaticFeaturePriority(), false, acceptorWithContext);
         }
-        addNonStaticMethodsScope(contextType, localVariableScope, acceptorWithoutContext);
+
+        // ... except adding in local method scoping
+        addLocalMethodScope(contextType, localVariableScope, acceptorWithoutContext);
 
         IScope result = featureScopeDescriptions.createScope(parent);
         return result;
@@ -98,13 +104,7 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         // holding the method signature for local scoping
         IScope createSimpleFeatureCallScope = super.createSimpleFeatureCallScope(context,
                 reference, resource, includeCurrentBlock, idx);
-        return new FilteringScope(createSimpleFeatureCallScope,
-                new Predicate<IEObjectDescription>() {
-                    @Override
-                    public boolean apply(IEObjectDescription input) {
-                        return !(input instanceof MethodScopingLocalVarDescription);
-                    }
-                });
+        return filterOutLocalMethods(createSimpleFeatureCallScope);
     }
 
     @Override
@@ -142,29 +142,8 @@ public class XTestScopeProvider extends XbaseScopeProvider {
     protected void addFeatureDescriptionProviders(Resource resource, JvmDeclaredType contextType,
             XExpression implicitReceiver, XExpression implicitArgument, int priority,
             IAcceptor<IJvmFeatureDescriptionProvider> acceptor) {
-        super.addFeatureDescriptionProviders(resource, contextType, implicitReceiver,
-                implicitArgument, priority, acceptor);
-
-        if (implicitReceiver == null || implicitArgument != null) {
-            final StaticallyImportedFeaturesProvider staticProvider = staticallyImportedFeaturesProvider
-                    .get();
-            staticProvider.setResourceContext(resource);
-            staticProvider.setExtensionProvider(true);
-            if (implicitArgument != null) {
-                // use the implicit argument as implicit receiver
-                SimpleAcceptor casted = (SimpleAcceptor) acceptor;
-                JvmTypeReference implicitArgumentType = getTypeProvider().getType(implicitArgument,
-                        true);
-                IAcceptor<IJvmFeatureDescriptionProvider> myAcceptor = casted.getParent().curry(
-                        implicitArgumentType, casted.getExpression());
-                addFeatureDescriptionProviders(contextType, staticProvider, implicitArgument, null,
-                        priority + STATIC_EXTENSION_PRIORITY_OFFSET, true, myAcceptor);
-            } else {
-                addFeatureDescriptionProviders(contextType, staticProvider, implicitReceiver,
-                        implicitArgument, priority + STATIC_EXTENSION_PRIORITY_OFFSET, true,
-                        acceptor);
-            }
-        }
+        addFeatureDescriptionProviders(resource, contextType, implicitReceiver, implicitArgument,
+                priority, acceptor, null);
     }
 
     @Override
@@ -172,30 +151,8 @@ public class XTestScopeProvider extends XbaseScopeProvider {
             JvmDeclaredType contextType, XExpression implicitReceiver,
             XExpression implicitArgument, int priority,
             IAcceptor<IJvmFeatureDescriptionProvider> acceptor) {
-        super.addFeatureDescriptionProvidersForAssignment(resource, contextType, implicitReceiver,
-                implicitArgument, priority, acceptor);
-
-        if (implicitReceiver == null || implicitArgument != null) {
-            final StaticallyImportedFeaturesProvider staticProvider = staticallyImportedFeaturesProvider
-                    .get();
-            staticProvider.setResourceContext(resource);
-            staticProvider.setExtensionProvider(true);
-            if (implicitArgument != null) {
-                // use the implicit argument as implicit receiver
-                SimpleAcceptor casted = (SimpleAcceptor) acceptor;
-                JvmTypeReference implicitArgumentType = getTypeProvider().getType(implicitArgument,
-                        true);
-                IAcceptor<IJvmFeatureDescriptionProvider> myAcceptor = casted.getParent().curry(
-                        implicitArgumentType, casted.getExpression());
-                addFeatureDescriptionProvidersForAssignment(contextType, staticProvider,
-                        implicitArgument, null, priority + STATIC_EXTENSION_PRIORITY_OFFSET, true,
-                        myAcceptor);
-            } else {
-                addFeatureDescriptionProvidersForAssignment(contextType, staticProvider,
-                        implicitReceiver, implicitArgument, priority
-                                + STATIC_EXTENSION_PRIORITY_OFFSET, true, acceptor);
-            }
-        }
+        addFeatureDescriptionProvidersForAssignment(resource, contextType, implicitReceiver,
+                implicitArgument, priority, acceptor, null);
 
     }
 
@@ -211,6 +168,21 @@ public class XTestScopeProvider extends XbaseScopeProvider {
 
         addFeatureDescriptionProviders(contextType, staticProvider, null, null,
                 IMPORTED_STATIC_FEATURE_PRIORITY, true, acceptor);
+    }
+
+    @Override
+    protected IScope createFeatureScopeForTypeRef(JvmTypeReference declaringType,
+            EObject expression, XExpression implicitReceiver, IScope parent) {
+        parent = super.createFeatureScopeForTypeRef(declaringType, expression, implicitReceiver,
+                parent);
+
+        // Add locally-defined extensions methods to feature scope
+        JvmFeatureScopeAcceptor featureScopeDescriptions = new JvmFeatureScopeAcceptor();
+        addLocalMethodExtensionScope(declaringType, expression, implicitReceiver, parent,
+                featureScopeDescriptions);
+        parent = featureScopeDescriptions.createScope(parent);
+
+        return parent;
     }
 
     @Override
@@ -270,7 +242,7 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         if (descriptions.isEmpty()) {
             return parentScope;
         }
-        return new JvmFeatureScope(parentScope, "XMETHDEF", descriptions);
+        return new ShadowedJvmFeatureScope(parentScope, "XMethodDef", descriptions);
     }
 
     /**
@@ -309,12 +281,126 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         return super.createTypeScope(context, reference);
     }
 
-    private void addNonStaticMethodsScope(JvmDeclaredType contextType, IScope localVariableScope,
+    private void addFeatureDescriptionProviders(Resource resource, JvmDeclaredType contextType,
+            XExpression implicitReceiver, XExpression implicitArgument, int priority,
+            IAcceptor<IJvmFeatureDescriptionProvider> acceptor, IScope parent) {
+        // Adds local extension methods to member feature call scope
+        super.addFeatureDescriptionProviders(resource, contextType, implicitReceiver,
+                implicitArgument, priority, acceptor);
+
+        if (implicitReceiver == null || implicitArgument != null) {
+            final StaticallyImportedFeaturesProvider staticProvider = staticallyImportedFeaturesProvider
+                    .get();
+            staticProvider.setResourceContext(resource);
+            staticProvider.setExtensionProvider(true);
+            if (implicitArgument != null) {
+                // use the implicit argument as implicit receiver
+                SimpleAcceptor casted = (SimpleAcceptor) acceptor;
+                JvmTypeReference implicitArgumentType = getTypeProvider().getType(implicitArgument,
+                        true);
+                IAcceptor<IJvmFeatureDescriptionProvider> myAcceptor = casted.getParent().curry(
+                        implicitArgumentType, casted.getExpression());
+                addFeatureDescriptionProviders(contextType, staticProvider, implicitArgument, null,
+                        priority + STATIC_EXTENSION_PRIORITY_OFFSET, true, myAcceptor);
+                if (parent != null) {
+                    IFeaturesForTypeProvider implicitMethodsProvider = new LocalMethodScopeFeaturesForTypeProvider(
+                            parent);
+                    addFeatureDescriptionProviders(contextType, implicitMethodsProvider,
+                            implicitArgument, null, priority + STATIC_EXTENSION_PRIORITY_OFFSET,
+                            false, myAcceptor);
+                }
+            } else {
+                addFeatureDescriptionProviders(contextType, staticProvider, implicitReceiver,
+                        implicitArgument, priority + STATIC_EXTENSION_PRIORITY_OFFSET, true,
+                        acceptor);
+                if (parent != null) {
+                    IFeaturesForTypeProvider implicitMethodsProvider = new LocalMethodScopeFeaturesForTypeProvider(
+                            parent);
+                    addFeatureDescriptionProviders(contextType, implicitMethodsProvider,
+                            implicitReceiver, implicitArgument, priority
+                                    + STATIC_EXTENSION_PRIORITY_OFFSET, false, acceptor);
+                }
+            }
+        }
+    }
+
+    private void addFeatureDescriptionProvidersForAssignment(Resource resource,
+            JvmDeclaredType contextType, XExpression implicitReceiver,
+            XExpression implicitArgument, int priority,
+            IAcceptor<IJvmFeatureDescriptionProvider> acceptor, IScope parent) {
+        // Adds local extension methods to member feature call scope
+        super.addFeatureDescriptionProvidersForAssignment(resource, contextType, implicitReceiver,
+                implicitArgument, priority, acceptor);
+
+        if (implicitReceiver == null || implicitArgument != null) {
+            final StaticallyImportedFeaturesProvider staticProvider = staticallyImportedFeaturesProvider
+                    .get();
+            staticProvider.setResourceContext(resource);
+            staticProvider.setExtensionProvider(true);
+            if (implicitArgument != null) {
+                // use the implicit argument as implicit receiver
+                SimpleAcceptor casted = (SimpleAcceptor) acceptor;
+                JvmTypeReference implicitArgumentType = getTypeProvider().getType(implicitArgument,
+                        true);
+                IAcceptor<IJvmFeatureDescriptionProvider> myAcceptor = casted.getParent().curry(
+                        implicitArgumentType, casted.getExpression());
+                addFeatureDescriptionProvidersForAssignment(contextType, staticProvider,
+                        implicitArgument, null, priority + STATIC_EXTENSION_PRIORITY_OFFSET, true,
+                        myAcceptor);
+                if (parent != null) {
+                    IFeaturesForTypeProvider implicitMethodsProvider = new LocalMethodScopeFeaturesForTypeProvider(
+                            parent);
+                    addFeatureDescriptionProvidersForAssignment(contextType,
+                            implicitMethodsProvider, implicitArgument, null, priority
+                                    + STATIC_EXTENSION_PRIORITY_OFFSET, false, myAcceptor);
+                }
+            } else {
+                addFeatureDescriptionProvidersForAssignment(contextType, staticProvider,
+                        implicitReceiver, implicitArgument, priority
+                                + STATIC_EXTENSION_PRIORITY_OFFSET, true, acceptor);
+                if (parent != null) {
+                    IFeaturesForTypeProvider implicitMethodsProvider = new LocalMethodScopeFeaturesForTypeProvider(
+                            parent);
+                    addFeatureDescriptionProvidersForAssignment(contextType,
+                            implicitMethodsProvider, implicitReceiver, implicitArgument, priority
+                                    + STATIC_EXTENSION_PRIORITY_OFFSET, false, acceptor);
+                }
+            }
+        }
+    }
+
+    private void addLocalMethodExtensionScope(JvmTypeReference receiverType, EObject expression,
+            XExpression implicitReceiver, IScope parent, JvmFeatureScopeAcceptor acceptor) {
+        JvmDeclaredType contextType = getContextType(expression);
+        IAcceptor<IJvmFeatureDescriptionProvider> curried = acceptor
+                .curry(receiverType, expression);
+        LocalVariableScopeContext scopeContext = createLocalVariableScopeContext(expression, null,
+                false, -1);
+        IScope localVariableScope = createLocalVarScope(parent, scopeContext);
+        if (expression instanceof XAssignment) {
+            addFeatureDescriptionProvidersForAssignment(expression.eResource(), contextType,
+                    implicitReceiver, null, getDefaultPriority(), curried, localVariableScope);
+        } else {
+            addFeatureDescriptionProviders(expression.eResource(), contextType, implicitReceiver,
+                    null, getDefaultPriority(), curried, localVariableScope);
+        }
+    }
+
+    private void addLocalMethodScope(JvmDeclaredType contextType, IScope localVariableScope,
             IAcceptor<IJvmFeatureDescriptionProvider> acceptor) {
-        IFeaturesForTypeProvider implicitMethodsProvider = new MethodScopeFeaturesForTypeProvider(
+        IFeaturesForTypeProvider implicitMethodsProvider = new LocalMethodScopeFeaturesForTypeProvider(
                 localVariableScope);
         addFeatureDescriptionProviders(contextType, implicitMethodsProvider, null, null,
                 getImplicitStaticFeaturePriority(), true, acceptor);
+    }
+
+    private FilteringScope filterOutLocalMethods(IScope parentScope) {
+        return new FilteringScope(parentScope, new Predicate<IEObjectDescription>() {
+            @Override
+            public boolean apply(IEObjectDescription input) {
+                return !(input instanceof MethodScopingLocalVarDescription);
+            }
+        });
     }
 
     private static class LocalVariableScopeContextAllowsMethods extends LocalVariableScopeContext {
@@ -350,7 +436,29 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         public MethodScopingLocalVarDescription(JvmOperation op) {
             super(QualifiedName.create(op.getSimpleName()), op);
         }
+    }
 
+    /**
+     * JVM Feature scope that is shado
+     * 
+     * @author Michael Barry
+     */
+    private static class ShadowedJvmFeatureScope extends JvmFeatureScope {
+        private ShadowedJvmFeatureScope(IScope parent, String scopeDescription,
+                Collection<? extends IValidatedEObjectDescription> descriptions) {
+            super(parent, scopeDescription, descriptions);
+        }
+
+        @Override
+        protected boolean isShadowed(IEObjectDescription fromParent) {
+            return false;
+        }
+
+        @Override
+        protected boolean isShadowedBy(IEObjectDescription fromParent,
+                Iterable<IEObjectDescription> localElements) {
+            return false;
+        }
     }
 
 }

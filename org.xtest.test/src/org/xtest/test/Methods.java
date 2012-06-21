@@ -10,6 +10,6 @@ import org.xtest.junit.XtestJunitRunner;
  * @author Michael Barry
  */
 @RunWith(XtestJunitRunner.class)
-@RunsXtest("src/org/xtest/test/Methods.xtest")
+@RunsXtest("src/org/xtest/test/MethodValidation.xtest")
 public class Methods {
 }
