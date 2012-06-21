@@ -176,7 +176,9 @@ xtest "use static method" {
 	xtest "curried static" { assertValidSyntax ('def static function((String)=>Integer arg) {arg.apply("a")}; function[it.length]') }
 	xtest "sugared static" { assertValidSyntax ('def static getC {1}; val d = c') }
 	xtest "static extension" { assertValidSyntax ('def static extn(int i) {1+1}; 1.extn') }
+	xtest "static extension on wrong type" { assertInvalidSyntax ('def static extn(String i) {1+1}; 1.extn') }
 	xtest "static sugared extension" { assertValidSyntax ('def static setC(int i, int a) {1+1}; 1.c = 2') }
+	xtest "static sugared extension on wrong type" { assertInvalidSyntax ('def static setC(String i, int a) {1+1}; 1.c = 2') }
 }
 
 xtest "use non-static method" {
@@ -203,24 +205,30 @@ xtest "use non-static method" {
 	xtest "curried non-static" { assertValidSyntax ('def function((String)=>Integer arg) {arg.apply("a")}; function[it.length]') }
 	xtest "sugared non-static" { assertValidSyntax ('def getC {1}; val d = c') }
 	xtest "non-static extension" { assertValidSyntax ('def extn(int i) {1+1}; 1.extn') }
+	xtest "non-static extension on wrong type" { assertInvalidSyntax ('def extn(String i) {1+1}; 1.extn') }
 	xtest "non-static sugared extension" { assertValidSyntax ('def setC(int i, int a) {1+1}; 1.c = 2') }
-	// Then typing
-	// Then interpreting
-}
+	xtest "non-static sugared extension on wrong type" { assertInvalidSyntax ('def setC(String i, int a) {1+1}; 1.c = 2') }
+} 
 
 xtest "local method naming conflicts" {
 	xtest "reassign function OK" { assertValidSyntax('def function() {}; def function() {}')}
 	xtest "reassign static function OK" { assertValidSyntax('def static function() {}; def function() {}')}
 	xtest "overload local variable NOT OK" { 
-		assertValidSyntax('val nop = 1; def function() {}')
-		assertInvalidSyntax('val function = 1; def function() {}')
+		assertValidSyntax('val b = 1; def a() {}')
+		assertInvalidSyntax('val a = 1; def a() {}')
 	}
 	xtest "overload local method with variable inside NOT OK" { 
-		assertValidSyntax('def function() {val nop = 1}')
-		assertInvalidSyntax('def function() {val function = 1}')
+		assertValidSyntax('def a() {val b = 1}')
+		assertInvalidSyntax('def a() {val a = 1}')
 	}
 	xtest "overload local method with variable outside NOT OK" { 
-		assertValidSyntax('def function() {}; val nop = 1')
-		assertInvalidSyntax('def function() {}; val function = 1')
+		assertValidSyntax('def a() {}; val b = 1')
+		assertInvalidSyntax('def a() {}; val a = 1')
 	}
+	xtest "overload static method with variable OK" { 
+		assertValidSyntax('def static a() {}; val a = 1')
+	}
+	// Then typing
+	// Then interpreting
+	// Then nicer extension method syntax
 }

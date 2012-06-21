@@ -21,14 +21,18 @@ import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.common.types.JvmField;
 import org.eclipse.xtext.common.types.JvmFormalParameter;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
+import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmType;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.TypesPackage;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
@@ -36,7 +40,10 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.eclipse.xtext.xbase.XAssignment;
+import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
+import org.eclipse.xtext.xbase.XbasePackage;
+import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
 import org.xtest.RunType;
 import org.xtest.XTestEvaluationException;
@@ -73,6 +80,8 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private static final int TEST_RUN_FAILURE_INDEX = Integer.MAX_VALUE;
+    @Inject
+    private IJvmModelAssociations associations;
     private final ThreadLocal<CancelIndicator> cancelIndicators = new ThreadLocal<CancelIndicator>();
     @Inject
     private PerFilePreferenceProvider preferenceProvider;
@@ -82,6 +91,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private TypeConformanceComputer typeConformanceComputer;
     @Inject
     private ITypeProvider typeProvider;
+
     @Inject
     private TypeReferences typeReferences;
 
@@ -229,6 +239,19 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      *            The method def
      */
     @Check
+    public void checkMethodNameDoesntShadowVariable(XMethodDef def) {
+        if (!def.isStatic()) {
+            checkDeclaredVariableName(def, def, XTestPackage.Literals.XMETHOD_DEF__NAME);
+        }
+    }
+
+    /**
+     * Checks that method parameter names don't collide with eachother or other local variables
+     * 
+     * @param def
+     *            The method def
+     */
+    @Check
     public void checkMethodParametersUnique(XMethodDef def) {
         if (!def.isStatic()) {
             for (JvmFormalParameter parameter : def.getParameters()) {
@@ -308,6 +331,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                         XTestPackage.Literals.XMETHOD_DEF__NAME, 0);
             }
         }
+
     }
 
     /**
@@ -354,6 +378,36 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                 markUnexecuted(main, unexecutedExpressions);
             }
             getContext().put(XTestResult.KEY, result);
+        }
+    }
+
+    @Override
+    protected void checkDeclaredVariableName(EObject nameDeclarator, EObject attributeHolder,
+            EAttribute attr) {
+        super.checkDeclaredVariableName(nameDeclarator, attributeHolder, attr);
+        if (nameDeclarator.eContainer() != null
+                && attr.getEContainingClass().isInstance(attributeHolder)) {
+            String name = (String) attributeHolder.eGet(attr);
+            int idx = 0;
+            if (nameDeclarator.eContainer() instanceof XBlockExpression) {
+                idx = ((XBlockExpression) nameDeclarator.eContainer()).getExpressions().indexOf(
+                        nameDeclarator);
+            }
+            IScope scope = getScopeProvider().createSimpleFeatureCallScope(
+                    nameDeclarator.eContainer(),
+                    XbasePackage.Literals.XABSTRACT_FEATURE_CALL__FEATURE,
+                    nameDeclarator.eResource(), true, idx);
+            Iterable<IEObjectDescription> elements = scope.getElements(QualifiedName.create(name));
+            for (IEObjectDescription desc : elements) {
+                EObject eObjectOrProxy = desc.getEObjectOrProxy();
+                if (eObjectOrProxy != nameDeclarator && eObjectOrProxy instanceof JvmOperation
+                        && !(nameDeclarator instanceof XMethodDef)
+                        && !((JvmOperation) eObjectOrProxy).isStatic()) {
+                    error("Local variable '" + name + "' shadows local method", attributeHolder,
+                            attr,
+                            org.eclipse.xtext.xbase.validation.IssueCodes.VARIABLE_NAME_SHADOWING);
+                }
+            }
         }
     }
 
