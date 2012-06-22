@@ -376,7 +376,7 @@ public class XTestScopeProvider extends XbaseScopeProvider {
                 .curry(receiverType, expression);
         LocalVariableScopeContext scopeContext = createLocalVariableScopeContext(expression, null,
                 false, -1);
-        IScope localVariableScope = createLocalVarScope(parent, scopeContext);
+        IScope localVariableScope = createLocalVarScope(IScope.NULLSCOPE, scopeContext);
         if (expression instanceof XAssignment) {
             addFeatureDescriptionProvidersForAssignment(expression.eResource(), contextType,
                     implicitReceiver, null, getDefaultPriority(), curried, localVariableScope);
