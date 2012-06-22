@@ -26,6 +26,7 @@ import org.eclipse.xtext.scoping.impl.MapBasedScope;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XBlockExpression;
+import org.eclipse.xtext.xbase.XClosure;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider;
@@ -416,17 +417,14 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         }
 
         @Override
-        public boolean canSpawnForContainer() {
-            return super.canSpawnForContainer();
-        }
-
-        @Override
         public LocalVariableScopeContext spawnForContainer() {
-            if (getContext() instanceof XMethodDef) {
+            if (getLogicalOrRealContainer() instanceof XMethodDef
+                    || getContext() instanceof XClosure) {
                 return new LocalVariableScopeContextAllowsMethods(getLogicalOrRealContainer(),
                         getReference(), false, -1, true, expressionContext);
             }
-            return super.spawnForContainer();
+            return new LocalVariableScopeContextAllowsMethods(getLogicalOrRealContainer(),
+                    getReference(), false, -1, isReferredFromClosure(), expressionContext);
         }
 
     }
