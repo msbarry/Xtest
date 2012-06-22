@@ -2,7 +2,7 @@
 runWhileEditing: false
 // TODO - when Guice fixes memory leak, re-enable running on save
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
-runOnSave: true
+runOnSave: false
  
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
@@ -228,6 +228,11 @@ xtest "local method naming conflicts" {
 	xtest "overload static method with variable OK" { 
 		assertValidSyntax('def static a() {}; val a = 1')
 	}
+	xtest "Can only use val from local method" { 
+		assertValidSyntax('val b = 1; def a() {b};')
+		assertInvalidSyntax('var b = 1; def a() {b};')
+	}
+	// When did slowdown happen? probably local method scoping
 	// Then typing
 	// Then interpreting
 	// Then nicer extension method syntax

@@ -43,7 +43,6 @@ import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.XbasePackage;
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
 import org.xtest.RunType;
 import org.xtest.XTestEvaluationException;
@@ -80,8 +79,6 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private static final int TEST_RUN_FAILURE_INDEX = Integer.MAX_VALUE;
-    @Inject
-    private IJvmModelAssociations associations;
     private final ThreadLocal<CancelIndicator> cancelIndicators = new ThreadLocal<CancelIndicator>();
     @Inject
     private PerFilePreferenceProvider preferenceProvider;
@@ -388,24 +385,28 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
         if (nameDeclarator.eContainer() != null
                 && attr.getEContainingClass().isInstance(attributeHolder)) {
             String name = (String) attributeHolder.eGet(attr);
-            int idx = 0;
-            if (nameDeclarator.eContainer() instanceof XBlockExpression) {
-                idx = ((XBlockExpression) nameDeclarator.eContainer()).getExpressions().indexOf(
-                        nameDeclarator);
-            }
-            IScope scope = getScopeProvider().createSimpleFeatureCallScope(
-                    nameDeclarator.eContainer(),
-                    XbasePackage.Literals.XABSTRACT_FEATURE_CALL__FEATURE,
-                    nameDeclarator.eResource(), true, idx);
-            Iterable<IEObjectDescription> elements = scope.getElements(QualifiedName.create(name));
-            for (IEObjectDescription desc : elements) {
-                EObject eObjectOrProxy = desc.getEObjectOrProxy();
-                if (eObjectOrProxy != nameDeclarator && eObjectOrProxy instanceof JvmOperation
-                        && !(nameDeclarator instanceof XMethodDef)
-                        && !((JvmOperation) eObjectOrProxy).isStatic()) {
-                    error("Local variable '" + name + "' shadows local method", attributeHolder,
-                            attr,
-                            org.eclipse.xtext.xbase.validation.IssueCodes.VARIABLE_NAME_SHADOWING);
+            if (name != null) {
+                int idx = 0;
+                if (nameDeclarator.eContainer() instanceof XBlockExpression) {
+                    idx = ((XBlockExpression) nameDeclarator.eContainer()).getExpressions()
+                            .indexOf(nameDeclarator);
+                }
+                IScope scope = getScopeProvider().createSimpleFeatureCallScope(
+                        nameDeclarator.eContainer(),
+                        XbasePackage.Literals.XABSTRACT_FEATURE_CALL__FEATURE,
+                        nameDeclarator.eResource(), true, idx);
+                Iterable<IEObjectDescription> elements = scope.getElements(QualifiedName
+                        .create(name));
+                for (IEObjectDescription desc : elements) {
+                    EObject eObjectOrProxy = desc.getEObjectOrProxy();
+                    if (eObjectOrProxy != nameDeclarator && eObjectOrProxy instanceof JvmOperation
+                            && !(nameDeclarator instanceof XMethodDef)
+                            && !((JvmOperation) eObjectOrProxy).isStatic()) {
+                        error("Local variable '" + name + "' shadows local method",
+                                attributeHolder,
+                                attr,
+                                org.eclipse.xtext.xbase.validation.IssueCodes.VARIABLE_NAME_SHADOWING);
+                    }
                 }
             }
         }

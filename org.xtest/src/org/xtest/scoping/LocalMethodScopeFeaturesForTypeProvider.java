@@ -1,12 +1,16 @@
 package org.xtest.scoping;
 
+import java.util.Collection;
+
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
 import org.eclipse.xtext.common.types.JvmFeature;
+import org.eclipse.xtext.common.types.JvmFormalParameter;
+import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.Strings;
-import org.eclipse.xtext.xbase.scoping.featurecalls.IFeaturesForTypeProvider;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -20,7 +24,7 @@ import com.google.common.collect.Lists;
  * @author Michael Barry
  */
 @SuppressWarnings("restriction")
-public class LocalMethodScopeFeaturesForTypeProvider implements IFeaturesForTypeProvider {
+public class LocalMethodScopeFeaturesForTypeProvider extends StaticallyImportedFeaturesProvider {
 
     private final Iterable<IEObjectDescription> descriptions;
 
@@ -32,12 +36,6 @@ public class LocalMethodScopeFeaturesForTypeProvider implements IFeaturesForType
      */
     public LocalMethodScopeFeaturesForTypeProvider(IScope localVariableScope) {
         this.descriptions = Lists.newArrayList(localVariableScope.getAllElements());
-    }
-
-    @Override
-    public Iterable<JvmFeature> getAllFeatures(JvmTypeReference typeReference,
-            Iterable<JvmTypeReference> hierarchy) {
-        return Iterables.filter(getEObjectsInScope(), JvmFeature.class);
     }
 
     @Override
@@ -55,6 +53,39 @@ public class LocalMethodScopeFeaturesForTypeProvider implements IFeaturesForType
     @Override
     public boolean isExtensionProvider() {
         return true;
+    }
+
+    @Override
+    protected void collectFeatures(String name, Iterable<JvmTypeReference> hierarchy,
+            Collection<JvmFeature> result) {
+        if (hierarchy != null) {
+            Iterable<JvmOperation> features = Iterables.filter(getEObjectsInScope(),
+                    JvmOperation.class);
+            for (JvmTypeReference e : hierarchy) {
+                for (JvmOperation feature : features) {
+                    if (isMatchingExtension(e, feature)) {
+                        result.add(feature);
+                    }
+                }
+            }
+        } else {
+            result.addAll(Lists.newArrayList(Iterables.filter(getEObjectsInScope(),
+                    JvmOperation.class)));
+        }
+    }
+
+    @Override
+    protected boolean isMatchingExtension(JvmTypeReference expectedParameterTypeReference,
+            JvmOperation operation) {
+        boolean result = false;
+        if (expectedParameterTypeReference == null) {
+            result = true;
+        } else if (operation.getParameters().size() > 0) {
+            JvmFormalParameter firstParam = Iterables.getFirst(operation.getParameters(), null);
+            result = super.isSameTypeOrAssignableToUpperBound(expectedParameterTypeReference,
+                    firstParam.getParameterType());
+        }
+        return result;
     }
 
     private Iterable<EObject> getEObjectsInScope() {
