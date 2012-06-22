@@ -1,0 +1,10 @@
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: true
+ 
+import static org.junit.Assert.*
+import static extension org.^xtest.test.TestUtils.*
+
+// TODO

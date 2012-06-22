@@ -8,6 +8,6 @@ import org.xtest.junit.XtestJunitRunner;
  * @author Michael Barry
  */
 @RunWith(XtestJunitRunner.class)
-@RunsXtest("src/org/xtest/test/StackTraces.xtest")
-public class StackTraces {
+@RunsXtest("src/org/xtest/test/MethodValidation.xtest")
+public class MethodValidation {
 }

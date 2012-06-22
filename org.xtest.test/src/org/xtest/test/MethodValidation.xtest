@@ -232,7 +232,4 @@ xtest "local method naming conflicts" {
 		assertValidSyntax  ('val b = 1; def a() {b};')
 		assertInvalidSyntax('var b = 1; def a() {b};')
 	}
-	// Then typing
-	// Then interpreting
-	// Then nicer extension method syntax
 }
