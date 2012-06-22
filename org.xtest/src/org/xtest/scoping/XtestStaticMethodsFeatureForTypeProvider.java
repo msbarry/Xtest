@@ -76,28 +76,29 @@ public class XtestStaticMethodsFeatureForTypeProvider extends StaticallyImported
             Map<JvmTypeReference, Collection<JvmTypeReference>> oldResult = result;
             result = Maps.newLinkedHashMap();
             if (!extension || hierarchy == null) {
-                result.put(null, typeName);
-                Collection<JvmTypeReference> ref = oldResult.get(null);
-                if (ref == null) {
+                Collection<JvmTypeReference> oldRef = oldResult.get(null);
+                List<JvmTypeReference> ref;
+                if (oldRef == null) {
                     ref = Lists.newArrayList();
                 } else {
-                    ref = Lists.newArrayList(ref);
+                    ref = Lists.newArrayList(oldRef);
                 }
                 result.put(null, ref);
                 for (JvmTypeReference type : typeName) {
-                    ref.add(type);
+                    ref.add(0, type);
                 }
             } else {
                 for (JvmTypeReference reference : hierarchy) {
-                    Collection<JvmTypeReference> ref = oldResult.get(reference);
-                    if (ref == null) {
+                    Collection<JvmTypeReference> oldRef = oldResult.get(reference);
+                    List<JvmTypeReference> ref;
+                    if (oldRef == null) {
                         ref = Lists.newArrayList();
                     } else {
-                        ref = Lists.newArrayList(ref);
+                        ref = Lists.newArrayList(oldRef);
                     }
                     result.put(reference, ref);
                     for (JvmTypeReference type : typeName) {
-                        ref.add(type);
+                        ref.add(0, type);
                     }
                 }
             }
