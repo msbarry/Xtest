@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -25,13 +27,26 @@ import com.google.inject.Injector;
  * @author Michael Barry
  */
 public class XtestJunitRunner extends Runner {
+    private static double cumulative = 0.0;
     private static Injector injector = new XTestStandaloneSetup()
             .createInjectorAndDoEMFRegistration();
+
+    /**
+     * Returns the cumulative time spent running xtest files throughout the lifetime of this class
+     * 
+     * @return The cumulative time spent running xtest files
+     */
+    public static double getCumulative() {
+        return cumulative;
+    }
+
     private final Class<?> clazz;
     private final String file;
     private final Set<String> names = Sets.newHashSet();
+
     private Throwable preEvalException = null;
     private XTestResult run;
+
     private Description top;
 
     /**
@@ -130,7 +145,15 @@ public class XtestJunitRunner extends Runner {
             builder.append(line);
         }
         in.close();
+
+        // profiling stats
+        long start = System.nanoTime();
         XTestResult run = XTestRunner.run(builder.toString(), injector);
+        long end = System.nanoTime();
+        double d = (end - start) / (double) TimeUnit.NANOSECONDS.convert(1, TimeUnit.SECONDS);
+        cumulative += d;
+        DecimalFormat decimalFormat = new DecimalFormat("#.###");
+        System.out.println(decimalFormat.format(d) + "s " + file.replaceAll("^.*/", ""));
         return run;
     }
 
