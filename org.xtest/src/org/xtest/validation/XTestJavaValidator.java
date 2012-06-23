@@ -16,11 +16,13 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend.core.validation.IssueCodes;
+import org.eclipse.xtend.core.validation.TypeErasedSignature;
 import org.eclipse.xtend.core.xtend.XtendImport;
 import org.eclipse.xtend.core.xtend.XtendPackage;
 import org.eclipse.xtend.core.xtend.XtendParameter;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.common.types.JvmField;
+import org.eclipse.xtext.common.types.JvmGenericType;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmType;
@@ -35,7 +37,6 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
@@ -49,6 +50,7 @@ import org.xtest.RunType;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.XTestRunner.DontRunCheck;
+import org.xtest.jvmmodel.XtestJvmModelAssociator;
 import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.results.XTestResult;
@@ -58,8 +60,10 @@ import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XTestPackage;
 
 import com.google.common.base.Function;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.TreeMultiset;
 import com.google.inject.Inject;
@@ -78,18 +82,37 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private static final int TEST_RUN_FAILURE_INDEX = Integer.MAX_VALUE;
+    @Inject
+    private XtestJvmModelAssociator associations;
     private final ThreadLocal<CancelIndicator> cancelIndicators = new ThreadLocal<CancelIndicator>();
     @Inject
     private PerFilePreferenceProvider preferenceProvider;
     @Inject
     private XTestRunner runner;
     @Inject
+    private TypeErasedSignature.Provider signatureProvider;
+    @Inject
     private TypeConformanceComputer typeConformanceComputer;
+
     @Inject
     private ITypeProvider typeProvider;
 
     @Inject
     private TypeReferences typeReferences;
+
+    private final XtendValidations xtendUtils;
+
+    /**
+     * FOR GUICE USE ONLY
+     * 
+     * @param xtendUtil
+     *            Xtend validator delegate to hook up to this validators message acceptor
+     */
+    @Inject
+    public XTestJavaValidator(XtendValidations xtendUtil) {
+        this.xtendUtils = xtendUtil;
+        xtendUtils.setDelagate(this);
+    }
 
     /**
      * Verifies that the "throws" type is a subclass of throwable or that the assert expression has
@@ -305,14 +328,17 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     }
 
     /**
-     * Checks that method def type parameter names are unique
+     * Checks that static method def signatures are unique.
      * 
-     * @param def
-     *            The method def
+     * Don't need to check local methods. Like javascript functions they can shadow each other based
+     * on scoping rules.
+     * 
+     * @param body
+     *            The body of the test file
      */
     @Check
-    public void checkStaticMethodNameUnique(XMethodDef def) {
-        final TreeIterator<EObject> allContents = def.eResource().getAllContents();
+    public void checkStaticMethodSignaturesUnique(Body body) {
+        final TreeIterator<EObject> allContents = body.eResource().getAllContents();
         Iterable<EObject> objects = new Iterable<EObject>() {
             @Override
             public java.util.Iterator<EObject> iterator() {
@@ -320,14 +346,19 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             };
         };
         Iterable<XMethodDef> filter = Iterables.filter(objects, XMethodDef.class);
-        for (XMethodDef other : filter) {
-            if (other != def && other.isStatic() && def.isStatic()
-                    && Strings.equal(def.getName(), other.getName())) {
-                error("Conflicting static method name", def,
-                        XtendPackage.Literals.XTEND_FUNCTION__NAME, 0);
+        Multimap<Object, JvmOperation> signatureToOperation = HashMultimap.create();
+        for (XMethodDef def : filter) {
+            if (def.isStatic()) {
+                for (JvmOperation operation : associations.getJvmOperations(def)) {
+                    TypeErasedSignature signature = signatureProvider.get(operation);
+                    signatureToOperation.put(signature, operation);
+                }
             }
         }
-
+        JvmGenericType inferredType = associations.getInferredType(body);
+        if (inferredType != null) {
+            xtendUtils.doCheckDuplicateExecutables(inferredType, signatureToOperation);
+        }
     }
 
     @Check

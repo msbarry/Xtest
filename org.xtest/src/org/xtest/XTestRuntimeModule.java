@@ -2,6 +2,7 @@ package org.xtest;
 
 import org.eclipse.xtend.core.formatting.OrganizeImports;
 import org.eclipse.xtend.core.formatting.OrganizeImports.ReferenceAcceptor;
+import org.eclipse.xtend.core.jvmmodel.IXtendJvmAssociations;
 import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.generator.IGenerator;
@@ -74,6 +75,15 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     @Override
     public Class<? extends org.eclipse.xtext.resource.IResourceDescription.Manager> bindIResourceDescription$Manager() {
         return XtestResourceDescriptionManager.class;
+    }
+
+    /**
+     * Bind the Xtend JVM Model Associator to our custom implementation
+     * 
+     * @return {@link XtestJvmModelAssociator}
+     */
+    public Class<? extends IXtendJvmAssociations> bindIXtendJvmAssociations() {
+        return XtestJvmModelAssociator.class;
     }
 
     /**

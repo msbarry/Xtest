@@ -45,11 +45,20 @@ xtest "type conformance utility tests" {
 // Now use it to test method type computation
 xtest "declared" {
 	xtest { assertIsValidAndTypeConformsTo("def Integer func {1}; func", Integer::class) } 
+	xtest { assertIsValidAndTypeConformsTo("def static Integer func {1}; func", Integer::class) } 
 	xtest { assertIsValidAndTypeConformsTo("def String func {'a'}; func", String::class) } 
 	xtest { assertIsValidAndVoidType("def void func {val a = 1}; func")} 
 }
+xtest "chooses correct method based on type when multiple names match" {
+	xtest { assertIsValidAndTypeConformsTo("def int func(int s) {1}; def String func(String s) {'a'}; func('a')", String::class) }
+	xtest { assertIsValidAndTypeConformsTo("def int func(int s) {1}; def String func(String s) {'a'}; func(1)", Integer::class) }
+	
+	xtest { assertIsValidAndTypeConformsTo("def static int func(int s) {1}; def static String func(String s) {'a'}; func('a')", String::class) }
+	xtest { assertIsValidAndTypeConformsTo("def static int func(int s) {1}; def static String func(String s) {'a'}; func(1)", Integer::class) }
+}  
 xtest "inferred" {
 	xtest { assertIsValidAndTypeConformsTo("def func {1}; func", Integer::class) } 
+	xtest { assertIsValidAndTypeConformsTo("def static func {1}; func", Integer::class) } 
 	xtest { assertIsValidAndTypeConformsTo("def func {'a'}; func", String::class) } 
 	xtest { assertIsValidAndVoidType("def func {val a = 1}; func")} 
 }

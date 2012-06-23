@@ -12,12 +12,13 @@ xtest "no arg, no body" {
 	xtest { assertValidSyntax('def function {}; def function {}') }
 	xtest { assertValidSyntax('def static function {}') }
 	xtest { assertValidSyntax('static def function {}') }
+	xtest { assertValidSyntax('def static function(String s) {}; def static function(int i) {}') }
 	
 	xtest { assertInvalidSyntax('def {}') }
 	xtest { assertInvalidSyntax('def function') }
 	xtest { assertInvalidSyntax('def static function {}; def static function {}') }
 }
-
+ 
 xtest "no arg, with body" {
 	xtest { assertValidSyntax('def function {return 0}') }
 	xtest { assertValidSyntax('def function {0}') }
