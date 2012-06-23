@@ -48,6 +48,7 @@ xtest "declared" {
 	xtest { assertIsValidAndTypeConformsTo("def static Integer func {1}; func", Integer::class) } 
 	xtest { assertIsValidAndTypeConformsTo("def String func {'a'}; func", String::class) } 
 	xtest { assertIsValidAndVoidType("def void func {val a = 1}; func")} 
+	xtest { assertIsValidAndVoidType("def void func {1}; func")} 
 }
 xtest "chooses correct method based on type when multiple names match" {
 	xtest { assertIsValidAndTypeConformsTo("def int func(int s) {1}; def String func(String s) {'a'}; func('a')", String::class) }

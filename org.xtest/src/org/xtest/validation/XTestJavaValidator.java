@@ -304,7 +304,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     @Check
     public void checkMethodReturnType(XMethodDef def) {
         JvmTypeReference declaredReturnType = def.getReturnType();
-        if (declaredReturnType != null) {
+        if (declaredReturnType != null && !typeReferences.is(declaredReturnType, Void.TYPE)) {
             JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(
                     def.getExpression(), true);
             if (!typeConformanceComputer.isConformant(declaredReturnType, commonReturnType)) {
