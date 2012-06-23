@@ -2,6 +2,7 @@ package org.xtest.test;
 
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -10,7 +11,10 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend.core.formatting.OrganizeImports;
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
+import org.eclipse.xtext.common.types.JvmType;
 import org.eclipse.xtext.common.types.JvmTypeReference;
+import org.eclipse.xtext.common.types.TypesFactory;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -44,9 +48,11 @@ public class TestUtils {
 
     private static TypeConformanceComputer typeComputer = XtestInjector.injector
             .getInstance(TypeConformanceComputer.class);
-
     private static XTestTypeProvider typeProvider = XtestInjector.injector
             .getInstance(XTestTypeProvider.class);
+
+    private static TypesFactory typesFactory = XtestInjector.injector
+            .getInstance(TypesFactory.class);
 
     public static void assertEqualsNormalizeLinebreak(String expected, String actual) {
         String expectedNormalized = expected.replace("\r\n", "\n");
@@ -67,6 +73,31 @@ public class TestUtils {
         Body val = parse(script);
         assertValidationPassed(val);
         assertEvaluatesTo(object, val);
+    }
+
+    public static void assertIsValidAndTypeConformsTo(String script, Class<?> type)
+            throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+        JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(val, true);
+        assertNotNull("computed common return type", commonReturnType);
+        JvmType findDeclaredType = typeRefs.findDeclaredType(type, val);
+        assertNotNull("type for " + type.getSimpleName(), findDeclaredType);
+        JvmParameterizedTypeReference createTypeRef = typeRefs.createTypeRef(findDeclaredType);
+        boolean conformant = typeComputer.isConformant(createTypeRef, commonReturnType);
+        assertTrue(commonReturnType + " does not conform to " + createTypeRef, conformant);
+    }
+
+    public static void assertIsValidAndVoidType(String script) throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+        JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(val, true);
+        assertNotNull("computed common return type", commonReturnType);
+        JvmParameterizedTypeReference createTypeRef = typeRefs.createTypeRef(typesFactory
+                .createJvmVoid());
+        boolean conformant = typeComputer.isConformant(createTypeRef, commonReturnType);
+        assertTrue("'" + commonReturnType + "' does not conform to '" + createTypeRef + "'",
+                conformant);
     }
 
     public static void assertProxyStackTrace(StackTraceElement element) {

@@ -288,7 +288,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             if (!typeConformanceComputer.isConformant(declaredReturnType, commonReturnType)) {
                 error("Incompatible return type. Declared " + getNameOfTypes(declaredReturnType)
                         + " but was " + canonicalName(commonReturnType), def,
-                        XTestPackage.Literals.XMETHOD_DEF__RETURN_TYPE,
+                        XTestPackage.Literals.XMETHOD_DEF__EXPRESSION,
                         ValidationMessageAcceptor.INSIGNIFICANT_INDEX, INCOMPATIBLE_RETURN_TYPE);
             }
         }
@@ -329,6 +329,15 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             }
         }
 
+    }
+
+    @Check
+    @Override
+    public void checkTypeReferenceIsNotVoid(XExpression expression) {
+        // only type reference is return type, that can be void
+        if (!(expression instanceof XMethodDef)) {
+            super.checkTypeReferenceIsNotVoid(expression);
+        }
     }
 
     /**

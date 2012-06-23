@@ -1,6 +1,6 @@
 package org.xtest.ui.resource;
 
-import org.eclipse.xtend.core.resource.XtendResource;
+import org.xtest.resource.XtestResource;
 import org.xtest.runner.external.DependencyAcceptor;
 
 import com.google.common.base.Optional;
@@ -11,7 +11,7 @@ import com.google.common.base.Optional;
  * @author Michael Barry
  */
 @SuppressWarnings("restriction")
-public class XtestDependencyAcceptingResource extends XtendResource {
+public class XtestDependencyAcceptingResource extends XtestResource {
     private DependencyAcceptor acceptor;
 
     /**
