@@ -11,11 +11,9 @@ import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
 
-import org.eclipse.xtext.common.types.JvmAnnotationTarget;
-import org.eclipse.xtext.common.types.JvmFormalParameter;
-import org.eclipse.xtext.common.types.JvmGenericArrayTypeReference;
-import org.eclipse.xtext.common.types.JvmIdentifiableElement;
-import org.eclipse.xtext.common.types.JvmTypeReference;
+import org.eclipse.xtend.core.xtend.XtendAnnotationTarget;
+import org.eclipse.xtend.core.xtend.XtendFunction;
+import org.eclipse.xtend.core.xtend.XtendMember;
 
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
@@ -116,33 +114,6 @@ public class XTestSwitch<T> extends Switch<T>
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case XTestPackage.PARAMETER:
-			{
-				Parameter parameter = (Parameter)theEObject;
-				T result = caseParameter(parameter);
-				if (result == null) result = caseJvmFormalParameter(parameter);
-				if (result == null) result = caseJvmIdentifiableElement(parameter);
-				if (result == null) result = caseJvmAnnotationTarget(parameter);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case XTestPackage.JVM_VAR_ARG_ARRAY:
-			{
-				JvmVarArgArray jvmVarArgArray = (JvmVarArgArray)theEObject;
-				T result = caseJvmVarArgArray(jvmVarArgArray);
-				if (result == null) result = caseJvmGenericArrayTypeReference(jvmVarArgArray);
-				if (result == null) result = caseJvmTypeReference(jvmVarArgArray);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case XTestPackage.XMETHOD_DEF:
-			{
-				XMethodDef xMethodDef = (XMethodDef)theEObject;
-				T result = caseXMethodDef(xMethodDef);
-				if (result == null) result = caseXExpression(xMethodDef);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case XTestPackage.XASSERT_EXPRESSION:
 			{
 				XAssertExpression xAssertExpression = (XAssertExpression)theEObject;
@@ -156,6 +127,24 @@ public class XTestSwitch<T> extends Switch<T>
 				XSafeExpression xSafeExpression = (XSafeExpression)theEObject;
 				T result = caseXSafeExpression(xSafeExpression);
 				if (result == null) result = caseXExpression(xSafeExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case XTestPackage.XMETHOD_DEF:
+			{
+				XMethodDef xMethodDef = (XMethodDef)theEObject;
+				T result = caseXMethodDef(xMethodDef);
+				if (result == null) result = caseXtendFunction(xMethodDef);
+				if (result == null) result = caseXtendMember(xMethodDef);
+				if (result == null) result = caseXtendAnnotationTarget(xMethodDef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case XTestPackage.XMETHOD_DEF_EXPRESSION:
+			{
+				XMethodDefExpression xMethodDefExpression = (XMethodDefExpression)theEObject;
+				T result = caseXMethodDefExpression(xMethodDefExpression);
+				if (result == null) result = caseXExpression(xMethodDefExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -228,54 +217,6 @@ public class XTestSwitch<T> extends Switch<T>
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Parameter</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Parameter</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseParameter(Parameter object)
-	{
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Jvm Var Arg Array</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Jvm Var Arg Array</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseJvmVarArgArray(JvmVarArgArray object)
-	{
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>XMethod Def</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>XMethod Def</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseXMethodDef(XMethodDef object)
-	{
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>XAssert Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -303,6 +244,38 @@ public class XTestSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	public T caseXSafeExpression(XSafeExpression object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>XMethod Def</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>XMethod Def</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXMethodDef(XMethodDef object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>XMethod Def Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>XMethod Def Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXMethodDefExpression(XMethodDefExpression object)
 	{
 		return null;
 	}
@@ -340,81 +313,49 @@ public class XTestSwitch<T> extends Switch<T>
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Jvm Identifiable Element</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Annotation Target</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Jvm Identifiable Element</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Annotation Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJvmIdentifiableElement(JvmIdentifiableElement object)
+	public T caseXtendAnnotationTarget(XtendAnnotationTarget object)
 	{
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Jvm Annotation Target</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Member</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Jvm Annotation Target</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Member</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJvmAnnotationTarget(JvmAnnotationTarget object)
+	public T caseXtendMember(XtendMember object)
 	{
 		return null;
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Jvm Formal Parameter</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Function</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Jvm Formal Parameter</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Function</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseJvmFormalParameter(JvmFormalParameter object)
-	{
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Jvm Type Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Jvm Type Reference</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseJvmTypeReference(JvmTypeReference object)
-	{
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Jvm Generic Array Type Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Jvm Generic Array Type Reference</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseJvmGenericArrayTypeReference(JvmGenericArrayTypeReference object)
+	public T caseXtendFunction(XtendFunction object)
 	{
 		return null;
 	}

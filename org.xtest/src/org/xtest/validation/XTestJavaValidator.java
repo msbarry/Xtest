@@ -17,9 +17,10 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend.core.validation.IssueCodes;
 import org.eclipse.xtend.core.xtend.XtendImport;
+import org.eclipse.xtend.core.xtend.XtendPackage;
+import org.eclipse.xtend.core.xtend.XtendParameter;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.common.types.JvmField;
-import org.eclipse.xtext.common.types.JvmFormalParameter;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmType;
@@ -52,8 +53,6 @@ import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
-import org.xtest.xTest.JvmVarArgArray;
-import org.xtest.xTest.Parameter;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XTestPackage;
@@ -238,7 +237,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     @Check
     public void checkMethodNameDoesntShadowVariable(XMethodDef def) {
         if (!def.isStatic()) {
-            checkDeclaredVariableName(def, def, XTestPackage.Literals.XMETHOD_DEF__NAME);
+            checkDeclaredVariableName(def, def, XtendPackage.Literals.XTEND_FUNCTION__NAME);
         }
     }
 
@@ -251,12 +250,12 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     @Check
     public void checkMethodParametersUnique(XMethodDef def) {
         if (!def.isStatic()) {
-            for (JvmFormalParameter parameter : def.getParameters()) {
+            for (XtendParameter parameter : def.getParameters()) {
                 checkDeclaredVariableName(def, parameter,
-                        TypesPackage.Literals.JVM_FORMAL_PARAMETER__NAME);
+                        XtendPackage.Literals.XTEND_PARAMETER__NAME);
             }
         }
-        checkParameterNames(def.getParameters(), TypesPackage.Literals.JVM_FORMAL_PARAMETER__NAME);
+        checkParameterNames(def.getParameters(), XtendPackage.Literals.XTEND_PARAMETER__NAME);
     }
 
     /**
@@ -266,7 +265,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      *            The method def parameter
      */
     @Check
-    public void checkMethodParemeterNotVoid(Parameter param) {
+    public void checkMethodParemeterNotVoid(XtendParameter param) {
         if (typeReferences.is(param.getParameterType(), Void.TYPE)) {
             error("Argument type cannot be void", param.getParameterType(), null,
                     INVALID_USE_OF_TYPE);
@@ -288,7 +287,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             if (!typeConformanceComputer.isConformant(declaredReturnType, commonReturnType)) {
                 error("Incompatible return type. Declared " + getNameOfTypes(declaredReturnType)
                         + " but was " + canonicalName(commonReturnType), def,
-                        XTestPackage.Literals.XMETHOD_DEF__EXPRESSION,
+                        XtendPackage.Literals.XTEND_FUNCTION__EXPRESSION,
                         ValidationMessageAcceptor.INSIGNIFICANT_INDEX, INCOMPATIBLE_RETURN_TYPE);
             }
         }
@@ -325,7 +324,7 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
             if (other != def && other.isStatic() && def.isStatic()
                     && Strings.equal(def.getName(), other.getName())) {
                 error("Conflicting static method name", def,
-                        XTestPackage.Literals.XMETHOD_DEF__NAME, 0);
+                        XtendPackage.Literals.XTEND_FUNCTION__NAME, 0);
             }
         }
 
@@ -348,13 +347,13 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
      */
     @Check
     public void checkVarArgIsLast(XMethodDef def) {
-        EList<JvmFormalParameter> parameters = def.getParameters();
-        List<JvmFormalParameter> reversedParams = Lists.reverse(parameters);
+        EList<XtendParameter> parameters = def.getParameters();
+        List<XtendParameter> reversedParams = Lists.reverse(parameters);
         boolean first = true;
-        for (JvmFormalParameter parameter : reversedParams) {
+        for (XtendParameter parameter : reversedParams) {
             if (first) {
                 first = false;
-            } else if (parameter.getParameterType() instanceof JvmVarArgArray) {
+            } else if (parameter.isVarArg()) {
                 error("Only last paremeter can be var arg", parameter, null, 0);
             }
         }

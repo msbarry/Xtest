@@ -2,6 +2,7 @@ package org.xtest.types;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtend.core.xtend.XtendPackage;
 import org.eclipse.xtext.common.types.JvmAnyTypeReference;
 import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
@@ -16,7 +17,6 @@ import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
-import org.xtest.xTest.XTestPackage;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -37,7 +37,7 @@ public class XTestTypeProvider extends XbaseTypeProvider {
     protected JvmTypeReference expectedType(EObject container, EReference reference, int index,
             boolean rawType) {
         if (container instanceof XMethodDef
-                && reference == XTestPackage.Literals.XMETHOD_DEF__EXPRESSION) {
+                && reference == XtendPackage.Literals.XTEND_FUNCTION__NAME) {
             return _expectedType((XMethodDef) container);
         } else {
             return super.expectedType(container, reference, index, rawType);

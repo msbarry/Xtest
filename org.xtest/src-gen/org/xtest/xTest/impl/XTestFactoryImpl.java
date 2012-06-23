@@ -72,11 +72,10 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 			case XTestPackage.UNIQUE_NAME: return createUniqueName();
 			case XTestPackage.BODY: return createBody();
 			case XTestPackage.XTEST_EXPRESSION: return createXTestExpression();
-			case XTestPackage.PARAMETER: return createParameter();
-			case XTestPackage.JVM_VAR_ARG_ARRAY: return createJvmVarArgArray();
-			case XTestPackage.XMETHOD_DEF: return createXMethodDef();
 			case XTestPackage.XASSERT_EXPRESSION: return createXAssertExpression();
 			case XTestPackage.XSAFE_EXPRESSION: return createXSafeExpression();
+			case XTestPackage.XMETHOD_DEF: return createXMethodDef();
+			case XTestPackage.XMETHOD_DEF_EXPRESSION: return createXMethodDefExpression();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -131,10 +130,10 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Parameter createParameter()
+	public XAssertExpression createXAssertExpression()
 	{
-		ParameterImpl parameter = new ParameterImpl();
-		return parameter;
+		XAssertExpressionImpl xAssertExpression = new XAssertExpressionImpl();
+		return xAssertExpression;
 	}
 
 	/**
@@ -142,10 +141,10 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public JvmVarArgArray createJvmVarArgArray()
+	public XSafeExpression createXSafeExpression()
 	{
-		JvmVarArgArrayImplCustom jvmVarArgArray = new JvmVarArgArrayImplCustom();
-		return jvmVarArgArray;
+		XSafeExpressionImpl xSafeExpression = new XSafeExpressionImpl();
+		return xSafeExpression;
 	}
 
 	/**
@@ -164,21 +163,10 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public XAssertExpression createXAssertExpression()
+	public XMethodDefExpression createXMethodDefExpression()
 	{
-		XAssertExpressionImpl xAssertExpression = new XAssertExpressionImpl();
-		return xAssertExpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public XSafeExpression createXSafeExpression()
-	{
-		XSafeExpressionImpl xSafeExpression = new XSafeExpressionImpl();
-		return xSafeExpression;
+		XMethodDefExpressionImpl xMethodDefExpression = new XMethodDefExpressionImpl();
+		return xMethodDefExpression;
 	}
 
 	/**

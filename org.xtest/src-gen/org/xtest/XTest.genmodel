@@ -24,22 +24,16 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestExpression/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XTestExpression/expression"/>
     </genClasses>
-    <genClasses ecoreClass="XTest.ecore#//Parameter"/>
-    <genClasses ecoreClass="XTest.ecore#//JvmVarArgArray"/>
-    <genClasses ecoreClass="XTest.ecore#//XMethodDef">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//XMethodDef/static"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XMethodDef/typeParameters"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XMethodDef/returnType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XTest.ecore#//XMethodDef/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XMethodDef/parameters"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XMethodDef/expression"/>
-    </genClasses>
     <genClasses ecoreClass="XTest.ecore#//XAssertExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XAssertExpression/actual"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XAssertExpression/throws"/>
     </genClasses>
     <genClasses ecoreClass="XTest.ecore#//XSafeExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XSafeExpression/actual"/>
+    </genClasses>
+    <genClasses ecoreClass="XTest.ecore#//XMethodDef"/>
+    <genClasses ecoreClass="XTest.ecore#//XMethodDefExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference XTest.ecore#//XMethodDefExpression/method"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

@@ -10,6 +10,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
+import org.eclipse.xtend.core.xtend.XtendFunction;
+import org.eclipse.xtend.core.xtend.XtendParameter;
 import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmEnumerationLiteral;
 import org.eclipse.xtext.common.types.JvmEnumerationType;
@@ -39,6 +41,7 @@ import org.eclipse.xtext.xbase.scoping.featurecalls.JvmFeatureScope;
 import org.eclipse.xtext.xbase.scoping.featurecalls.LocalVarDescription;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.xTest.XMethodDef;
+import org.xtest.xTest.XMethodDefExpression;
 import org.xtest.xTest.XTestPackage;
 
 import com.google.common.base.Predicate;
@@ -204,15 +207,6 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         if (context instanceof XMethodDef) {
             XMethodDef methDef = (XMethodDef) context;
             parentScope = createLocalVarScopeForMethodDef(methDef, parentScope);
-            if (scopeContext.isIncludeCurrentBlock() && !methDef.isStatic()) {
-                if (context instanceof XBlockExpression) {
-                    XBlockExpression block = (XBlockExpression) context;
-                    if (!block.getExpressions().isEmpty()) {
-                        parentScope = createLocalVarScopeForBlock(block, scopeContext.getIndex(),
-                                scopeContext.isReferredFromClosure(), parentScope);
-                    }
-                }
-            }
         }
         return parentScope;
     }
@@ -225,8 +219,8 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         List<IValidatedEObjectDescription> descriptions = Lists.newArrayList();
         for (int i = 0; i <= indexOfContextExpressionInBlock && i < block.getExpressions().size(); i++) {
             XExpression expression = block.getExpressions().get(i);
-            if (expression instanceof XMethodDef) {
-                XMethodDef methDef = (XMethodDef) expression;
+            if (expression instanceof XMethodDefExpression) {
+                XtendFunction methDef = ((XMethodDefExpression) expression).getMethod();
                 Set<EObject> jvmElements2 = associations.getJvmElements(methDef);
                 Iterable<JvmOperation> jvmElements = Iterables.filter(jvmElements2,
                         JvmOperation.class);
@@ -265,13 +259,18 @@ public class XTestScopeProvider extends XbaseScopeProvider {
                 }
             });
         }
-        for (JvmFormalParameter p : def.getParameters()) {
-            String name = p.getName();
-            if (name != null) {
-                QualifiedName create = QualifiedName.create(name);
-                IValidatedEObjectDescription desc;
-                desc = new LocalVarDescription(create, p);
-                descriptions.add(desc);
+        for (XtendParameter xtendParam : def.getParameters()) {
+            Set<EObject> jvmElements = associations.getJvmElements(xtendParam);
+            Iterable<JvmFormalParameter> params = Iterables.filter(jvmElements,
+                    JvmFormalParameter.class);
+            for (JvmFormalParameter param : params) {
+                String name = param.getName();
+                if (name != null) {
+                    QualifiedName create = QualifiedName.create(name);
+                    IValidatedEObjectDescription desc;
+                    desc = new LocalVarDescription(create, param);
+                    descriptions.add(desc);
+                }
             }
         }
         return new JvmFeatureScope(parentScope, "XMethodDef", descriptions);

@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtend.core.scoping.XtendImportedNamespaceScopeProvider;
 import org.eclipse.xtend.core.xtend.XtendImport;
+import org.eclipse.xtend.core.xtend.XtendPackage;
 import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -26,7 +27,6 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.scoping.XbaseImportedNamespaceScopeProvider;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XMethodDef;
-import org.xtest.xTest.XTestPackage;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -78,7 +78,7 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
 
         // Add method type parameters to LOCAL scope
         if (context instanceof XMethodDef
-                && reference != XTestPackage.Literals.XMETHOD_DEF__TYPE_PARAMETERS) {
+                && reference != XtendPackage.Literals.XTEND_FUNCTION__TYPE_PARAMETERS) {
             if (((XMethodDef) context).isStatic()) {
 
                 // Except if method is static, it loses surrounding type parameter scope

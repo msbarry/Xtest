@@ -26,22 +26,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="ecore:EClass ../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="../../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmFormalParameter"/>
-  <eClassifiers xsi:type="ecore:EClass" name="JvmVarArgArray" eSuperTypes="../../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmGenericArrayTypeReference"/>
-  <eClassifiers xsi:type="ecore:EClass" name="XMethodDef" eSuperTypes="../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="static" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="typeParameters" upperBound="-1"
-        eType="ecore:EClass ../../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeParameter"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" eType="ecore:EClass ../../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmTypeReference"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
-        eType="ecore:EClass ../../../../org.eclipse.xtext.common.types/model/JavaVMTypes.ecore#//JvmFormalParameter"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="ecore:EClass ../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
-        containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XAssertExpression" eSuperTypes="../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="actual" eType="ecore:EClass ../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
@@ -50,6 +34,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XSafeExpression" eSuperTypes="../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="actual" eType="ecore:EClass ../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="XMethodDef" eSuperTypes="../../../../org.eclipse.xtend.core/model/Xtend.ecore#//XtendFunction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="XMethodDefExpression" eSuperTypes="../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="method" eType="ecore:EClass ../../../../org.eclipse.xtend.core/model/Xtend.ecore#//XtendFunction"
         containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

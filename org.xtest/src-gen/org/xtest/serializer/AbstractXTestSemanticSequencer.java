@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend.core.xtend.XtendImport;
 import org.eclipse.xtend.core.xtend.XtendPackage;
+import org.eclipse.xtend.core.xtend.XtendParameter;
 import org.eclipse.xtext.common.types.JvmFormalParameter;
 import org.eclipse.xtext.common.types.JvmGenericArrayTypeReference;
 import org.eclipse.xtext.common.types.JvmLowerBound;
@@ -56,11 +57,10 @@ import org.eclipse.xtext.xtype.XtypePackage;
 import org.xtest.services.XTestGrammarAccess;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.FileParam;
-import org.xtest.xTest.JvmVarArgArray;
-import org.xtest.xTest.Parameter;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XMethodDef;
+import org.xtest.xTest.XMethodDefExpression;
 import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestPackage;
@@ -112,9 +112,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 			case TypesPackage.JVM_GENERIC_ARRAY_TYPE_REFERENCE:
 				if(context == grammarAccess.getJvmArgumentTypeReferenceRule() ||
 				   context == grammarAccess.getJvmTypeReferenceRule() ||
-				   context == grammarAccess.getJvmTypeReferenceAccess().getJvmGenericArrayTypeReferenceComponentTypeAction_0_1_0_0() ||
-				   context == grammarAccess.getJvmVarArgTypeReferenceRule() ||
-				   context == grammarAccess.getJvmVarArgTypeReferenceAccess().getJvmVarArgArrayComponentTypeAction_1_0_0()) {
+				   context == grammarAccess.getJvmTypeReferenceAccess().getJvmGenericArrayTypeReferenceComponentTypeAction_0_1_0_0()) {
 					sequence_JvmTypeReference(context, (JvmGenericArrayTypeReference) semanticObject); 
 					return; 
 				}
@@ -129,9 +127,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				if(context == grammarAccess.getJvmArgumentTypeReferenceRule() ||
 				   context == grammarAccess.getJvmParameterizedTypeReferenceRule() ||
 				   context == grammarAccess.getJvmTypeReferenceRule() ||
-				   context == grammarAccess.getJvmTypeReferenceAccess().getJvmGenericArrayTypeReferenceComponentTypeAction_0_1_0_0() ||
-				   context == grammarAccess.getJvmVarArgTypeReferenceRule() ||
-				   context == grammarAccess.getJvmVarArgTypeReferenceAccess().getJvmVarArgArrayComponentTypeAction_1_0_0()) {
+				   context == grammarAccess.getJvmTypeReferenceAccess().getJvmGenericArrayTypeReferenceComponentTypeAction_0_1_0_0()) {
 					sequence_JvmParameterizedTypeReference(context, (JvmParameterizedTypeReference) semanticObject); 
 					return; 
 				}
@@ -170,22 +166,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 			case XTestPackage.FILE_PARAM:
 				if(context == grammarAccess.getFileParamRule()) {
 					sequence_FileParam(context, (FileParam) semanticObject); 
-					return; 
-				}
-				else break;
-			case XTestPackage.JVM_VAR_ARG_ARRAY:
-				if(context == grammarAccess.getJvmVarArgArrayRule()) {
-					sequence_JvmVarArgArray(context, (JvmVarArgArray) semanticObject); 
-					return; 
-				}
-				else if(context == grammarAccess.getJvmVarArgTypeReferenceRule()) {
-					sequence_JvmVarArgTypeReference(context, (JvmVarArgArray) semanticObject); 
-					return; 
-				}
-				else break;
-			case XTestPackage.PARAMETER:
-				if(context == grammarAccess.getParameterRule()) {
-					sequence_Parameter(context, (Parameter) semanticObject); 
 					return; 
 				}
 				else break;
@@ -229,6 +209,12 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				}
 				else break;
 			case XTestPackage.XMETHOD_DEF:
+				if(context == grammarAccess.getXMethodDefRule()) {
+					sequence_XMethodDef(context, (XMethodDef) semanticObject); 
+					return; 
+				}
+				else break;
+			case XTestPackage.XMETHOD_DEF_EXPRESSION:
 				if(context == grammarAccess.getXAdditiveExpressionRule() ||
 				   context == grammarAccess.getXAdditiveExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
 				   context == grammarAccess.getXAndExpressionRule() ||
@@ -244,7 +230,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				   context == grammarAccess.getXMemberFeatureCallRule() ||
 				   context == grammarAccess.getXMemberFeatureCallAccess().getXAssignmentAssignableAction_1_0_0_0_0() ||
 				   context == grammarAccess.getXMemberFeatureCallAccess().getXMemberFeatureCallMemberCallTargetAction_1_1_0_0_0() ||
-				   context == grammarAccess.getXMethodDefRule() ||
+				   context == grammarAccess.getXMethodDefExpressionRule() ||
 				   context == grammarAccess.getXMultiplicativeExpressionRule() ||
 				   context == grammarAccess.getXMultiplicativeExpressionAccess().getXBinaryOperationLeftOperandAction_1_0_0_0() ||
 				   context == grammarAccess.getXOrExpressionRule() ||
@@ -257,7 +243,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				   context == grammarAccess.getXRelationalExpressionAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
 				   context == grammarAccess.getXRelationalExpressionAccess().getXInstanceOfExpressionExpressionAction_1_0_0_0_0() ||
 				   context == grammarAccess.getXUnaryOperationRule()) {
-					sequence_XMethodDef(context, (XMethodDef) semanticObject); 
+					sequence_XMethodDefExpression(context, (XMethodDefExpression) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1131,13 +1117,17 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 					return; 
 				}
 				else break;
+			case XtendPackage.XTEND_PARAMETER:
+				if(context == grammarAccess.getParameterRule()) {
+					sequence_Parameter(context, (XtendParameter) semanticObject); 
+					return; 
+				}
+				else break;
 			}
 		else if(semanticObject.eClass().getEPackage() == XtypePackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
 			case XtypePackage.XFUNCTION_TYPE_REF:
 				if(context == grammarAccess.getJvmArgumentTypeReferenceRule() ||
 				   context == grammarAccess.getJvmTypeReferenceRule() ||
-				   context == grammarAccess.getJvmVarArgTypeReferenceRule() ||
-				   context == grammarAccess.getJvmVarArgTypeReferenceAccess().getJvmVarArgArrayComponentTypeAction_1_0_0() ||
 				   context == grammarAccess.getXFunctionTypeRefRule()) {
 					sequence_XFunctionTypeRef(context, (XFunctionTypeRef) semanticObject); 
 					return; 
@@ -1262,31 +1252,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     {JvmVarArgArray}
-	 */
-	protected void sequence_JvmVarArgArray(EObject context, JvmVarArgArray semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     componentType=JvmVarArgTypeReference_JvmVarArgArray_1_0_0
-	 */
-	protected void sequence_JvmVarArgTypeReference(EObject context, JvmVarArgArray semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, TypesPackage.Literals.JVM_GENERIC_ARRAY_TYPE_REFERENCE__COMPONENT_TYPE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypesPackage.Literals.JVM_GENERIC_ARRAY_TYPE_REFERENCE__COMPONENT_TYPE));
-		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getJvmVarArgTypeReferenceAccess().getJvmVarArgArrayComponentTypeAction_1_0_0(), semanticObject.getComponentType());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * Constraint:
 	 *     ((constraints+=JvmUpperBound | constraints+=JvmLowerBound)?)
 	 */
 	protected void sequence_JvmWildcardTypeReference(EObject context, JvmWildcardTypeReference semanticObject) {
@@ -1296,9 +1261,9 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (parameterType=JvmVarArgTypeReference name=ValidID)
+	 *     (parameterType=JvmTypeReference varArg?='...'? name=ValidID)
 	 */
-	protected void sequence_Parameter(EObject context, Parameter semanticObject) {
+	protected void sequence_Parameter(EObject context, XtendParameter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -1505,6 +1470,22 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	 */
 	protected void sequence_XMemberFeatureCall(EObject context, XMemberFeatureCall semanticObject) {
 		superSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     method=XMethodDef
+	 */
+	protected void sequence_XMethodDefExpression(EObject context, XMethodDefExpression semanticObject) {
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, XTestPackage.Literals.XMETHOD_DEF_EXPRESSION__METHOD) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, XTestPackage.Literals.XMETHOD_DEF_EXPRESSION__METHOD));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getXMethodDefExpressionAccess().getMethodXMethodDefParserRuleCall_1_0(), semanticObject.getMethod());
+		feeder.finish();
 	}
 	
 	

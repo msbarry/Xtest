@@ -13,11 +13,9 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.xtext.common.types.JvmAnnotationTarget;
-import org.eclipse.xtext.common.types.JvmFormalParameter;
-import org.eclipse.xtext.common.types.JvmGenericArrayTypeReference;
-import org.eclipse.xtext.common.types.JvmIdentifiableElement;
-import org.eclipse.xtext.common.types.JvmTypeReference;
+import org.eclipse.xtend.core.xtend.XtendAnnotationTarget;
+import org.eclipse.xtend.core.xtend.XtendFunction;
+import org.eclipse.xtend.core.xtend.XtendMember;
 
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
@@ -108,21 +106,6 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 				return createXTestExpressionAdapter();
 			}
 			@Override
-			public Adapter caseParameter(Parameter object)
-			{
-				return createParameterAdapter();
-			}
-			@Override
-			public Adapter caseJvmVarArgArray(JvmVarArgArray object)
-			{
-				return createJvmVarArgArrayAdapter();
-			}
-			@Override
-			public Adapter caseXMethodDef(XMethodDef object)
-			{
-				return createXMethodDefAdapter();
-			}
-			@Override
 			public Adapter caseXAssertExpression(XAssertExpression object)
 			{
 				return createXAssertExpressionAdapter();
@@ -131,6 +114,16 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 			public Adapter caseXSafeExpression(XSafeExpression object)
 			{
 				return createXSafeExpressionAdapter();
+			}
+			@Override
+			public Adapter caseXMethodDef(XMethodDef object)
+			{
+				return createXMethodDefAdapter();
+			}
+			@Override
+			public Adapter caseXMethodDefExpression(XMethodDefExpression object)
+			{
+				return createXMethodDefExpressionAdapter();
 			}
 			@Override
 			public Adapter caseXExpression(XExpression object)
@@ -143,29 +136,19 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 				return createXBlockExpressionAdapter();
 			}
 			@Override
-			public Adapter caseJvmIdentifiableElement(JvmIdentifiableElement object)
+			public Adapter caseXtendAnnotationTarget(XtendAnnotationTarget object)
 			{
-				return createJvmIdentifiableElementAdapter();
+				return createXtendAnnotationTargetAdapter();
 			}
 			@Override
-			public Adapter caseJvmAnnotationTarget(JvmAnnotationTarget object)
+			public Adapter caseXtendMember(XtendMember object)
 			{
-				return createJvmAnnotationTargetAdapter();
+				return createXtendMemberAdapter();
 			}
 			@Override
-			public Adapter caseJvmFormalParameter(JvmFormalParameter object)
+			public Adapter caseXtendFunction(XtendFunction object)
 			{
-				return createJvmFormalParameterAdapter();
-			}
-			@Override
-			public Adapter caseJvmTypeReference(JvmTypeReference object)
-			{
-				return createJvmTypeReferenceAdapter();
-			}
-			@Override
-			public Adapter caseJvmGenericArrayTypeReference(JvmGenericArrayTypeReference object)
-			{
-				return createJvmGenericArrayTypeReferenceAdapter();
+				return createXtendFunctionAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object)
@@ -250,51 +233,6 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.Parameter <em>Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.xtest.xTest.Parameter
-	 * @generated
-	 */
-	public Adapter createParameterAdapter()
-	{
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.JvmVarArgArray <em>Jvm Var Arg Array</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.xtest.xTest.JvmVarArgArray
-	 * @generated
-	 */
-	public Adapter createJvmVarArgArrayAdapter()
-	{
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XMethodDef <em>XMethod Def</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.xtest.xTest.XMethodDef
-	 * @generated
-	 */
-	public Adapter createXMethodDefAdapter()
-	{
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XAssertExpression <em>XAssert Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -320,6 +258,36 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	public Adapter createXSafeExpressionAdapter()
+	{
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XMethodDef <em>XMethod Def</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.xtest.xTest.XMethodDef
+	 * @generated
+	 */
+	public Adapter createXMethodDefAdapter()
+	{
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XMethodDefExpression <em>XMethod Def Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.xtest.xTest.XMethodDefExpression
+	 * @generated
+	 */
+	public Adapter createXMethodDefExpressionAdapter()
 	{
 		return null;
 	}
@@ -355,76 +323,46 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.xtext.common.types.JvmIdentifiableElement <em>Jvm Identifiable Element</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.xtend.core.xtend.XtendAnnotationTarget <em>Annotation Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.xtext.common.types.JvmIdentifiableElement
+	 * @see org.eclipse.xtend.core.xtend.XtendAnnotationTarget
 	 * @generated
 	 */
-	public Adapter createJvmIdentifiableElementAdapter()
+	public Adapter createXtendAnnotationTargetAdapter()
 	{
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.xtext.common.types.JvmAnnotationTarget <em>Jvm Annotation Target</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.xtend.core.xtend.XtendMember <em>Member</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.xtext.common.types.JvmAnnotationTarget
+	 * @see org.eclipse.xtend.core.xtend.XtendMember
 	 * @generated
 	 */
-	public Adapter createJvmAnnotationTargetAdapter()
+	public Adapter createXtendMemberAdapter()
 	{
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.xtext.common.types.JvmFormalParameter <em>Jvm Formal Parameter</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.xtend.core.xtend.XtendFunction <em>Function</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.xtext.common.types.JvmFormalParameter
+	 * @see org.eclipse.xtend.core.xtend.XtendFunction
 	 * @generated
 	 */
-	public Adapter createJvmFormalParameterAdapter()
-	{
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.xtext.common.types.JvmTypeReference <em>Jvm Type Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.xtext.common.types.JvmTypeReference
-	 * @generated
-	 */
-	public Adapter createJvmTypeReferenceAdapter()
-	{
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.xtext.common.types.JvmGenericArrayTypeReference <em>Jvm Generic Array Type Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.xtext.common.types.JvmGenericArrayTypeReference
-	 * @generated
-	 */
-	public Adapter createJvmGenericArrayTypeReferenceAdapter()
+	public Adapter createXtendFunctionAdapter()
 	{
 		return null;
 	}

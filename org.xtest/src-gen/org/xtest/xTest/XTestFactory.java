@@ -63,33 +63,6 @@ public interface XTestFactory extends EFactory
 	XTestExpression createXTestExpression();
 
 	/**
-	 * Returns a new object of class '<em>Parameter</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Parameter</em>'.
-	 * @generated
-	 */
-	Parameter createParameter();
-
-	/**
-	 * Returns a new object of class '<em>Jvm Var Arg Array</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Jvm Var Arg Array</em>'.
-	 * @generated
-	 */
-	JvmVarArgArray createJvmVarArgArray();
-
-	/**
-	 * Returns a new object of class '<em>XMethod Def</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>XMethod Def</em>'.
-	 * @generated
-	 */
-	XMethodDef createXMethodDef();
-
-	/**
 	 * Returns a new object of class '<em>XAssert Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -106,6 +79,24 @@ public interface XTestFactory extends EFactory
 	 * @generated
 	 */
 	XSafeExpression createXSafeExpression();
+
+	/**
+	 * Returns a new object of class '<em>XMethod Def</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XMethod Def</em>'.
+	 * @generated
+	 */
+	XMethodDef createXMethodDef();
+
+	/**
+	 * Returns a new object of class '<em>XMethod Def Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XMethod Def Expression</em>'.
+	 * @generated
+	 */
+	XMethodDefExpression createXMethodDefExpression();
 
 	/**
 	 * Returns the package supported by this factory.

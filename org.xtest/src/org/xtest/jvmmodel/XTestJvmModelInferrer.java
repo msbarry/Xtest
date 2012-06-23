@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend.core.jvmmodel.XtendJvmModelInferrer;
+import org.eclipse.xtend.core.xtend.XtendParameter;
 import org.eclipse.xtext.common.types.JvmFormalParameter;
 import org.eclipse.xtext.common.types.JvmGenericType;
 import org.eclipse.xtext.common.types.JvmOperation;
@@ -16,7 +17,6 @@ import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociator;
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
-import org.xtest.xTest.JvmVarArgArray;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.impl.BodyImplCustom;
 
@@ -77,13 +77,8 @@ public class XTestJvmModelInferrer extends XtendJvmModelInferrer {
             op.setStatic(def.isStatic());
             String documentation = builder.getDocumentation(def);
             builder.setDocumentation(op, documentation);
-            for (JvmFormalParameter param : def.getParameters()) {
-                JvmFormalParameter cloneWithProxies = builder.cloneWithProxies(param);
-                op.getParameters().add(cloneWithProxies);
-                associator.associatePrimary(op, param);
-                if (param.getParameterType() instanceof JvmVarArgArray) {
-                    op.setVarArgs(true);
-                }
+            for (XtendParameter param : def.getParameters()) {
+                translateParameter(op, param);
             }
             copyAndFixTypeParameters(def.getTypeParameters(), op);
 
