@@ -6,7 +6,6 @@ runOnSave: true
  
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
-import java.util.List
 
 // First make sure that the custom type conformance assertion method works as expected 
 xtest "type conformance utility tests" {
@@ -49,6 +48,7 @@ xtest "declared" {
 	xtest { assertIsValidAndTypeConformsTo("def String func {'a'}; func", String::class) } 
 	xtest { assertIsValidAndVoidType("def void func {val a = 1}; func")} 
 	xtest { assertIsValidAndVoidType("def void func {1}; func")} 
+	xtest { assertIsValidAndVoidType("def void func {1}")} 
 }
 xtest "chooses correct method based on type when multiple names match" {
 	xtest { assertIsValidAndTypeConformsTo("def int func(int s) {1}; def String func(String s) {'a'}; func('a')", String::class) }
@@ -73,4 +73,49 @@ xtest "inferred w/ type param" {
 xtest "inferred w/ type param, vararg" {
 	xtest { assertIsValidAndTypeConformsToArray("def <T> func(T... in) {in}; func(1,2,3)", Integer::class) } 
 }
-// etc...
+xtest "inferred w/ type param, vararg gets common supertype" {
+	xtest { assertIsValidAndTypeConformsTo("def <T> i(T... s) {s.head}; i(1,2,3)", Integer::class) } 
+	xtest { assertIsValidAndTypeConformsTo("def <T> i(T... s) {s.head}; i(1,'s')", Comparable::class) } 
+	xtest { assertIsValidAndTypeConformsTo("def <T> i(T... s) {s.head}; i(1,2L)", Number::class) } 
+	xtest { assertIsValidAndTypeConformsTo("def static <T> i(T... s) {s.head}; i(1,2L)", Number::class) } 
+}
+
+xtest "nested method type inference" {
+	val script =
+'def <T> get(T i) {
+	def <U> get2(U j) {
+		j
+	}
+	get2(i)
+}
+
+get(1)'
+	assertIsValidAndTypeConformsTo(script, Integer::class)
+}
+
+xtest "nested method type inference - uses type paremeter from grandparent" {
+	val script =
+'def <T> get(T... i) {
+	def get2(T... j) {
+		j.head
+	}
+	get2(i)
+}
+
+get(1)'
+	assertIsValidAndTypeConformsTo(script, Integer::class)
+}
+
+xtest "static method kills parent type scope" {
+	val script =
+'def <T> get(T... i) {
+	def static get2(T... j) {
+		j.head
+	}
+	get2(i)
+}
+
+get(1)'
+	assertInvalidSyntax(script)
+}
+

@@ -284,15 +284,12 @@ public class XTestScopeProvider extends XbaseScopeProvider {
         }
         IScope parentScope = createTypeScope(context.eContainer(), reference);
         if (context instanceof XMethodDef && ((XMethodDef) context).isStatic()) {
-            return parentScope;
+            parentScope = filterOutParentInferredScope(parentScope);
         }
 
         if (context instanceof XMethodDef) {
             XMethodDef def = (XMethodDef) context;
-            if (!def.isStatic()) {
-
-            }
-            JvmOperation op = associations.getJvmOperation((XMethodDef) context);
+            JvmOperation op = associations.getJvmOperation(def);
             parentScope = createTypeScope(op, reference, parentScope);
         }
         return parentScope;
@@ -301,10 +298,11 @@ public class XTestScopeProvider extends XbaseScopeProvider {
     @Override
     protected IScope createTypeScope(JvmIdentifiableElement context, EReference reference,
             IScope parentScope) {
-        if (!(context instanceof JvmOperation)) {
-            return parentScope;
+        IScope result = parentScope;
+        if (context instanceof JvmOperation || !associations.hasAssociation(context)) {
+            result = super.createTypeScope(context, reference, parentScope);
         }
-        return super.createTypeScope(context, reference, parentScope);
+        return result;
     }
 
     private void addFeatureDescriptionProviders(Resource resource, JvmDeclaredType contextType,
@@ -425,6 +423,16 @@ public class XTestScopeProvider extends XbaseScopeProvider {
             @Override
             public boolean apply(IEObjectDescription input) {
                 return !(input instanceof MethodScopingLocalVarDescription);
+            }
+        });
+    }
+
+    private FilteringScope filterOutParentInferredScope(IScope parentScope) {
+        return new FilteringScope(parentScope, new Predicate<IEObjectDescription>() {
+            @Override
+            public boolean apply(IEObjectDescription input) {
+                EObject eObjectOrProxy = input.getEObjectOrProxy();
+                return !associations.hasAssociation(eObjectOrProxy);
             }
         });
     }

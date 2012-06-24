@@ -72,4 +72,22 @@ public class XtestJvmModelAssociator extends Impl {
     public JvmIdentifiableElement getNearestLogicalContainer(EObject context) {
         return null;
     }
+
+    /**
+     * Returns true if {@code context} is either a JVM identifiable element with source EObject
+     * assocation or it is a source EObject with JVM identifiable element association.
+     * 
+     * @param context
+     *            The object to check for associations
+     * @return True if it has associations, false if not
+     */
+    public boolean hasAssociation(EObject context) {
+        boolean result = false;
+        if (context instanceof JvmIdentifiableElement) {
+            result = !getSourceElements(context).isEmpty();
+        } else {
+            result = !getJvmElements(context).isEmpty();
+        }
+        return result;
+    }
 }

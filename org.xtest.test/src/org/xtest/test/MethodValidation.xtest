@@ -113,6 +113,7 @@ xtest "type parameter" {
 	xtest { assertValidSyntax('def <T extends String, U extends Integer> function(T input, U input2) {}') }
 	xtest { assertValidSyntax('def <T> T method(T t) {}') }
 	xtest { assertValidSyntax('def <T> method(T t) {}') }
+	xtest { assertValidSyntax('def <T> T function(T... input) {input.head}') }
 	
 	xtest { assertInvalidSyntax('def <T> T function(T input)') }
 	xtest { assertInvalidSyntax('def <T> T function(U input) {}') }

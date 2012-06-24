@@ -7,12 +7,14 @@ import org.eclipse.xtext.common.types.JvmAnyTypeReference;
 import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
+import org.eclipse.xtext.common.types.JvmTypeParameterDeclarator;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.XFeatureCall;
 import org.eclipse.xtext.xbase.impl.XFeatureCallImplCustom;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
+import org.xtest.jvmmodel.XtestJvmModelAssociator;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XMethodDefExpression;
@@ -32,6 +34,8 @@ import com.google.inject.Singleton;
 @SuppressWarnings("restriction")
 public class XTestTypeProvider extends XbaseTypeProvider {
     @Inject
+    private XtestJvmModelAssociator associations;
+    @Inject
     private TypeReferences typeRefs;
 
     @Override
@@ -43,6 +47,17 @@ public class XTestTypeProvider extends XbaseTypeProvider {
         } else {
             return super.expectedType(container, reference, index, rawType);
         }
+    }
+
+    @Override
+    protected JvmTypeParameterDeclarator getNearestTypeParameterDeclarator(EObject obj) {
+        JvmTypeParameterDeclarator result = null;
+        if (obj instanceof XMethodDef) {
+            result = associations.getJvmOperation((XMethodDef) obj);
+        } else if (obj != null && obj.eContainer() != null) {
+            result = getNearestTypeParameterDeclarator(obj.eContainer());
+        }
+        return result;
     }
 
     @Override

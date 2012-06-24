@@ -12,14 +12,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtend.core.scoping.XtendImportedNamespaceScopeProvider;
 import org.eclipse.xtend.core.xtend.XtendImport;
-import org.eclipse.xtend.core.xtend.XtendPackage;
-import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
-import org.eclipse.xtext.scoping.impl.FilteringScope;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.scoping.impl.MultimapBasedSelectable;
 import org.eclipse.xtext.scoping.impl.ScopeBasedSelectable;
@@ -76,23 +73,6 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
                     reference.getEReferenceType(), isIgnoreCase(reference));
         }
 
-        // Add method type parameters to LOCAL scope
-        if (context instanceof XMethodDef
-                && reference != XtendPackage.Literals.XTEND_FUNCTION__TYPE_PARAMETERS) {
-            if (((XMethodDef) context).isStatic()) {
-
-                // Except if method is static, it loses surrounding type parameter scope
-                result = new FilteringScope(result, new Predicate<IEObjectDescription>() {
-                    @Override
-                    public boolean apply(IEObjectDescription input) {
-                        EObject eObjectOrProxy = input.getEObjectOrProxy();
-                        return !(eObjectOrProxy instanceof JvmTypeParameter)
-                                && associations.getPrimarySourceElement(eObjectOrProxy) == null;
-                    }
-                });
-            }
-            result = Scopes.scopeFor(((XMethodDef) context).getTypeParameters(), result);
-        }
         return result;
     }
 
