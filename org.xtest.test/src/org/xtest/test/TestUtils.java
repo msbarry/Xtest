@@ -11,6 +11,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend.core.formatting.OrganizeImports;
+import org.eclipse.xtext.common.types.JvmGenericArrayTypeReference;
 import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
 import org.eclipse.xtext.common.types.JvmType;
 import org.eclipse.xtext.common.types.JvmTypeReference;
@@ -75,17 +76,26 @@ public class TestUtils {
         assertEvaluatesTo(object, val);
     }
 
+    @SuppressWarnings("restriction")
     public static void assertIsValidAndTypeConformsTo(String script, Class<?> type)
             throws Exception {
         Body val = parse(script);
         assertValidationPassed(val);
-        JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(val, true);
-        assertNotNull("computed common return type", commonReturnType);
         JvmType findDeclaredType = typeRefs.findDeclaredType(type, val);
         assertNotNull("type for " + type.getSimpleName(), findDeclaredType);
         JvmParameterizedTypeReference createTypeRef = typeRefs.createTypeRef(findDeclaredType);
-        boolean conformant = typeComputer.isConformant(createTypeRef, commonReturnType);
-        assertTrue(commonReturnType + " does not conform to " + createTypeRef, conformant);
+        assertIsValidAndTypeConformsTo(val, createTypeRef);
+    }
+
+    public static void assertIsValidAndTypeConformsToArray(String script, Class<?> type)
+            throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+        JvmType findDeclaredType = typeRefs.findDeclaredType(type, val);
+        assertNotNull("type for " + type.getSimpleName(), findDeclaredType);
+        JvmParameterizedTypeReference createTypeRef = typeRefs.createTypeRef(findDeclaredType);
+        JvmGenericArrayTypeReference arraytype = typeRefs.createArrayType(createTypeRef);
+        assertIsValidAndTypeConformsTo(val, arraytype);
     }
 
     public static void assertIsValidAndVoidType(String script) throws Exception {
@@ -223,6 +233,14 @@ public class TestUtils {
 
     public static String textOf(EObject eObject) {
         return NodeModelUtils.getNode(eObject).getText().trim();
+    }
+
+    @SuppressWarnings("restriction")
+    protected static void assertIsValidAndTypeConformsTo(Body val, JvmTypeReference createTypeRef) {
+        JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(val, true);
+        assertNotNull("computed common return type", commonReturnType);
+        boolean conformant = typeComputer.isConformant(createTypeRef, commonReturnType);
+        assertTrue(commonReturnType + " does not conform to " + createTypeRef, conformant);
     }
 
 }

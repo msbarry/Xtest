@@ -41,6 +41,17 @@ public class XtestJvmModelAssociator extends Impl {
     }
 
     /**
+     * Returns the first JVM operation associated with a method def
+     * 
+     * @param def
+     *            The method def
+     * @return The first JVM operation associated with that method
+     */
+    public JvmOperation getJvmOperation(XMethodDef def) {
+        return Iterables.getFirst(getJvmOperations(def), null);
+    }
+
+    /**
      * Returns the JVM operations associated with a method def
      * 
      * @param def

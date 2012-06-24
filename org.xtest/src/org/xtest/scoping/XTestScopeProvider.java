@@ -16,6 +16,7 @@ import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmEnumerationLiteral;
 import org.eclipse.xtext.common.types.JvmEnumerationType;
 import org.eclipse.xtext.common.types.JvmFormalParameter;
+import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.util.TypeReferences;
@@ -30,7 +31,6 @@ import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XClosure;
 import org.eclipse.xtext.xbase.XExpression;
-import org.eclipse.xtext.xbase.jvmmodel.IJvmModelAssociations;
 import org.eclipse.xtext.xbase.jvmmodel.ILogicalContainerProvider;
 import org.eclipse.xtext.xbase.scoping.LocalVariableScopeContext;
 import org.eclipse.xtext.xbase.scoping.XbaseScopeProvider;
@@ -39,6 +39,7 @@ import org.eclipse.xtext.xbase.scoping.featurecalls.IJvmFeatureDescriptionProvid
 import org.eclipse.xtext.xbase.scoping.featurecalls.IValidatedEObjectDescription;
 import org.eclipse.xtext.xbase.scoping.featurecalls.JvmFeatureScope;
 import org.eclipse.xtext.xbase.scoping.featurecalls.LocalVarDescription;
+import org.xtest.jvmmodel.XtestJvmModelAssociator;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XMethodDefExpression;
@@ -65,7 +66,7 @@ public class XTestScopeProvider extends XbaseScopeProvider {
     private static final int STATIC_EXTENSION_PRIORITY_OFFSET = 220;
 
     @Inject
-    private IJvmModelAssociations associations;
+    private XtestJvmModelAssociator associations;
     @Inject
     private ILogicalContainerProvider logicalContainerProvider;
 
@@ -278,7 +279,32 @@ public class XTestScopeProvider extends XbaseScopeProvider {
 
     @Override
     protected IScope createTypeScope(EObject context, EReference reference) {
-        return super.createTypeScope(context, reference);
+        if (context.eContainer() == null) {
+            return super.createTypeScope(context, reference);
+        }
+        IScope parentScope = createTypeScope(context.eContainer(), reference);
+        if (context instanceof XMethodDef && ((XMethodDef) context).isStatic()) {
+            return parentScope;
+        }
+
+        if (context instanceof XMethodDef) {
+            XMethodDef def = (XMethodDef) context;
+            if (!def.isStatic()) {
+
+            }
+            JvmOperation op = associations.getJvmOperation((XMethodDef) context);
+            parentScope = createTypeScope(op, reference, parentScope);
+        }
+        return parentScope;
+    }
+
+    @Override
+    protected IScope createTypeScope(JvmIdentifiableElement context, EReference reference,
+            IScope parentScope) {
+        if (!(context instanceof JvmOperation)) {
+            return parentScope;
+        }
+        return super.createTypeScope(context, reference, parentScope);
     }
 
     private void addFeatureDescriptionProviders(Resource resource, JvmDeclaredType contextType,

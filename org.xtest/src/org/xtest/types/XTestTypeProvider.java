@@ -15,6 +15,7 @@ import org.eclipse.xtext.xbase.impl.XFeatureCallImplCustom;
 import org.eclipse.xtext.xbase.typing.XbaseTypeProvider;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XMethodDef;
+import org.xtest.xTest.XMethodDefExpression;
 import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 
@@ -68,6 +69,8 @@ public class XTestTypeProvider extends XbaseTypeProvider {
             }
         } else if (expression instanceof XMethodDef) {
             result = getPrimitiveVoid(expression);
+        } else if (expression instanceof XMethodDefExpression) {
+            result = getPrimitiveVoid(expression);
         } else {
             result = super.type(expression, rawExpectation, rawType);
         }
@@ -93,12 +96,6 @@ public class XTestTypeProvider extends XbaseTypeProvider {
         JvmTypeReference declaredOrInferredReturnType = function.getReturnType();
         if (declaredOrInferredReturnType == null) {
             declaredOrInferredReturnType = getCommonReturnType(function.getExpression(), true);
-            // if (declaredOrInferredReturnType != null &&
-            // !earlyExitComputer.isEarlyExit(function.getExpression())) {
-            // if (!getTypeReferences().is(declaredOrInferredReturnType, Void.TYPE))
-            // declaredOrInferredReturnType =
-            // primitives.asWrapperTypeIfPrimitive(declaredOrInferredReturnType);
-            // }
         }
         if (declaredOrInferredReturnType == null
                 || getTypeReferences().is(declaredOrInferredReturnType, Void.TYPE)) {

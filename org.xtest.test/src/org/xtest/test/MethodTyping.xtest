@@ -71,6 +71,6 @@ xtest "inferred w/ type param" {
 	xtest { assertIsValidAndTypeConformsTo("def <T> func(T in) {in}; func('a')", String::class) } 
 }
 xtest "inferred w/ type param, vararg" {
-	xtest { assertIsValidAndTypeConformsTo("def <T> func(T... in) {in}; func(in)", List::class) } 
+	xtest { assertIsValidAndTypeConformsToArray("def <T> func(T... in) {in}; func(1,2,3)", Integer::class) } 
 }
 // etc...
