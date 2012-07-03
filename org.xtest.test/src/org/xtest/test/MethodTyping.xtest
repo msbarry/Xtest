@@ -68,7 +68,7 @@ xtest "declared w/ type param" {
 }
 xtest "inferred w/ type param" {
 	xtest { assertIsValidAndTypeConformsTo("def <T> func(T in) {in}; func(1)", Integer::class) } 
-	xtest { assertIsValidAndTypeConformsTo("def <T> func(T in) {in}; func('a')", String::class) } 
+	xtest { assertIsValidAndTypeConformsTo("def <T> func(T in) {in}; func('a')", String::class) }
 }
 xtest "inferred w/ type param, vararg" {
 	xtest { assertIsValidAndTypeConformsToArray("def <T> func(T... in) {in}; func(1,2,3)", Integer::class) } 
@@ -95,8 +95,21 @@ get(1)'
 
 xtest "nested method type inference - uses type paremeter from grandparent" {
 	val script =
-'def <T> get(T... i) {
-	def get2(T... j) {
+'def <T> get(T i) {
+	def get2(T j) {
+		j
+	}
+	get2(i)
+}
+
+get(1)'
+	assertIsValidAndTypeConformsTo(script, Integer::class)
+}
+
+xtest "nested method type inference - uses var arg type paremeter from grandparent" {
+	val script =
+'def <K> get(K... i) {
+	def get2(K... j) {
 		j.head
 	}
 	get2(i)
@@ -106,8 +119,42 @@ get(1)'
 	assertIsValidAndTypeConformsTo(script, Integer::class)
 }
 
-xtest "static method kills parent type scope" {
+xtest "nested method type inference - uses var arg type paremeter from grandparent #2" {
 	val script =
+'def static <T> first(T... is) {is.get(0)}
+
+def <T> get(T... i) {
+	def get2(T... j) {
+		first(j)
+	}
+	get2(i)
+} 
+
+get(1)'
+	assertIsValidAndTypeConformsTo(script, Integer::class)
+}
+
+xtest "nested method type inference - uses var arg type paremeter from grandparent #3" {
+	val script =
+'def <T> get(T... i) {
+	def get2(T... j) { j.get(0) }
+	get2(i)
+} 
+get(1)'
+	assertIsValidAndTypeConformsTo(script, Integer::class)
+}
+
+xtest "static method kills parent type scope" {
+	val scriptGood = // inner method is local
+'def <T> get(T... i) {
+	def get2(T... j) {
+		j.head
+	}
+	get2(i)
+}
+
+get(1)'
+	val scriptBad = // inner method is static
 'def <T> get(T... i) {
 	def static get2(T... j) {
 		j.head
@@ -116,6 +163,7 @@ xtest "static method kills parent type scope" {
 }
 
 get(1)'
-	assertInvalidSyntax(script)
+	assertValidSyntax(scriptGood)
+	assertInvalidSyntax(scriptBad)
 }
 

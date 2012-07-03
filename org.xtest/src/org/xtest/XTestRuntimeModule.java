@@ -4,6 +4,7 @@ import org.eclipse.xtend.core.formatting.OrganizeImports;
 import org.eclipse.xtend.core.formatting.OrganizeImports.ReferenceAcceptor;
 import org.eclipse.xtend.core.jvmmodel.IXtendJvmAssociations;
 import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
+import org.eclipse.xtext.common.types.util.LazyTypeArgumentContext;
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.resource.XtextResource;
@@ -30,6 +31,7 @@ import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
 import org.xtest.scoping.XtestStaticMethodsFeatureForTypeProvider;
 import org.xtest.scoping.XtestVisibilityService;
 import org.xtest.types.XTestTypeProvider;
+import org.xtest.types.XtestTypeArgumentContextProvider;
 
 /**
  * Set up Guice bindings
@@ -94,6 +96,16 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
      */
     public Class<? extends JvmModelAssociator> bindJvmModelAssociator() {
         return XtestJvmModelAssociator.class;
+    }
+
+    /**
+     * Bind {@link LazyTypeArgumentContext} to an Xtest-specific implementation that resolves type
+     * parameters from containing functions.
+     * 
+     * @return {@link XtestTypeArgumentContextProvider}
+     */
+    public Class<? extends LazyTypeArgumentContext> bindLazyTypeArgumentContext() {
+        return XtestTypeArgumentContextProvider.class;
     }
 
     /**

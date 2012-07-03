@@ -85,7 +85,7 @@ public class XtestJvmModelAssociator extends Impl {
         boolean result = false;
         if (context instanceof JvmIdentifiableElement) {
             result = !getSourceElements(context).isEmpty();
-        } else {
+        } else if (context != null) {
             result = !getJvmElements(context).isEmpty();
         }
         return result;

@@ -195,3 +195,20 @@ xtest safeTypeComputation {
 	val parse = parse('val a = ?assert 1 == \n?assert 1 == 2')
 	runValidation(parse)
 }
+
+xtest "exception was thrown" {
+	val script=
+'def static 
+
+def <T> get(T i) {
+	def get2(T j) {
+		j
+	}
+	get2(i)
+}  
+
+get(1)'
+    val body = parse(script)
+    runValidation(body)
+    typeProvider.getCommonReturnType(body, true)
+}

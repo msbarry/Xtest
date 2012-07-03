@@ -1,5 +1,7 @@
 package org.xtest.types;
 
+import java.util.Set;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtend.core.xtend.XtendPackage;
@@ -58,6 +60,31 @@ public class XTestTypeProvider extends XbaseTypeProvider {
             result = getNearestTypeParameterDeclarator(obj.eContainer());
         }
         return result;
+    }
+
+    @Override
+    protected org.eclipse.xtext.common.types.util.TypeArgumentContextProvider getTypeArgumentContextProvider() {
+        return super.getTypeArgumentContextProvider();
+    }
+
+    @Override
+    protected boolean isResolved(JvmTypeReference reference, JvmTypeParameterDeclarator declarator,
+            boolean rawType, boolean allowAnyType, Set<JvmTypeReference> visited) {
+        // TODO may not need this
+        if (super.isResolved(reference, declarator, rawType, allowAnyType, visited)) {
+            return true;
+        } else if (declarator != null) {
+            EObject primarySourceElement = associations.getPrimarySourceElement(declarator);
+            if (primarySourceElement != null && primarySourceElement.eContainer() != null) {
+                JvmTypeParameterDeclarator nearestTypeParameterDeclarator = getNearestTypeParameterDeclarator(primarySourceElement
+                        .eContainer());
+                if (nearestTypeParameterDeclarator != null) {
+                    return isResolved(reference, nearestTypeParameterDeclarator, rawType,
+                            allowAnyType, visited);
+                }
+            }
+        }
+        return false;
     }
 
     @Override
