@@ -41,12 +41,12 @@ public abstract class AbstractXTestRuntimeModule extends DefaultRuntimeModule {
 
 	// contributed by org.eclipse.xtext.generator.serializer.SerializerFragment
 	public Class<? extends org.eclipse.xtext.serializer.sequencer.ISemanticSequencer> bindISemanticSequencer() {
-		return org.xtest.serializer.AbstractXTestSemanticSequencer.class;
+		return org.xtest.serializer.XTestSemanticSequencer.class;
 	}
 
 	// contributed by org.eclipse.xtext.generator.serializer.SerializerFragment
 	public Class<? extends org.eclipse.xtext.serializer.sequencer.ISyntacticSequencer> bindISyntacticSequencer() {
-		return org.xtest.serializer.AbstractXTestSyntacticSequencer.class;
+		return org.xtest.serializer.XTestSyntacticSequencer.class;
 	}
 
 	// contributed by org.eclipse.xtext.generator.serializer.SerializerFragment

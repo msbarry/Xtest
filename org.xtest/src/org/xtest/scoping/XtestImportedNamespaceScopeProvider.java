@@ -52,7 +52,7 @@ public class XtestImportedNamespaceScopeProvider extends XtendImportedNamespaceS
         boolean ignoreCase = isIgnoreCase(reference);
         if (context instanceof Body) {
             // explicitly add java.lang imports with correct import-selectable
-            List<ImportNormalizer> javaLangImport = getJavaLangImport();
+            List<ImportNormalizer> javaLangImport = getDefaultImports();
             result = createImportScope(result, javaLangImport, parentSelectable,
                     reference.getEReferenceType(), isIgnoreCase(reference));
         }

@@ -18,7 +18,6 @@ import org.eclipse.xtext.serializer.acceptor.ISemanticSequenceAcceptor;
 import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
 import org.eclipse.xtext.serializer.diagnostic.ISemanticSequencerDiagnosticProvider;
 import org.eclipse.xtext.serializer.diagnostic.ISerializationDiagnostic.Acceptor;
-import org.eclipse.xtext.serializer.sequencer.AbstractSemanticSequencer;
 import org.eclipse.xtext.serializer.sequencer.GenericSequencer;
 import org.eclipse.xtext.serializer.sequencer.ISemanticNodeProvider.INodesForEObjectProvider;
 import org.eclipse.xtext.serializer.sequencer.ISemanticSequencer;
@@ -65,37 +64,11 @@ import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestPackage;
 
-@SuppressWarnings("restriction")
-public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
+@SuppressWarnings("all")
+public class XTestSemanticSequencer extends XbaseSemanticSequencer {
 
 	@Inject
-	protected XTestGrammarAccess grammarAccess;
-	
-	@Inject
-	protected ISemanticSequencerDiagnosticProvider diagnosticProvider;
-	
-	@Inject
-	protected ITransientValueService transientValues;
-	
-	@Inject
-	@GenericSequencer
-	protected Provider<ISemanticSequencer> genericSequencerProvider;
-	
-	protected ISemanticSequencer genericSequencer;
-	
-	@Inject
-	protected Provider<XbaseSemanticSequencer> superSequencerProvider;
-	 
-	protected XbaseSemanticSequencer superSequencer; 
-	
-	@Override
-	public void init(ISemanticSequencer sequencer, ISemanticSequenceAcceptor sequenceAcceptor, Acceptor errorAcceptor) {
-		super.init(sequencer, sequenceAcceptor, errorAcceptor);
-		this.genericSequencer = genericSequencerProvider.get();
-		this.genericSequencer.init(sequencer, sequenceAcceptor, errorAcceptor);
-		this.superSequencer = superSequencerProvider.get();
-		this.superSequencer.init(sequencer, sequenceAcceptor, errorAcceptor); 
-	}
+	private XTestGrammarAccess grammarAccess;
 	
 	public void createSequence(EObject context, EObject semanticObject) {
 		if(semanticObject.eClass().getEPackage() == TypesPackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
@@ -316,15 +289,11 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 			}
 		else if(semanticObject.eClass().getEPackage() == XbasePackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
 			case XbasePackage.XASSIGNMENT:
-				if(context == grammarAccess.getXFeatureCallRule()) {
-					sequence_XFeatureCall(context, (XAssignment) semanticObject); 
-					return; 
-				}
-				else if(context == grammarAccess.getXAssignmentRule() ||
+				if(context == grammarAccess.getXAssignmentRule() ||
 				   context == grammarAccess.getXExpressionRule() ||
 				   context == grammarAccess.getXExpressionInsideBlockRule() ||
 				   context == grammarAccess.getXParenthesizedExpressionRule()) {
-					sequence_XMemberFeatureCall(context, (XAssignment) semanticObject); 
+					sequence_XAssignment_XFeatureCall_XMemberFeatureCall(context, (XAssignment) semanticObject); 
 					return; 
 				}
 				else if(context == grammarAccess.getXAdditiveExpressionRule() ||
@@ -350,7 +319,11 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				   context == grammarAccess.getXRelationalExpressionAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
 				   context == grammarAccess.getXRelationalExpressionAccess().getXInstanceOfExpressionExpressionAction_1_0_0_0_0() ||
 				   context == grammarAccess.getXUnaryOperationRule()) {
-					sequence_XPrimaryExpression(context, (XAssignment) semanticObject); 
+					sequence_XAssignment_XFeatureCall_XMemberFeatureCall_XPrimaryExpression(context, (XAssignment) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getXFeatureCallRule()) {
+					sequence_XFeatureCall(context, (XAssignment) semanticObject); 
 					return; 
 				}
 				else break;
@@ -382,7 +355,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				   context == grammarAccess.getXRelationalExpressionAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
 				   context == grammarAccess.getXRelationalExpressionAccess().getXInstanceOfExpressionExpressionAction_1_0_0_0_0() ||
 				   context == grammarAccess.getXUnaryOperationRule()) {
-					sequence_XAdditiveExpression(context, (XBinaryOperation) semanticObject); 
+					sequence_XAdditiveExpression_XAndExpression_XAssignment_XEqualityExpression_XMultiplicativeExpression_XOrExpression_XOtherOperatorExpression_XRelationalExpression(context, (XBinaryOperation) semanticObject); 
 					return; 
 				}
 				else break;
@@ -799,7 +772,7 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 				   context == grammarAccess.getXRelationalExpressionAccess().getXBinaryOperationLeftOperandAction_1_1_0_0_0() ||
 				   context == grammarAccess.getXRelationalExpressionAccess().getXInstanceOfExpressionExpressionAction_1_0_0_0_0() ||
 				   context == grammarAccess.getXUnaryOperationRule()) {
-					sequence_XPrimaryExpression(context, (XNullLiteral) semanticObject); 
+					sequence_XNullLiteral(context, (XNullLiteral) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1167,15 +1140,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (parameterType=JvmTypeReference name=ValidID)
-	 */
-	protected void sequence_FullJvmFormalParameter(EObject context, JvmFormalParameter semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
 	 *     (
 	 *         (static?='static' extension?='extension'? importedType=[JvmType|QualifiedName]) | 
 	 *         importedType=[JvmType|QualifiedName] | 
@@ -1184,78 +1148,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	 */
 	protected void sequence_Import(EObject context, XtendImport semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (parameterType=JvmTypeReference? name=ValidID)
-	 */
-	protected void sequence_JvmFormalParameter(EObject context, JvmFormalParameter semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     typeReference=JvmTypeReference
-	 */
-	protected void sequence_JvmLowerBound(EObject context, JvmLowerBound semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (type=[JvmType|QualifiedName] (arguments+=JvmArgumentTypeReference arguments+=JvmArgumentTypeReference*)?)
-	 */
-	protected void sequence_JvmParameterizedTypeReference(EObject context, JvmParameterizedTypeReference semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (name=ValidID ((constraints+=JvmUpperBound constraints+=JvmUpperBoundAnded*) | constraints+=JvmLowerBound)?)
-	 */
-	protected void sequence_JvmTypeParameter(EObject context, JvmTypeParameter semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     componentType=JvmTypeReference_JvmGenericArrayTypeReference_0_1_0_0
-	 */
-	protected void sequence_JvmTypeReference(EObject context, JvmGenericArrayTypeReference semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     typeReference=JvmTypeReference
-	 */
-	protected void sequence_JvmUpperBoundAnded(EObject context, JvmUpperBound semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     typeReference=JvmTypeReference
-	 */
-	protected void sequence_JvmUpperBound(EObject context, JvmUpperBound semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     ((constraints+=JvmUpperBound | constraints+=JvmLowerBound)?)
-	 */
-	protected void sequence_JvmWildcardTypeReference(EObject context, JvmWildcardTypeReference semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1279,24 +1171,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (
-	 *         (leftOperand=XAdditiveExpression_XBinaryOperation_1_0_0_0 feature=[JvmIdentifiableElement|OpAdd] rightOperand=XMultiplicativeExpression) | 
-	 *         (leftOperand=XMultiplicativeExpression_XBinaryOperation_1_0_0_0 feature=[JvmIdentifiableElement|OpMulti] rightOperand=XUnaryOperation) | 
-	 *         (leftOperand=XOtherOperatorExpression_XBinaryOperation_1_0_0_0 feature=[JvmIdentifiableElement|OpOther] rightOperand=XAdditiveExpression) | 
-	 *         (leftOperand=XRelationalExpression_XBinaryOperation_1_1_0_0_0 feature=[JvmIdentifiableElement|OpCompare] rightOperand=XOtherOperatorExpression) | 
-	 *         (leftOperand=XEqualityExpression_XBinaryOperation_1_0_0_0 feature=[JvmIdentifiableElement|OpEquality] rightOperand=XRelationalExpression) | 
-	 *         (leftOperand=XAndExpression_XBinaryOperation_1_0_0_0 feature=[JvmIdentifiableElement|OpAnd] rightOperand=XEqualityExpression) | 
-	 *         (leftOperand=XOrExpression_XBinaryOperation_1_0_0_0 feature=[JvmIdentifiableElement|OpOr] rightOperand=XAndExpression) | 
-	 *         (leftOperand=XAssignment_XBinaryOperation_1_1_0_0_0 feature=[JvmIdentifiableElement|OpMultiAssign] rightOperand=XAssignment)
-	 *     )
-	 */
-	protected void sequence_XAdditiveExpression(EObject context, XBinaryOperation semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
 	 *     (actual=XExpression throws=JvmTypeReference?)
 	 */
 	protected void sequence_XAssertExpression(EObject context, XAssertExpression semanticObject) {
@@ -1306,90 +1180,27 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     (expressions+=XExpressionInsideBlock*)
+	 *     (
+	 *         (assignable=XMemberFeatureCall_XAssignment_1_0_0_0_0 feature=[JvmIdentifiableElement|ValidID] value=XAssignment) | 
+	 *         (assignable=XFeatureCall_XAssignment_6_0 value=XAssignment) | 
+	 *         (feature=[JvmIdentifiableElement|ValidID] value=XAssignment)
+	 *     )
 	 */
-	protected void sequence_XBlockExpression(EObject context, XBlockExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (isTrue?='true'?)
-	 */
-	protected void sequence_XBooleanLiteral(EObject context, XBooleanLiteral semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (typeGuard=JvmTypeReference? case=XExpression? then=XExpression)
-	 */
-	protected void sequence_XCasePart(EObject context, XCasePart semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (target=XCastedExpression_XCastedExpression_1_0_0_0 type=JvmTypeReference)
-	 */
-	protected void sequence_XCastedExpression(EObject context, XCastedExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (declaredParam=FullJvmFormalParameter expression=XExpression)
-	 */
-	protected void sequence_XCatchClause(EObject context, XCatchClause semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
+	protected void sequence_XAssignment_XFeatureCall_XMemberFeatureCall(EObject context, XAssignment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Constraint:
 	 *     (
-	 *         ((declaredFormalParameters+=JvmFormalParameter declaredFormalParameters+=JvmFormalParameter*)? explicitSyntax?='|')? 
-	 *         expression=XExpressionInClosure
+	 *         (assignable=XFeatureCall_XAssignment_6_0 value=XAssignment) | 
+	 *         (feature=[JvmIdentifiableElement|ValidID] value=XAssignment) | 
+	 *         (assignable=XMemberFeatureCall_XAssignment_1_0_0_0_0 feature=[JvmIdentifiableElement|ValidID] value=XAssignment)
 	 *     )
 	 */
-	protected void sequence_XClosure(EObject context, XClosure semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (
-	 *         constructor=[JvmConstructor|QualifiedName] 
-	 *         (typeArguments+=JvmArgumentTypeReference typeArguments+=JvmArgumentTypeReference*)? 
-	 *         (arguments+=XShortClosure | (arguments+=XExpression arguments+=XExpression*))? 
-	 *         arguments+=XClosure?
-	 *     )
-	 */
-	protected void sequence_XConstructorCall(EObject context, XConstructorCall semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (body=XExpression predicate=XExpression)
-	 */
-	protected void sequence_XDoWhileExpression(EObject context, XDoWhileExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (expressions+=XExpressionInsideBlock*)
-	 */
-	protected void sequence_XExpressionInClosure(EObject context, XBlockExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
+	protected void sequence_XAssignment_XFeatureCall_XMemberFeatureCall_XPrimaryExpression(EObject context, XAssignment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1414,62 +1225,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	 */
 	protected void sequence_XFeatureCall(EObject context, XFeatureCall semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (declaredParam=JvmFormalParameter forExpression=XExpression eachExpression=XExpression)
-	 */
-	protected void sequence_XForLoopExpression(EObject context, XForLoopExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     ((paramTypes+=JvmTypeReference paramTypes+=JvmTypeReference*)? returnType=JvmTypeReference)
-	 */
-	protected void sequence_XFunctionTypeRef(EObject context, XFunctionTypeRef semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (if=XExpression then=XExpression else=XExpression?)
-	 */
-	protected void sequence_XIfExpression(EObject context, XIfExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (
-	 *         (assignable=XMemberFeatureCall_XAssignment_1_0_0_0_0 feature=[JvmIdentifiableElement|ValidID] value=XAssignment) | 
-	 *         (assignable=XFeatureCall_XAssignment_6_0 value=XAssignment) | 
-	 *         (feature=[JvmIdentifiableElement|ValidID] value=XAssignment)
-	 *     )
-	 */
-	protected void sequence_XMemberFeatureCall(EObject context, XAssignment semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (
-	 *         memberCallTarget=XMemberFeatureCall_XMemberFeatureCall_1_1_0_0_0 
-	 *         (nullSafe?='?.' | spreading?='*.')? 
-	 *         (typeArguments+=JvmArgumentTypeReference typeArguments+=JvmArgumentTypeReference*)? 
-	 *         feature=[JvmIdentifiableElement|ValidID] 
-	 *         (explicitOperationCall?='(' (memberCallArguments+=XShortClosure | (memberCallArguments+=XExpression memberCallArguments+=XExpression*))?)? 
-	 *         memberCallArguments+=XClosure?
-	 *     )
-	 */
-	protected void sequence_XMemberFeatureCall(EObject context, XMemberFeatureCall semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1507,55 +1262,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 	
 	/**
 	 * Constraint:
-	 *     value=Number
-	 */
-	protected void sequence_XNumberLiteral(EObject context, XNumberLiteral semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (
-	 *         (assignable=XFeatureCall_XAssignment_6_0 value=XAssignment) | 
-	 *         (feature=[JvmIdentifiableElement|ValidID] value=XAssignment) | 
-	 *         (assignable=XMemberFeatureCall_XAssignment_1_0_0_0_0 feature=[JvmIdentifiableElement|ValidID] value=XAssignment)
-	 *     )
-	 */
-	protected void sequence_XPrimaryExpression(EObject context, XAssignment semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     {XNullLiteral}
-	 */
-	protected void sequence_XPrimaryExpression(EObject context, XNullLiteral semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (expression=XRelationalExpression_XInstanceOfExpression_1_0_0_0_0 type=JvmTypeReference)
-	 */
-	protected void sequence_XRelationalExpression(EObject context, XInstanceOfExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (expression=XExpression?)
-	 */
-	protected void sequence_XReturnExpression(EObject context, XReturnExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
 	 *     actual=XExpression
 	 */
 	protected void sequence_XSafeExpression(EObject context, XSafeExpression semanticObject) {
@@ -1567,33 +1273,6 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
 		feeder.accept(grammarAccess.getXSafeExpressionAccess().getActualXExpressionParserRuleCall_2_0(), semanticObject.getActual());
 		feeder.finish();
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     ((declaredFormalParameters+=JvmFormalParameter declaredFormalParameters+=JvmFormalParameter*)? explicitSyntax?='|' expression=XExpression)
-	 */
-	protected void sequence_XShortClosure(EObject context, XClosure semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     value=STRING
-	 */
-	protected void sequence_XStringLiteral(EObject context, XStringLiteral semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (((localVarName=ValidID? switch=XExpression) | (localVarName=ValidID switch=XExpression)) cases+=XCasePart+ default=XExpression?)
-	 */
-	protected void sequence_XSwitchExpression(EObject context, XSwitchExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1613,59 +1292,5 @@ public class AbstractXTestSemanticSequencer extends AbstractSemanticSequencer {
 		feeder.accept(grammarAccess.getXTestExpressionAccess().getNameUniqueNameParserRuleCall_2_0(), semanticObject.getName());
 		feeder.accept(grammarAccess.getXTestExpressionAccess().getExpressionXBlockExpressionParserRuleCall_3_0(), semanticObject.getExpression());
 		feeder.finish();
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     expression=XExpression
-	 */
-	protected void sequence_XThrowExpression(EObject context, XThrowExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (expression=XExpression ((catchClauses+=XCatchClause+ finallyExpression=XExpression?) | finallyExpression=XExpression))
-	 */
-	protected void sequence_XTryCatchFinallyExpression(EObject context, XTryCatchFinallyExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     type=[JvmType|QualifiedName]
-	 */
-	protected void sequence_XTypeLiteral(EObject context, XTypeLiteral semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (feature=[JvmIdentifiableElement|OpUnary] operand=XCastedExpression)
-	 */
-	protected void sequence_XUnaryOperation(EObject context, XUnaryOperation semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (writeable?='var'? ((type=JvmTypeReference name=ValidID) | name=ValidID) right=XExpression?)
-	 */
-	protected void sequence_XVariableDeclaration(EObject context, XVariableDeclaration semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (predicate=XExpression body=XExpression)
-	 */
-	protected void sequence_XWhileExpression(EObject context, XWhileExpression semanticObject) {
-		superSequencer.createSequence(context, semanticObject);
 	}
 }
