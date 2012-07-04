@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend.core.jvmmodel.IXtendJvmAssociations.Impl;
+import org.eclipse.xtext.common.types.JvmExecutable;
 import org.eclipse.xtext.common.types.JvmGenericType;
 import org.eclipse.xtext.common.types.JvmIdentifiableElement;
 import org.eclipse.xtext.common.types.JvmOperation;
@@ -66,6 +67,19 @@ public class XtestJvmModelAssociator extends Impl {
     @Override
     public JvmIdentifiableElement getLogicalContainer(EObject object) {
         return null;
+    }
+
+    /**
+     * Gets the method associated with a {@link JvmExecutable}
+     * 
+     * @param exec
+     *            The executable
+     * @return The method for that executable
+     */
+    public XMethodDef getMethodDef(JvmExecutable exec) {
+        EObject primarySourceElement = getPrimarySourceElement(exec);
+        return primarySourceElement instanceof XMethodDef ? (XMethodDef) primarySourceElement
+                : null;
     }
 
     @Override

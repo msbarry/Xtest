@@ -6,13 +6,13 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.Callable;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
+import org.xtest.xTest.impl.BodyImplCustom;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
@@ -145,6 +145,20 @@ public class XtestUtil {
         return result;
     }
 
+    private static StackTraceElement generateXtestStackTraceElement(XExpression expression) {
+        ICompositeNode node = NodeModelUtils.getNode(expression);
+        String fileName = getBody(expression).getTypeName();
+        int startLine = node.getStartLine();
+        return new StackTraceElement(fileName, "\"" + getText(expression) + "\"", fileName,
+                startLine);
+    }
+
+    private static BodyImplCustom getBody(XExpression expression) {
+        Iterable<BodyImplCustom> filter = Iterables.filter(expression.eResource().getContents(),
+                BodyImplCustom.class);
+        return Iterables.getFirst(filter, null);
+    }
+
     private static String getNodeWithoutComments(ICompositeNode node) {
         INode rootNode = node.getRootNode();
         if (rootNode != null) {
@@ -153,14 +167,6 @@ public class XtestUtil {
             return rootNode.getText().substring(offset, offset + length);
         }
         return null;
-    }
-
-    private static StackTraceElement getTraceForExpression(XExpression expression) {
-        ICompositeNode node = NodeModelUtils.getNode(expression);
-        URI uri = expression.eResource().getURI();
-        int startLine = node.getStartLine();
-        String fileName = uri.lastSegment();
-        return new StackTraceElement(fileName, getText(expression), fileName, startLine);
     }
 
     private static StackTraceElement[] insertXtestElements(StackTraceElement[] stackTrace,
@@ -177,14 +183,14 @@ public class XtestUtil {
                 break;
             }
             if (element.getClassName().equals(XtestStackMarker.class.getName())) {
-                StackTraceElement newElement = getTraceForExpression(queue.poll());
+                StackTraceElement newElement = generateXtestStackTraceElement(queue.poll());
                 list.add(i++, newElement);
             }
         }
 
         // add the rest...
         for (XExpression expression : queue) {
-            list.add(getTraceForExpression(expression));
+            list.add(generateXtestStackTraceElement(expression));
         }
         return list.toArray(new StackTraceElement[list.size()]);
     }

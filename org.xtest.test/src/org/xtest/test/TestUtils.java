@@ -217,7 +217,7 @@ public class TestUtils {
 
     public static void assertXtestStackTrace(StackTraceElement element, String methodName,
             int lineNumber) {
-        assertStackTraceEquals(element, "__synthetic0.uri", methodName, "__synthetic0.uri",
+        assertStackTraceEquals(element, "Synthetic0Uri", "\"" + methodName + "\"", "Synthetic0Uri",
                 lineNumber);
     }
 

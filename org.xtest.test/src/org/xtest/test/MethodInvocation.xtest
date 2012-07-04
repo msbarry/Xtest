@@ -2,7 +2,7 @@
 runWhileEditing: false
 // TODO - when Guice fixes memory leak, re-enable running on save
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
-runOnSave: true
+runOnSave: false
  
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
@@ -11,24 +11,25 @@ import static org.^xtest.XTestRunner.*
 xtest "method def returns null" { assertIsValidAndEvaluatesTo(null, "def method {1}") }
 xtest "no-arg" {
 	xtest "no body" {assertIsValidAndEvaluatesTo(null, "def method {}; method") }
-//	xtest "implicit return" {assertIsValidAndEvaluatesTo(1, "def method {1}; method") }
-//	xtest "explicit return" {assertIsValidAndEvaluatesTo(1, "def method {return 1}; method") }
-//	xtest "local method sees outer context" {assertIsValidAndEvaluatesTo(1, "int i = 1; def method {i}; method") }
-//	xtest "static method defined before use" {assertIsValidAndEvaluatesTo(1, "def static method {1}; method") }
-//	xtest "static method calls other static method" {assertIsValidAndEvaluatesTo(1, "def static method2 {method1}; def static method1 {1}; method2") }
-//	xtest "local method calls other local method" {assertIsValidAndEvaluatesTo(1, "def method1 {1}; def method2 {method1}; method2") }
-//	xtest "local method calls static method" {assertIsValidAndEvaluatesTo(1, "def method2 {method1}; def static method1 {1}; method2") }
+	xtest "implicit return" {assertIsValidAndEvaluatesTo(1, "def method {1}; method") }
+	xtest "explicit return" {assertIsValidAndEvaluatesTo(1, "def method {return 1}; method") }
+	xtest "local method sees outer context" {assertIsValidAndEvaluatesTo(1, "val i = 1; def method {i}; method") }
+	xtest "static method defined before use" {assertIsValidAndEvaluatesTo(1, "def static method {1}; method") }
+	xtest "static method calls other static method" {assertIsValidAndEvaluatesTo(1, "def static method2 {method1}; def static method1 {1}; method2") }
+	xtest "local method calls other local method" {assertIsValidAndEvaluatesTo(1, "def method1 {1}; def method2 {method1}; method2") }
+	xtest "local method calls static method" {assertIsValidAndEvaluatesTo(1, "def method2 {method1}; def static method1 {1}; method2") }
 }
-//xtest "1-arg method" { assertIsValidAndEvaluatesTo(1, "def method(int i) {i}; method(1)") }
-//xtest "2-arg method" { assertIsValidAndEvaluatesTo("a1", "def method(String i, int j) {i+j}; method('a', 1)")}
-//xtest "var arg method" { assertIsValidAndEvaluatesTo(1, "def method(int... i) {i.head} method(1,2,3)")}
-//xtest "recursive local method" { assertIsValidAndEvaluatesTo(4, "def r(int i) {if (i <= 0) 0 else 1+r(i-1)}; r(4)") }
-//xtest "recursive static method" { assertIsValidAndEvaluatesTo(4, "def static r(int i) {if (i <= 0) 0 else 1+r(i-1)}; r(4)") }
-//xtest "local type parameter" { assertIsValidAndEvaluatesTo(4, "def <T> meth(T i) {i}; meth(4)") }
-//xtest "static type parameter" { assertIsValidAndEvaluatesTo(4, "def static <T> meth(T i) {i}; meth(4)") }
-//xtest "operator overloading" {
-//	xtest {assertIsValidAndEvaluatesTo(2, "def operator_plus(String a, String b) {a.length+b.length}; 'a'+'b'")}
-//	xtest {assertIsValidAndEvaluatesTo(2, "def static operator_plus(String a, String b) {a.length+b.length}; 'a'+'b'")}
-//	xtest {assertIsValidAndEvaluatesTo(2, "def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1+1")}
-//	xtest {assertIsValidAndEvaluatesTo(2l, "def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1L+1L")}
-//}
+xtest "1-arg method" { assertIsValidAndEvaluatesTo(1, "def method(int i) {i}; method(1)") }
+xtest "2-arg method" { assertIsValidAndEvaluatesTo("a1", "def method(String i, int j) {i+j}; method('a', 1)")}
+xtest "var arg method" { assertIsValidAndEvaluatesTo(1, "def method(int... i) {i.head}; method(1,2,3)")}
+xtest "var arg method" { assertIsValidAndEvaluatesTo(1, "def method(int... i) {1}; method()")}
+xtest "recursive local method" { assertIsValidAndEvaluatesTo(4, "def r(int i) {if (i <= 0) 0 else 1+r(i-1)}; r(4)") }
+xtest "recursive static method" { assertIsValidAndEvaluatesTo(4, "def static r(int i) {if (i <= 0) 0 else 1+r(i-1)}; r(4)") }
+xtest "local type parameter" { assertIsValidAndEvaluatesTo(4, "def <T> meth(T i) {i}; meth(4)") }
+xtest "static type parameter" { assertIsValidAndEvaluatesTo(4, "def static <T> meth(T i) {i}; meth(4)") }
+xtest "operator overloading" {
+	xtest {assertIsValidAndEvaluatesTo(2, "def operator_plus(String a, String b) {a.length+b.length}; 'a'+'b'")}
+	xtest {assertIsValidAndEvaluatesTo(2, "def static operator_plus(String a, String b) {a.length+b.length}; 'a'+'b'")}
+	xtest {assertIsValidAndEvaluatesTo(2, "def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1+1")}
+	xtest {assertIsValidAndEvaluatesTo(2l, "def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1L+1L")}
+}

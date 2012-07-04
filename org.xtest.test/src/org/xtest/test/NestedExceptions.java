@@ -8,6 +8,6 @@ import org.xtest.junit.XtestJunitRunner;
  * @author Michael Barry
  */
 @RunWith(XtestJunitRunner.class)
-@RunsXtest("src/org/xtest/test/Closures.xtest")
-public class Closures {
+@RunsXtest("src/org/xtest/test/NestedExceptions.xtest")
+public class NestedExceptions {
 }
