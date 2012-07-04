@@ -340,7 +340,8 @@ public class XTestInterpreter extends XbaseInterpreter {
                 if (expressions.size() == executable.getParameters().size()) {
                     XExpression arg = expressions.get(paramCount);
                     Object lastArgResult = internalEvaluate(arg, context, indicator);
-                    if (componentType.isInstance(lastArgResult)) {
+                    if (componentType.isInstance(lastArgResult)
+                            && !lastArgResult.getClass().isArray()) {
                         Object array = Array.newInstance(componentType, 1);
                         Array.set(array, 0, lastArgResult);
                         result.add(array);

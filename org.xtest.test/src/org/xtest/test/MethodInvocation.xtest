@@ -33,3 +33,68 @@ xtest "operator overloading" {
 	xtest {assertIsValidAndEvaluatesTo(2, "def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1+1")}
 	xtest {assertIsValidAndEvaluatesTo(2l, "def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1L+1L")}
 }
+xtest "nested methods" {
+	xtest "nested method type inference" {
+		val script =
+	'def <T> get(T i) {
+		def <U> get2(U j) {
+			j
+		}
+		get2(i)
+	}
+	
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+	
+	xtest "nested method type inference - uses type paremeter from grandparent" {
+		val script =
+	'def <T> get(T i) {
+		def get2(T j) {
+			j
+		}
+		get2(i)
+	}
+	
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+	
+	xtest "nested method type inference - uses var arg type paremeter from grandparent" {
+		val script =
+	'def <K> get(K... i) {
+		def get2(K... j) {
+			j.head
+		}
+		get2(i)
+	}
+	
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+	
+	xtest "nested method type inference - uses var arg type paremeter from grandparent #2" {
+		val script =
+	'def static <T> first(T... is) {is.get(0)}
+	
+	def <T> get(T... i) {
+		def get2(T... j) {
+			first(j)
+		}
+		get2(i)
+	} 
+	
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+	
+	xtest "nested method type inference - uses var arg type paremeter from grandparent #3" {
+		val script =
+	'def <T> get(T... i) {
+		def get2(T... j) { j.get(0) }
+		get2(i)
+	} 
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+}
