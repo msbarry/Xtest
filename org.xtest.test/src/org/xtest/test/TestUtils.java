@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.XExpression;
+import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
@@ -63,8 +65,10 @@ public class TestUtils {
         assertEquals(expectedNormalized, actualNormalized);
     }
 
-    public static void assertEvaluatesTo(Object object, Body body) throws Exception {
-        assertEquals(object, invokeXbaseExpression(body));
+    public static void assertEvaluatesTo(Object object, Body val) {
+        Collection<XTestEvaluationException> exceptions = assertEvaluatesToIgnoreExceptions(object,
+                val);
+        assertEquals(exceptions.toString(), 0, exceptions.size());
     }
 
     public static void assertInvalidSyntax(String script) throws Exception {
@@ -208,11 +212,8 @@ public class TestUtils {
         assertEquals(XTestState.PASS, result.getState());
     }
 
-    public static void assertXtestPreEvalFailure(String test) {
-        XTestResult result = XTestRunner.run(test, injector);
-        assertTrue(result.getErrorMessages().toString(),
-                !"[]".equals(result.getErrorMessages().toString()));
-        assertEquals(XTestState.FAIL, result.getState());
+    public static void assertXtestPreEvalFailure(String test) throws Exception {
+        assertInvalidSyntax(test);
     }
 
     public static void assertXtestStackTrace(StackTraceElement element, String methodName,
@@ -255,6 +256,13 @@ public class TestUtils {
 
     public static String textOf(EObject eObject) {
         return NodeModelUtils.getNode(eObject).getText().trim();
+    }
+
+    protected static Collection<XTestEvaluationException> assertEvaluatesToIgnoreExceptions(
+            Object object, Body val) {
+        XTestResult run = XTestRunner.run(val, injector);
+        assertEquals("evaluation result", object, run.getResultObject());
+        return run.getEvaluationException();
     }
 
     @SuppressWarnings("restriction")

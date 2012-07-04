@@ -25,6 +25,7 @@ public class XTestResult {
     private final Collection<XTestEvaluationException> expressions = Lists.newArrayList();
     private final String name;
     private final XTestResult parent;
+    private Object resultObject;
     private XTestState state = XTestState.NOT_RUN;
     private final List<XTestResult> subTests = Lists.newArrayList();
     private final List<String> syntaxErrors = Lists.newArrayList();
@@ -133,6 +134,15 @@ public class XTestResult {
     }
 
     /**
+     * Gets the return value of the test
+     * 
+     * @return The return value of the test
+     */
+    public Object getResultObject() {
+        return resultObject;
+    }
+
+    /**
      * Returns the state of this test result
      * 
      * @return The state of this test result
@@ -160,6 +170,16 @@ public class XTestResult {
                 parent.pass();
             }
         }
+    }
+
+    /**
+     * Sets the return value of the test
+     * 
+     * @param resultObject
+     *            The return vale of the test
+     */
+    public void setResultObject(Object resultObject) {
+        this.resultObject = resultObject;
     }
 
     /**

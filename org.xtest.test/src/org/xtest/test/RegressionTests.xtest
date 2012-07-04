@@ -188,7 +188,7 @@ xtest testVerifyTrue {
 xtest testVerifyTrue {
     val parse = parse('?1/0')
     assertValidationPassed(parse)
-    assertEvaluatesTo(null, parse)
+    assertEvaluatesToIgnoreExceptions(null, parse)
 }
 
 xtest safeTypeComputation {

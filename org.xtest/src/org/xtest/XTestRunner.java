@@ -1,25 +1,21 @@
 package org.xtest;
 
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.junit.util.ParseHelper;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.CheckType;
-import org.eclipse.xtext.validation.IResourceValidator;
-import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
+import org.eclipse.xtext.xbase.interpreter.IEvaluationResult;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
-import org.xtest.results.XTestState;
 import org.xtest.xTest.Body;
 
 import com.google.common.collect.Sets;
@@ -58,6 +54,28 @@ public class XTestRunner {
     }
 
     /**
+     * Runs a xtest script object model
+     * 
+     * @param parse
+     *            The parse xtest script object model
+     * @param injector
+     *            The Guice injector to use
+     * @return The test results
+     */
+    public static XTestResult run(Body parse, Injector injector) {
+        XTestResult result;
+        try {
+            XTestRunner instance = injector.getInstance(XTestRunner.class);
+            result = instance.run(parse, RunType.HEAVYWEIGHT, CancelIndicator.NullImpl);
+        } catch (Exception e) {
+            result = new XTestResult(null);
+            result.fail();
+        }
+
+        return result;
+    }
+
+    /**
      * Runs a xtest script contained inside a string
      * 
      * @param string
@@ -70,18 +88,7 @@ public class XTestRunner {
         XTestResult result;
         try {
             Body parse = parse(string, injector);
-            result = new XTestResult(parse);
-            List<Issue> validate = injector.getInstance(IResourceValidator.class).validate(
-                    parse.eResource(), CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
-            for (Issue issue : validate) {
-                if (issue.getSeverity() == Severity.ERROR) {
-                    result.addSyntaxError(issue.getLineNumber() + ": " + issue.getMessage());
-                }
-            }
-            if (result.getState() != XTestState.FAIL) {
-                result = injector.getInstance(XTestRunner.class).run(parse, RunType.HEAVYWEIGHT,
-                        CancelIndicator.NullImpl);
-            }
+            result = run(parse, injector);
         } catch (Exception e) {
             result = new XTestResult(null);
             result.fail();
@@ -139,9 +146,10 @@ public class XTestRunner {
      */
     public XTestResult run(Body main, RunType weight, CancelIndicator monitor) {
         XTestInterpreter interpreter = getInterpreter(main.eResource());
+        IEvaluationResult resultObject = null;
         boolean failed = false;
         try {
-            interpreter.evaluate(main, contextProvider.get(), monitor);
+            resultObject = interpreter.evaluate(main, contextProvider.get(), monitor);
         } catch (InterpreterCanceledException e) {
         } catch (Throwable e) {
             failed = true;
@@ -151,6 +159,7 @@ public class XTestRunner {
         if (failed) {
             result.fail();
         }
+        result.setResultObject(resultObject.getResult());
         return result;
     }
 

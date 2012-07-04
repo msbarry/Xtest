@@ -119,11 +119,8 @@ xtest testImportStatic_innerStaticClassWildcard {
 
 
 xtest testImportStatic_type_shouldfail {
-    val result = XTestRunner::run(
-            "import static helpers.SUT\nxsuite suite {xtest tcase {assert getStatic==2}}",
-            injector);
-    assertTrue(!"[]".equals(result.getErrorMessages().toString()));
-    assertEquals(XTestState::FAIL, result.getState());
+    assertInvalidSyntax(
+            "import static helpers.SUT\nxsuite suite {xtest tcase {assert getStatic==2}}");
 }
 
 
@@ -143,11 +140,7 @@ xtest testInnerClassesRecognized {
 
 
 xtest testMalformed {
-    val result = XTestRunner::run("testSui", injector);
-    assertEquals(1, result.getErrorMessages().size());
-    assertEquals(XTestState::FAIL, result.getState());
-    assertEquals(0, result.getSubTests().size());
-    assertEquals(0, result.getSubTests().size());
+    assertInvalidSyntax("testSui")
 }
 
 
