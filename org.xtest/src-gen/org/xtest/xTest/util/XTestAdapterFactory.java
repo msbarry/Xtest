@@ -13,6 +13,10 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.xtend.core.xtend.XtendAnnotationTarget;
+import org.eclipse.xtend.core.xtend.XtendFunction;
+import org.eclipse.xtend.core.xtend.XtendMember;
+
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
 
@@ -112,6 +116,16 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 				return createXSafeExpressionAdapter();
 			}
 			@Override
+			public Adapter caseXMethodDef(XMethodDef object)
+			{
+				return createXMethodDefAdapter();
+			}
+			@Override
+			public Adapter caseXMethodDefExpression(XMethodDefExpression object)
+			{
+				return createXMethodDefExpressionAdapter();
+			}
+			@Override
 			public Adapter caseXExpression(XExpression object)
 			{
 				return createXExpressionAdapter();
@@ -120,6 +134,21 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 			public Adapter caseXBlockExpression(XBlockExpression object)
 			{
 				return createXBlockExpressionAdapter();
+			}
+			@Override
+			public Adapter caseXtendAnnotationTarget(XtendAnnotationTarget object)
+			{
+				return createXtendAnnotationTargetAdapter();
+			}
+			@Override
+			public Adapter caseXtendMember(XtendMember object)
+			{
+				return createXtendMemberAdapter();
+			}
+			@Override
+			public Adapter caseXtendFunction(XtendFunction object)
+			{
+				return createXtendFunctionAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object)
@@ -234,6 +263,36 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XMethodDef <em>XMethod Def</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.xtest.xTest.XMethodDef
+	 * @generated
+	 */
+	public Adapter createXMethodDefAdapter()
+	{
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XMethodDefExpression <em>XMethod Def Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.xtest.xTest.XMethodDefExpression
+	 * @generated
+	 */
+	public Adapter createXMethodDefExpressionAdapter()
+	{
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.xtext.xbase.XExpression <em>XExpression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -259,6 +318,51 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	public Adapter createXBlockExpressionAdapter()
+	{
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.xtend.core.xtend.XtendAnnotationTarget <em>Annotation Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.xtend.core.xtend.XtendAnnotationTarget
+	 * @generated
+	 */
+	public Adapter createXtendAnnotationTargetAdapter()
+	{
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.xtend.core.xtend.XtendMember <em>Member</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.xtend.core.xtend.XtendMember
+	 * @generated
+	 */
+	public Adapter createXtendMemberAdapter()
+	{
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.xtend.core.xtend.XtendFunction <em>Function</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.xtend.core.xtend.XtendFunction
+	 * @generated
+	 */
+	public Adapter createXtendFunctionAdapter()
 	{
 		return null;
 	}

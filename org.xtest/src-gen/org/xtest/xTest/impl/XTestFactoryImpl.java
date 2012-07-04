@@ -74,6 +74,8 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 			case XTestPackage.XTEST_EXPRESSION: return createXTestExpression();
 			case XTestPackage.XASSERT_EXPRESSION: return createXAssertExpression();
 			case XTestPackage.XSAFE_EXPRESSION: return createXSafeExpression();
+			case XTestPackage.XMETHOD_DEF: return createXMethodDef();
+			case XTestPackage.XMETHOD_DEF_EXPRESSION: return createXMethodDefExpression();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -143,6 +145,28 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	{
 		XSafeExpressionImpl xSafeExpression = new XSafeExpressionImpl();
 		return xSafeExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XMethodDef createXMethodDef()
+	{
+		XMethodDefImpl xMethodDef = new XMethodDefImpl();
+		return xMethodDef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XMethodDefExpression createXMethodDefExpression()
+	{
+		XMethodDefExpressionImpl xMethodDefExpression = new XMethodDefExpressionImpl();
+		return xMethodDefExpression;
 	}
 
 	/**

@@ -17,7 +17,7 @@ import org.xtest.preferences.RuntimePref;
 import org.xtest.runner.external.DependencyAcceptor;
 import org.xtest.runner.external.TestResult;
 import org.xtest.ui.editor.SpecialResourceValidator;
-import org.xtest.ui.resource.XtestResource;
+import org.xtest.ui.resource.XtestDependencyAcceptingResource;
 import org.xtest.xTest.Body;
 
 import com.google.inject.Inject;
@@ -53,8 +53,8 @@ public class TestRunner extends DefaultResourceUIValidatorExtension {
         SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
         try {
             Body body = null;
-            if (resource instanceof XtestResource) {
-                XtestResource resource2 = (XtestResource) resource;
+            if (resource instanceof XtestDependencyAcceptingResource) {
+                XtestDependencyAcceptingResource resource2 = (XtestDependencyAcceptingResource) resource;
                 resource2.setAcceptor(acceptor);
                 body = (Body) resource2.getContents().get(0);
             }

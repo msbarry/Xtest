@@ -249,11 +249,14 @@ public class XTestOutlineTreeProvider extends DefaultOutlineTreeProvider {
     }
 
     private void scheduleValidation(EObject body) {
-        Iterable<Pair<IStorage, IProject>> storages = mapper.getStorages(body.eResource().getURI());
-        for (Pair<IStorage, IProject> pair : storages) {
-            IStorage first = pair.getFirst();
-            if (first instanceof IFile) {
-                ContinuousTestRunner.schedule((IFile) first);
+        if (prefs.get((Body) body, RuntimePref.RUN_ON_SAVE)) {
+            Iterable<Pair<IStorage, IProject>> storages = mapper.getStorages(body.eResource()
+                    .getURI());
+            for (Pair<IStorage, IProject> pair : storages) {
+                IStorage first = pair.getFirst();
+                if (first instanceof IFile) {
+                    ContinuousTestRunner.schedule((IFile) first);
+                }
             }
         }
     }

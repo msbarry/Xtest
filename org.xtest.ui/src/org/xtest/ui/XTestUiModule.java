@@ -24,7 +24,7 @@ import org.xtest.ui.editor.XtestPreferencePage;
 import org.xtest.ui.highlight.XtestHighlightingCalculator;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
-import org.xtest.ui.resource.XtestResource;
+import org.xtest.ui.resource.XtestDependencyAcceptingResource;
 import org.xtest.ui.runner.UiXTestRunner;
 import org.xtest.ui.templates.XtestTemplateProposalProvider;
 import org.xtest.ui.validation.XtestDiagnostician;
@@ -137,12 +137,12 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
     }
 
     /**
-     * Binds {@link XtextResource} implementation to custom {@link XtestResource}
+     * Binds {@link XtextResource} implementation to custom {@link XtestDependencyAcceptingResource}
      * 
-     * @return {@link XtestResource} class
+     * @return {@link XtestDependencyAcceptingResource} class
      */
     public Class<? extends XtextResource> bindXtextResource() {
-        return XtestResource.class;
+        return XtestDependencyAcceptingResource.class;
     }
 
     /**

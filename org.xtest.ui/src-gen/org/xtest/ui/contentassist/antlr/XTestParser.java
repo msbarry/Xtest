@@ -84,6 +84,14 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getXAssertExpressionAccess().getGroup(), "rule__XAssertExpression__Group__0");
 					put(grammarAccess.getXAssertExpressionAccess().getGroup_3(), "rule__XAssertExpression__Group_3__0");
 					put(grammarAccess.getXSafeExpressionAccess().getGroup(), "rule__XSafeExpression__Group__0");
+					put(grammarAccess.getParameterAccess().getGroup(), "rule__Parameter__Group__0");
+					put(grammarAccess.getXMethodDefAccess().getGroup(), "rule__XMethodDef__Group__0");
+					put(grammarAccess.getXMethodDefAccess().getGroup_2(), "rule__XMethodDef__Group_2__0");
+					put(grammarAccess.getXMethodDefAccess().getGroup_2_2(), "rule__XMethodDef__Group_2_2__0");
+					put(grammarAccess.getXMethodDefAccess().getGroup_5(), "rule__XMethodDef__Group_5__0");
+					put(grammarAccess.getXMethodDefAccess().getGroup_5_1(), "rule__XMethodDef__Group_5_1__0");
+					put(grammarAccess.getXMethodDefAccess().getGroup_5_1_1(), "rule__XMethodDef__Group_5_1_1__0");
+					put(grammarAccess.getXMethodDefExpressionAccess().getGroup(), "rule__XMethodDefExpression__Group__0");
 					put(grammarAccess.getXFeatureCallAccess().getGroup(), "rule__XFeatureCall__Group__0");
 					put(grammarAccess.getXFeatureCallAccess().getGroup_2(), "rule__XFeatureCall__Group_2__0");
 					put(grammarAccess.getXFeatureCallAccess().getGroup_2_2(), "rule__XFeatureCall__Group_2_2__0");
@@ -236,6 +244,18 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getXAssertExpressionAccess().getActualAssignment_2(), "rule__XAssertExpression__ActualAssignment_2");
 					put(grammarAccess.getXAssertExpressionAccess().getThrowsAssignment_3_1(), "rule__XAssertExpression__ThrowsAssignment_3_1");
 					put(grammarAccess.getXSafeExpressionAccess().getActualAssignment_2(), "rule__XSafeExpression__ActualAssignment_2");
+					put(grammarAccess.getParameterAccess().getParameterTypeAssignment_0(), "rule__Parameter__ParameterTypeAssignment_0");
+					put(grammarAccess.getParameterAccess().getVarArgAssignment_1(), "rule__Parameter__VarArgAssignment_1");
+					put(grammarAccess.getParameterAccess().getNameAssignment_2(), "rule__Parameter__NameAssignment_2");
+					put(grammarAccess.getXMethodDefAccess().getStaticAssignment_1_1(), "rule__XMethodDef__StaticAssignment_1_1");
+					put(grammarAccess.getXMethodDefAccess().getTypeParametersAssignment_2_1(), "rule__XMethodDef__TypeParametersAssignment_2_1");
+					put(grammarAccess.getXMethodDefAccess().getTypeParametersAssignment_2_2_1(), "rule__XMethodDef__TypeParametersAssignment_2_2_1");
+					put(grammarAccess.getXMethodDefAccess().getReturnTypeAssignment_3(), "rule__XMethodDef__ReturnTypeAssignment_3");
+					put(grammarAccess.getXMethodDefAccess().getNameAssignment_4(), "rule__XMethodDef__NameAssignment_4");
+					put(grammarAccess.getXMethodDefAccess().getParametersAssignment_5_1_0(), "rule__XMethodDef__ParametersAssignment_5_1_0");
+					put(grammarAccess.getXMethodDefAccess().getParametersAssignment_5_1_1_1(), "rule__XMethodDef__ParametersAssignment_5_1_1_1");
+					put(grammarAccess.getXMethodDefAccess().getExpressionAssignment_6(), "rule__XMethodDef__ExpressionAssignment_6");
+					put(grammarAccess.getXMethodDefExpressionAccess().getMethodAssignment_1(), "rule__XMethodDefExpression__MethodAssignment_1");
 					put(grammarAccess.getXFeatureCallAccess().getDeclaringTypeAssignment_1(), "rule__XFeatureCall__DeclaringTypeAssignment_1");
 					put(grammarAccess.getXFeatureCallAccess().getTypeArgumentsAssignment_2_1(), "rule__XFeatureCall__TypeArgumentsAssignment_2_1");
 					put(grammarAccess.getXFeatureCallAccess().getTypeArgumentsAssignment_2_2_1(), "rule__XFeatureCall__TypeArgumentsAssignment_2_2_1");
@@ -352,6 +372,7 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getJvmTypeParameterAccess().getConstraintsAssignment_1_0_0(), "rule__JvmTypeParameter__ConstraintsAssignment_1_0_0");
 					put(grammarAccess.getJvmTypeParameterAccess().getConstraintsAssignment_1_0_1(), "rule__JvmTypeParameter__ConstraintsAssignment_1_0_1");
 					put(grammarAccess.getJvmTypeParameterAccess().getConstraintsAssignment_1_1(), "rule__JvmTypeParameter__ConstraintsAssignment_1_1");
+					put(grammarAccess.getXMethodDefAccess().getUnorderedGroup_1(), "rule__XMethodDef__UnorderedGroup_1");
 				}
 			};
 		}

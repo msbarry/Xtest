@@ -400,6 +400,211 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getActualXExpressionParserRuleCall_2_0() { return cActualXExpressionParserRuleCall_2_0; }
 	}
 
+	public class ParameterElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Parameter");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cParameterTypeAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cParameterTypeJvmTypeReferenceParserRuleCall_0_0 = (RuleCall)cParameterTypeAssignment_0.eContents().get(0);
+		private final Assignment cVarArgAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Keyword cVarArgFullStopFullStopFullStopKeyword_1_0 = (Keyword)cVarArgAssignment_1.eContents().get(0);
+		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cNameValidIDParserRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
+		
+		//// Methods
+		//
+		//Parameter returns XtendParameter:
+		//
+		//	parameterType=JvmTypeReference varArg?="..."? name=ValidID;
+		public ParserRule getRule() { return rule; }
+
+		//parameterType=JvmTypeReference varArg?="..."? name=ValidID
+		public Group getGroup() { return cGroup; }
+
+		//parameterType=JvmTypeReference
+		public Assignment getParameterTypeAssignment_0() { return cParameterTypeAssignment_0; }
+
+		//JvmTypeReference
+		public RuleCall getParameterTypeJvmTypeReferenceParserRuleCall_0_0() { return cParameterTypeJvmTypeReferenceParserRuleCall_0_0; }
+
+		//varArg?="..."?
+		public Assignment getVarArgAssignment_1() { return cVarArgAssignment_1; }
+
+		//"..."
+		public Keyword getVarArgFullStopFullStopFullStopKeyword_1_0() { return cVarArgFullStopFullStopFullStopKeyword_1_0; }
+
+		//name=ValidID
+		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
+
+		//ValidID
+		public RuleCall getNameValidIDParserRuleCall_2_0() { return cNameValidIDParserRuleCall_2_0; }
+	}
+
+	public class XMethodDefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XMethodDef");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cXMethodDefAction_0 = (Action)cGroup.eContents().get(0);
+		private final UnorderedGroup cUnorderedGroup_1 = (UnorderedGroup)cGroup.eContents().get(1);
+		private final Keyword cDefKeyword_1_0 = (Keyword)cUnorderedGroup_1.eContents().get(0);
+		private final Assignment cStaticAssignment_1_1 = (Assignment)cUnorderedGroup_1.eContents().get(1);
+		private final Keyword cStaticStaticKeyword_1_1_0 = (Keyword)cStaticAssignment_1_1.eContents().get(0);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cLessThanSignKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final Assignment cTypeParametersAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cTypeParametersJvmTypeParameterParserRuleCall_2_1_0 = (RuleCall)cTypeParametersAssignment_2_1.eContents().get(0);
+		private final Group cGroup_2_2 = (Group)cGroup_2.eContents().get(2);
+		private final Keyword cCommaKeyword_2_2_0 = (Keyword)cGroup_2_2.eContents().get(0);
+		private final Assignment cTypeParametersAssignment_2_2_1 = (Assignment)cGroup_2_2.eContents().get(1);
+		private final RuleCall cTypeParametersJvmTypeParameterParserRuleCall_2_2_1_0 = (RuleCall)cTypeParametersAssignment_2_2_1.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_2_3 = (Keyword)cGroup_2.eContents().get(3);
+		private final Assignment cReturnTypeAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cReturnTypeJvmTypeReferenceParserRuleCall_3_0 = (RuleCall)cReturnTypeAssignment_3.eContents().get(0);
+		private final Assignment cNameAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cNameValidIDParserRuleCall_4_0 = (RuleCall)cNameAssignment_4.eContents().get(0);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Keyword cLeftParenthesisKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Group cGroup_5_1 = (Group)cGroup_5.eContents().get(1);
+		private final Assignment cParametersAssignment_5_1_0 = (Assignment)cGroup_5_1.eContents().get(0);
+		private final RuleCall cParametersParameterParserRuleCall_5_1_0_0 = (RuleCall)cParametersAssignment_5_1_0.eContents().get(0);
+		private final Group cGroup_5_1_1 = (Group)cGroup_5_1.eContents().get(1);
+		private final Keyword cCommaKeyword_5_1_1_0 = (Keyword)cGroup_5_1_1.eContents().get(0);
+		private final Assignment cParametersAssignment_5_1_1_1 = (Assignment)cGroup_5_1_1.eContents().get(1);
+		private final RuleCall cParametersParameterParserRuleCall_5_1_1_1_0 = (RuleCall)cParametersAssignment_5_1_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_5_2 = (Keyword)cGroup_5.eContents().get(2);
+		private final Assignment cExpressionAssignment_6 = (Assignment)cGroup.eContents().get(6);
+		private final RuleCall cExpressionXBlockExpressionParserRuleCall_6_0 = (RuleCall)cExpressionAssignment_6.eContents().get(0);
+		
+		//XMethodDef returns XtendFunction:
+		//
+		//	{XMethodDef} ("def" & static?="static"?) ("<" typeParameters+=JvmTypeParameter (","
+		//
+		//	typeParameters+=JvmTypeParameter)* ">")? returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter (","
+		//
+		//	parameters+=Parameter)*)? ")")? expression=XBlockExpression;
+		public ParserRule getRule() { return rule; }
+
+		//{XMethodDef} ("def" & static?="static"?) ("<" typeParameters+=JvmTypeParameter ("," typeParameters+=JvmTypeParameter)*
+		//
+		//">")? returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter ("," parameters+=Parameter)*)? ")")?
+		//
+		//expression=XBlockExpression
+		public Group getGroup() { return cGroup; }
+
+		//{XMethodDef}
+		public Action getXMethodDefAction_0() { return cXMethodDefAction_0; }
+
+		//"def" & static?="static"?
+		public UnorderedGroup getUnorderedGroup_1() { return cUnorderedGroup_1; }
+
+		//"def"
+		public Keyword getDefKeyword_1_0() { return cDefKeyword_1_0; }
+
+		//static?="static"?
+		public Assignment getStaticAssignment_1_1() { return cStaticAssignment_1_1; }
+
+		//"static"
+		public Keyword getStaticStaticKeyword_1_1_0() { return cStaticStaticKeyword_1_1_0; }
+
+		//("<" typeParameters+=JvmTypeParameter ("," typeParameters+=JvmTypeParameter)* ">")?
+		public Group getGroup_2() { return cGroup_2; }
+
+		//"<"
+		public Keyword getLessThanSignKeyword_2_0() { return cLessThanSignKeyword_2_0; }
+
+		//typeParameters+=JvmTypeParameter
+		public Assignment getTypeParametersAssignment_2_1() { return cTypeParametersAssignment_2_1; }
+
+		//JvmTypeParameter
+		public RuleCall getTypeParametersJvmTypeParameterParserRuleCall_2_1_0() { return cTypeParametersJvmTypeParameterParserRuleCall_2_1_0; }
+
+		//("," typeParameters+=JvmTypeParameter)*
+		public Group getGroup_2_2() { return cGroup_2_2; }
+
+		//","
+		public Keyword getCommaKeyword_2_2_0() { return cCommaKeyword_2_2_0; }
+
+		//typeParameters+=JvmTypeParameter
+		public Assignment getTypeParametersAssignment_2_2_1() { return cTypeParametersAssignment_2_2_1; }
+
+		//JvmTypeParameter
+		public RuleCall getTypeParametersJvmTypeParameterParserRuleCall_2_2_1_0() { return cTypeParametersJvmTypeParameterParserRuleCall_2_2_1_0; }
+
+		//">"
+		public Keyword getGreaterThanSignKeyword_2_3() { return cGreaterThanSignKeyword_2_3; }
+
+		//returnType=JvmTypeReference?
+		public Assignment getReturnTypeAssignment_3() { return cReturnTypeAssignment_3; }
+
+		//JvmTypeReference
+		public RuleCall getReturnTypeJvmTypeReferenceParserRuleCall_3_0() { return cReturnTypeJvmTypeReferenceParserRuleCall_3_0; }
+
+		//name=ValidID
+		public Assignment getNameAssignment_4() { return cNameAssignment_4; }
+
+		//ValidID
+		public RuleCall getNameValidIDParserRuleCall_4_0() { return cNameValidIDParserRuleCall_4_0; }
+
+		//("(" (parameters+=Parameter ("," parameters+=Parameter)*)? ")")?
+		public Group getGroup_5() { return cGroup_5; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_5_0() { return cLeftParenthesisKeyword_5_0; }
+
+		//(parameters+=Parameter ("," parameters+=Parameter)*)?
+		public Group getGroup_5_1() { return cGroup_5_1; }
+
+		//parameters+=Parameter
+		public Assignment getParametersAssignment_5_1_0() { return cParametersAssignment_5_1_0; }
+
+		//Parameter
+		public RuleCall getParametersParameterParserRuleCall_5_1_0_0() { return cParametersParameterParserRuleCall_5_1_0_0; }
+
+		//("," parameters+=Parameter)*
+		public Group getGroup_5_1_1() { return cGroup_5_1_1; }
+
+		//","
+		public Keyword getCommaKeyword_5_1_1_0() { return cCommaKeyword_5_1_1_0; }
+
+		//parameters+=Parameter
+		public Assignment getParametersAssignment_5_1_1_1() { return cParametersAssignment_5_1_1_1; }
+
+		//Parameter
+		public RuleCall getParametersParameterParserRuleCall_5_1_1_1_0() { return cParametersParameterParserRuleCall_5_1_1_1_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_5_2() { return cRightParenthesisKeyword_5_2; }
+
+		//expression=XBlockExpression
+		public Assignment getExpressionAssignment_6() { return cExpressionAssignment_6; }
+
+		//XBlockExpression
+		public RuleCall getExpressionXBlockExpressionParserRuleCall_6_0() { return cExpressionXBlockExpressionParserRuleCall_6_0; }
+	}
+
+	public class XMethodDefExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XMethodDefExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cXMethodDefExpressionAction_0 = (Action)cGroup.eContents().get(0);
+		private final Assignment cMethodAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cMethodXMethodDefParserRuleCall_1_0 = (RuleCall)cMethodAssignment_1.eContents().get(0);
+		
+		//XMethodDefExpression returns XExpression:
+		//
+		//	{XMethodDefExpression} method=XMethodDef;
+		public ParserRule getRule() { return rule; }
+
+		//{XMethodDefExpression} method=XMethodDef
+		public Group getGroup() { return cGroup; }
+
+		//{XMethodDefExpression}
+		public Action getXMethodDefExpressionAction_0() { return cXMethodDefExpressionAction_0; }
+
+		//method=XMethodDef
+		public Assignment getMethodAssignment_1() { return cMethodAssignment_1; }
+
+		//XMethodDef
+		public RuleCall getMethodXMethodDefParserRuleCall_1_0() { return cMethodXMethodDefParserRuleCall_1_0; }
+	}
+
 	public class XPrimaryExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XPrimaryExpression");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -419,6 +624,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cXTestExpressionParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
 		private final RuleCall cXAssertExpressionParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
 		private final RuleCall cXSafeExpressionParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
+		private final RuleCall cXMethodDefExpressionParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
 		
 		//// Hook our newly defined expressions into XBase as new kinds of expressions
 		//
@@ -430,7 +636,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//
 		//	XParenthesizedExpression | // Add new expressions
 		//
-		//	XTestExpression | XAssertExpression | XSafeExpression;
+		//	XTestExpression | XAssertExpression | XSafeExpression | XMethodDefExpression;
 		public ParserRule getRule() { return rule; }
 
 		//// Keep old expressions
@@ -441,7 +647,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//
 		//XParenthesizedExpression | // Add new expressions
 		//
-		//XTestExpression | XAssertExpression | XSafeExpression
+		//XTestExpression | XAssertExpression | XSafeExpression | XMethodDefExpression
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//// Keep old expressions
@@ -495,6 +701,9 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 
 		//XSafeExpression
 		public RuleCall getXSafeExpressionParserRuleCall_15() { return cXSafeExpressionParserRuleCall_15; }
+
+		//XMethodDefExpression
+		public RuleCall getXMethodDefExpressionParserRuleCall_16() { return cXMethodDefExpressionParserRuleCall_16; }
 	}
 
 	public class StaticEqualsElements extends AbstractParserRuleElementFinder {
@@ -712,6 +921,9 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	private XTestExpressionElements pXTestExpression;
 	private XAssertExpressionElements pXAssertExpression;
 	private XSafeExpressionElements pXSafeExpression;
+	private ParameterElements pParameter;
+	private XMethodDefElements pXMethodDef;
+	private XMethodDefExpressionElements pXMethodDefExpression;
 	private XPrimaryExpressionElements pXPrimaryExpression;
 	private StaticEqualsElements pStaticEquals;
 	private XFeatureCallElements pXFeatureCall;
@@ -831,6 +1043,45 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		return getXSafeExpressionAccess().getRule();
 	}
 
+	//// Methods
+	//
+	//Parameter returns XtendParameter:
+	//
+	//	parameterType=JvmTypeReference varArg?="..."? name=ValidID;
+	public ParameterElements getParameterAccess() {
+		return (pParameter != null) ? pParameter : (pParameter = new ParameterElements());
+	}
+	
+	public ParserRule getParameterRule() {
+		return getParameterAccess().getRule();
+	}
+
+	//XMethodDef returns XtendFunction:
+	//
+	//	{XMethodDef} ("def" & static?="static"?) ("<" typeParameters+=JvmTypeParameter (","
+	//
+	//	typeParameters+=JvmTypeParameter)* ">")? returnType=JvmTypeReference? name=ValidID ("(" (parameters+=Parameter (","
+	//
+	//	parameters+=Parameter)*)? ")")? expression=XBlockExpression;
+	public XMethodDefElements getXMethodDefAccess() {
+		return (pXMethodDef != null) ? pXMethodDef : (pXMethodDef = new XMethodDefElements());
+	}
+	
+	public ParserRule getXMethodDefRule() {
+		return getXMethodDefAccess().getRule();
+	}
+
+	//XMethodDefExpression returns XExpression:
+	//
+	//	{XMethodDefExpression} method=XMethodDef;
+	public XMethodDefExpressionElements getXMethodDefExpressionAccess() {
+		return (pXMethodDefExpression != null) ? pXMethodDefExpression : (pXMethodDefExpression = new XMethodDefExpressionElements());
+	}
+	
+	public ParserRule getXMethodDefExpressionRule() {
+		return getXMethodDefExpressionAccess().getRule();
+	}
+
 	//// Hook our newly defined expressions into XBase as new kinds of expressions
 	//
 	//XPrimaryExpression returns XExpression: // Keep old expressions
@@ -841,7 +1092,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	//
 	//	XParenthesizedExpression | // Add new expressions
 	//
-	//	XTestExpression | XAssertExpression | XSafeExpression;
+	//	XTestExpression | XAssertExpression | XSafeExpression | XMethodDefExpression;
 	public XPrimaryExpressionElements getXPrimaryExpressionAccess() {
 		return (pXPrimaryExpression != null) ? pXPrimaryExpression : (pXPrimaryExpression = new XPrimaryExpressionElements());
 	}

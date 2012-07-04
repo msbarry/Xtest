@@ -45,6 +45,22 @@ XSafeExpression returns XExpression:
 	{XSafeExpression} '?' actual=XExpression
 ;
 
+// Methods
+Parameter returns XtendParameter:
+	parameterType=JvmTypeReference varArg?='...'? name=ValidID;
+	
+XMethodDef returns XtendFunction:
+	{XMethodDef}
+	('def' & (static?='static')?)
+	('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')?
+	 (returnType=JvmTypeReference)?
+	 name=ValidID 
+	 ('(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')')?
+	 expression=XBlockExpression;
+	 
+XMethodDefExpression returns XExpression:
+	{XMethodDefExpression} method = XMethodDef;
+
 // Hook our newly defined expressions into XBase as new kinds of expressions
 XPrimaryExpression returns XExpression:
 	// Keep old expressions
@@ -64,7 +80,8 @@ XPrimaryExpression returns XExpression:
 	// Add new expressions
 	XTestExpression |
 	XAssertExpression |
-	XSafeExpression;
+	XSafeExpression |
+	XMethodDefExpression;
 
 // Add static member setting support to Xbase
 StaticEquals:':=';

@@ -23,6 +23,8 @@ import org.xtest.xTest.Body;
 import org.xtest.xTest.FileParam;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XMethodDef;
+import org.xtest.xTest.XMethodDefExpression;
 import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestFactory;
@@ -77,6 +79,20 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * @generated
 	 */
 	private EClass xSafeExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass xMethodDefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass xMethodDefExpressionEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -319,6 +335,36 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getXMethodDef()
+	{
+		return xMethodDefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getXMethodDefExpression()
+	{
+		return xMethodDefExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getXMethodDefExpression_Method()
+	{
+		return (EReference)xMethodDefExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public XTestFactory getXTestFactory()
 	{
 		return (XTestFactory)getEFactoryInstance();
@@ -366,6 +412,11 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 
 		xSafeExpressionEClass = createEClass(XSAFE_EXPRESSION);
 		createEReference(xSafeExpressionEClass, XSAFE_EXPRESSION__ACTUAL);
+
+		xMethodDefEClass = createEClass(XMETHOD_DEF);
+
+		xMethodDefExpressionEClass = createEClass(XMETHOD_DEF_EXPRESSION);
+		createEReference(xMethodDefExpressionEClass, XMETHOD_DEF_EXPRESSION__METHOD);
 	}
 
 	/**
@@ -406,6 +457,8 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		xTestExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xAssertExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xSafeExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
+		xMethodDefEClass.getESuperTypes().add(theXtendPackage.getXtendFunction());
+		xMethodDefExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(fileParamEClass, FileParam.class, "FileParam", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -430,6 +483,11 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 
 		initEClass(xSafeExpressionEClass, XSafeExpression.class, "XSafeExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getXSafeExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XSafeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(xMethodDefEClass, XMethodDef.class, "XMethodDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(xMethodDefExpressionEClass, XMethodDefExpression.class, "XMethodDefExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getXMethodDefExpression_Method(), theXtendPackage.getXtendFunction(), null, "method", null, 0, 1, XMethodDefExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

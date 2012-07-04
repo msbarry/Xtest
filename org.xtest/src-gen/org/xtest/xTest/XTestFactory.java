@@ -81,6 +81,24 @@ public interface XTestFactory extends EFactory
 	XSafeExpression createXSafeExpression();
 
 	/**
+	 * Returns a new object of class '<em>XMethod Def</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XMethod Def</em>'.
+	 * @generated
+	 */
+	XMethodDef createXMethodDef();
+
+	/**
+	 * Returns a new object of class '<em>XMethod Def Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XMethod Def Expression</em>'.
+	 * @generated
+	 */
+	XMethodDefExpression createXMethodDefExpression();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

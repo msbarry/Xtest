@@ -36,4 +36,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="actual" eType="ecore:EClass ../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="XMethodDef" eSuperTypes="../../../../org.eclipse.xtend.core/model/Xtend.ecore#//XtendFunction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="XMethodDefExpression" eSuperTypes="../../../../org.eclipse.xtext.xbase/model/Xbase.ecore#//XExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="method" eType="ecore:EClass ../../../../org.eclipse.xtend.core/model/Xtend.ecore#//XtendFunction"
+        containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

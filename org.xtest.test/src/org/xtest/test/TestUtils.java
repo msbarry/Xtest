@@ -2,6 +2,7 @@ package org.xtest.test;
 
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -10,7 +11,11 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend.core.formatting.OrganizeImports;
+import org.eclipse.xtext.common.types.JvmGenericArrayTypeReference;
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
+import org.eclipse.xtext.common.types.JvmType;
 import org.eclipse.xtext.common.types.JvmTypeReference;
+import org.eclipse.xtext.common.types.TypesFactory;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -19,6 +24,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.xbase.XExpression;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
@@ -26,6 +32,7 @@ import org.xtest.results.XTestState;
 import org.xtest.types.XTestTypeProvider;
 import org.xtest.xTest.Body;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Injector;
@@ -44,9 +51,11 @@ public class TestUtils {
 
     private static TypeConformanceComputer typeComputer = XtestInjector.injector
             .getInstance(TypeConformanceComputer.class);
-
     private static XTestTypeProvider typeProvider = XtestInjector.injector
             .getInstance(XTestTypeProvider.class);
+
+    private static TypesFactory typesFactory = XtestInjector.injector
+            .getInstance(TypesFactory.class);
 
     public static void assertEqualsNormalizeLinebreak(String expected, String actual) {
         String expectedNormalized = expected.replace("\r\n", "\n");
@@ -56,6 +65,51 @@ public class TestUtils {
 
     public static void assertEvaluatesTo(Object object, Body body) throws Exception {
         assertEquals(object, invokeXbaseExpression(body));
+    }
+
+    public static void assertInvalidSyntax(String script) throws Exception {
+        Body val = parse(script);
+        assertValidationFailed(val);
+    }
+
+    public static void assertIsValidAndEvaluatesTo(Object object, String script) throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+        assertEvaluatesTo(object, val);
+    }
+
+    @SuppressWarnings("restriction")
+    public static void assertIsValidAndTypeConformsTo(String script, Class<?> type)
+            throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+        JvmType findDeclaredType = typeRefs.findDeclaredType(type, val);
+        assertNotNull("type for " + type.getSimpleName(), findDeclaredType);
+        JvmParameterizedTypeReference createTypeRef = typeRefs.createTypeRef(findDeclaredType);
+        assertIsValidAndTypeConformsTo(val, createTypeRef);
+    }
+
+    public static void assertIsValidAndTypeConformsToArray(String script, Class<?> type)
+            throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+        JvmType findDeclaredType = typeRefs.findDeclaredType(type, val);
+        assertNotNull("type for " + type.getSimpleName(), findDeclaredType);
+        JvmParameterizedTypeReference createTypeRef = typeRefs.createTypeRef(findDeclaredType);
+        JvmGenericArrayTypeReference arraytype = typeRefs.createArrayType(createTypeRef);
+        assertIsValidAndTypeConformsTo(val, arraytype);
+    }
+
+    public static void assertIsValidAndVoidType(String script) throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
+        JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(val, true);
+        assertNotNull("computed common return type", commonReturnType);
+        JvmParameterizedTypeReference createTypeRef = typeRefs.createTypeRef(typesFactory
+                .createJvmVoid());
+        boolean conformant = typeComputer.isConformant(createTypeRef, commonReturnType);
+        assertTrue("'" + commonReturnType + "' does not conform to '" + createTypeRef + "'",
+                conformant);
     }
 
     public static void assertProxyStackTrace(StackTraceElement element) {
@@ -92,6 +146,40 @@ public class TestUtils {
         assertEquals("line number", lineNumber, element.getLineNumber());
     }
 
+    public static void assertThrowsExceptionForExpression(String script, String exceptionMessage) {
+        XTestResult run = XTestRunner.run(script, injector);
+        assertEquals("number of exceptions thrown", 1, run.getEvaluationException().size());
+        XExpression expression = Iterables.getFirst(run.getEvaluationException(), null)
+                .getExpression();
+        assertEquals("thrown exception message", exceptionMessage, textOf(expression));
+    }
+
+    public static void assertThrowsExceptionInSubtest(String script, String exceptionMessage) {
+        XTestResult run = XTestRunner.run(script, injector);
+        assertEquals("number of top-level exceptions thrown", 0, run.getEvaluationException()
+                .size());
+        assertEquals("number of sub-tests", 1, run.getSubTests().size());
+        assertEquals("number of exceptions thrown in sub-test", 1, run.getSubTests().get(0)
+                .getEvaluationException().size());
+        assertEquals("exception thrown in sub-test", exceptionMessage,
+                textOf(Iterables.getFirst(run.getSubTests().get(0).getEvaluationException(), null)
+                        .getExpression()));
+    }
+
+    public static void assertValidationFailed(Body parse) throws Exception {
+        IResourceValidator instance = injector.getInstance(IResourceValidator.class);
+        Resource eResource = parse.eResource();
+        List<Issue> validate = instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN,
+                CancelIndicator.NullImpl);
+        List<Issue> errors = Lists.newArrayList();
+        for (Issue issue : validate) {
+            if (issue.getSeverity() == Severity.ERROR) {
+                errors.add(issue);
+            }
+        }
+        assertTrue("expected to find errors but did not", !errors.isEmpty());
+    }
+
     public static void assertValidationPassed(Body parse) throws Exception {
         IResourceValidator instance = injector.getInstance(IResourceValidator.class);
         Resource eResource = parse.eResource();
@@ -103,7 +191,14 @@ public class TestUtils {
                 errors.add(issue);
             }
         }
-        assertEquals("[]", errors.toString());
+        if (!errors.isEmpty()) {
+            fail(errors.toString());
+        }
+    }
+
+    public static void assertValidSyntax(String script) throws Exception {
+        Body val = parse(script);
+        assertValidationPassed(val);
     }
 
     public static void assertXtestPasses(String test) {
@@ -115,13 +210,14 @@ public class TestUtils {
 
     public static void assertXtestPreEvalFailure(String test) {
         XTestResult result = XTestRunner.run(test, injector);
-        assertTrue(!"[]".equals(result.getErrorMessages().toString()));
+        assertTrue(result.getErrorMessages().toString(),
+                !"[]".equals(result.getErrorMessages().toString()));
         assertEquals(XTestState.FAIL, result.getState());
     }
 
     public static void assertXtestStackTrace(StackTraceElement element, String methodName,
             int lineNumber) {
-        assertStackTraceEquals(element, "__synthetic0.uri", methodName, "__synthetic0.uri",
+        assertStackTraceEquals(element, "Synthetic0Uri", "\"" + methodName + "\"", "Synthetic0Uri",
                 lineNumber);
     }
 
@@ -159,6 +255,14 @@ public class TestUtils {
 
     public static String textOf(EObject eObject) {
         return NodeModelUtils.getNode(eObject).getText().trim();
+    }
+
+    @SuppressWarnings("restriction")
+    protected static void assertIsValidAndTypeConformsTo(Body val, JvmTypeReference createTypeRef) {
+        JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(val, true);
+        assertNotNull("computed common return type", commonReturnType);
+        boolean conformant = typeComputer.isConformant(createTypeRef, commonReturnType);
+        assertTrue(commonReturnType + " does not conform to " + createTypeRef, conformant);
     }
 
 }

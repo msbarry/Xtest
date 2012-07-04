@@ -1,15 +1,23 @@
 package org.xtest.interpreter;
 
+import java.lang.reflect.Array;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.Callable;
 
+import org.eclipse.xtend.core.xtend.XtendFunction;
+import org.eclipse.xtend.core.xtend.XtendParameter;
 import org.eclipse.xtext.common.types.JvmDeclaredType;
+import org.eclipse.xtext.common.types.JvmExecutable;
+import org.eclipse.xtext.common.types.JvmOperation;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.JvmVoid;
 import org.eclipse.xtext.common.types.access.impl.ClassFinder;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.XAssignment;
 import org.eclipse.xtext.xbase.XClosure;
@@ -22,17 +30,22 @@ import org.eclipse.xtext.xbase.interpreter.impl.DefaultEvaluationResult;
 import org.eclipse.xtext.xbase.interpreter.impl.EvaluationException;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
-import org.xtest.XtestUtil;
 import org.xtest.XTestAssertionFailure;
 import org.xtest.XTestEvaluationException;
+import org.xtest.XtestUtil;
+import org.xtest.jvmmodel.XtestJvmModelAssociator;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
+import org.xtest.xTest.XMethodDef;
+import org.xtest.xTest.XMethodDefExpression;
 import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -44,10 +57,13 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
+    @Inject
+    private XtestJvmModelAssociator assocations;
     private final Stack<XExpression> callStack = new Stack<XExpression>();
     // TODO move some of this stuff into custom context
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
     private int inSafeBlock = 0;
+    private final Map<XtendFunction, IEvaluationContext> localMethodContexts = Maps.newHashMap();
     private XTestResult result;
     private StackTraceElement[] startTrace = null;
     private final Stack<XTestResult> testStack = new Stack<XTestResult>();
@@ -61,7 +77,8 @@ public class XTestInterpreter extends XbaseInterpreter {
             CancelIndicator indicator) {
         try {
             IEvaluationResult evaluate;
-            if (expression.eContainer() instanceof XClosure) {
+            if (expression.eContainer() instanceof XClosure
+                    || expression.eContainer() instanceof XMethodDef) {
                 evaluate = evaluateInsideOfClosure(expression, context, indicator);
             } else {
                 startTrace = Thread.currentThread().getStackTrace();
@@ -175,6 +192,26 @@ public class XTestInterpreter extends XbaseInterpreter {
         return toReturn;
     }
 
+    /**
+     * Evaluate a method definition. Store its context if local and return null (since methods are
+     * void)
+     * 
+     * @param method
+     *            The method
+     * @param context
+     *            The context
+     * @param indicator
+     *            The cancel indicator
+     * @return Null
+     */
+    protected Object _evaluateMethodDef(XMethodDefExpression method, IEvaluationContext context,
+            CancelIndicator indicator) {
+        if (!method.getMethod().isStatic()) {
+            localMethodContexts.put(method.getMethod(), context);
+        }
+        return null;
+    }
+
     @Override
     protected Object _evaluateReturnExpression(XReturnExpression returnExpr,
             IEvaluationContext context, CancelIndicator indicator) {
@@ -269,6 +306,64 @@ public class XTestInterpreter extends XbaseInterpreter {
         return clazz;
     }
 
+    @Override
+    protected List<Object> evaluateArgumentExpressions(JvmExecutable executable,
+            List<XExpression> expressions, IEvaluationContext context, CancelIndicator indicator) {
+        // Same as XbaseInterpreter.evaluateArgumentExpressions() ...
+
+        XMethodDef methodDef = assocations.getMethodDef(executable);
+        List<Object> result;
+        if (methodDef != null) {
+            result = Lists.newArrayList();
+            int paramCount = executable.getParameters().size();
+            if (executable.isVarArgs()) {
+                paramCount--;
+            }
+            for (int i = 0; i < paramCount; i++) {
+                XExpression arg = expressions.get(i);
+                Object argResult = internalEvaluate(arg, context, indicator);
+                JvmTypeReference parameterType = executable.getParameters().get(i)
+                        .getParameterType();
+                Object argumentValue = coerceArgumentType(argResult, parameterType);
+                result.add(argumentValue);
+            }
+            if (executable.isVarArgs()) {
+                JvmTypeReference parameterType = methodDef.getParameters().get(paramCount)
+                        .getParameterType();
+
+                // ... except get the var-arg class from the XMethodDef
+
+                Class<?> componentType = getJavaReflectAccess().getRawType(parameterType.getType());
+
+                // end diff
+
+                if (expressions.size() == executable.getParameters().size()) {
+                    XExpression arg = expressions.get(paramCount);
+                    Object lastArgResult = internalEvaluate(arg, context, indicator);
+                    if (componentType.isInstance(lastArgResult)) {
+                        Object array = Array.newInstance(componentType, 1);
+                        Array.set(array, 0, lastArgResult);
+                        result.add(array);
+                    } else {
+                        result.add(lastArgResult);
+                    }
+                } else {
+                    Object array = Array
+                            .newInstance(componentType, expressions.size() - paramCount);
+                    for (int i = paramCount; i < expressions.size(); i++) {
+                        XExpression arg = expressions.get(i);
+                        Object argValue = internalEvaluate(arg, context, indicator);
+                        Array.set(array, i - paramCount, argValue);
+                    }
+                    result.add(array);
+                }
+            }
+        } else {
+            result = super.evaluateArgumentExpressions(executable, expressions, context, indicator);
+        }
+        return result;
+    }
+
     /*
      * Override default expression evaluator to wrap thrown exceptions with an xtest evaluation
      * exception wrapper that contains the expression that threw the exception
@@ -310,6 +405,53 @@ public class XTestInterpreter extends XbaseInterpreter {
             callStack.push(previous != null ? previous : expression);
         }
         return internalEvaluate;
+    }
+
+    @Override
+    protected Object invokeOperation(JvmOperation operation, Object receiver,
+            List<Object> argumentValues) {
+        XMethodDef method = assocations.getMethodDef(operation);
+        if (method != null) {
+            return invokeXtestMethod(method, argumentValues);
+        } else {
+            return super.invokeOperation(operation, receiver, argumentValues);
+        }
+    }
+
+    /**
+     * Invokes a method declared in an Xtest file
+     * 
+     * @param method
+     *            The method
+     * @param argumentValues
+     *            The argument values
+     * @return The result of invoking that operation
+     */
+    protected Object invokeXtestMethod(XMethodDef method, List<Object> argumentValues) {
+        IEvaluationContext context = localMethodContexts.get(method);
+        if (context == null) {
+            context = createContext();
+        } else {
+            context = context.fork();
+        }
+        if (argumentValues.size() != method.getParameters().size()) {
+            throw new IllegalStateException("Number of arguments did not match. Expected: "
+                    + method.getParameters().size() + " but was: " + argumentValues.size());
+        }
+
+        int i = 0;
+        for (XtendParameter param : method.getParameters()) {
+            Object value;
+            value = argumentValues.get(i);
+
+            context.newValue(QualifiedName.create(param.getName()), value);
+            i++;
+        }
+
+        IEvaluationResult evaluate = evaluate(method.getExpression(), context,
+                CancelIndicator.NullImpl);
+
+        return evaluate.getResult();
     }
 
     private IEvaluationResult evaluateInsideOfClosure(final XExpression expression,

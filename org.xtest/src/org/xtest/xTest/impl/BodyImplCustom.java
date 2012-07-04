@@ -5,6 +5,7 @@ import java.net.URLDecoder;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.xtest.XtestUtil;
 import org.xtest.xTest.Body;
 
 /**
@@ -31,4 +32,22 @@ public class BodyImplCustom extends BodyImpl {
         }
         return result;
     }
+
+    /**
+     * Returns the inferred type name from the xtest file.
+     * 
+     * @return The inferred type name from the xtest file.
+     */
+    public String getTypeName() {
+        String result = getFileName();
+        if (result != null) {
+            result = result.replaceFirst(".xtest$", "").trim();
+            result = XtestUtil.toUpperCamel(result);
+        }
+        if (result.isEmpty()) {
+            result = "Xtest";
+        }
+        return result;
+    }
+
 }

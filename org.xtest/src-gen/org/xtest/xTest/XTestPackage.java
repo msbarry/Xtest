@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
+import org.eclipse.xtend.core.xtend.XtendPackage;
+
 import org.eclipse.xtext.xbase.XbasePackage;
 
 /**
@@ -284,6 +286,170 @@ public interface XTestPackage extends EPackage
 	 */
 	int XSAFE_EXPRESSION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
 
+	/**
+	 * The meta object id for the '{@link org.xtest.xTest.impl.XMethodDefImpl <em>XMethod Def</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.xtest.xTest.impl.XMethodDefImpl
+	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXMethodDef()
+	 * @generated
+	 */
+	int XMETHOD_DEF = 6;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__ANNOTATIONS = XtendPackage.XTEND_FUNCTION__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Annotation Info</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__ANNOTATION_INFO = XtendPackage.XTEND_FUNCTION__ANNOTATION_INFO;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__NAME = XtendPackage.XTEND_FUNCTION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__EXPRESSION = XtendPackage.XTEND_FUNCTION__EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Return Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__RETURN_TYPE = XtendPackage.XTEND_FUNCTION__RETURN_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__PARAMETERS = XtendPackage.XTEND_FUNCTION__PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Override</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__OVERRIDE = XtendPackage.XTEND_FUNCTION__OVERRIDE;
+
+	/**
+	 * The feature id for the '<em><b>Dispatch</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__DISPATCH = XtendPackage.XTEND_FUNCTION__DISPATCH;
+
+	/**
+	 * The feature id for the '<em><b>Create Extension Info</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__CREATE_EXTENSION_INFO = XtendPackage.XTEND_FUNCTION__CREATE_EXTENSION_INFO;
+
+	/**
+	 * The feature id for the '<em><b>Type Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__TYPE_PARAMETERS = XtendPackage.XTEND_FUNCTION__TYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Visibility</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__VISIBILITY = XtendPackage.XTEND_FUNCTION__VISIBILITY;
+
+	/**
+	 * The feature id for the '<em><b>Static</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__STATIC = XtendPackage.XTEND_FUNCTION__STATIC;
+
+	/**
+	 * The feature id for the '<em><b>Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__EXCEPTIONS = XtendPackage.XTEND_FUNCTION__EXCEPTIONS;
+
+	/**
+	 * The number of structural features of the '<em>XMethod Def</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF_FEATURE_COUNT = XtendPackage.XTEND_FUNCTION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.xtest.xTest.impl.XMethodDefExpressionImpl <em>XMethod Def Expression</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.xtest.xTest.impl.XMethodDefExpressionImpl
+	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXMethodDefExpression()
+	 * @generated
+	 */
+	int XMETHOD_DEF_EXPRESSION = 7;
+
+	/**
+	 * The feature id for the '<em><b>Method</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF_EXPRESSION__METHOD = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>XMethod Def Expression</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF_EXPRESSION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
+
 
 	/**
 	 * Returns the meta object for class '{@link org.xtest.xTest.FileParam <em>File Param</em>}'.
@@ -467,6 +633,37 @@ public interface XTestPackage extends EPackage
 	EReference getXSafeExpression_Actual();
 
 	/**
+	 * Returns the meta object for class '{@link org.xtest.xTest.XMethodDef <em>XMethod Def</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>XMethod Def</em>'.
+	 * @see org.xtest.xTest.XMethodDef
+	 * @generated
+	 */
+	EClass getXMethodDef();
+
+	/**
+	 * Returns the meta object for class '{@link org.xtest.xTest.XMethodDefExpression <em>XMethod Def Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>XMethod Def Expression</em>'.
+	 * @see org.xtest.xTest.XMethodDefExpression
+	 * @generated
+	 */
+	EClass getXMethodDefExpression();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XMethodDefExpression#getMethod <em>Method</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Method</em>'.
+	 * @see org.xtest.xTest.XMethodDefExpression#getMethod()
+	 * @see #getXMethodDefExpression()
+	 * @generated
+	 */
+	EReference getXMethodDefExpression_Method();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -636,6 +833,34 @@ public interface XTestPackage extends EPackage
 		 * @generated
 		 */
 		EReference XSAFE_EXPRESSION__ACTUAL = eINSTANCE.getXSafeExpression_Actual();
+
+		/**
+		 * The meta object literal for the '{@link org.xtest.xTest.impl.XMethodDefImpl <em>XMethod Def</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.xtest.xTest.impl.XMethodDefImpl
+		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXMethodDef()
+		 * @generated
+		 */
+		EClass XMETHOD_DEF = eINSTANCE.getXMethodDef();
+
+		/**
+		 * The meta object literal for the '{@link org.xtest.xTest.impl.XMethodDefExpressionImpl <em>XMethod Def Expression</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.xtest.xTest.impl.XMethodDefExpressionImpl
+		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXMethodDefExpression()
+		 * @generated
+		 */
+		EClass XMETHOD_DEF_EXPRESSION = eINSTANCE.getXMethodDefExpression();
+
+		/**
+		 * The meta object literal for the '<em><b>Method</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference XMETHOD_DEF_EXPRESSION__METHOD = eINSTANCE.getXMethodDefExpression_Method();
 
 	}
 

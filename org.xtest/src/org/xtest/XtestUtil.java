@@ -6,14 +6,19 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.Callable;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
+import org.xtest.xTest.impl.BodyImplCustom;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -111,6 +116,49 @@ public class XtestUtil {
         return XtestStackMarker.run(callable);
     }
 
+    /**
+     * Converts any string to java upper-camel-case format. Non java letter-or-digits are dropped
+     * and used to tokenize. Leading non-java letters are dropped entirely.
+     * 
+     * @param input
+     *            The input
+     * @return The upper-camel-case output
+     */
+    public static String toUpperCamel(String input) {
+        String result = "";
+        if (input != null) {
+            // 1. Trim non-java letters from start of the input
+            input = CharMatcher.JAVA_LETTER.negate().trimLeadingFrom(input);
+            // 2. Split on non-java or digit characters
+            Iterable<String> split = Splitter.on(CharMatcher.JAVA_LETTER_OR_DIGIT.negate()).split(
+                    input);
+            // 3. Convert the first character of each token to upper case
+            split = Iterables.transform(split, new Function<String, String>() {
+                @Override
+                public String apply(String input) {
+                    return Strings.toFirstUpper(input.toLowerCase());
+                }
+            });
+            // 4. Pack them back together
+            result = Joiner.on("").join(split);
+        }
+        return result;
+    }
+
+    private static StackTraceElement generateXtestStackTraceElement(XExpression expression) {
+        ICompositeNode node = NodeModelUtils.getNode(expression);
+        String fileName = getBody(expression).getTypeName();
+        int startLine = node.getStartLine();
+        return new StackTraceElement(fileName, "\"" + getText(expression) + "\"", fileName,
+                startLine);
+    }
+
+    private static BodyImplCustom getBody(XExpression expression) {
+        Iterable<BodyImplCustom> filter = Iterables.filter(expression.eResource().getContents(),
+                BodyImplCustom.class);
+        return Iterables.getFirst(filter, null);
+    }
+
     private static String getNodeWithoutComments(ICompositeNode node) {
         INode rootNode = node.getRootNode();
         if (rootNode != null) {
@@ -119,14 +167,6 @@ public class XtestUtil {
             return rootNode.getText().substring(offset, offset + length);
         }
         return null;
-    }
-
-    private static StackTraceElement getTraceForExpression(XExpression expression) {
-        ICompositeNode node = NodeModelUtils.getNode(expression);
-        URI uri = expression.eResource().getURI();
-        int startLine = node.getStartLine();
-        String fileName = uri.lastSegment();
-        return new StackTraceElement(fileName, getText(expression), fileName, startLine);
     }
 
     private static StackTraceElement[] insertXtestElements(StackTraceElement[] stackTrace,
@@ -143,14 +183,14 @@ public class XtestUtil {
                 break;
             }
             if (element.getClassName().equals(XtestStackMarker.class.getName())) {
-                StackTraceElement newElement = getTraceForExpression(queue.poll());
+                StackTraceElement newElement = generateXtestStackTraceElement(queue.poll());
                 list.add(i++, newElement);
             }
         }
 
         // add the rest...
         for (XExpression expression : queue) {
-            list.add(getTraceForExpression(expression));
+            list.add(generateXtestStackTraceElement(expression));
         }
         return list.toArray(new StackTraceElement[list.size()]);
     }

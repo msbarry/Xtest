@@ -11,6 +11,10 @@ import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
 
+import org.eclipse.xtend.core.xtend.XtendAnnotationTarget;
+import org.eclipse.xtend.core.xtend.XtendFunction;
+import org.eclipse.xtend.core.xtend.XtendMember;
+
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
 
@@ -126,6 +130,24 @@ public class XTestSwitch<T> extends Switch<T>
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case XTestPackage.XMETHOD_DEF:
+			{
+				XMethodDef xMethodDef = (XMethodDef)theEObject;
+				T result = caseXMethodDef(xMethodDef);
+				if (result == null) result = caseXtendFunction(xMethodDef);
+				if (result == null) result = caseXtendMember(xMethodDef);
+				if (result == null) result = caseXtendAnnotationTarget(xMethodDef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case XTestPackage.XMETHOD_DEF_EXPRESSION:
+			{
+				XMethodDefExpression xMethodDefExpression = (XMethodDefExpression)theEObject;
+				T result = caseXMethodDefExpression(xMethodDefExpression);
+				if (result == null) result = caseXExpression(xMethodDefExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -227,6 +249,38 @@ public class XTestSwitch<T> extends Switch<T>
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>XMethod Def</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>XMethod Def</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXMethodDef(XMethodDef object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>XMethod Def Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>XMethod Def Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXMethodDefExpression(XMethodDefExpression object)
+	{
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>XExpression</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -254,6 +308,54 @@ public class XTestSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	public T caseXBlockExpression(XBlockExpression object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Annotation Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Annotation Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXtendAnnotationTarget(XtendAnnotationTarget object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Member</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Member</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXtendMember(XtendMember object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXtendFunction(XtendFunction object)
 	{
 		return null;
 	}
