@@ -66,9 +66,10 @@ public class TestUtils {
     }
 
     public static void assertEvaluatesTo(Object object, Body val) {
-        Collection<XTestEvaluationException> exceptions = assertEvaluatesToIgnoreExceptions(object,
-                val);
-        assertEquals(exceptions.toString(), 0, exceptions.size());
+        XTestResult run = XTestRunner.run(val, injector);
+        Collection<XTestEvaluationException> exceptions = run.getEvaluationException();
+        assertTrue(exceptions.toString(), exceptions.isEmpty());
+        assertEquals("evaluation result", object, run.getResultObject());
     }
 
     public static void assertInvalidSyntax(String script) throws Exception {

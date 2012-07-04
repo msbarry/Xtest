@@ -98,3 +98,62 @@ xtest "nested methods" {
 		assertIsValidAndEvaluatesTo(1, script)
 	}
 }
+
+xtest "interpreter can handle type parameters" {
+	// TODO
+//	xtest "cast to type argument" {
+//		assertIsValidAndEvaluatesTo(null, "def <T> cast(Object in) {in as T}; cast(null)")
+//	}
+//	xtest "cast to type argument" { 
+//		assertIsValidAndEvaluatesTo(1, "def <T extends Number> cast(Object in) {(in as T).intValue}; cast(1)")
+//	}
+//	xtest "type literal" {
+//		val scriptTrue =
+//	'
+//	def <T> tryswitch(T a) {
+//		val T b = a
+//		b
+//	}
+//	tryswitch(1)
+//	'
+//		assertIsValidAndEvaluatesTo(1, scriptTrue)
+//	}
+//	
+//	xtest "switch expression type guard" {
+//		val scriptTrue =
+//	'
+//	def <T> tryswitch(T a) {
+//		switch (a) {
+//			T: true
+//			default: false
+//		}
+//	}
+//	tryswitch(1)
+//	'
+//		val scriptFalse =
+//	'
+//	def <T> tryswitch(T a) {
+//		switch ("b") {
+//			T: true
+//			default: false
+//		}
+//	}
+//	tryswitch(1)
+//	'
+//		assertIsValidAndEvaluatesTo(true, scriptTrue)
+//		assertIsValidAndEvaluatesTo(false, scriptFalse)
+//	}
+//	xtest "catch exception type" {
+//		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a) {try {1/0} catch (T b) {return true} return false}; cast(new Exception())")
+//		assertIsValidAndEvaluatesTo(false, "def <T> cast(T a) {try {1/0} catch (T b) {return true} return false}; cast(new IllegalArgumentException())")
+//	}
+//	xtest "throws T" {
+//		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {assert 1/0 throws T}; cast(new Exception(), 1)")
+//	}
+//	xtest "instanceof true" {
+//		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {b instanceof T}; cast(1, 1)")
+//	}
+//	xtest "instanceof false" {
+//		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {b instanceof T}; cast('a', 1)")
+//	}
+}
