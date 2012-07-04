@@ -24,6 +24,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.xbase.XExpression;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
@@ -31,6 +32,7 @@ import org.xtest.results.XTestState;
 import org.xtest.types.XTestTypeProvider;
 import org.xtest.xTest.Body;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Injector;
@@ -142,6 +144,26 @@ public class TestUtils {
         assertEquals("method name", methodName, element.getMethodName());
         assertEquals("file name", fileName, element.getFileName());
         assertEquals("line number", lineNumber, element.getLineNumber());
+    }
+
+    public static void assertThrowsExceptionForExpression(String script, String exceptionMessage) {
+        XTestResult run = XTestRunner.run(script, injector);
+        assertEquals("number of exceptions thrown", 1, run.getEvaluationException().size());
+        XExpression expression = Iterables.getFirst(run.getEvaluationException(), null)
+                .getExpression();
+        assertEquals("thrown exception message", exceptionMessage, textOf(expression));
+    }
+
+    public static void assertThrowsExceptionInSubtest(String script, String exceptionMessage) {
+        XTestResult run = XTestRunner.run(script, injector);
+        assertEquals("number of top-level exceptions thrown", 0, run.getEvaluationException()
+                .size());
+        assertEquals("number of sub-tests", 1, run.getSubTests().size());
+        assertEquals("number of exceptions thrown in sub-test", 1, run.getSubTests().get(0)
+                .getEvaluationException().size());
+        assertEquals("exception thrown in sub-test", exceptionMessage,
+                textOf(Iterables.getFirst(run.getSubTests().get(0).getEvaluationException(), null)
+                        .getExpression()));
     }
 
     public static void assertValidationFailed(Body parse) throws Exception {

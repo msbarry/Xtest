@@ -167,3 +167,9 @@ get(1)'
 	assertInvalidSyntax(scriptBad)
 }
 
+xtest "operator overloading" {
+	xtest {assertIsValidAndTypeConformsTo("def operator_plus(String a, String b) {a.length+b.length}; 'a'+'b'", Integer::class)}
+	xtest {assertIsValidAndTypeConformsTo("def static operator_plus(String a, String b) {a.length+b.length}; 'a'+'b'", Integer::class)}
+	xtest {assertIsValidAndTypeConformsTo("def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1+1", Integer::class)}
+	xtest {assertIsValidAndTypeConformsTo("def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1L+1L", Long::class)}
+}
