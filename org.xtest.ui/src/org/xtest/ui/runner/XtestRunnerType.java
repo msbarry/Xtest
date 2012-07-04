@@ -30,9 +30,11 @@ public class XtestRunnerType implements ITestType {
 
     @Override
     public boolean caresAboutDelta(IFile resource) {
+        // care about generated class files and user-modified xtest files
         String fileExtension = resource.getFileExtension();
-        return resource.isDerived() && fileExtension != null
-                && fileExtension.equalsIgnoreCase("class");
+        return fileExtension != null
+                && (resource.isDerived() && fileExtension.equalsIgnoreCase("class") || !resource
+                        .isDerived() && fileExtension.equalsIgnoreCase("xtest"));
     }
 
     @Override

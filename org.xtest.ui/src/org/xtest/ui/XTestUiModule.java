@@ -14,6 +14,7 @@ import org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.xbase.ui.highlighting.XbaseHighlightingCalculator;
 import org.xtest.XTestRunner;
+import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.preferences.DefaultPreferenceProvider;
 import org.xtest.ui.contentassist.XtestImportingTypesProposalProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider;
@@ -22,6 +23,7 @@ import org.xtest.ui.editor.XtestDocumentProvider;
 import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
 import org.xtest.ui.editor.XtestPreferencePage;
 import org.xtest.ui.highlight.XtestHighlightingCalculator;
+import org.xtest.ui.interpreter.XtestDependencyAcceptingInterpreter;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
 import org.xtest.ui.resource.XtestDependencyAcceptingResource;
@@ -116,6 +118,16 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public Class<? extends XbaseHighlightingCalculator> bindXbaseHighlightingCalculator() {
         return XtestHighlightingCalculator.class;
+    }
+
+    /**
+     * Binds {@link XTestInterpreter} to a custom implementation that accepts Xtest files as
+     * dependencies when methods are called between files
+     * 
+     * @return {@link XtestDependencyAcceptingInterpreter}
+     */
+    public Class<? extends XTestInterpreter> bindXTestInterpreter() {
+        return XtestDependencyAcceptingInterpreter.class;
     }
 
     /**

@@ -365,6 +365,15 @@ public class XTestInterpreter extends XbaseInterpreter {
         return result;
     }
 
+    /**
+     * Returns the Xtest expression call stack
+     * 
+     * @return The Xtest expression call stack
+     */
+    protected Stack<XExpression> getCallStack() {
+        return callStack;
+    }
+
     /*
      * Override default expression evaluator to wrap thrown exceptions with an xtest evaluation
      * exception wrapper that contains the expression that threw the exception
