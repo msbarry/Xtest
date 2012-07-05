@@ -2,7 +2,7 @@
 runWhileEditing: false
 // TODO - when Guice fixes memory leak, re-enable running on save
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
-runOnSave: false
+runOnSave: true
 import helpers.SUT
 import org.^xtest.XTestRunner
 
@@ -211,4 +211,8 @@ get(1)'
     val body = parse(script)
     runValidation(body)
     typeProvider.getCommonReturnType(body, true)
+}
+xtest "bug" {
+	assertTestPasses("assert 1 == 1; println(1)") 
+	assertTestPasses("assert 1/0 throws Exception; println(1)") 
 }

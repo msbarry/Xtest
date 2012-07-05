@@ -93,10 +93,8 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
     private TypeErasedSignature.Provider signatureProvider;
     @Inject
     private TypeConformanceComputer typeConformanceComputer;
-
     @Inject
     private ITypeProvider typeProvider;
-
     @Inject
     private TypeReferences typeReferences;
 
@@ -482,6 +480,13 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
         cancelIndicators.set((CancelIndicator) context
                 .get(CancelableDiagnostician.CANCEL_INDICATOR));
         return super.isResponsible(context, eObject);
+    }
+
+    @Override
+    protected boolean isValueExpectedRecursive(XExpression expr) {
+        EObject eContainer = expr.eContainer();
+        return eContainer != null && eContainer instanceof XAssertExpression
+                || super.isValueExpectedRecursive(expr);
     }
 
     @Override
