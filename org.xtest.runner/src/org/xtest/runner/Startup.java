@@ -1,5 +1,6 @@
 package org.xtest.runner;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.ui.IStartup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,10 @@ public class Startup implements IStartup {
 
     @Override
     public void earlyStartup() {
+        // TODO move this configuration to common logging plugin
+        PropertyConfigurator.configure(Activator.getDefault().getBundle()
+                .getEntry("log4j.properties"));
+
         logger.info("Initializing Xtest runner service.");
         Activator.getDefault().boot();
     }
