@@ -2,7 +2,7 @@
 runWhileEditing: false
 // TODO - when Guice fixes memory leak, re-enable running on save
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
-runOnSave: true
+runOnSave: false
  
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
@@ -63,10 +63,12 @@ xtest "inferred" {
 	xtest { assertIsValidAndTypeConformsTo("def func {'a'}; func", String::class) } 
 	xtest { assertIsValidAndVoidType("def func {val a = 1}; func")} 
 	xtest "recursive" {
-		xtest { assertIsValidAndTypeConformsTo("def static r(int i) {i + r(i)}; r(1)", Integer::class)}
-		xtest { assertIsValidAndTypeConformsTo("def static r(int i) {'' + i + r(i)}; r(1)", String::class)}
-		xtest { assertIsValidAndTypeConformsTo("def static r(int i) {1L + i + r(i)}; r(1)", Long::class)}
-		xtest { assertIsValidAndTypeConformsTo("def r(int i) {r(i)}; r(1)", Integer::class)}
+		xtest { assertIsValidAndTypeConformsTo(
+		"def static r(int i) {if (i == 0) return 0 else return i + r(i)}; r(1)", Integer::class)}
+		xtest { assertIsValidAndTypeConformsTo(
+		"def static r(int i) {'' + i + r(i)}; r(1)", String::class)}
+		xtest { assertIsValidAndTypeConformsTo(
+		"def static r(int i) {if (i == 0) return 0L else return 1L + i + r(i)}; r(1)", Long::class)}
 	}
 }
 xtest "declared w/ type param" {
