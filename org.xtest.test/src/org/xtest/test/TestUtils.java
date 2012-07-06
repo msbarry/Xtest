@@ -151,6 +151,14 @@ public class TestUtils {
         assertEquals("line number", lineNumber, element.getLineNumber());
     }
 
+    public static void assertTestPasses(String val) throws Exception {
+        assertValidSyntax(val);
+        XTestResult run = XTestRunner.run(val, injector);
+        Collection<XTestEvaluationException> exceptions = run.getEvaluationException();
+        assertTrue(exceptions.toString(), exceptions.isEmpty());
+        assertTrue("test passes", run.getState() == XTestState.PASS);
+    }
+
     public static void assertThrowsExceptionForExpression(String script, String exceptionMessage) {
         XTestResult run = XTestRunner.run(script, injector);
         assertEquals("number of exceptions thrown", 1, run.getEvaluationException().size());
