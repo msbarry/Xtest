@@ -212,3 +212,7 @@ get(1)'
     runValidation(body)
     typeProvider.getCommonReturnType(body, true)
 }
+xtest "bug" {
+	assertTestPasses("assert 1 == 1; println(1)") 
+	assertTestPasses("assert 1/0 throws Exception; println(1)") 
+}

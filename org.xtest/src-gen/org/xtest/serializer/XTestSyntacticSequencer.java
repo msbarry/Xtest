@@ -15,8 +15,8 @@ import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISyn
 import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 import org.xtest.services.XTestGrammarAccess;
 
-@SuppressWarnings("restriction")
-public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer {
+@SuppressWarnings("all")
+public class XTestSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected XTestGrammarAccess grammarAccess;
 	protected AbstractElementAlias match_Body_SemicolonKeyword_1_1_q;
@@ -58,11 +58,20 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 		return "";
 	}
 	
+	/**
+	 * OpSingleAssign:
+	 * 	'='
+	 * ;
+	 */
 	protected String getOpSingleAssignToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (node != null)
 			return getTokenText(node);
 		return "=";
 	}
+	
+	/**
+	 * StaticEquals:':=';
+	 */
 	protected String getStaticEqualsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (node != null)
 			return getTokenText(node);
@@ -193,7 +202,7 @@ public class AbstractXTestSyntacticSequencer extends AbstractSyntacticSequencer 
 	
 	/**
 	 * Syntax:
-	 *     'xsuite' | 'xtest'
+	 *     'xtest' | 'xsuite'
 	 */
 	protected void emit_XTestExpression_XsuiteKeyword_1_0_or_XtestKeyword_1_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

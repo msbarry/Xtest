@@ -138,11 +138,12 @@ xtest "type parameter" {
 	xtest "type parameter only available inside method def" {
 		assertValidSyntax('def <T> method(T t) {}')
 		assertValidSyntax('def <T> method(T t) {}; def <T> method2(T t) {}')
-		assertInvalidSyntax('def <T> method(T t) {}; val T a = null')
-		assertInvalidSyntax('val T a = null\ndef <T> method(T t) {}')
+		xtest { assertInvalidSyntax('def <T> method(T t) {}; val T a = null') }
+		xtest { assertInvalidSyntax('def static <T> method(T t) {}; val T a = null') }
+		xtest { assertInvalidSyntax('val T a = null\ndef <T> method(T t) {}') }
 	}
-	
-	xtest "type parameter valid inside nested method for non-static only" {
+	 
+	xtest "type parameter valid inside nested method for non-static only" { 
 		assertValidSyntax('def <T> method(T t) {def <U> nestedMethod(U u) {null as T}}')
 		assertInvalidSyntax('def static <T> method(T t) {def static <U> nestedMethod(U u) {null as T}}')
 	}

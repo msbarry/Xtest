@@ -9,7 +9,17 @@ Require-Bundle: org.xtest.ui,
  org.eclipse.xtext.junit4,
  org.junit4,
  org.eclipse.xtext.xbase.junit;bundle-version="[2.3.0,2.4.0)",
- org.eclipse.xtend.core;bundle-version="[2.3.0,2.4.0)"
+ org.eclipse.xtend.core;bundle-version="[2.3.0,2.4.0)",
+ org.xtest,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.workbench;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.apache.log4j;version="1.2.15",
- org.eclipse.xtext.junit.util
+ org.eclipse.xtext.junit.util,
+ org.junit.runner;version="4.5.0",
+ org.junit.runner.manipulation;version="4.5.0",
+ org.junit.runner.notification;version="4.5.0",
+ org.junit.runners;version="4.5.0",
+ org.junit.runners.model;version="4.5.0",
+ org.hamcrest.core
+Export-Package: org.xtest

@@ -62,6 +62,14 @@ xtest "inferred" {
 	xtest { assertIsValidAndTypeConformsTo("def static func {1}; func", Integer::class) } 
 	xtest { assertIsValidAndTypeConformsTo("def func {'a'}; func", String::class) } 
 	xtest { assertIsValidAndVoidType("def func {val a = 1}; func")} 
+	xtest "recursive" {
+		xtest { assertIsValidAndTypeConformsTo(
+		"def static r(int i) {if (i == 0) return 0 else return i + r(i)}; r(1)", Integer::class)}
+		xtest { assertIsValidAndTypeConformsTo(
+		"def static r(int i) {'' + i + r(i)}; r(1)", String::class)}
+		xtest { assertIsValidAndTypeConformsTo(
+		"def static r(int i) {if (i == 0) return 0L else return 1L + i + r(i)}; r(1)", Long::class)}
+	}
 }
 xtest "declared w/ type param" {
 	xtest { assertIsValidAndTypeConformsTo("def <T> T func(T in) {in}; func(1)", Integer::class) } 
