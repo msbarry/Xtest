@@ -1,20 +1,29 @@
 package org.xtest.interpreter;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.Callable;
 
+import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend.core.xtend.XtendFunction;
 import org.eclipse.xtend.core.xtend.XtendParameter;
 import org.eclipse.xtext.common.types.JvmDeclaredType;
 import org.eclipse.xtext.common.types.JvmExecutable;
 import org.eclipse.xtext.common.types.JvmOperation;
+import org.eclipse.xtext.common.types.JvmParameterizedTypeReference;
+import org.eclipse.xtext.common.types.JvmType;
+import org.eclipse.xtext.common.types.JvmTypeParameter;
 import org.eclipse.xtext.common.types.JvmTypeReference;
 import org.eclipse.xtext.common.types.JvmVoid;
+import org.eclipse.xtext.common.types.TypesFactory;
 import org.eclipse.xtext.common.types.access.impl.ClassFinder;
+import org.eclipse.xtext.common.types.impl.JvmTypeParameterImplCustom;
+import org.eclipse.xtext.common.types.util.RawTypeHelper;
 import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
 import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -64,13 +73,19 @@ public class XTestInterpreter extends XbaseInterpreter {
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
     private int inSafeBlock = 0;
     private final Map<XtendFunction, IEvaluationContext> localMethodContexts = Maps.newHashMap();
+    @Inject
+    private RawTypeHelper rawTypeHelper;
     private XTestResult result;
     private StackTraceElement[] startTrace = null;
     private final Stack<XTestResult> testStack = new Stack<XTestResult>();
     @Inject
     private TypeConformanceComputer typeConformanceComputer;
+
     @Inject
     private TypeReferences typeReferences;
+
+    @Inject
+    private TypesFactory typesFactory;
 
     @Override
     public IEvaluationResult evaluate(XExpression expression, IEvaluationContext context,
@@ -108,6 +123,35 @@ public class XTestInterpreter extends XbaseInterpreter {
         return result;
     }
 
+    @Override
+    public void setClassLoader(ClassLoader classLoader) {
+        super.setClassLoader(classLoader);
+
+        // HACK to work avoid duplicating all of XbaseInterpreter to get at classFinder since it is
+        // private not protected
+        ClassFinder finder = new ClassFinder(classLoader) {
+            @Override
+            public Class<?> forName(String name) throws ClassNotFoundException {
+                String erasedType = calculateTypeParemeterErasure(name);
+                return super.forName(erasedType);
+            }
+        };
+        Field declaredField;
+        try {
+            declaredField = XbaseInterpreter.class.getDeclaredField("classFinder");
+            declaredField.setAccessible(true);
+            declaredField.set(this, finder);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Evaluates an assert expression. Throws an {@link XTestAssertionFailure} if the assert does
      * not succeed
@@ -134,17 +178,23 @@ public class XTestInterpreter extends XbaseInterpreter {
             }
         } else {
             // assert exception
+            String qualifiedName = expected.getType().getQualifiedName();
             try {
-                internalEvaluate(resultExp, context, indicator);
-                handleAssertionFailure(assertExpression);
-                returnVal = false;
-            } catch (XTestEvaluationException exception) {
-                Throwable throwable = exception.getCause();
-                JvmTypeReference actual = typeReferences.getTypeForName(throwable.getClass(),
-                        assertExpression);
-                if (!typeConformanceComputer.isConformant(expected, actual)) {
-                    throw new XTestAssertionFailure("Assertion failed");
+                Class<?> expectedExceptionClass = getClassFinder().forName(qualifiedName);
+                try {
+                    internalEvaluate(resultExp, context, indicator);
+                    throw new XTestAssertionFailure("Expected <" + expectedExceptionClass.getName()
+                            + "> but no exception was thrown");
+                } catch (XTestEvaluationException exception) {
+                    Throwable throwable = exception.getCause();
+                    if (!expectedExceptionClass.isInstance(throwable)) {
+                        throw new XTestAssertionFailure("Expected <"
+                                + expectedExceptionClass.getName() + "> but threw <"
+                                + throwable.getClass().getName() + "> insead");
+                    }
                 }
+            } catch (ClassNotFoundException e) {
+                throw new WrappedException(e);
             }
         }
 
@@ -333,7 +383,22 @@ public class XTestInterpreter extends XbaseInterpreter {
 
                 // ... except get the var-arg class from the XMethodDef
 
-                Class<?> componentType = getJavaReflectAccess().getRawType(parameterType.getType());
+                JvmType type = parameterType.getType();
+                String typeName;
+
+                if (type instanceof JvmTypeParameterImplCustom) {
+                    JvmTypeParameterImplCustom param = (JvmTypeParameterImplCustom) type;
+                    typeName = calculateTypeParemeterErasure(param);
+                } else {
+                    typeName = type.getQualifiedName();
+                }
+
+                Class<?> componentType;
+                try {
+                    componentType = getClassFinder().forName(typeName);
+                } catch (ClassNotFoundException e) {
+                    throw new WrappedException(e);
+                }
 
                 // end diff
 
@@ -462,6 +527,38 @@ public class XTestInterpreter extends XbaseInterpreter {
                 CancelIndicator.NullImpl);
 
         return evaluate.getResult();
+    }
+
+    private String calculateTypeParemeterErasure(JvmTypeParameter param) {
+        JvmParameterizedTypeReference demandCreated = typesFactory
+                .createJvmParameterizedTypeReference();
+        demandCreated.setType(param);
+        JvmTypeReference result = rawTypeHelper.getRawTypeReference(demandCreated,
+                param.eResource());
+        return result.getType().getQualifiedName();
+    }
+
+    private String calculateTypeParemeterErasure(String name) {
+        for (EObject obj = callStack.peek(); obj != null; obj = obj.eContainer()) {
+            if (obj instanceof XMethodDef) {
+                XMethodDef def = (XMethodDef) obj;
+
+                JvmOperation op = assocations.getJvmOperation(def);
+                if (op != null) {
+                    for (JvmTypeParameter param : op.getTypeParameters()) {
+                        if (param.getQualifiedName().equals(name)) {
+                            String calculateTypeParemeterErasure = calculateTypeParemeterErasure(param);
+                            return calculateTypeParemeterErasure;
+                        }
+                    }
+                }
+
+                if (def.isStatic()) {
+                    return name;
+                }
+            }
+        }
+        return name;
     }
 
     private IEvaluationResult evaluateInsideOfClosure(final XExpression expression,

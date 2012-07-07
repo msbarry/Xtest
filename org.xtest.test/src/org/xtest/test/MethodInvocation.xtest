@@ -2,7 +2,7 @@
 runWhileEditing: false
 // TODO - when Guice fixes memory leak, re-enable running on save
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
-runOnSave: false
+runOnSave: true
  
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
@@ -100,60 +100,41 @@ xtest "nested methods" {
 }
 
 xtest "interpreter can handle type parameters" {
-	// TODO
-//	xtest "cast to type argument" {
-//		assertIsValidAndEvaluatesTo(null, "def <T> cast(Object in) {in as T}; cast(null)")
-//	}
-//	xtest "cast to type argument" { 
-//		assertIsValidAndEvaluatesTo(1, "def <T extends Number> cast(Object in) {(in as T).intValue}; cast(1)")
-//	}
-//	xtest "type literal" {
-//		val scriptTrue =
-//	'
-//	def <T> tryswitch(T a) {
-//		val T b = a
-//		b
-//	}
-//	tryswitch(1)
-//	'
-//		assertIsValidAndEvaluatesTo(1, scriptTrue)
-//	}
-//	
-//	xtest "switch expression type guard" {
-//		val scriptTrue =
-//	'
-//	def <T> tryswitch(T a) {
-//		switch (a) {
-//			T: true
-//			default: false
-//		}
-//	}
-//	tryswitch(1)
-//	'
-//		val scriptFalse =
-//	'
-//	def <T> tryswitch(T a) {
-//		switch ("b") {
-//			T: true
-//			default: false
-//		}
-//	}
-//	tryswitch(1)
-//	'
-//		assertIsValidAndEvaluatesTo(true, scriptTrue)
-//		assertIsValidAndEvaluatesTo(false, scriptFalse)
-//	}
-//	xtest "catch exception type" {
-//		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a) {try {1/0} catch (T b) {return true} return false}; cast(new Exception())")
-//		assertIsValidAndEvaluatesTo(false, "def <T> cast(T a) {try {1/0} catch (T b) {return true} return false}; cast(new IllegalArgumentException())")
-//	}
-//	xtest "throws T" {
-//		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {assert 1/0 throws T}; cast(new Exception(), 1)")
-//	}
-//	xtest "instanceof true" {
-//		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {b instanceof T}; cast(1, 1)")
-//	}
-//	xtest "instanceof false" {
-//		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {b instanceof T}; cast('a', 1)")
-//	}
+	xtest "cast to type argument" {
+		assertIsValidAndEvaluatesTo(null, "def <T> cast(Object in) {in as T}; cast(null)")
+	}
+	xtest "cast to type argument" { 
+		assertIsValidAndEvaluatesTo(1, "def <T extends Number> cast(Object in) {(in as T).intValue}; cast(1)")
+	}
+	
+	xtest "switch expression type guard" {
+		val scriptTrue =
+		'def <T> tryswitch(T a) {
+			switch (a) {
+				T: true
+				default: false
+			}
+		}
+		tryswitch(1)'
+		assertIsValidAndEvaluatesTo(true, scriptTrue)
+	}
+	xtest "catch exception type" {
+		assertIsValidAndEvaluatesTo(true, "def <T extends Exception> cast() {try {val b = 1/0} catch (T b) {return true} return false}; cast()")
+		assertIsValidAndEvaluatesTo(false, "def <T extends IllegalArgumentException> cast() {try {val b = 1/0} catch (T b) {return true} return false}; cast()")
+	}
+	xtest "throws T" {
+		assertIsValidAndEvaluatesTo(true, "def <T extends Exception> cast(Object b) {assert 1/0 throws T}; cast(1)")
+	}
+	xtest "instanceof true" {
+		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {b instanceof T}; cast(1, 1)")
+	}
+	xtest "instanceof false" {
+		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {b instanceof T}; cast('a', 1)")
+	}
+	xtest "instanceof wildcard upper bound" {
+		assertIsValidAndEvaluatesTo(true, "def <T extends Number> cast(Object b) {b instanceof T}; cast(1)")
+	}
+	xtest "instanceof wildcard upper bound" {
+		assertIsValidAndEvaluatesTo(false, "def <T extends Number> cast(Object b) {b instanceof T}; cast('1')")
+	}
 }
