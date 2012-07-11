@@ -29,7 +29,6 @@ import org.xtest.runner.events.TestFinished;
 import org.xtest.runner.events.TestsStarted;
 import org.xtest.runner.external.TestResult;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
@@ -44,6 +43,31 @@ import com.google.inject.Inject;
  * @author Michael Barry
  */
 public class FailedTestsHandler extends AbstractHandler {
+
+    /**
+     * Returns a collection of error markers for a file
+     * 
+     * @param failure
+     *            The test file
+     * @return A collection of error markers for that file
+     */
+    private static Collection<IMarker> getErrors(IFile failure) {
+        Multimap<Integer, IMarker> startLineToMarker = TreeMultimap.create(Ordering.natural(),
+                Ordering.arbitrary());
+        try {
+            IMarker[] findMarkers = failure.findMarkers(null, true, 0);
+            for (IMarker thisMarker : findMarkers) {
+                Object attribute = thisMarker.getAttribute(IMarker.SEVERITY);
+                if (attribute instanceof Integer && (Integer) attribute == IMarker.SEVERITY_ERROR) {
+                    Object attribute2 = thisMarker.getAttribute(IMarker.LINE_NUMBER);
+                    Integer lineNum = attribute2 instanceof Integer ? (Integer) attribute2 : 0;
+                    startLineToMarker.put(lineNum, thisMarker);
+                }
+            }
+        } catch (CoreException e1) {
+        }
+        return startLineToMarker.values();
+    }
 
     private final EventBus bus;
 
@@ -105,11 +129,26 @@ public class FailedTestsHandler extends AbstractHandler {
         if (!failures.isEmpty()) {
             MenuManager menuManager = new MenuManager("Failed Test Menu",
                     "org.xtest.statusbar.menu.failures");
+            int i = 0;
 
             // construct menu
             for (final IFile failure : failures) {
-                NavigateToFailureAction create = NavigateToFailureAction.create(failure);
-                menuManager.add(create);
+                Collection<IMarker> errors = getErrors(failure);
+
+                for (IMarker error : errors) {
+                    try {
+                        String attribute = (String) error.getAttribute(IMarker.MESSAGE);
+                        attribute = attribute.replaceAll("[\\r\\n].*", ""); // first line only
+                        String name = failure.getName() + ": " + attribute;
+                        NavigateToFailureAction create = NavigateToFailureAction
+                                .create(name, error);
+                        menuManager.add(create);
+                        if (i++ > 100) {
+                            break;
+                        }
+                    } catch (CoreException e) {
+                    }
+                }
             }
 
             // Display menu
@@ -138,55 +177,20 @@ public class FailedTestsHandler extends AbstractHandler {
         /**
          * Static factory to construct from an {@link IFile}
          * 
-         * @param failure
-         *            The failed test file
+         * @param name
+         *            Label to display on marker
+         * @param first
+         *            the marker to navigate to
          * @return The new {@link NavigateToFailureAction}
          */
-        public static NavigateToFailureAction create(IFile failure) {
-            Collection<IMarker> errors = getErrors(failure);
-
-            String name = failure.getName();
-            IMarker first = Iterables.getFirst(errors, null);
-            if (!errors.isEmpty()) {
-                int size = errors.size();
-                name += " - " + size + " error" + (size == 1 ? "" : "s");
-            }
-            return new NavigateToFailureAction(name, failure, first);
+        public static NavigateToFailureAction create(String name, IMarker first) {
+            return new NavigateToFailureAction(name, first);
         }
-
-        /**
-         * Returns a collection of error markers for a file
-         * 
-         * @param failure
-         *            The test file
-         * @return A collection of error markers for that file
-         */
-        private static Collection<IMarker> getErrors(IFile failure) {
-            Multimap<Integer, IMarker> startLineToMarker = TreeMultimap.create(Ordering.natural(),
-                    Ordering.arbitrary());
-            try {
-                IMarker[] findMarkers = failure.findMarkers(null, true, 0);
-                for (IMarker thisMarker : findMarkers) {
-                    Object attribute = thisMarker.getAttribute(IMarker.SEVERITY);
-                    if (attribute instanceof Integer
-                            && (Integer) attribute == IMarker.SEVERITY_ERROR) {
-                        Object attribute2 = thisMarker.getAttribute(IMarker.LINE_NUMBER);
-                        Integer lineNum = attribute2 instanceof Integer ? (Integer) attribute2 : 0;
-                        startLineToMarker.put(lineNum, thisMarker);
-                    }
-                }
-            } catch (CoreException e1) {
-            }
-            return startLineToMarker.values();
-        }
-
-        private final IFile failure;
 
         private final IMarker first;
 
-        private NavigateToFailureAction(String name, IFile failure, IMarker first) {
+        private NavigateToFailureAction(String name, IMarker first) {
             super(name, Activator.getDefault().getErrorFileImage());
-            this.failure = failure;
             this.first = first;
         }
 
@@ -199,8 +203,6 @@ public class FailedTestsHandler extends AbstractHandler {
             try {
                 if (first != null) {
                     IDE.openEditor(activePage, first);
-                } else {
-                    IDE.openEditor(activePage, failure);
                 }
             } catch (PartInitException e) {
             }
