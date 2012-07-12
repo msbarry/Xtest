@@ -1,5 +1,8 @@
 package org.xtest.runner.external;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -49,12 +52,12 @@ public class TestResult implements Serializable {
         return new TestResult(TestState.FAIL, 0, 0, 0);
     }
 
-    private final int numFail;
+    private int numFail;
 
-    private final int numPend;
-    private final int numTotal;
+    private int numPend;
+    private int numTotal;
 
-    private final TestState state;
+    private TestState state;
 
     private TestResult(TestState state, int numFail, int numPend, int numTotal) {
         this.state = state;
@@ -114,4 +117,19 @@ public class TestResult implements Serializable {
                 + "]";
     }
 
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        state = (TestState) stream.readObject();
+        numFail = stream.readInt();
+        numPend = stream.readInt();
+        numTotal = stream.readInt();
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+        stream.writeObject(state);
+        stream.writeInt(numFail);
+        stream.writeInt(numPend);
+        stream.writeInt(numTotal);
+    }
 }
