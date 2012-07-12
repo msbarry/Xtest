@@ -72,7 +72,7 @@ public class XtestRunnerType implements ITestType {
         @Override
         public TestResult run(IFile file, IProgressMonitor monitor, DependencyAcceptor acceptor) {
             URI uri = mapper.getUri(file);
-            TestResult runTests = TestResult.FAIL;
+            TestResult runTests = TestResult.notRun();
             if (uri != null) {
                 ResourceSet resourceSet = resourceSetProvider.getUnchecked(file.getProject());
                 Resource resource = resourceSet.getResource(uri, true);

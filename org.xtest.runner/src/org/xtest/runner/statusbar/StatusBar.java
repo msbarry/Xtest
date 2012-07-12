@@ -84,7 +84,7 @@ public class StatusBar extends WorkbenchWindowControlContribution {
      */
     @Subscribe
     public void finish(TestsFinished event) {
-        // TODO - show icon
+        // TODO
     }
 
     /**
@@ -110,6 +110,7 @@ public class StatusBar extends WorkbenchWindowControlContribution {
     @Subscribe
     public void testRan(TestFinished event) {
         passing &= event.passed();
+        System.err.println(event.getResult());
         worked++;
         updateColor();
     }

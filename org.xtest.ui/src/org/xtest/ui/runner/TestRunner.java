@@ -14,6 +14,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.Issue;
 import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
+import org.xtest.results.XTestResult;
 import org.xtest.runner.external.DependencyAcceptor;
 import org.xtest.runner.external.TestResult;
 import org.xtest.ui.editor.SpecialResourceValidator;
@@ -49,7 +50,7 @@ public class TestRunner extends DefaultResourceUIValidatorExtension {
      */
     public TestResult runTests(IFile file, Resource resource, DependencyAcceptor acceptor,
             IProgressMonitor monitor) {
-        TestResult result = TestResult.NOT_RUN;
+        TestResult result = TestResult.notRun();
         SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
         try {
             Body body = null;
@@ -67,14 +68,25 @@ public class TestRunner extends DefaultResourceUIValidatorExtension {
                 subMonitor.worked(1);
                 deleteMarkers(file, CheckMode.EXPENSIVE_ONLY, subMonitor);
                 if (file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR) {
-                    // don't bother running tests because there is already an error
-                    // lets us report failure to user quicker
+                    // don't bother adding new errors if there are errors still left after removing
+                    // expensive markers tests because there is already an error
                 } else {
                     createMarkers(file, list, subMonitor);
                 }
-                // Any errors? test failed!
-                result = file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR ? TestResult.FAIL
-                        : TestResult.PASS;
+
+                if (resource instanceof XtestDependencyAcceptingResource) {
+                    XtestDependencyAcceptingResource resource2 = (XtestDependencyAcceptingResource) resource;
+                    XTestResult result2 = resource2.getResult();
+                    if (result2 != null) {
+                        result = TestResult.create(result2.countFailures(),
+                                result2.countPendings(), result2.countTests());
+                    }
+                }
+
+                if (result.getNumTotal() == 0
+                        && file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR) {
+                    result = TestResult.syntaxFailure();
+                }
             }
         } catch (CoreException e) {
         }

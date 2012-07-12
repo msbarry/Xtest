@@ -13,6 +13,7 @@ import org.xtest.runner.external.DependencyAcceptor;
 import org.xtest.runner.external.ITestRunner;
 import org.xtest.runner.external.ITestType;
 import org.xtest.runner.external.TestResult;
+import org.xtest.runner.external.TestState;
 import org.xtest.runner.util.SerializationUtils;
 import org.xtest.runner.util.URIUtil;
 
@@ -63,7 +64,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
         duration = getLong(durationKey);
         numDependencies = getLong(numAffectedByKey);
         Optional<String> optional = get(resultKey);
-        result = SerializationUtils.<TestResult> fromString(optional).or(TestResult.NOT_RUN);
+        result = SerializationUtils.<TestResult> fromString(optional).or(TestResult.notRun());
         pending = get(pendingKey);
     }
 
@@ -136,7 +137,7 @@ public class RunnableTest implements Comparable<RunnableTest> {
      * @return true if this test has run before, false if not
      */
     public boolean hasRun() {
-        return result != TestResult.NOT_RUN;
+        return result.getState() != TestState.NOT_RUN;
     }
 
     /**

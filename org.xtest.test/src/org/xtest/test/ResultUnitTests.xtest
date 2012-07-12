@@ -137,3 +137,47 @@ xtest "pass a test after failing it leaves in failing state" {
     suite.pass()
     assertEquals(XTestState::FAIL, suite.getState())
 }
+
+xtest "1 test" {
+	val suite = new XTestResult(null)
+	assertEquals(1, suite.countTests)
+}
+
+xtest "2 tests" {
+	val suite = new XTestResult(null)
+	suite.subTest("sub", null)
+	assertEquals(2, suite.countTests)
+}
+
+xtest "no failure" {
+	val suite = new XTestResult(null)
+	assertEquals(0, suite.countFailures)
+}
+
+xtest "1 failures" {
+	val suite = new XTestResult(null)
+	suite.fail
+	assertEquals(1, suite.countFailures)
+}
+
+xtest "1 failure - in subtest" {
+	val suite = new XTestResult(null)
+	suite.subTest("sub",null).fail
+	assertEquals(1, suite.countFailures)
+}
+
+xtest "Failed parent and child" {
+	val suite = new XTestResult(null)
+	suite.subTest("sub",null).fail
+	suite.fail
+	assertEquals(2, suite.countFailures)
+}
+
+xtest "Pending child" {
+	val suite = new XTestResult(null)
+	val sub = suite.subTest("sub",null)
+	sub.setPending
+	assertTrue("Parent not pending", !suite.isPending)
+	assertTrue("Child is pending", sub.isPending)
+	assertEquals(1, suite.countPendings)
+}

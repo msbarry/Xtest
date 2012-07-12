@@ -1,29 +1,117 @@
 package org.xtest.runner.external;
 
+import java.io.Serializable;
+
 /**
  * Result of running a test
  * 
  * @author Michael Barry
  */
-public enum TestResult {
-    /** Test Failed */
-    FAIL(0),
-    /** Test not run */
-    NOT_RUN(1),
-    /** Test passed */
-    PASS(2);
-    private final int fOrder;
+public class TestResult implements Serializable {
 
-    private TestResult(int order) {
-        fOrder = order;
+    /**
+     * Generated serial version UID
+     */
+    private static final long serialVersionUID = 8898971430290710197L;
+
+    /**
+     * Creates a new test result with the given number of failures, pending, and total tests
+     * 
+     * @param numFail
+     *            Number of test failures that occurred
+     * @param numPend
+     *            Number of pending tests
+     * @param numTotal
+     *            Number of total tests
+     * @return The new test result
+     */
+    public static TestResult create(int numFail, int numPend, int numTotal) {
+        TestState state = numFail != 0 ? TestState.FAIL : numTotal == 0 ? TestState.NOT_RUN
+                : TestState.PASS;
+        return new TestResult(state, numFail, numPend, numTotal);
     }
 
     /**
-     * Returns the order of this result, {@link #FAIL} is first
+     * Creates a new test result in a NOT RUN state
+     * 
+     * @return The new test result
+     */
+    public static TestResult notRun() {
+        return create(0, 0, 0);
+    }
+
+    /**
+     * Creates a new test result in a failed-due-to-syntax-error state
+     * 
+     * @return The new test result
+     */
+    public static TestResult syntaxFailure() {
+        return new TestResult(TestState.FAIL, 0, 0, 0);
+    }
+
+    private final int numFail;
+
+    private final int numPend;
+    private final int numTotal;
+
+    private final TestState state;
+
+    private TestResult(TestState state, int numFail, int numPend, int numTotal) {
+        this.state = state;
+        this.numFail = numFail;
+        this.numPend = numPend;
+        this.numTotal = numTotal;
+    }
+
+    /**
+     * Returns the number of test failures
+     * 
+     * @return The number of test failures
+     */
+    public int getNumFail() {
+        return numFail;
+    }
+
+    /**
+     * Returns the number of pending tests
+     * 
+     * @return The number of pending tests
+     */
+    public int getNumPend() {
+        return numPend;
+    }
+
+    /**
+     * Returns the number of total tests
+     * 
+     * @return The number of total tests
+     */
+    public int getNumTotal() {
+        return numTotal;
+    }
+
+    /**
+     * Returns the order of this result, {@link TestState#FAIL} is first
      * 
      * @return The order of this result
      */
     public int getOrder() {
-        return fOrder;
+        return state.getOrder();
     }
+
+    /**
+     * Returns the state of this result
+     * 
+     * @return The state of this result
+     */
+    public Object getState() {
+        return state;
+    }
+
+    @Override
+    public String toString() {
+        return state + " [failures: " + numFail + ", pending: " + numPend + ", total: " + numTotal
+                + "]";
+    }
+
 }
