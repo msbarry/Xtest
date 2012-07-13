@@ -12,7 +12,8 @@ Require-Bundle: org.xtest.ui,
  org.eclipse.xtend.core;bundle-version="[2.3.0,2.4.0)",
  org.xtest,
  org.eclipse.core.runtime,
- org.eclipse.ui.workbench;resolution:=optional
+ org.eclipse.ui.workbench;resolution:=optional,
+ org.xtest.runner;bundle-version="0.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.apache.log4j;version="1.2.15",
  org.eclipse.xtext.junit.util,

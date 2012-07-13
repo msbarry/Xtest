@@ -7,10 +7,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.xtest.results.XTestResult;
 import org.xtest.ui.mediator.ValidationFinishedEvent;
 import org.xtest.ui.mediator.XtestResultsCache;
+import org.xtest.ui.resource.XtestDependencyAcceptingResource;
 import org.xtest.xTest.Body;
 
 import com.google.common.eventbus.EventBus;
@@ -43,12 +45,17 @@ public class XtestDiagnostician extends CancelableDiagnostician {
     public boolean validate(EClass eClass, EObject eObject, DiagnosticChain diagnostics,
             Map<Object, Object> context) {
         boolean validate = false;
-        URI uri = eObject.eResource().getURI();
+        Resource eResource = eObject.eResource();
+        URI uri = eResource.getURI();
         if (eObject instanceof Body) {
             XTestResult xtestResult = null;
             try {
                 validate = super.validate(eClass, eObject, diagnostics, context);
                 xtestResult = (XTestResult) context.get(XTestResult.KEY);
+                if (eResource instanceof XtestDependencyAcceptingResource) {
+                    XtestDependencyAcceptingResource resource = (XtestDependencyAcceptingResource) eResource;
+                    resource.setResult(xtestResult);
+                }
             } finally {
                 eventBus.post(new ValidationFinishedEvent(uri, xtestResult));
             }

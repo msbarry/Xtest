@@ -2,6 +2,7 @@ package org.xtest.runner.events;
 
 import org.eclipse.core.resources.IFile;
 import org.xtest.runner.external.TestResult;
+import org.xtest.runner.external.TestState;
 
 /**
  * Event indicating that a test file has completed
@@ -34,13 +35,22 @@ public class TestFinished {
     }
 
     /**
+     * Returns the result of this test
+     * 
+     * @return The result of this test
+     */
+    public TestResult getResult() {
+        return state;
+    }
+
+    /**
      * Returns true if this test was canceled or did not fail, false it failed
      * 
      * @return True if this test was canceled or did not fail, false it failed
      */
     public boolean passed() {
         // Consider a canceled event passing for now
-        return state != TestResult.FAIL;
+        return state.getState() != TestState.FAIL;
     }
 
 }

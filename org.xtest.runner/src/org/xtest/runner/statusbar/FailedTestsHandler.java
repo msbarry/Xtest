@@ -27,7 +27,7 @@ import org.xtest.runner.RunAllJob;
 import org.xtest.runner.TestsProvider;
 import org.xtest.runner.events.TestFinished;
 import org.xtest.runner.events.TestsStarted;
-import org.xtest.runner.external.TestResult;
+import org.xtest.runner.external.TestState;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -87,7 +87,7 @@ public class FailedTestsHandler extends AbstractHandler {
     public FailedTestsHandler(RunAllJob job, EventBus bus, TestsProvider tests) {
         this.bus = bus;
         bus.register(this);
-        Collection<IFile> failingTests = tests.getTestFilesWithState(TestResult.FAIL);
+        Collection<IFile> failingTests = tests.getTestFilesWithState(TestState.FAIL);
         List<IFile> unsynchronizedList = Lists.newArrayList(failingTests);
         failures = Collections.synchronizedCollection(unsynchronizedList);
     }

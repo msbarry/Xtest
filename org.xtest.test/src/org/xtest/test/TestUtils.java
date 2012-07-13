@@ -5,8 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
@@ -36,6 +39,7 @@ import org.xtest.xTest.Body;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Injector;
 
@@ -46,18 +50,22 @@ public class TestUtils {
     public static TypeReferences typeRefs = XtestInjector.injector
             .getInstance(TypeReferences.class);
 
+    private static int i = 0;
+
     private static Injector injector = XtestInjector.injector;
 
     private static XTestInterpreter interpreter = XtestInjector.injector
             .getInstance(XTestInterpreter.class);
-
     private static TypeConformanceComputer typeComputer = XtestInjector.injector
             .getInstance(TypeConformanceComputer.class);
+
     private static XTestTypeProvider typeProvider = XtestInjector.injector
             .getInstance(XTestTypeProvider.class);
 
     private static TypesFactory typesFactory = XtestInjector.injector
             .getInstance(TypesFactory.class);
+
+    private static final Map<Object, URI> used = Maps.newHashMap();
 
     public static void assertEqualsNormalizeLinebreak(String expected, String actual) {
         String expectedNormalized = expected.replace("\r\n", "\n");
@@ -265,6 +273,15 @@ public class TestUtils {
 
     public static String textOf(EObject eObject) {
         return NodeModelUtils.getNode(eObject).getText().trim();
+    }
+
+    public static URI uniqueUri(Object key) throws URISyntaxException {
+        if (used.get(key) != null) {
+            return used.get(key);
+        }
+        URI uri = new URI(Integer.toString(i++));
+        used.put(key, uri);
+        return uri;
     }
 
     protected static Collection<XTestEvaluationException> assertEvaluatesToIgnoreExceptions(

@@ -1,6 +1,7 @@
 package org.xtest.ui.resource;
 
 import org.xtest.resource.XtestResource;
+import org.xtest.results.XTestResult;
 import org.xtest.runner.external.DependencyAcceptor;
 
 import com.google.common.base.Optional;
@@ -10,9 +11,9 @@ import com.google.common.base.Optional;
  * 
  * @author Michael Barry
  */
-@SuppressWarnings("restriction")
 public class XtestDependencyAcceptingResource extends XtestResource {
     private DependencyAcceptor acceptor;
+    private XTestResult result;
 
     /**
      * Returns the optional {@link DependencyAcceptor}
@@ -24,12 +25,31 @@ public class XtestDependencyAcceptingResource extends XtestResource {
     }
 
     /**
+     * Returns the test result captured during the validation
+     * 
+     * @return The test result captured during the validation
+     */
+    public XTestResult getResult() {
+        return result;
+    }
+
+    /**
      * Sets the {@link DependencyAcceptor}
      * 
      * @param acceptor
      */
     public void setAcceptor(DependencyAcceptor acceptor) {
         this.acceptor = acceptor;
+    }
+
+    /**
+     * Sets the test result captured during the validation
+     * 
+     * @param result
+     *            The test result captured during the validation
+     */
+    public void setResult(XTestResult result) {
+        this.result = result;
     }
 
 }

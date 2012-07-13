@@ -25,10 +25,14 @@ public class XTestResult {
     private final Collection<XTestEvaluationException> expressions = Lists.newArrayList();
     private final String name;
     private final XTestResult parent;
+    private boolean pending = false;
     private Object resultObject;
+
     private XTestState state = XTestState.NOT_RUN;
+
     private final List<XTestResult> subTests = Lists.newArrayList();
     private final List<String> syntaxErrors = Lists.newArrayList();
+    private boolean uniqueFailure = false;
 
     /**
      * Construct a top-level xtest result
@@ -71,13 +75,50 @@ public class XTestResult {
     }
 
     /**
+     * Counts the number of failures
+     * 
+     * @return The number of failures including this and sub tests
+     */
+    public int countFailures() {
+        int result = uniqueFailure ? 1 : 0;
+        for (XTestResult sub : subTests) {
+            result += sub.countFailures();
+        }
+        return result;
+    }
+
+    /**
+     * Counts the number of pending tests
+     * 
+     * @return The number of pending tests including this and sub tests
+     */
+    public int countPendings() {
+        int result = pending ? 1 : 0;
+        for (XTestResult sub : subTests) {
+            result += sub.countPendings();
+        }
+        return result;
+    }
+
+    /**
+     * Counts the total number of tests
+     * 
+     * @return The total number of tests including this and sub tests
+     */
+    public int countTests() {
+        int result = 1;
+        for (XTestResult sub : subTests) {
+            result += sub.countTests();
+        }
+        return result;
+    }
+
+    /**
      * Fails the test and all of its parents
      */
     public void fail() {
-        state = XTestState.FAIL;
-        if (parent != null) {
-            parent.fail();
-        }
+        uniqueFailure = true;
+        internalFail();
     }
 
     /**
@@ -161,6 +202,15 @@ public class XTestResult {
     }
 
     /**
+     * Returns true if this test is pending, false if not
+     * 
+     * @return True if this test is pending, false if not
+     */
+    public boolean isPending() {
+        return pending;
+    }
+
+    /**
      * Passes this result. Only passes its parent if the parent has not been run yet.
      */
     public void pass() {
@@ -170,6 +220,13 @@ public class XTestResult {
                 parent.pass();
             }
         }
+    }
+
+    /**
+     * Sets this test as pending
+     */
+    public void setPending() {
+        this.pending = true;
     }
 
     /**
@@ -195,6 +252,13 @@ public class XTestResult {
         XTestResult result = new XTestResult(this, name, eObject);
         subTests.add(result);
         return result;
+    }
+
+    private void internalFail() {
+        state = XTestState.FAIL;
+        if (parent != null) {
+            parent.internalFail();
+        }
     }
 
 }
