@@ -22,6 +22,7 @@ import org.xtest.runner.external.TestResult;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -94,7 +95,7 @@ public class RunAllJob extends Job {
         long start = System.nanoTime();
         int size = files.size();
         SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", size);
-        events.startTests(size);
+        events.startTests(Lists.newArrayList(files));
         logger.info("==========> Starting {} tests", size);
         Cache<ITestType, ITestRunner> runnerCache = CacheBuilder.newBuilder().build(
                 new CacheLoader<ITestType, ITestRunner>() {
@@ -119,7 +120,7 @@ public class RunAllJob extends Job {
                     TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
 
             // Post a "canceled" event where the number of events scheduled is the size of the queue
-            events.cancelAndSchedule(files.size());
+            events.cancelAndSchedule(Lists.newArrayList(files));
         } else {
             logger.info("==========> Finished {} tests took {} ms", size,
                     TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));

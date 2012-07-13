@@ -1,6 +1,9 @@
 package org.xtest.runner.events;
 
+import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
+import org.xtest.runner.RunnableTest;
 import org.xtest.runner.external.TestResult;
 
 import com.google.common.eventbus.EventBus;
@@ -20,11 +23,11 @@ public class Events {
      * Post an event that currently running tests have been canceled, and there are still
      * {@code numScheduled} pending tests.
      * 
-     * @param numScheduled
-     *            The number of remaining tests
+     * @param tests
+     *            The remaining tests
      */
-    public void cancelAndSchedule(int numScheduled) {
-        bus.post(new TestsCanceled(numScheduled));
+    public void cancelAndSchedule(Collection<RunnableTest> tests) {
+        bus.post(new TestsCanceled(tests));
     }
 
     /**
@@ -50,11 +53,11 @@ public class Events {
     /**
      * Post an event that a test run has started with {@code numToRun} pending tests.
      * 
-     * @param numToRun
-     *            the number of tests that will run in this batch
+     * @param testsToStart
+     *            the tests that will run in this batch
      */
-    public void startTests(int numToRun) {
-        bus.post(new TestsStarted(numToRun));
+    public void startTests(Collection<RunnableTest> testsToStart) {
+        bus.post(new TestsStarted(testsToStart));
     }
 
 }

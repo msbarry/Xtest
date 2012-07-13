@@ -15,14 +15,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
-import org.xtest.runner.TestsProvider;
-import org.xtest.runner.events.TestFinished;
-import org.xtest.runner.events.TestsCanceled;
-import org.xtest.runner.events.TestsFinished;
-import org.xtest.runner.events.TestsStarted;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 /**
@@ -30,100 +23,43 @@ import com.google.inject.Inject;
  * 
  * @author Michael Barry
  */
-public class StatusBar extends WorkbenchWindowControlContribution {
-    private final EventBus bus;
+public class StatusBar extends WorkbenchWindowControlContribution implements
+        IStatusBarRepaintListener {
     private Composite composite;
+    private final StatusBarController controller;
     private final RGB green = new RGB(0x51, 0xa3, 0x51);
-    private boolean passing;
+    private Label label;
     private Image progressBackground;
     private final RGB red = new RGB(0xbd, 0x36, 0x2f);
+
     @Inject
-    private TestsProvider testProvider;
-    private int total;
-    private int worked;
-
-    /**
-     * FOR GUICE ONLY
-     * 
-     * @param bus
-     *            The event bus instance provided by Guice
-     */
-    @Inject
-    private StatusBar(EventBus bus) {
-        this.bus = bus;
-        bus.register(this);
-
-        // Start with 100% complete so that colored bar can reflect state of the tests
-        total = 1;
-        worked = 1;
-    }
-
-    /**
-     * FOR EVENT BUS ONLY
-     * 
-     * @param event
-     *            Test canceled event
-     */
-    @Subscribe
-    public void cancel(TestsCanceled event) {
-        worked = total - event.getNum();
-        updateColor();
+    private StatusBar(StatusBarController controller) {
+        this.controller = controller;
+        controller.addListener(this);
     }
 
     @Override
     public void dispose() {
-        bus.unregister(this);
         super.dispose();
+        controller.removeListener(this);
     }
 
-    /**
-     * FOR EVENT BUS ONLY
-     * 
-     * @param event
-     *            Test finished event
-     */
-    @Subscribe
-    public void finish(TestsFinished event) {
-        // TODO
-    }
+    @Override
+    public void schedulePaint() {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                paint();
+            }
 
-    /**
-     * FOR EVENT BUS ONLY
-     * 
-     * @param event
-     *            Test started event
-     */
-    @Subscribe
-    public void start(TestsStarted event) {
-        passing = true;
-        total = testProvider.getNumTotalTests();
-        worked = total - event.getNum();
-        updateColor();
-    }
-
-    /**
-     * FOR EVENT BUS ONLY
-     * 
-     * @param event
-     *            Test finish event
-     */
-    @Subscribe
-    public void testRan(TestFinished event) {
-        passing &= event.passed();
-        System.err.println(event.getResult());
-        worked++;
-        updateColor();
+        });
     }
 
     @Override
     protected Control createControl(Composite parent) {
-        // initialize colors
-
         // create components and apply layout
         composite = parent;
         composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
-        // GridLayoutFactory.fillDefaults().margins(0, 0).extendedMargins(0, 4, 0, 0)
-        // .applyTo(composite);
         composite.addListener(SWT.Resize, new Listener() {
             @Override
             public void handleEvent(Event e) {
@@ -131,18 +67,13 @@ public class StatusBar extends WorkbenchWindowControlContribution {
             }
         });
 
-        initializeProgressBar();
         Composite composite = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().numColumns(1).margins(3, 3).applyTo(composite);
-        Label label = new Label(composite, SWT.BOLD);
-        label.setText("Xtest");
+        label = new Label(composite, SWT.BOLD);
+        label.setText("9999/9999");
         GridDataFactory.fillDefaults().applyTo(label);
+        schedulePaint();
         return composite;
-    }
-
-    private void initializeProgressBar() {
-        passing = testProvider.areAllTestsPassing();
-        updateColor();
     }
 
     private void paint() {
@@ -153,29 +84,29 @@ public class StatusBar extends WorkbenchWindowControlContribution {
             boolean horizontal = rect.width > rect.height;
             int boundWidth = rect.width;
             int boundHeight = rect.height;
-            if (horizontal) {
-                boundWidth -= 1;
-            }
             progressBackground = new Image(display, rect.width, rect.height);
             GC gc = new GC(progressBackground);
             try {
-                RGB rgb = passing ? green : red;
+                RGB rgb = controller.isPassing() ? green : red;
                 Color color = new Color(Display.getDefault(), rgb);
                 try {
-                    double completionRatio = total == 0 ? 0.0 : worked * 1.0 / total;
 
-                    Rectangle progress;
                     Rectangle unknown;
+                    Rectangle progress;
+                    double completionRatio = controller.getCompletionRatio();
+                    if (horizontal) {
+                        boundWidth -= 1;
+                    }
                     if (horizontal) {
                         int horizontalDivide = (int) (completionRatio * boundWidth);
                         int remainder = boundWidth - horizontalDivide;
-                        progress = new Rectangle(0, 0, horizontalDivide, boundHeight);
                         unknown = new Rectangle(horizontalDivide, 0, remainder, boundHeight);
+                        progress = new Rectangle(0, 0, horizontalDivide, boundHeight);
                     } else {
                         int verticalDivide = (int) (completionRatio * boundHeight);
                         int remainder = boundHeight - verticalDivide;
-                        progress = new Rectangle(0, remainder, boundWidth, verticalDivide);
                         unknown = new Rectangle(0, 0, boundWidth, remainder);
+                        progress = new Rectangle(0, remainder, boundWidth, verticalDivide);
                     }
 
                     gc.setBackground(color);
@@ -183,6 +114,7 @@ public class StatusBar extends WorkbenchWindowControlContribution {
 
                     gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
                     gc.fillRectangle(unknown);
+                    label.setText(controller.getText());
 
                     if (horizontal) {
                         gc.setBackground(Display.getDefault().getSystemColor(
@@ -202,19 +134,5 @@ public class StatusBar extends WorkbenchWindowControlContribution {
                 oldImage.dispose();
             }
         }
-    }
-
-    private void setProgress() {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                paint();
-            }
-
-        });
-    }
-
-    private void updateColor() {
-        setProgress();
     }
 }

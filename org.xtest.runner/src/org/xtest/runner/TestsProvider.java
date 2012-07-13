@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.ITestType;
 import org.xtest.runner.external.TestState;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -33,20 +31,6 @@ public class TestsProvider {
     private final Logger logger = LoggerFactory.getLogger(TestsProvider.class);
 
     private final AtomicInteger numTotalTests = new AtomicInteger(-1);
-
-    /**
-     * Returns true if all tests are passing, false if not
-     * 
-     * @return True if alltests are passing, false if not
-     */
-    public boolean areAllTestsPassing() {
-        return !Iterables.any(getAllTests(), new Predicate<RunnableTest>() {
-            @Override
-            public boolean apply(RunnableTest input) {
-                return input.getState().getState() == TestState.FAIL;
-            }
-        });
-    }
 
     /**
      * Get all tests in the workspace

@@ -1,5 +1,9 @@
 package org.xtest.runner.events;
 
+import java.util.Collection;
+
+import org.xtest.runner.RunnableTest;
+
 /**
  * Event indicating that currently running tests have been canceled
  * 
@@ -7,24 +11,24 @@ package org.xtest.runner.events;
  */
 public class TestsCanceled {
 
-    private final int num;
+    private final Collection<RunnableTest> tests;
 
     /**
      * Package-protected constructor so this can only be instantiated by {@link Events}
      * 
      * @param i
-     *            The number of tests that are still pending
+     *            The tests that are still pending
      */
-    TestsCanceled(int i) {
-        this.num = i;
+    TestsCanceled(Collection<RunnableTest> tests) {
+        this.tests = tests;
     }
 
     /**
-     * Returns the number of tests that are still pending
+     * Returns the tests that are still pending
      * 
-     * @return The number of tests that are still pending
+     * @return The tests that are still pending
      */
-    public int getNum() {
-        return num;
+    public Collection<RunnableTest> getTests() {
+        return tests;
     }
 }
