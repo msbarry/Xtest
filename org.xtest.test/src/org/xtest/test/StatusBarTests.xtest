@@ -78,7 +78,7 @@ xtest "events" {
 		// start it
 		events.startTests(newArrayList(testWithFailures.toRunnableTest(uri1)))
 		// finish it
-		events.finishTest(testWithFailures, null)
+		events.finishTest(testWithFailures, fileForURI(uri1))
 		// assert state
 		controller.check("after failing test", 1.0, false, 1, 0, 1, 1, 1)
 	}

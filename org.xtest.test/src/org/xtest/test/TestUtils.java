@@ -272,7 +272,7 @@ public class TestUtils {
     }
 
     public static String textOf(EObject eObject) {
-        return NodeModelUtils.getNode(eObject).getText();
+        return NodeModelUtils.getNode(eObject).getText().trim();
     }
 
     public static URI uniqueUri(Object key) throws URISyntaxException {
