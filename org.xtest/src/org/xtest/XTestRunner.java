@@ -15,6 +15,7 @@ import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationResult;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.xtest.interpreter.XTestInterpreter;
+import org.xtest.interpreter.XtestEvaluationResult;
 import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
 
@@ -146,21 +147,39 @@ public class XTestRunner {
      */
     public XTestResult run(Body main, RunType weight, CancelIndicator monitor) {
         XTestInterpreter interpreter = getInterpreter(main.eResource());
-        IEvaluationResult resultObject = null;
-        boolean failed = false;
         try {
-            resultObject = interpreter.evaluate(main, contextProvider.get(), monitor);
-        } catch (InterpreterCanceledException e) {
-        } catch (Throwable e) {
-            failed = true;
+            IEvaluationResult resultObject = null;
+            boolean failed = false;
+            try {
+                resultObject = interpreter.evaluate(main, contextProvider.get(), monitor);
+            } catch (InterpreterCanceledException e) {
+            } catch (Throwable e) {
+                failed = true;
+            }
+            XTestResult result = new XTestResult(main);
+            if (resultObject instanceof XtestEvaluationResult) {
+                XtestEvaluationResult evalResult = (XtestEvaluationResult) resultObject;
+                result = evalResult.getXtestResult();
+                executed = evalResult.getExpressions();
+            }
+            if (failed) {
+                result.fail();
+            }
+            result.setResultObject(resultObject.getResult());
+            return result;
+        } finally {
+            cleanupInterpreter(interpreter);
         }
-        XTestResult result = interpreter.getTestResult();
-        executed = interpreter.getExecutedExpressions();
-        if (failed) {
-            result.fail();
-        }
-        result.setResultObject(resultObject.getResult());
-        return result;
+    }
+
+    /**
+     * Perform cleanup on interpreter after a test run has finished
+     * 
+     * @param interpreter
+     *            The interpreter to clean up
+     */
+    protected void cleanupInterpreter(XTestInterpreter interpreter) {
+
     }
 
     /**

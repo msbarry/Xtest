@@ -2,6 +2,7 @@ package org.xtest.interpreter;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,8 +25,6 @@ import org.eclipse.xtext.common.types.TypesFactory;
 import org.eclipse.xtext.common.types.access.impl.ClassFinder;
 import org.eclipse.xtext.common.types.impl.JvmTypeParameterImplCustom;
 import org.eclipse.xtext.common.types.util.RawTypeHelper;
-import org.eclipse.xtext.common.types.util.TypeConformanceComputer;
-import org.eclipse.xtext.common.types.util.TypeReferences;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.xbase.XAssignment;
@@ -69,6 +68,7 @@ public class XTestInterpreter extends XbaseInterpreter {
     @Inject
     private XtestJvmModelAssociator assocations;
     private final Stack<XExpression> callStack = new Stack<XExpression>();
+    private ClassLoader classLoader;
     // TODO move some of this stuff into custom context
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
     private int inSafeBlock = 0;
@@ -79,52 +79,56 @@ public class XTestInterpreter extends XbaseInterpreter {
     private StackTraceElement[] startTrace = null;
     private final Stack<XTestResult> testStack = new Stack<XTestResult>();
     @Inject
-    private TypeConformanceComputer typeConformanceComputer;
-
-    @Inject
-    private TypeReferences typeReferences;
-
-    @Inject
     private TypesFactory typesFactory;
 
     @Override
-    public IEvaluationResult evaluate(XExpression expression, IEvaluationContext context,
+    public XtestEvaluationResult evaluate(XExpression expression, IEvaluationContext context,
             CancelIndicator indicator) {
+        boolean isTopLevel = false;
         try {
             IEvaluationResult evaluate;
             if (expression.eContainer() instanceof XClosure
                     || expression.eContainer() instanceof XMethodDef) {
                 evaluate = evaluateInsideOfClosure(expression, context, indicator);
             } else {
+                isTopLevel = true;
                 startTrace = Thread.currentThread().getStackTrace();
                 evaluate = super.evaluate(expression, context, indicator);
             }
-            return evaluate;
+            HashSet<XExpression> copy = Sets.newHashSet(executedExpressions);
+            XtestEvaluationResult toReturn = new XtestEvaluationResult(evaluate, copy, result);
+            return toReturn;
         } catch (ReturnValue e) {
-            return new DefaultEvaluationResult(e.returnValue, null);
+            HashSet<XExpression> copy2 = Sets.newHashSet(executedExpressions);
+            DefaultEvaluationResult other = new DefaultEvaluationResult(e.returnValue, null);
+            XtestEvaluationResult toReturn = new XtestEvaluationResult(other, copy2, result);
+            return toReturn;
+        } finally {
+            // release references held by this object
+            if (isTopLevel) {
+                callStack.clear();
+                executedExpressions.clear();
+                localMethodContexts.clear();
+                result = null;
+                startTrace = null;
+                testStack.clear();
+            }
         }
     }
 
     /**
-     * Returns the list of executed expressions
+     * Returns this interpreters classloader
      * 
-     * @return The list of executed expressions
+     * @return The classloader for this interpreter
      */
-    public Set<XExpression> getExecutedExpressions() {
-        return executedExpressions;
-    }
-
-    /**
-     * Returns the test suite result after the tests have run
-     * 
-     * @return The test result
-     */
-    public XTestResult getTestResult() {
-        return result;
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
     @Override
+    @Inject
     public void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
         super.setClassLoader(classLoader);
 
         // HACK to work avoid duplicating all of XbaseInterpreter to get at classFinder since it is
@@ -238,6 +242,8 @@ public class XTestInterpreter extends XbaseInterpreter {
             result.pass();
         } catch (XTestEvaluationException e) {
             result.addEvaluationException(e);
+        } finally {
+            testStack.pop();
         }
         return toReturn;
     }
