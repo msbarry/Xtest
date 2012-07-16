@@ -44,6 +44,33 @@ public class WorkspaceEvent {
     }
 
     /**
+     * Returns a set of test files that have been deleted in this event
+     * 
+     * @param extensions
+     *            Extensions that tell us if test types care about each delta
+     * @return The set of test files that have been deleted in this event
+     */
+    public Set<IFile> getDeletedTests(final Extensions extensions) {
+        final Set<IFile> deltas = Sets.newHashSet();
+        try {
+            event.getDelta().accept(new IResourceDeltaVisitor() {
+
+                @Override
+                public boolean visit(IResourceDelta delta) throws CoreException {
+                    IResource resource = delta.getResource();
+                    if (resource instanceof IFile && extensions.supports((IFile) resource)
+                            && (delta.getKind() & REMOVED) > 0) {
+                        deltas.add((IFile) resource);
+                    }
+                    return true;
+                }
+            });
+        } catch (CoreException e) {
+        }
+        return deltas;
+    }
+
+    /**
      * Returns the files that are affected by this delta
      * 
      * @param extensions

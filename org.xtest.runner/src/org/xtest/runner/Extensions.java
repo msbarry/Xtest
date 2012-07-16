@@ -62,6 +62,25 @@ public class Extensions {
         return result;
     }
 
+    /**
+     * Returns true if a registered test type supports the given file
+     * 
+     * @param resource
+     *            The file
+     * @return True if a registered test type supports the given file
+     */
+    public boolean supports(IFile resource) {
+        Collection<ITestType> allTestTypes = getAllTestTypes();
+        boolean result = false;
+        for (ITestType testType : allTestTypes) {
+            if (testType.supports(resource)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
     private synchronized Collection<ITestType> getAllTestTypes() {
         if (types == null) {
             types = Lists.newArrayList();

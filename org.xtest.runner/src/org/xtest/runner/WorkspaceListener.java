@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.JavaCore;
 import org.slf4j.LoggerFactory;
+import org.xtest.runner.events.Events;
 import org.xtest.runner.external.ContinuousTestRunner;
 
 import com.google.inject.Inject;
@@ -25,6 +26,8 @@ import com.google.inject.Inject;
  */
 public class WorkspaceListener implements IResourceChangeListener, IElementChangedListener {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WorkspaceListener.class);
+    @Inject
+    private Events events;
     @Inject
     private Extensions extensions;
     @Inject
@@ -39,6 +42,10 @@ public class WorkspaceListener implements IResourceChangeListener, IElementChang
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
         WorkspaceEvent wrapped = WorkspaceEvent.wrap(event);
+        Set<IFile> deleted = wrapped.getDeletedTests(extensions);
+        if (!deleted.isEmpty()) {
+            events.testDeleted(deleted);
+        }
         if (wrapped.isBuild()) {
             build(wrapped);
         } else if (wrapped.isClean()) {

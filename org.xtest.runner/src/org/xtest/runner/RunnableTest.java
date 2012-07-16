@@ -150,17 +150,22 @@ public class RunnableTest implements Comparable<RunnableTest> {
      * @return The result of the test
      */
     public TestResult invoke(SubMonitor convert, Cache<ITestType, ITestRunner> runnerCache) {
-        logger.debug("Start  {}", getName());
-        long start = System.nanoTime();
-        Acceptor acceptor = new Acceptor(dependencies, numDependencies);
-        ITestRunner testRunner = runnerCache.getUnchecked(fTestType);
-        TestResult result = testRunner.run(fFile, convert, acceptor);
-        long end = System.nanoTime();
-        logger.debug(
-                "Finish {} {} dependencies {} ms",
-                new Object[] { getName(), acceptor.dependencies,
-                        TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) });
-        storeResultsPersistently(result, acceptor, end - start);
+        TestResult result = TestResult.notRun();
+        if (fFile.exists()) {
+            logger.debug("Start  {}", getName());
+            long start = System.nanoTime();
+            Acceptor acceptor = new Acceptor(dependencies, numDependencies);
+            ITestRunner testRunner = runnerCache.getUnchecked(fTestType);
+            result = testRunner.run(fFile, convert, acceptor);
+            long end = System.nanoTime();
+            logger.debug(
+                    "Finish {} {} dependencies {} ms",
+                    new Object[] { getName(), acceptor.dependencies,
+                            TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) });
+            storeResultsPersistently(result, acceptor, end - start);
+        } else {
+            logger.info("Tried to run {} but it didn't exist", getName());
+        }
         return result;
     }
 

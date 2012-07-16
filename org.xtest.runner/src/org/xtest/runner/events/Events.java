@@ -1,6 +1,7 @@
 package org.xtest.runner.events;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.xtest.runner.RunnableTest;
@@ -58,6 +59,16 @@ public class Events {
      */
     public void startTests(Collection<RunnableTest> testsToStart) {
         bus.post(new TestsStarted(testsToStart));
+    }
+
+    /**
+     * Post an event that a set of tests have been deleted.
+     * 
+     * @param files
+     *            The tests that have been deleted
+     */
+    public void testDeleted(Set<IFile> files) {
+        bus.post(new TestDeleted(files));
     }
 
 }

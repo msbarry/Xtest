@@ -6,8 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.xtest.runner.RunnableTest;
 import org.xtest.runner.TestsProvider;
+import org.xtest.runner.events.TestDeleted;
 import org.xtest.runner.events.TestFinished;
 import org.xtest.runner.events.TestsCanceled;
 import org.xtest.runner.events.TestsStarted;
@@ -75,6 +77,26 @@ public class StatusBarController {
     public void cancel(TestsCanceled event) {
         testsMustRun(event.getTests());
         notifyListeners();
+    }
+
+    /**
+     * FOR EVENT BUS ONLY
+     * 
+     * @param event
+     *            Test deleted event
+     */
+    @Subscribe
+    public void deleted(TestDeleted event) {
+        Collection<IFile> tests = event.getTests();
+        boolean changed = false;
+        for (IFile file : tests) {
+            URI uri = file.getLocationURI();
+            changed |= removeFromTestCounts(uri);
+            resultsForUris.remove(uri);
+        }
+        if (changed) {
+            notifyListeners();
+        }
     }
 
     /**
@@ -174,12 +196,7 @@ public class StatusBarController {
      *            The URI that the test result is for
      */
     protected void updateFor(TestResult state, URI uri) {
-        TestResult old = resultsForUris.get(uri);
-        if (old != null) {
-            failures -= old.getNumFail();
-            pending -= old.getNumPend();
-            total -= old.getNumTotal();
-        }
+        removeFromTestCounts(uri);
         failures += state.getNumFail();
         pending += state.getNumPend();
         total += state.getNumTotal();
@@ -200,5 +217,17 @@ public class StatusBarController {
         for (IStatusBarRepaintListener listener : listeners) {
             listener.schedulePaint();
         }
+    }
+
+    private boolean removeFromTestCounts(URI uri) {
+        boolean changed = false;
+        TestResult old = resultsForUris.get(uri);
+        if (old != null) {
+            failures -= old.getNumFail();
+            pending -= old.getNumPend();
+            total -= old.getNumTotal();
+            changed = true;
+        }
+        return changed;
     }
 }
