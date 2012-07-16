@@ -136,7 +136,7 @@ public class XtestUtil {
             split = Iterables.transform(split, new Function<String, String>() {
                 @Override
                 public String apply(String input) {
-                    return Strings.toFirstUpper(input.toLowerCase());
+                    return Strings.toFirstUpper(input);
                 }
             });
             // 4. Pack them back together

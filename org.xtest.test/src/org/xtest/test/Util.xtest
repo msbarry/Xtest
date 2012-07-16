@@ -2,15 +2,21 @@ import org.^xtest.XtestUtil
 import static junit.framework.Assert.*
 
 xtest toUpperCamel {
-	xtest {assertEquals("",XtestUtil::toUpperCamel(null))}
-	xtest {assertEquals("",XtestUtil::toUpperCamel(""))}
-	xtest {assertEquals("Abc",XtestUtil::toUpperCamel("abc"))}
-	xtest {assertEquals("A",XtestUtil::toUpperCamel("	a 	"))}
-	xtest {assertEquals("AbC",XtestUtil::toUpperCamel("ab c"))}
-	xtest {assertEquals("ThisIsASentence",XtestUtil::toUpperCamel("This is a sentence"))}
-	xtest {assertEquals("SentenceWithAcronym",XtestUtil::toUpperCamel("Sentence with ACRONYM"))}
-	xtest {assertEquals("ABCde",XtestUtil::toUpperCamel("A\nB\nCDE"))}
-	xtest {assertEquals("ABCde",XtestUtil::toUpperCamel("A-B-CDE"))}
-	xtest {assertEquals("",XtestUtil::toUpperCamel("-------"))}
-	xtest {assertEquals("A",XtestUtil::toUpperCamel("999a"))}
+	def testToUpperCamel(String to, String from) {
+		xtest (to+"->"+from) {
+			assertEquals("output",to,XtestUtil::toUpperCamel(from))
+		}
+	}
+	testToUpperCamel("",null)
+	testToUpperCamel("","")
+	testToUpperCamel("Abc","abc")
+	testToUpperCamel("A","a")
+	testToUpperCamel("AbC","ab c")
+	testToUpperCamel("ThisIsASentence","This is a sentence")
+	testToUpperCamel("SentenceWithACRONYM","Sentence with ACRONYM")
+	testToUpperCamel("ABCDE","A\nB\nCDE")
+	testToUpperCamel("ABCDE","A-B-CDE")
+	testToUpperCamel("","-------")
+	testToUpperCamel("A","999a")
+	testToUpperCamel("AbcAbc","AbcAbc")
 }
