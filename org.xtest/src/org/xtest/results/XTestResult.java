@@ -48,7 +48,7 @@ public class XTestResult {
     // instantiate a non-top-level test
     private XTestResult(XTestResult parent, String name, EObject eObject) {
         this.parent = parent;
-        this.name = name;
+        this.name = name != null ? name.replaceAll("[\n\r]", "") : null;
         this.eObject = eObject;
     }
 

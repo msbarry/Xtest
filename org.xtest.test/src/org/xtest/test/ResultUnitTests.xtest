@@ -181,3 +181,9 @@ xtest "Pending child" {
 	assertTrue("Child is pending", sub.isPending)
 	assertEquals(1, suite.countPendings)
 }
+
+xtest "line break omitted from name" {
+    val test = new XTestResult(null).subTest("te
+st", null)
+	assertEquals("test", test.getName)
+}
