@@ -47,6 +47,7 @@ import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.XbasePackage;
 import org.eclipse.xtext.xbase.typing.ITypeProvider;
 import org.xtest.RunType;
+import org.xtest.XTestAssertionFailure;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.XTestRunner.DontRunCheck;
@@ -60,6 +61,7 @@ import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XTestPackage;
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -525,8 +527,16 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
         for (XTestEvaluationException exception : exceptions) {
             Throwable cause = exception.getCause();
             XExpression expression = exception.getExpression();
-            StringBuilder builder = new StringBuilder(run.getQualifiedName() + ": "
-                    + cause.toString());
+            String name = run.getQualifiedName();
+            StringBuilder builder = new StringBuilder(name);
+            if (!Strings.isNullOrEmpty(name)) {
+                builder.append(": ");
+            }
+            if (cause instanceof XTestAssertionFailure) {
+                builder.append(cause.getMessage());
+            } else {
+                builder.append(cause.toString());
+            }
             for (StackTraceElement trace : cause.getStackTrace()) {
                 builder.append("\n");
                 builder.append(trace.toString());

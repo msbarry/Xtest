@@ -1,0 +1,35 @@
+runWhileEditing: false
+import static org.^xtest.test.TestUtils.*
+import static org.junit.Assert.*
+import org.^xtest.XTestRunner
+import com.sun.org.apache.xpath.internal.operations.Div
+
+def static assertFailsTo(String input, String expectedMessage) {
+	val result = XTestRunner::run(input, injector)
+	assertEquals("number of exceptions", 1, result.evaluationException.size)
+	assertEquals(expectedMessage, result.evaluationException.head.cause.message)
+}
+
+def static messageForNoException(Class<? extends Exception> e) {
+	"Expected <"+e.getName+"> but no exception was thrown"
+}
+
+def static messageForWrongException(Class<?> expected, Class<?> actual) {
+	"Expected <"+expected.getName+"> but threw <"+actual.getName+"> instead"
+}
+
+xtest "exceptions" {	
+	xtest {
+		assertFailsTo("assert null throws IllegalArgumentException", 
+			messageForNoException(IllegalArgumentException::class)
+		)
+	}
+	
+	xtest {
+		assertFailsTo("assert 1/0 throws IllegalArgumentException", 
+			messageForWrongException(IllegalArgumentException::class, ArithmeticException::class)
+		)
+	}
+}
+
+// TODO test operations

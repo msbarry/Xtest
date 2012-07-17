@@ -187,14 +187,13 @@ public class XTestInterpreter extends XbaseInterpreter {
                 Class<?> expectedExceptionClass = getClassFinder().forName(qualifiedName);
                 try {
                     internalEvaluate(resultExp, context, indicator);
-                    throw new XTestAssertionFailure("Expected <" + expectedExceptionClass.getName()
+                    fail("Expected <" + expectedExceptionClass.getName()
                             + "> but no exception was thrown");
                 } catch (XTestEvaluationException exception) {
                     Throwable throwable = exception.getCause();
                     if (!expectedExceptionClass.isInstance(throwable)) {
-                        throw new XTestAssertionFailure("Expected <"
-                                + expectedExceptionClass.getName() + "> but threw <"
-                                + throwable.getClass().getName() + "> insead");
+                        fail("Expected <" + expectedExceptionClass.getName() + "> but threw <"
+                                + throwable.getClass().getName() + "> instead");
                     }
                 }
             } catch (ClassNotFoundException e) {
@@ -597,6 +596,10 @@ public class XTestInterpreter extends XbaseInterpreter {
         }
     }
 
+    private void fail(String failure) {
+        throw new XTestAssertionFailure(failure);
+    }
+
     /**
      * Evaluates a {@link UniqueName} and returns the result
      * 
@@ -633,7 +636,7 @@ public class XTestInterpreter extends XbaseInterpreter {
     }
 
     private void handleAssertionFailure(XAssertExpression assertExpression) {
-        throw new XTestAssertionFailure("Assertion Failed");
+        fail("Assert failed");
     }
 
     private void handleEvaluationException(Throwable toWrap, XExpression expression) {
