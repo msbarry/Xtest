@@ -78,27 +78,44 @@ public class XtestUtil {
     }
 
     /**
+     * Get the text of an Expression
+     * 
+     * @param expression
+     *            The expression
+     * @param maxLen
+     *            The maximum allowed length of the text
+     * @return The test of the expression
+     */
+    public static String getText(XExpression expression, int maxLen) {
+        String name;
+
+        ICompositeNode node = NodeModelUtils.getNode(expression);
+        if (node != null) {
+            String nodeWithoutComments = getNodeWithoutComments(node);
+            name = trimIfNecessary(nodeWithoutComments, maxLen);
+        } else {
+            name = "";
+        }
+        name = trimIfNecessary(name, maxLen);
+
+        return name;
+    }
+
+    /**
      * Get the text of the first line of an expression
      * 
      * @param expression
      *            The expression
+     * @param maxLen
+     *            The maximum allowed length of the text
      * @return The test of the first line of the expression
      */
-    public static String getText(XExpression expression) {
-        String name;
+    public static String getTextOfFirstLine(XExpression expression, int maxLen) {
         while (expression instanceof XBlockExpression
                 && !((XBlockExpression) expression).getExpressions().isEmpty()) {
             expression = ((XBlockExpression) expression).getExpressions().get(0);
         }
-
-        ICompositeNode node = NodeModelUtils.getNode(expression);
-        if (node != null) {
-            name = getNodeWithoutComments(node).replaceAll("^(\\{|\\s)*", "")
-                    .replaceAll("[\n\r].*$", "").trim().replaceAll("\\}$", "");
-        } else {
-            name = "";
-        }
-        return name;
+        return getText(expression, maxLen);
     }
 
     /**
@@ -145,12 +162,30 @@ public class XtestUtil {
         return result;
     }
 
+    /**
+     * Removes line breaks to fit onto one line and trims to the {@code maxLen}, inserting ellipsis
+     * if necessary.
+     * 
+     * @param string
+     *            The string
+     * @param maxLen
+     *            The maximum length
+     * @return The original string, trimmed with ellipsis if necessary
+     */
+    public static String trimIfNecessary(String string, int maxLen) {
+        string = string.replaceAll("\\s+", " ").trim();
+        if (string.length() >= maxLen) {
+            string = string.substring(0, maxLen - 3) + "...";
+        }
+        return string;
+    }
+
     private static StackTraceElement generateXtestStackTraceElement(XExpression expression) {
         ICompositeNode node = NodeModelUtils.getNode(expression);
         String fileName = getBody(expression).getTypeName();
         int startLine = node.getStartLine();
-        return new StackTraceElement(fileName, "\"" + getText(expression) + "\"", fileName,
-                startLine);
+        return new StackTraceElement(fileName, "\"" + getTextOfFirstLine(expression, 60) + "\"",
+                fileName, startLine);
     }
 
     private static BodyImplCustom getBody(XExpression expression) {
