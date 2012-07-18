@@ -65,6 +65,7 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
+    private Map<XExpression, Object> assertionDiagnostics = null;
     @Inject
     private XtestJvmModelAssociator assocations;
     private final Stack<XExpression> callStack = new Stack<XExpression>();
@@ -74,10 +75,13 @@ public class XTestInterpreter extends XbaseInterpreter {
     private int inSafeBlock = 0;
     private final Map<XtendFunction, IEvaluationContext> localMethodContexts = Maps.newHashMap();
     @Inject
+    private AssertionMessageBuilder messageBuilder;
+    @Inject
     private RawTypeHelper rawTypeHelper;
     private XTestResult result;
     private StackTraceElement[] startTrace = null;
     private final Stack<XTestResult> testStack = new Stack<XTestResult>();
+
     @Inject
     private TypesFactory typesFactory;
 
@@ -111,6 +115,7 @@ public class XTestInterpreter extends XbaseInterpreter {
                 localMethodContexts.clear();
                 result = null;
                 startTrace = null;
+                assertionDiagnostics = null;
                 testStack.clear();
             }
         }
@@ -170,15 +175,25 @@ public class XTestInterpreter extends XbaseInterpreter {
      */
     protected Object _evaluateAssertExpression(XAssertExpression assertExpression,
             IEvaluationContext context, CancelIndicator indicator) {
+        boolean wasFirst = assertionDiagnostics == null;
+        if (wasFirst) {
+            assertionDiagnostics = Maps.newHashMap();
+        }
         XExpression resultExp = assertExpression.getActual();
         JvmTypeReference expected = assertExpression.getThrows();
         boolean returnVal = true;
         if (expected == null) {
             // normal assert
-            Object result = internalEvaluate(resultExp, context, indicator);
-            if (!(result instanceof Boolean) || !(Boolean) result) {
-                handleAssertionFailure(assertExpression);
-                returnVal = false;
+            try {
+                Object result = internalEvaluate(resultExp, context, indicator);
+                if (!(result instanceof Boolean) || !(Boolean) result) {
+                    handleAssertionFailure(assertExpression);
+                    returnVal = false;
+                }
+            } finally {
+                if (wasFirst) {
+                    assertionDiagnostics = null;
+                }
             }
         } else {
             // assert exception
@@ -453,6 +468,9 @@ public class XTestInterpreter extends XbaseInterpreter {
             CancelIndicator indicator) throws EvaluationException {
         Object internalEvaluate;
         executedExpressions.add(expression);
+        if (assertionDiagnostics != null) {
+            assertionDiagnostics.put(expression, null);
+        }
         XExpression previous = null;
         if (!callStack.empty()) {
             previous = callStack.pop();
@@ -461,6 +479,10 @@ public class XTestInterpreter extends XbaseInterpreter {
         try {
             // replace top of stack with current expression
             internalEvaluate = super.internalEvaluate(expression, context, indicator);
+            executedExpressions.add(expression);
+            if (assertionDiagnostics != null) {
+                assertionDiagnostics.put(expression, internalEvaluate);
+            }
         } catch (ReturnValue value) {
             throw value;
         } catch (InterpreterCanceledException e) {
@@ -630,13 +652,15 @@ public class XTestInterpreter extends XbaseInterpreter {
         }
         if (name == null) {
             XExpression expression = test.getExpression();
-            name = XtestUtil.getText(expression);
+            name = XtestUtil.getTextOfFirstLine(expression, 40);
         }
         return name;
     }
 
     private void handleAssertionFailure(XAssertExpression assertExpression) {
-        fail("Assert failed");
+        String message = messageBuilder.buildMessage(assertExpression.getActual(),
+                assertionDiagnostics);
+        fail(message);
     }
 
     private void handleEvaluationException(Throwable toWrap, XExpression expression) {

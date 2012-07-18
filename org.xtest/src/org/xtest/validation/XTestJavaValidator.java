@@ -139,7 +139,9 @@ public class XTestJavaValidator extends AbstractXTestJavaValidator {
                         assertExpression);
 
                 if (!typeConformanceComputer.isConformant(expected, returnType)) {
-                    error("Assert expression must return a boolean",
+                    // AssertionMessageBuilder will add more detailed message
+                    warning("Assert expression must return a boolean, is "
+                            + returnType.getQualifiedName() + " instead",
                             XTestPackage.Literals.XASSERT_EXPRESSION__ACTUAL);
                 }
             }

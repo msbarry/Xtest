@@ -1,5 +1,7 @@
 package org.xtest.validation;
 
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtend.core.validation.XtendJavaValidator;
@@ -49,5 +51,10 @@ public class XtendValidations extends XtendJavaValidator {
      */
     public void setDelagate(XTestJavaValidator delegate) {
         this.messageAcceptor = delegate.getMessageAcceptor();
+    }
+
+    @Override
+    protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
+        return false;
     }
 }
