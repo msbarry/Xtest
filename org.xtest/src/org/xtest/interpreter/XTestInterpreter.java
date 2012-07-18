@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.Callable;
 
@@ -64,12 +65,13 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class XTestInterpreter extends XbaseInterpreter {
+    private Map<XExpression, Object> assertionDiagnostics = null;
     @Inject
     private XtestJvmModelAssociator assocations;
     private final Stack<XExpression> callStack = new Stack<XExpression>();
     private ClassLoader classLoader;
     // TODO move some of this stuff into custom context
-    private final Map<XExpression, Object> executedExpressions = Maps.newHashMap();
+    private final Set<XExpression> executedExpressions = Sets.newHashSet();
     private int inSafeBlock = 0;
     private final Map<XtendFunction, IEvaluationContext> localMethodContexts = Maps.newHashMap();
     @Inject
@@ -97,11 +99,11 @@ public class XTestInterpreter extends XbaseInterpreter {
                 startTrace = Thread.currentThread().getStackTrace();
                 evaluate = super.evaluate(expression, context, indicator);
             }
-            HashSet<XExpression> copy = Sets.newHashSet(executedExpressions.keySet());
+            HashSet<XExpression> copy = Sets.newHashSet(executedExpressions);
             XtestEvaluationResult toReturn = new XtestEvaluationResult(evaluate, copy, result);
             return toReturn;
         } catch (ReturnValue e) {
-            HashSet<XExpression> copy2 = Sets.newHashSet(executedExpressions.keySet());
+            HashSet<XExpression> copy2 = Sets.newHashSet(executedExpressions);
             DefaultEvaluationResult other = new DefaultEvaluationResult(e.returnValue, null);
             XtestEvaluationResult toReturn = new XtestEvaluationResult(other, copy2, result);
             return toReturn;
@@ -113,6 +115,7 @@ public class XTestInterpreter extends XbaseInterpreter {
                 localMethodContexts.clear();
                 result = null;
                 startTrace = null;
+                assertionDiagnostics = null;
                 testStack.clear();
             }
         }
@@ -172,15 +175,25 @@ public class XTestInterpreter extends XbaseInterpreter {
      */
     protected Object _evaluateAssertExpression(XAssertExpression assertExpression,
             IEvaluationContext context, CancelIndicator indicator) {
+        boolean wasFirst = assertionDiagnostics == null;
+        if (wasFirst) {
+            assertionDiagnostics = Maps.newHashMap();
+        }
         XExpression resultExp = assertExpression.getActual();
         JvmTypeReference expected = assertExpression.getThrows();
         boolean returnVal = true;
         if (expected == null) {
             // normal assert
-            Object result = internalEvaluate(resultExp, context, indicator);
-            if (!(result instanceof Boolean) || !(Boolean) result) {
-                handleAssertionFailure(assertExpression);
-                returnVal = false;
+            try {
+                Object result = internalEvaluate(resultExp, context, indicator);
+                if (!(result instanceof Boolean) || !(Boolean) result) {
+                    handleAssertionFailure(assertExpression);
+                    returnVal = false;
+                }
+            } finally {
+                if (wasFirst) {
+                    assertionDiagnostics = null;
+                }
             }
         } else {
             // assert exception
@@ -454,7 +467,10 @@ public class XTestInterpreter extends XbaseInterpreter {
     protected Object internalEvaluate(XExpression expression, IEvaluationContext context,
             CancelIndicator indicator) throws EvaluationException {
         Object internalEvaluate;
-        executedExpressions.put(expression, null);
+        executedExpressions.add(expression);
+        if (assertionDiagnostics != null) {
+            assertionDiagnostics.put(expression, null);
+        }
         XExpression previous = null;
         if (!callStack.empty()) {
             previous = callStack.pop();
@@ -463,7 +479,10 @@ public class XTestInterpreter extends XbaseInterpreter {
         try {
             // replace top of stack with current expression
             internalEvaluate = super.internalEvaluate(expression, context, indicator);
-            executedExpressions.put(expression, internalEvaluate);
+            executedExpressions.add(expression);
+            if (assertionDiagnostics != null) {
+                assertionDiagnostics.put(expression, internalEvaluate);
+            }
         } catch (ReturnValue value) {
             throw value;
         } catch (InterpreterCanceledException e) {
@@ -640,7 +659,7 @@ public class XTestInterpreter extends XbaseInterpreter {
 
     private void handleAssertionFailure(XAssertExpression assertExpression) {
         String message = messageBuilder.buildMessage(assertExpression.getActual(),
-                executedExpressions);
+                assertionDiagnostics);
         fail(message);
     }
 

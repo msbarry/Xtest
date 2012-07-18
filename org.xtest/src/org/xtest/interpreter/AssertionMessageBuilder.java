@@ -46,7 +46,9 @@ public class AssertionMessageBuilder {
      */
     public String buildMessage(XExpression actual, Map<XExpression, Object> executedExpressions) {
         StringBuilder builder = new StringBuilder("Assertion failed\n");
-        traverse(actual, executedExpressions, builder);
+        if (executedExpressions != null) {
+            traverse(actual, executedExpressions, builder);
+        }
         return builder.toString();
     }
 
