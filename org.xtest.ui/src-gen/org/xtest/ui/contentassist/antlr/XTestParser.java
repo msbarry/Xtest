@@ -85,7 +85,6 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getXTestExpressionAccess().getGroup(), "rule__XTestExpression__Group__0");
 					put(grammarAccess.getXAssertExpressionAccess().getGroup(), "rule__XAssertExpression__Group__0");
 					put(grammarAccess.getXAssertExpressionAccess().getGroup_3(), "rule__XAssertExpression__Group_3__0");
-					put(grammarAccess.getXSafeExpressionAccess().getGroup(), "rule__XSafeExpression__Group__0");
 					put(grammarAccess.getParameterAccess().getGroup(), "rule__Parameter__Group__0");
 					put(grammarAccess.getXMethodDefAccess().getGroup(), "rule__XMethodDef__Group__0");
 					put(grammarAccess.getXMethodDefAccess().getGroup_2(), "rule__XMethodDef__Group_2__0");
@@ -253,7 +252,6 @@ public class XTestParser extends AbstractContentAssistParser {
 					put(grammarAccess.getXTestExpressionAccess().getExpressionAssignment_3(), "rule__XTestExpression__ExpressionAssignment_3");
 					put(grammarAccess.getXAssertExpressionAccess().getActualAssignment_2(), "rule__XAssertExpression__ActualAssignment_2");
 					put(grammarAccess.getXAssertExpressionAccess().getThrowsAssignment_3_1(), "rule__XAssertExpression__ThrowsAssignment_3_1");
-					put(grammarAccess.getXSafeExpressionAccess().getActualAssignment_2(), "rule__XSafeExpression__ActualAssignment_2");
 					put(grammarAccess.getParameterAccess().getParameterTypeAssignment_0(), "rule__Parameter__ParameterTypeAssignment_0");
 					put(grammarAccess.getParameterAccess().getVarArgAssignment_1(), "rule__Parameter__VarArgAssignment_1");
 					put(grammarAccess.getParameterAccess().getNameAssignment_2(), "rule__Parameter__NameAssignment_2");

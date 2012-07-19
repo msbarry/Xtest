@@ -168,29 +168,6 @@ assert 1 == 1', injector)
     assertEquals("Boolean", typeProvider.getCommonReturnType(result, true).simpleName) 
 } 
 
-
-xtest testSafeExpressionReturnType {
-    val result = parse('?true')
-    assertEquals("boolean", typeProvider.getCommonReturnType(result, true).simpleName) 
-} 
-
-xtest testSafeExpressionReturnType {
-    val result = parse('?')
-    assertEquals("void", typeProvider.getCommonReturnType(result, true).simpleName) 
-} 
-
-xtest testVerifyTrue {
-    val parse = parse('?1')
-    assertValidationPassed(parse)
-    assertEvaluatesTo(1, parse)
-}
-
-xtest testVerifyTrue {
-    val parse = parse('?1/0')
-    assertValidationPassed(parse)
-    assertEvaluatesToIgnoreExceptions(null, parse)
-}
-
 xtest safeTypeComputation {
 	val parse = parse('val a = ?assert 1 == \n?assert 1 == 2')
 	runValidation(parse)

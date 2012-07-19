@@ -49,7 +49,6 @@ import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XMethodDefExpression;
-import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 
 import com.google.common.collect.Lists;
@@ -72,7 +71,6 @@ public class XTestInterpreter extends XbaseInterpreter {
     private ClassLoader classLoader;
     // TODO move some of this stuff into custom context
     private final Set<XExpression> executedExpressions = Sets.newHashSet();
-    private int inSafeBlock = 0;
     private final Map<XtendFunction, IEvaluationContext> localMethodContexts = Maps.newHashMap();
     @Inject
     private AssertionMessageBuilder messageBuilder;
@@ -289,31 +287,6 @@ public class XTestInterpreter extends XbaseInterpreter {
         // handle return exception but I don't have access to package-protected ReturnValue
         Object returnValue = internalEvaluate(returnExpr.getExpression(), context, indicator);
         throw new ReturnValue(returnValue);
-    }
-
-    /**
-     * Evaluates an expression inside an exception-safe block that marks exceptions in containing
-     * tests but continues execution if an exception occurs
-     * 
-     * @param expression
-     *            The expression to evaluate
-     * @param context
-     *            The context of evaluation
-     * @param indicator
-     *            The cancel indicator
-     * @return The result of evaluation the expression, or null if exception was thrown
-     */
-    protected Object _evaluateSafeExpression(XSafeExpression expression,
-            IEvaluationContext context, CancelIndicator indicator) {
-        XExpression actual = expression.getActual();
-        inSafeBlock++;
-        Object result = null;
-        try {
-            result = actual == null ? null : internalEvaluate(actual, context, indicator);
-        } finally {
-            inSafeBlock--;
-        }
-        return result;
     }
 
     /**
@@ -679,12 +652,7 @@ public class XTestInterpreter extends XbaseInterpreter {
         StackTraceElement[] generatedStack = XtestUtil.generateXtestStackTrace(startTrace,
                 toWrap.getStackTrace(), callStack);
         toWrap.setStackTrace(generatedStack);
-        if (inSafeBlock > 0) {
-            XTestResult peek = testStack.peek();
-            peek.addEvaluationException(toThrow);
-        } else {
-            throw toThrow;
-        }
+        throw toThrow;
     }
 
     private static class ReturnValue extends RuntimeException {

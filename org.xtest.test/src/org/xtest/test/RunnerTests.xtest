@@ -435,32 +435,6 @@ xtest xtestInSuiteInSuite {
     val xTestCaseResult = xTestSuiteResult.getSubTests().get(0);
     assertEquals(XTestState::PASS, xTestCaseResult.getState());
     assertEquals("suite.tcase", xTestCaseResult.getQualifiedName());
-} 
-
-
-xtest testVerifyExpression {
-    val result = XTestRunner::run('
-?assert 1 == 2
-?assert 1+1 throws Exception
-', injector);
-    assertEquals("[]", result.getErrorMessages().toString());
-    assertEquals(XTestState::FAIL, result.getState());
-    assertEquals(0, result.getSubTests().size());
-    assertEquals("", result.getQualifiedName());
-    assertEquals(2, result.evaluationException.size);
-}
-
-
-xtest testSafeExpressionGuardsExceptions {
-    val result = XTestRunner::run('
-?1/0
-?1/0
-', injector);
-    assertEquals("[]", result.getErrorMessages().toString());
-    assertEquals(XTestState::FAIL, result.getState());
-    assertEquals(0, result.getSubTests().size());
-    assertEquals("", result.getQualifiedName());
-    assertEquals(2, result.evaluationException.size);
 }
 
 
@@ -523,22 +497,4 @@ assert true}
     assertEquals("1", result.getSubTests.get(0).getName);
     assertTrue(result.getEvaluationException().isEmpty);
     assertEquals(XTestState::PASS, result.getState());
-}
-
-xtest "return after caught exception doesnt pass" {
-    val result = XTestRunner::run('
-?assert false
-return true
-', injector);
-    assertEquals(XTestState::FAIL, result.getState());
-}
-
-xtest "return after caught exception in subtest doesnt pass" {
-    val result = XTestRunner::run('
-xtest {
-?assert false
-return true
-}', injector);
-    assertEquals(XTestState::FAIL, result.getState());
-    assertEquals(XTestState::FAIL, result.getSubTests.head.getState());
 }

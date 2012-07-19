@@ -41,9 +41,6 @@ XAssertExpression returns XExpression:
 	{XAssertExpression}
 	'assert' actual=XExpression (=>'throws' throws=JvmTypeReference)?
 ;
-XSafeExpression returns XExpression:
-	{XSafeExpression} '?' actual=XExpression
-;
 
 // Methods
 Parameter returns XtendParameter:
@@ -80,7 +77,6 @@ XPrimaryExpression returns XExpression:
 	// Add new expressions
 	XTestExpression |
 	XAssertExpression |
-	XSafeExpression |
 	XMethodDefExpression;
 
 // Add static member setting support to Xbase

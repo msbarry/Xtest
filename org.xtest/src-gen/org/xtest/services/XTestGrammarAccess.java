@@ -373,35 +373,6 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getThrowsJvmTypeReferenceParserRuleCall_3_1_0() { return cThrowsJvmTypeReferenceParserRuleCall_3_1_0; }
 	}
 
-	public class XSafeExpressionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "XSafeExpression");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cXSafeExpressionAction_0 = (Action)cGroup.eContents().get(0);
-		private final Keyword cQuestionMarkKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cActualAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cActualXExpressionParserRuleCall_2_0 = (RuleCall)cActualAssignment_2.eContents().get(0);
-		
-		//XSafeExpression returns XExpression:
-		//
-		//	{XSafeExpression} "?" actual=XExpression;
-		public ParserRule getRule() { return rule; }
-
-		//{XSafeExpression} "?" actual=XExpression
-		public Group getGroup() { return cGroup; }
-
-		//{XSafeExpression}
-		public Action getXSafeExpressionAction_0() { return cXSafeExpressionAction_0; }
-
-		//"?"
-		public Keyword getQuestionMarkKeyword_1() { return cQuestionMarkKeyword_1; }
-
-		//actual=XExpression
-		public Assignment getActualAssignment_2() { return cActualAssignment_2; }
-
-		//XExpression
-		public RuleCall getActualXExpressionParserRuleCall_2_0() { return cActualXExpressionParserRuleCall_2_0; }
-	}
-
 	public class ParameterElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Parameter");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -625,8 +596,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cXParenthesizedExpressionParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
 		private final RuleCall cXTestExpressionParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
 		private final RuleCall cXAssertExpressionParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
-		private final RuleCall cXSafeExpressionParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
-		private final RuleCall cXMethodDefExpressionParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
+		private final RuleCall cXMethodDefExpressionParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
 		
 		//// Hook our newly defined expressions into XBase as new kinds of expressions
 		//
@@ -638,7 +608,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//
 		//	XParenthesizedExpression | // Add new expressions
 		//
-		//	XTestExpression | XAssertExpression | XSafeExpression | XMethodDefExpression;
+		//	XTestExpression | XAssertExpression | XMethodDefExpression;
 		public ParserRule getRule() { return rule; }
 
 		//// Keep old expressions
@@ -649,7 +619,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//
 		//XParenthesizedExpression | // Add new expressions
 		//
-		//XTestExpression | XAssertExpression | XSafeExpression | XMethodDefExpression
+		//XTestExpression | XAssertExpression | XMethodDefExpression
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//// Keep old expressions
@@ -701,11 +671,8 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		//XAssertExpression
 		public RuleCall getXAssertExpressionParserRuleCall_14() { return cXAssertExpressionParserRuleCall_14; }
 
-		//XSafeExpression
-		public RuleCall getXSafeExpressionParserRuleCall_15() { return cXSafeExpressionParserRuleCall_15; }
-
 		//XMethodDefExpression
-		public RuleCall getXMethodDefExpressionParserRuleCall_16() { return cXMethodDefExpressionParserRuleCall_16; }
+		public RuleCall getXMethodDefExpressionParserRuleCall_15() { return cXMethodDefExpressionParserRuleCall_15; }
 	}
 
 	public class StaticEqualsElements extends AbstractParserRuleElementFinder {
@@ -922,7 +889,6 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	private UniqueNameElements pUniqueName;
 	private XTestExpressionElements pXTestExpression;
 	private XAssertExpressionElements pXAssertExpression;
-	private XSafeExpressionElements pXSafeExpression;
 	private ParameterElements pParameter;
 	private XMethodDefElements pXMethodDef;
 	private XMethodDefExpressionElements pXMethodDefExpression;
@@ -1051,17 +1017,6 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 		return getXAssertExpressionAccess().getRule();
 	}
 
-	//XSafeExpression returns XExpression:
-	//
-	//	{XSafeExpression} "?" actual=XExpression;
-	public XSafeExpressionElements getXSafeExpressionAccess() {
-		return (pXSafeExpression != null) ? pXSafeExpression : (pXSafeExpression = new XSafeExpressionElements());
-	}
-	
-	public ParserRule getXSafeExpressionRule() {
-		return getXSafeExpressionAccess().getRule();
-	}
-
 	//// Methods
 	//
 	//Parameter returns XtendParameter:
@@ -1111,7 +1066,7 @@ public class XTestGrammarAccess extends AbstractGrammarElementFinder {
 	//
 	//	XParenthesizedExpression | // Add new expressions
 	//
-	//	XTestExpression | XAssertExpression | XSafeExpression | XMethodDefExpression;
+	//	XTestExpression | XAssertExpression | XMethodDefExpression;
 	public XPrimaryExpressionElements getXPrimaryExpressionAccess() {
 		return (pXPrimaryExpression != null) ? pXPrimaryExpression : (pXPrimaryExpression = new XPrimaryExpressionElements());
 	}

@@ -68,15 +68,6 @@ public interface XTestFactory extends EFactory
 	XAssertExpression createXAssertExpression();
 
 	/**
-	 * Returns a new object of class '<em>XSafe Expression</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>XSafe Expression</em>'.
-	 * @generated
-	 */
-	XSafeExpression createXSafeExpression();
-
-	/**
 	 * Returns a new object of class '<em>XMethod Def</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

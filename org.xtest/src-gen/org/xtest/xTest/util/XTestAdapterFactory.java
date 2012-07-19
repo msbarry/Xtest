@@ -107,11 +107,6 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 				return createXAssertExpressionAdapter();
 			}
 			@Override
-			public Adapter caseXSafeExpression(XSafeExpression object)
-			{
-				return createXSafeExpressionAdapter();
-			}
-			@Override
 			public Adapter caseXMethodDef(XMethodDef object)
 			{
 				return createXMethodDefAdapter();
@@ -239,21 +234,6 @@ public class XTestAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	public Adapter createXAssertExpressionAdapter()
-	{
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.xtest.xTest.XSafeExpression <em>XSafe Expression</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.xtest.xTest.XSafeExpression
-	 * @generated
-	 */
-	public Adapter createXSafeExpressionAdapter()
 	{
 		return null;
 	}

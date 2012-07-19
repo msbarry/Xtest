@@ -604,55 +604,6 @@ ruleXAssertExpression returns [EObject current=null]
 
 
 
-// Entry rule entryRuleXSafeExpression
-entryRuleXSafeExpression returns [EObject current=null] 
-	:
-	{ newCompositeNode(grammarAccess.getXSafeExpressionRule()); }
-	 iv_ruleXSafeExpression=ruleXSafeExpression 
-	 { $current=$iv_ruleXSafeExpression.current; } 
-	 EOF 
-;
-
-// Rule XSafeExpression
-ruleXSafeExpression returns [EObject current=null] 
-    @init { enterRule(); 
-    }
-    @after { leaveRule(); }:
-((
-    {
-        $current = forceCreateModelElement(
-            grammarAccess.getXSafeExpressionAccess().getXSafeExpressionAction_0(),
-            $current);
-    }
-)	otherlv_1='?' 
-    {
-    	newLeafNode(otherlv_1, grammarAccess.getXSafeExpressionAccess().getQuestionMarkKeyword_1());
-    }
-(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getXSafeExpressionAccess().getActualXExpressionParserRuleCall_2_0()); 
-	    }
-		lv_actual_2_0=ruleXExpression		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getXSafeExpressionRule());
-	        }
-       		set(
-       			$current, 
-       			"actual",
-        		lv_actual_2_0, 
-        		"XExpression");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-))
-;
-
-
-
-
-
 // Entry rule entryRuleParameter
 entryRuleParameter returns [EObject current=null] 
 	:
@@ -1173,21 +1124,11 @@ ruleXPrimaryExpression returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXSafeExpressionParserRuleCall_15()); 
+        newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXMethodDefExpressionParserRuleCall_15()); 
     }
-    this_XSafeExpression_15=ruleXSafeExpression
+    this_XMethodDefExpression_15=ruleXMethodDefExpression
     { 
-        $current = $this_XSafeExpression_15.current; 
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getXPrimaryExpressionAccess().getXMethodDefExpressionParserRuleCall_16()); 
-    }
-    this_XMethodDefExpression_16=ruleXMethodDefExpression
-    { 
-        $current = $this_XMethodDefExpression_16.current; 
+        $current = $this_XMethodDefExpression_15.current; 
         afterParserOrEnumRuleCall();
     }
 )

@@ -21,7 +21,6 @@ import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
 import org.xtest.xTest.XMethodDef;
 import org.xtest.xTest.XMethodDefExpression;
-import org.xtest.xTest.XSafeExpression;
 import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestFactory;
 import org.xtest.xTest.XTestPackage;
@@ -68,13 +67,6 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * @generated
 	 */
 	private EClass xAssertExpressionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass xSafeExpressionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -311,26 +303,6 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getXSafeExpression()
-	{
-		return xSafeExpressionEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getXSafeExpression_Actual()
-	{
-		return (EReference)xSafeExpressionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getXMethodDef()
 	{
 		return xMethodDefEClass;
@@ -406,9 +378,6 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__ACTUAL);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__THROWS);
 
-		xSafeExpressionEClass = createEClass(XSAFE_EXPRESSION);
-		createEReference(xSafeExpressionEClass, XSAFE_EXPRESSION__ACTUAL);
-
 		xMethodDefEClass = createEClass(XMETHOD_DEF);
 
 		xMethodDefExpressionEClass = createEClass(XMETHOD_DEF_EXPRESSION);
@@ -452,7 +421,6 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		bodyEClass.getESuperTypes().add(theXbasePackage.getXBlockExpression());
 		xTestExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xAssertExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
-		xSafeExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xMethodDefEClass.getESuperTypes().add(theXtendPackage.getXtendFunction());
 		xMethodDefExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 
@@ -476,9 +444,6 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		initEClass(xAssertExpressionEClass, XAssertExpression.class, "XAssertExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getXAssertExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getXAssertExpression_Throws(), theTypesPackage.getJvmTypeReference(), null, "throws", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(xSafeExpressionEClass, XSafeExpression.class, "XSafeExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getXSafeExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XSafeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(xMethodDefEClass, XMethodDef.class, "XMethodDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

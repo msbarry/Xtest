@@ -69,7 +69,6 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 			case XTestPackage.BODY: return createBody();
 			case XTestPackage.XTEST_EXPRESSION: return createXTestExpression();
 			case XTestPackage.XASSERT_EXPRESSION: return createXAssertExpression();
-			case XTestPackage.XSAFE_EXPRESSION: return createXSafeExpression();
 			case XTestPackage.XMETHOD_DEF: return createXMethodDef();
 			case XTestPackage.XMETHOD_DEF_EXPRESSION: return createXMethodDefExpression();
 			default:
@@ -130,17 +129,6 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	{
 		XAssertExpressionImpl xAssertExpression = new XAssertExpressionImpl();
 		return xAssertExpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public XSafeExpression createXSafeExpression()
-	{
-		XSafeExpressionImpl xSafeExpression = new XSafeExpressionImpl();
-		return xSafeExpression;
 	}
 
 	/**
