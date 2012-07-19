@@ -11,6 +11,7 @@ import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 import org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage;
+import org.eclipse.xtext.ui.refactoring.ui.IRenameElementHandler;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
 import org.eclipse.xtext.xbase.ui.highlighting.XbaseHighlightingCalculator;
 import org.xtest.XTestRunner;
@@ -26,6 +27,7 @@ import org.xtest.ui.highlight.XtestHighlightingCalculator;
 import org.xtest.ui.interpreter.XtestDependencyAcceptingInterpreter;
 import org.xtest.ui.outline.ValidationTriggeredOutlinePage;
 import org.xtest.ui.outline.XtestOutlineRefreshJob;
+import org.xtest.ui.refactoring.XtestRenameElementHandler;
 import org.xtest.ui.resource.XtestDependencyAcceptingResource;
 import org.xtest.ui.runner.UiXTestRunner;
 import org.xtest.ui.templates.XtestTemplateProposalProvider;
@@ -71,6 +73,13 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public EventBus bindEventBusToInstance() {
         return new EventBus("Xtest Event Bus");
+    }
+
+    @Override
+    public Class<? extends IRenameElementHandler> bindIRenameElementHandler() {
+        // Custom implementation that allows refactoring a reference to a Xtest method to also
+        // refactor the declaration
+        return XtestRenameElementHandler.class;
     }
 
     @Override
