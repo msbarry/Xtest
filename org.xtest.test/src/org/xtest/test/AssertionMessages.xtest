@@ -2,13 +2,13 @@ runWhileEditing: false
 runOnSave: false
 import static org.^xtest.test.TestUtils.*
 import static org.junit.Assert.*
-import org.^xtest.XTestRunner
+import org.^xtest.Xtest
 
 // Utility methods
 
 def static assertFailsTo(String input, String... expectedMessage) {
 	assertValidSyntax(input)
-	val result = XTestRunner::run(input, injector)
+	val result = Xtest::run(input, injector)
 	assertEquals("number of exceptions", 1, result.evaluationException.size)
 	val compiledExpected = expectedMessage.fold("", [prev,next|prev+next+"\n"])
 	assertEquals(compiledExpected.trim, result.evaluationException.head.cause.message.trim)

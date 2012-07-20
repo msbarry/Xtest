@@ -74,11 +74,6 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
         return XTestJvmModelInferrer.class;
     }
 
-    @Override
-    public Class<? extends org.eclipse.xtext.resource.IResourceDescription.Manager> bindIResourceDescription$Manager() {
-        return XtestResourceDescriptionManager.class;
-    }
-
     /**
      * Bind the Xtend JVM Model Associator to our custom implementation
      * 

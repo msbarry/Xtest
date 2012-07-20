@@ -1,14 +1,14 @@
 runWhileEditing: false
 runOnSave: false
 
-import org.^xtest.XTestRunner
+import org.^xtest.Xtest
 
 import static org.junit.Assert.*
 import static extension org.^xtest.test.TestUtils.*
 import static org.hamcrest.CoreMatchers.*
  
 xtest "top-level assert" {
-    val result = XTestRunner::run('assert false', injector);
+    val result = Xtest::run('assert false', injector);
     val exception = result.evaluationException.head
     val stackTrace = exception.getCause.getStackTrace
     assertEquals(1, stackTrace.size)
@@ -16,7 +16,7 @@ xtest "top-level assert" {
 }
 
 xtest "top-level exception, second line" {
-    val result = XTestRunner::run('
+    val result = Xtest::run('
 1/0', injector);
     val exception = result.evaluationException.head
     val stackTrace = exception.getCause.getStackTrace
@@ -25,7 +25,7 @@ xtest "top-level exception, second line" {
 }
 
 xtest "assert in inline closure" { 
-    val result = XTestRunner::run('[|assert false].apply', injector);
+    val result = Xtest::run('[|assert false].apply', injector);
     val exception = result.evaluationException.head
     val stackTrace = exception.getCause.getStackTrace
     assertEquals(3, stackTrace.size)
@@ -35,7 +35,7 @@ xtest "assert in inline closure" {
 }
 
 xtest "nested exception in inline closure" { 
-    val result = XTestRunner::run('{{{[|{{1/0}}].apply}}}', injector);
+    val result = Xtest::run('{{{[|{{1/0}}].apply}}}', injector);
     val exception = result.evaluationException.head
     val stackTrace = exception.getCause.getStackTrace
     assertEquals(3, stackTrace.size)
@@ -45,7 +45,7 @@ xtest "nested exception in inline closure" {
 }
 
 xtest "assert with comment before shouldn't include comment" { 
-    val result = XTestRunner::run('// comment
+    val result = Xtest::run('// comment
 assert false', injector);
     val exception = result.evaluationException.head
     val stackTrace = exception.getCause.getStackTrace

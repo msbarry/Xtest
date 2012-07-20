@@ -4,13 +4,13 @@ runWhileEditing: false
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
 runOnSave: false
 import helpers.SUT
-import org.^xtest.XTestRunner
+import org.^xtest.Xtest
 
 import static org.junit.Assert.*
 import static org.^xtest.test.TestUtils.*
 
 xtest testBug1 {
-    val result = XTestRunner::parse('
+    val result = Xtest::parse('
 xsuite test {
 	xtest case {
 		assert 1 == 1 
@@ -21,7 +21,7 @@ xsuite test {
     typeProvider.getCommonReturnType(result, true) 
 } 
 xtest testBug2 {
-    val result = XTestRunner::parse('
+    val result = Xtest::parse('
 val a = new java.util.TreeMap
 xtest test {
 	assert a.descendingMap == a
@@ -30,7 +30,7 @@ xtest test {
 }
 
 xtest bug3 {
-	val result = XTestRunner::parse('	
+	val result = Xtest::parse('	
 import java.util.List
 xtest mockito {
 	val mo   List::class.mock
@@ -163,7 +163,7 @@ a.apply("c")')
 
 
 xtest testBug1 {
-    val result = XTestRunner::parse('
+    val result = Xtest::parse('
 assert 1 == 1', injector)
     assertEquals("Boolean", typeProvider.getCommonReturnType(result, true).simpleName) 
 } 
