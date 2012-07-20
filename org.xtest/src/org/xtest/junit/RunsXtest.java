@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation to tell {@link XtestJunitRunner} what file to find the appropriate xtest file to run
- * in
  * 
  * @author Michael Barry
  */
@@ -16,6 +15,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface RunsXtest {
+
     /**
      * Returns the name of the file to run
      * 

@@ -5,10 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -56,8 +60,7 @@ public class XtestJunitRunner extends Runner {
      *            The Xtest-invoking test class
      */
     public XtestJunitRunner(Class<?> clazz) {
-        RunsXtest annotation = clazz.getAnnotation(RunsXtest.class);
-        this.file = annotation.value();
+        file = getXtestFile(clazz);
         this.clazz = clazz;
     }
 
@@ -112,6 +115,21 @@ public class XtestJunitRunner extends Runner {
         return result;
     }
 
+    private Set<Class<?>> getRunnerDependencies(Class<?> xtestRunner) {
+        DependsOnXtest annotation = xtestRunner.getAnnotation(DependsOnXtest.class);
+        Set<Class<?>> classes = Sets.newHashSet();
+        if (annotation != null) {
+            Class<?>[] value = annotation.value();
+            classes = Sets.newHashSet(value);
+        }
+        return classes;
+    }
+
+    private String getXtestFile(Class<?> clazz) {
+        RunsXtest annotation = clazz.getAnnotation(RunsXtest.class);
+        return annotation == null ? null : annotation.value();
+    }
+
     private void mark(XTestResult run2, Description top) {
         List<XTestResult> subTests = run2.getSubTests();
         for (XTestResult result : subTests) {
@@ -134,21 +152,55 @@ public class XtestJunitRunner extends Runner {
         }
     }
 
-    private XTestResult runTest() throws FileNotFoundException, IOException {
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        String line;
-        StringBuilder builder = new StringBuilder();
-        while ((line = in.readLine()) != null) {
-            if (builder.length() > 0) {
-                builder.append('\n');
+    private void parseDependencies(Class<?> xtestRunner, ResourceSet set, Set<Class<?>> visited)
+            throws FileNotFoundException, IOException {
+        if (!visited.contains(xtestRunner)) {
+            Set<Class<?>> classes = getRunnerDependencies(xtestRunner);
+            for (Class<?> dependency : classes) {
+                String file = getXtestFile(dependency);
+                if (file != null) {
+                    String fileDependedOn = readFile(file);
+                    try {
+                        XTestRunner.parse(fileDependedOn, URI.createURI(file), set, injector);
+                    } catch (Exception e) {
+                    }
+                }
+                parseDependencies(dependency, set, visited);
             }
-            builder.append(line);
+            visited.add(xtestRunner);
         }
-        in.close();
+    }
+
+    private String readFile(String file) throws FileNotFoundException, IOException {
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        StringBuilder builder = new StringBuilder();
+        try {
+            String line;
+            while ((line = in.readLine()) != null) {
+                if (builder.length() > 0) {
+                    builder.append('\n');
+                }
+                builder.append(line);
+            }
+        } finally {
+            in.close();
+        }
+        return builder.toString();
+    }
+
+    private XTestResult runTest() throws FileNotFoundException, IOException {
+        String fileBeingRun = readFile(file);
+
+        ResourceSet set = injector.getInstance(XtextResourceSet.class);
+        Class<?> claz = clazz;
+
+        HashSet<Class<?>> visited = Sets.newHashSet();
+
+        parseDependencies(claz, set, visited);
 
         // profiling stats
         long start = System.nanoTime();
-        XTestResult run = XTestRunner.run(builder.toString(), injector);
+        XTestResult run = XTestRunner.run(fileBeingRun, URI.createURI(file), set, injector);
         long end = System.nanoTime();
         double d = (end - start) / (double) TimeUnit.NANOSECONDS.convert(1, TimeUnit.SECONDS);
         cumulative += d;
