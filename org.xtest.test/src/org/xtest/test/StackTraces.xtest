@@ -29,9 +29,9 @@ xtest "assert in inline closure" {
     val exception = result.evaluationException.head
     val stackTrace = exception.getCause.getStackTrace
     assertEquals(3, stackTrace.size)
-    ?stackTrace.get(0).assertXtestStackTrace("assert false", 1)
-    ?stackTrace.get(1).assertProxyStackTrace
-    ?stackTrace.get(2).assertXtestStackTrace("[|assert false].apply", 1)
+    xtest {stackTrace.get(0).assertXtestStackTrace("assert false", 1)}
+    xtest {stackTrace.get(1).assertProxyStackTrace}
+    xtest {stackTrace.get(2).assertXtestStackTrace("[|assert false].apply", 1)}
 }
 
 xtest "nested exception in inline closure" { 
@@ -39,9 +39,9 @@ xtest "nested exception in inline closure" {
     val exception = result.evaluationException.head
     val stackTrace = exception.getCause.getStackTrace
     assertEquals(3, stackTrace.size)
-    ?stackTrace.get(0).assertXtestStackTrace("1/0", 1)
-    ?stackTrace.get(1).assertProxyStackTrace
-    ?stackTrace.get(2).assertXtestStackTrace("[|{{1/0}}].apply", 1)
+    xtest {stackTrace.get(0).assertXtestStackTrace("1/0", 1)}
+    xtest {stackTrace.get(1).assertProxyStackTrace}
+    xtest {stackTrace.get(2).assertXtestStackTrace("[|{{1/0}}].apply", 1)}
 }
 
 xtest "assert with comment before shouldn't include comment" { 
@@ -50,5 +50,5 @@ assert false', injector);
     val exception = result.evaluationException.head
     val stackTrace = exception.getCause.getStackTrace
     assertEquals(1, stackTrace.size)
-    ?stackTrace.get(0).assertXtestStackTrace("assert false", 2)
+    stackTrace.get(0).assertXtestStackTrace("assert false", 2)
 }
