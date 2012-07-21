@@ -3,12 +3,11 @@ package org.xtest.runner;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.SubMonitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.DependencyAcceptor;
 import org.xtest.runner.external.ITestRunner;
 import org.xtest.runner.external.ITestType;
@@ -35,7 +34,7 @@ import com.google.common.hash.Funnels;
 public class RunnableTest implements Comparable<RunnableTest> {
     private static final QualifiedName affectedByKey = new QualifiedName("org.xtest", "xaffectedBy");
     private static final QualifiedName durationKey = new QualifiedName("org.xtest", "xduration");
-    private static final Logger logger = LoggerFactory.getLogger(RunnableTest.class);
+    private static final Logger logger = Logger.getLogger(RunnableTest.class);
     private static final QualifiedName numAffectedByKey = new QualifiedName("org.xtest",
             "xnumAffectedBy");
     private static final QualifiedName pendingKey = new QualifiedName("org.xtest", "pending");
@@ -152,19 +151,19 @@ public class RunnableTest implements Comparable<RunnableTest> {
     public TestResult invoke(SubMonitor convert, Cache<ITestType, ITestRunner> runnerCache) {
         TestResult result = TestResult.notRun();
         if (fFile.exists()) {
-            logger.debug("Start  {}", getName());
+            logger.debug("Start  " + getName());
             long start = System.nanoTime();
             Acceptor acceptor = new Acceptor(dependencies, numDependencies);
             ITestRunner testRunner = runnerCache.getUnchecked(fTestType);
             result = testRunner.run(fFile, convert, acceptor);
             long end = System.nanoTime();
-            logger.debug(
-                    "Finish {} {} dependencies {} ms",
-                    new Object[] { getName(), acceptor.dependencies,
-                            TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) });
+            if (logger.isDebugEnabled()) {
+                logger.debug("Finish " + getName() + " " + acceptor.dependencies + " dependencies "
+                        + TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) + " ms");
+            }
             storeResultsPersistently(result, acceptor, end - start);
         } else {
-            logger.info("Tried to run {} but it didn't exist", getName());
+            logger.info("Tried to run " + getName() + " but it didn't exist");
         }
         return result;
     }

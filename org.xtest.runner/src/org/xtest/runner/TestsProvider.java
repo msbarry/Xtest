@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xtest.runner.external.ITestType;
 import org.xtest.runner.external.TestState;
 
@@ -28,7 +27,7 @@ import com.google.inject.Inject;
 public class TestsProvider {
     @Inject
     private Extensions extensions;
-    private final Logger logger = LoggerFactory.getLogger(TestsProvider.class);
+    private final Logger logger = Logger.getLogger(TestsProvider.class);
 
     private final AtomicInteger numTotalTests = new AtomicInteger(-1);
 
@@ -91,18 +90,18 @@ public class TestsProvider {
             if (!test.hasRun()) {
                 // Always re-run failing or unexecuted tests
                 result.add(test);
-                logger.debug("Scheduling {} because it has not run before", test.getName());
+                logger.debug("Scheduling " + test.getName() + " because it has not run before");
             } else if (test.isPending()) {
                 result.add(test);
-                logger.debug("Scheduling {} because it was pending", test.getName());
+                logger.debug("Scheduling " + test.getName() + " because it was pending");
             } else if (TestState.FAIL == test.getState().getState()) {
                 result.add(test);
-                logger.debug("Scheduling {} because it is failing", test.getName());
+                logger.debug("Scheduling " + test.getName() + " because it is failing");
             } else {
                 for (IFile delta : deltas) {
                     if (test.isAffectedBy(delta)) {
-                        logger.debug("Scheduling {} because dependency changed: {}",
-                                test.getName(), delta.getName());
+                        logger.debug("Scheduling " + test.getName()
+                                + " because dependency changed: " + delta.getName());
                         result.add(test);
                         break;
                     }

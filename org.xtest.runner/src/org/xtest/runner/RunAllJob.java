@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -12,8 +13,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xtest.runner.events.Events;
 import org.xtest.runner.external.ITestRunner;
 import org.xtest.runner.external.ITestType;
@@ -33,7 +32,7 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class RunAllJob extends Job {
-    private static final Logger logger = LoggerFactory.getLogger(RunAllJob.class);
+    private static final Logger logger = Logger.getLogger(RunAllJob.class);
     @Inject
     private Events events;
     private final PriorityBlockingQueue<RunnableTest> files;
@@ -96,7 +95,7 @@ public class RunAllJob extends Job {
         int size = files.size();
         SubMonitor convert = SubMonitor.convert(monitor, "Running Tests", size);
         events.startTests(Lists.newArrayList(files));
-        logger.info("==========> Starting {} tests", size);
+        logger.info("==========> Starting " + size + " tests");
         Cache<ITestType, ITestRunner> runnerCache = CacheBuilder.newBuilder().build(
                 new CacheLoader<ITestType, ITestRunner>() {
                     @Override
@@ -116,14 +115,20 @@ public class RunAllJob extends Job {
         }
 
         if (monitor.isCanceled()) {
-            logger.info("!!!!!!!!!!! Canceled with {} tests left took {} ms", files.size(),
-                    TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
+            logger.info("!!!!!!!!!!! Canceled with "
+                    + files.size()
+                    + " tests left took "
+                    + TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS)
+                    + " ms");
 
             // Post a "canceled" event where the number of events scheduled is the size of the queue
             events.cancelAndSchedule(Lists.newArrayList(files));
         } else {
-            logger.info("==========> Finished {} tests took {} ms", size,
-                    TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS));
+            logger.info("==========> Finished "
+                    + size
+                    + " tests took "
+                    + TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS)
+                    + " ms");
 
             // Only post finished event if not canceled
             events.finishTests();
