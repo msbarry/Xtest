@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.eclipse.equinox.security.storage.EncodingUtils;
+import org.apache.commons.codec.binary.Base64;
 
 import com.google.common.base.Optional;
 
@@ -30,7 +30,7 @@ public class SerializationUtils {
     public static <T extends Serializable> Optional<T> fromString(Optional<String> string) {
         T result = null;
         if (string.isPresent()) {
-            byte[] bytes = EncodingUtils.decodeBase64(string.get());
+            byte[] bytes = Base64.decodeBase64(string.get().getBytes());
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
             try {
                 ObjectInputStream objectStream = new ObjectInputStream(inputStream);
@@ -64,7 +64,7 @@ public class SerializationUtils {
                 try {
                     objectStream.writeObject(object);
                     byte[] byteArray = outputStream.toByteArray();
-                    result = EncodingUtils.encodeBase64(byteArray);
+                    result = new String(Base64.encodeBase64(byteArray));
                 } finally {
                     objectStream.close();
                 }
