@@ -1,10 +1,11 @@
 package org.xtest.ui.editor;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
-import org.eclipse.xtext.ui.editor.validation.AnnotationIssueProcessor;
 import org.eclipse.xtext.ui.editor.validation.ValidationJob;
 import org.eclipse.xtext.validation.CheckMode;
 import org.xtest.preferences.PerFilePreferenceProvider;
@@ -29,10 +30,24 @@ public class XtestDocumentProvider extends XtextDocumentProvider {
         final ElementInfo info = super.createElementInfo(element);
         XtextDocument doc = (XtextDocument) info.fDocument;
         if (info.fModel != null) {
-            AnnotationIssueProcessor annotationIssueProcessor = new XtestAnnotationProcessor(doc,
-                    info.fModel, issueResolutionProvider, prefProvider);
+            final XtestAnnotationProcessor annotationIssueProcessor = new XtestAnnotationProcessor(
+                    doc, info.fModel, issueResolutionProvider, prefProvider);
+
+            // Custom validation job to notify the annotation issue processor when an annotation
+            // change comes from a reconcile
             ValidationJob job = new ValidationJob(resourceValidator, doc, annotationIssueProcessor,
-                    CheckMode.FAST_ONLY);
+                    CheckMode.FAST_ONLY) {
+                @Override
+                protected IStatus run(IProgressMonitor monitor) {
+                    annotationIssueProcessor.fromValidate(true);
+                    try {
+                        IStatus run = super.run(monitor);
+                        return run;
+                    } finally {
+                        annotationIssueProcessor.fromValidate(false);
+                    }
+                }
+            };
             doc.setValidationJob(job);
         }
         return info;

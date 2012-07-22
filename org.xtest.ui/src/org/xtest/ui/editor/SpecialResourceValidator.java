@@ -36,6 +36,11 @@ public class SpecialResourceValidator extends ResourceValidatorImpl {
                     public boolean shouldCheck(CheckType type) {
                         return type == CheckType.EXPENSIVE || mode.shouldCheck(type);
                     }
+
+                    @Override
+                    public String toString() {
+                        return mode.toString();
+                    }
                 };
             }
         }

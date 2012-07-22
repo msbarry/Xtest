@@ -29,6 +29,8 @@ public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
 
     private final IAnnotationModel fAnnotaionModel;
     private final PerFilePreferenceProvider fPreferences;
+    private boolean fromValidate;
+
     private final IXtextDocument fXtextDocument;
 
     public XtestAnnotationProcessor(IXtextDocument xtextDocument, IAnnotationModel annotationModel,
@@ -37,6 +39,17 @@ public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
         fAnnotaionModel = annotationModel;
         fXtextDocument = xtextDocument;
         fPreferences = preferences;
+        fromValidate = false;
+    }
+
+    /**
+     * Notification that this is inside a reconcile event
+     * 
+     * @param value
+     *            True if inside a reconcile event, false otherwise
+     */
+    public void fromValidate(boolean value) {
+        fromValidate = value;
     }
 
     @Override
@@ -71,20 +84,22 @@ public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
     }
 
     private boolean applies(IMarker marker) throws CoreException {
-        Boolean expensive = fXtextDocument.readOnly(new IUnitOfWork<Boolean, XtextResource>() {
-            @Override
-            public Boolean exec(XtextResource resource) throws Exception {
-                Boolean result = false;
-                if (resource != null && resource.getContents().size() > 0
-                        && resource.getContents().get(0) instanceof Body) {
-                    Body body = (Body) resource.getContents().get(0);
-                    result = fPreferences.get(body, RuntimePref.RUN_WHILE_EDITING);
-                }
-                return result;
-            }
-        });
-        return expensive && marker.isSubtypeOf(MarkerTypes.EXPENSIVE_VALIDATION)
+        // Only remove expensive annotations if this is from a reconcile event and run while editing
+        // is enabled
+        Boolean removeExpensive = fromValidate
+                && fXtextDocument.readOnly(new IUnitOfWork<Boolean, XtextResource>() {
+                    @Override
+                    public Boolean exec(XtextResource resource) throws Exception {
+                        Boolean result = false;
+                        if (resource != null && resource.getContents().size() > 0
+                                && resource.getContents().get(0) instanceof Body) {
+                            Body body = (Body) resource.getContents().get(0);
+                            result = fPreferences.get(body, RuntimePref.RUN_WHILE_EDITING);
+                        }
+                        return result;
+                    }
+                });
+        return removeExpensive && marker.isSubtypeOf(MarkerTypes.EXPENSIVE_VALIDATION)
                 || marker.isSubtypeOf(MarkerTypes.FAST_VALIDATION);
     }
-
 }
