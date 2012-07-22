@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 import com.google.inject.Inject;
@@ -59,6 +60,12 @@ public class StatusBar extends WorkbenchWindowControlContribution implements
     protected Control createControl(Composite parent) {
         // create components and apply layout
         composite = parent;
+        for (composite = parent; composite != null && !(composite instanceof ToolBar); composite = composite
+                .getParent()) {
+        }
+        if (composite == null) {
+            return parent;
+        }
         composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
         composite.addListener(SWT.Resize, new Listener() {
             @Override
