@@ -139,15 +139,17 @@ public class AssertionMessageBuilder {
         String text = getTrimmedText(actual);
         builder.append("   \"");
         builder.append(text);
-        builder.append("\" was ");
+        builder.append("\" was: ");
         if (!skipped) {
-            builder.append("<");
             if (object != null) {
+                builder.append(toString(object));
+                builder.append(" (");
                 builder.append(object.getClass().getSimpleName());
-                builder.append(": ");
+                builder.append(")");
+            } else {
+                builder.append("null");
             }
-            builder.append(toString(object));
-            builder.append(">\n");
+            builder.append('\n');
         } else {
             builder.append("skipped\n");
         }

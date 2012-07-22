@@ -1,5 +1,5 @@
 runWhileEditing: false
-runOnSave: false
+runOnSave: true
 import static org.^xtest.test.TestUtils.*
 import static org.junit.Assert.*
 import org.^xtest.Xtest
@@ -15,10 +15,10 @@ def static assertFailsTo(String input, String... expectedMessage) {
 }
 def static preamble {"Assertion failed"}
 def static value(String expr, Object actual) {
-	if (actual==null) "   \""+expr+"\" was <null>"
-	else "   \""+expr+"\" was <"+actual.getClass.simpleName+": "+actual+">"
+	if (actual==null) "   \""+expr+"\" was: null"
+	else "   \""+expr+"\" was: "+actual+" ("+actual.getClass.simpleName+")"
 }
-def static skipped(String expr) {"   \""+expr+"\" was skipped"}
+def static skipped(String expr) {"   \""+expr+"\" was: skipped"}
 def static messageForNoException(Class<? extends Exception> e) {
 	"Expected <"+e.getName+"> but no exception was thrown"
 }
