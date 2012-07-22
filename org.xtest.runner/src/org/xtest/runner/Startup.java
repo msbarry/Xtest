@@ -14,8 +14,12 @@ public class Startup implements IStartup {
 
     @Override
     public void earlyStartup() {
-        PropertyConfigurator.configure(Activator.getDefault().getBundle()
-                .getEntry("log4j.properties"));
+        try {
+            PropertyConfigurator.configure(Activator.getDefault().getBundle()
+                    .getEntry("log4j.properties"));
+        } catch (NoClassDefFoundError e) {
+            logger.error("Unable to configure logging");
+        }
 
         logger.info("Initializing Xtest runner service.");
         Activator.getDefault().boot();

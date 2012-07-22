@@ -20,7 +20,8 @@ Require-Bundle: org.xtest;visibility:=reexport,
  org.xtest.lib;bundle-version="0.2.0",
  org.eclipse.xtend.ide;bundle-version="[2.3.0,2.4.0)",
  org.xtest.runner;bundle-version="0.2.0"
-Import-Package: org.apache.log4j
+Import-Package: org.apache.commons.logging,
+ org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.xtest.ui.contentassist,
  org.xtest.ui.contentassist.antlr,
