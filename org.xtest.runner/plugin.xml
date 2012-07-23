@@ -60,4 +60,14 @@
             name="Failed tests">
       </command>
    </extension>
+   <extension
+            point="org.eclipse.ui.preferencePages">
+        <page
+              category="org.xtest.XTest"
+              class="org.xtest.runner.XtestRunnerExecutableExtensionFactory:org.xtest.runner.preferences.RunnerPreferencePage"
+              id="org.xtest.XTest.runner"
+              name="Runner">
+           <keywordReference id="org.xtest.ui.keyword_XTest"/>
+        </page>
+    </extension>
 </plugin>

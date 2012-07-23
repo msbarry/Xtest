@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
+import org.xtest.runner.Activator;
 
 import com.google.inject.Inject;
 
@@ -28,6 +29,7 @@ public class StatusBar extends WorkbenchWindowControlContribution implements
         IStatusBarRepaintListener {
     private Composite composite;
     private final StatusBarController controller;
+    private final boolean enabled;
     private final RGB green = new RGB(0x51, 0xa3, 0x51);
     private Label label;
     private Image progressBackground;
@@ -37,6 +39,8 @@ public class StatusBar extends WorkbenchWindowControlContribution implements
     private StatusBar(StatusBarController controller) {
         this.controller = controller;
         controller.addListener(this);
+        enabled = Activator.getDefault().getPreferenceStore()
+                .getBoolean(Activator.SHOW_XTEST_RUNNER);
     }
 
     @Override
@@ -66,21 +70,35 @@ public class StatusBar extends WorkbenchWindowControlContribution implements
         if (composite == null) {
             return parent;
         }
-        composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
-        composite.addListener(SWT.Resize, new Listener() {
-            @Override
-            public void handleEvent(Event e) {
-                paint();
-            }
-        });
+        if (enabled) {
+            composite.setBackgroundMode(SWT.INHERIT_DEFAULT);
+            composite.addListener(SWT.Resize, new Listener() {
+                @Override
+                public void handleEvent(Event e) {
+                    paint();
+                }
+            });
 
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.fillDefaults().numColumns(1).margins(3, 3).applyTo(composite);
-        label = new Label(composite, SWT.BOLD);
-        label.setText("9999/9999");
-        GridDataFactory.fillDefaults().applyTo(label);
-        schedulePaint();
-        return composite;
+            Composite composite = new Composite(parent, SWT.NONE);
+            GridLayoutFactory.fillDefaults().numColumns(1).margins(3, 3).applyTo(composite);
+            label = new Label(composite, SWT.BOLD);
+            label.setText("9999/9999");
+            GridDataFactory.fillDefaults().applyTo(label);
+            schedulePaint();
+            return composite;
+        } else {
+            // TODO Would be better to handle this through a visibleWhen clause in the extension,
+            // but that appears to not have any effect
+            // (https://bugs.eclipse.org/bugs/show_bug.cgi?id=201589)
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    composite.dispose();
+                    dispose();
+                }
+            });
+            return new Label(parent, SWT.NONE);
+        }
     }
 
     private void paint() {
