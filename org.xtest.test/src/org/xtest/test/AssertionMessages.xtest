@@ -15,10 +15,10 @@ def static assertFailsTo(String input, String... expectedMessage) {
 }
 def static preamble {"Assertion failed"}
 def static value(String expr, Object actual) {
-	if (actual==null) "   \""+expr+"\" was: null"
-	else "   \""+expr+"\" was: "+actual+" ("+actual.getClass.simpleName+")"
+	if (actual==null) "   \""+expr+"\" was <null>"
+	else "   \""+expr+"\" was "+actual.getClass.simpleName+" <"+actual+">"
 }
-def static skipped(String expr) {"   \""+expr+"\" was: skipped"}
+def static skipped(String expr) {"   \""+expr+"\" was skipped"}
 def static messageForNoException(Class<? extends Exception> e) {
 	"Expected <"+e.getName+"> but no exception was thrown"
 }
@@ -144,9 +144,9 @@ xtest "handles string" {
 		'val Object a = "s"; assert switch (a) {String: a == "z"\nInteger: a == 1}',
 		preamble,
 		value('switch (a) {String: a == "z" Integer: a == 1}', false),
-		value('a', '"s"'),
+		value('a', 's'),
 		value('a == "z"', false),
-		value('a', '"s"')
+		value('a', 's')
 	)
 }
 
