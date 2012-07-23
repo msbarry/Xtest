@@ -12,7 +12,10 @@ import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
 import org.eclipse.xtext.ui.editor.validation.AnnotationIssueProcessor;
+import org.eclipse.xtext.ui.editor.validation.XtextAnnotation;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.Issue;
 import org.xtest.preferences.PerFilePreferenceProvider;
 import org.xtest.preferences.RuntimePref;
 import org.xtest.xTest.Body;
@@ -27,7 +30,7 @@ import com.google.common.collect.Iterators;
  */
 public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
 
-    private final IAnnotationModel fAnnotaionModel;
+    private final IAnnotationModel fAnnotationModel;
     private final PerFilePreferenceProvider fPreferences;
     private boolean fromValidate;
 
@@ -36,7 +39,7 @@ public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
     public XtestAnnotationProcessor(IXtextDocument xtextDocument, IAnnotationModel annotationModel,
             IssueResolutionProvider issueResolutionProvider, PerFilePreferenceProvider preferences) {
         super(xtextDocument, annotationModel, issueResolutionProvider);
-        fAnnotaionModel = annotationModel;
+        fAnnotationModel = annotationModel;
         fXtextDocument = xtextDocument;
         fPreferences = preferences;
         fromValidate = false;
@@ -58,36 +61,57 @@ public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
             return;
         }
 
-        Iterator<MarkerAnnotation> annotationIterator = Iterators.filter(
-                fAnnotaionModel.getAnnotationIterator(), MarkerAnnotation.class);
+        removeExpensiveXtextAnnotations(monitor);
+        removeExpensiveAndFastMarkerAnnotations(monitor);
+        fireQueuedEvents();
+    }
 
+    private boolean fastOrRemovableExpensive(IMarker marker) throws CoreException {
+        boolean expensive = marker.isSubtypeOf(MarkerTypes.EXPENSIVE_VALIDATION);
+        boolean fast = marker.isSubtypeOf(MarkerTypes.FAST_VALIDATION);
+        // Only remove expensive annotations if this is from a reconcile event and run while editing
+        // is enabled
+        return fast || expensive && fromValidate && shouldRemoveExpensive();
+    }
+
+    private void removeExpensiveAndFastMarkerAnnotations(IProgressMonitor monitor) {
         // every markerAnnotation produced by fast validation can be marked as deleted.
         // If its predicate still holds, the validation annotation will be covered anyway.
+        Iterator<MarkerAnnotation> annotationIterator = Iterators.filter(
+                fAnnotationModel.getAnnotationIterator(), MarkerAnnotation.class);
         while (annotationIterator.hasNext() && !monitor.isCanceled()) {
             final MarkerAnnotation annotation = annotationIterator.next();
             if (!annotation.isMarkedDeleted()) {
                 try {
-                    if (isRelevantAnnotationType(annotation.getType())) {
-                        IMarker marker = annotation.getMarker();
-                        boolean markAsDeleted = applies(marker);
-                        if (markAsDeleted) {
-                            annotation.markDeleted(true);
-                            queueOrFireAnnotationChangedEvent(annotation);
-                        }
+                    IMarker marker = annotation.getMarker();
+                    if (isRelevantAnnotationType(annotation.getType())
+                            && fastOrRemovableExpensive(marker)) {
+                        annotation.markDeleted(true);
+                        queueOrFireAnnotationChangedEvent(annotation);
                     }
                 } catch (CoreException e) {
                     // marker type cannot be resolved - keep state of annotation
                 }
             }
         }
-        fireQueuedEvents();
     }
 
-    private boolean applies(IMarker marker) throws CoreException {
-        // Only remove expensive annotations if this is from a reconcile event and run while editing
-        // is enabled
-        Boolean removeExpensive = fromValidate
-                && fXtextDocument.readOnly(new IUnitOfWork<Boolean, XtextResource>() {
+    private void removeExpensiveXtextAnnotations(IProgressMonitor monitor) {
+        Iterator<XtextAnnotation> xtext = Iterators.filter(
+                fAnnotationModel.getAnnotationIterator(), XtextAnnotation.class);
+        while (xtext.hasNext() && !monitor.isCanceled()) {
+            final XtextAnnotation annotation = xtext.next();
+            Issue issue = annotation.getIssue();
+            if (!annotation.isMarkedDeleted() && isRelevantAnnotationType(annotation.getType())
+                    && issue.getType() == CheckType.EXPENSIVE && shouldRemoveExpensive()) {
+                fAnnotationModel.removeAnnotation(annotation);
+            }
+        }
+    }
+
+    private Boolean shouldRemoveExpensive() {
+        Boolean removeExpensive = fXtextDocument
+                .readOnly(new IUnitOfWork<Boolean, XtextResource>() {
                     @Override
                     public Boolean exec(XtextResource resource) throws Exception {
                         Boolean result = false;
@@ -99,7 +123,6 @@ public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
                         return result;
                     }
                 });
-        return removeExpensive && marker.isSubtypeOf(MarkerTypes.EXPENSIVE_VALIDATION)
-                || marker.isSubtypeOf(MarkerTypes.FAST_VALIDATION);
+        return removeExpensive;
     }
 }
