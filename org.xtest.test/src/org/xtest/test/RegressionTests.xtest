@@ -1,93 +1,96 @@
+/*
+ * Miscellaneous bugs found to prevent them from recurring
+ */
+
 /* File-specific parameters */
 runWhileEditing: false
 // TODO - when Guice fixes memory leak, re-enable running on save
 // (http://code.google.com/p/google-guice/issues/detail?id=288)
 runOnSave: false
+
 import helpers.SUT
-import org.^xtest.Xtest
 
 import static org.junit.Assert.*
 import static org.^xtest.test.TestUtils.*
+import org.eclipse.emf.common.notify.Notifier
 
 xtest testBug1 {
-    val result = Xtest::parse('
+    val result = parse('
 xsuite test {
 	xtest case {
 		assert 1 == 1 
 		assert 2 ==
 		assert 3 == 3
 	}
-}', injector)
+}')
     typeProvider.getCommonReturnType(result, true) 
 } 
+
 xtest testBug2 {
-    val result = Xtest::parse('
+    val result = parse('
 val a = new java.util.TreeMap
 xtest test {
 	assert a.descendingMap == a
-}', injector)
+}')
     typeProvider.getCommonReturnType(result, true)
 }
 
 xtest bug3 {
-	val result = Xtest::parse('	
+	val result = parse('	
 import java.util.List
 xtest mockito {
 	val mo   List::class.mock
-}', injector)
+}')
     runValidation(result)
 }
 
 xtest testCodeNotRun {
-    val parse = parse('
+    val warnings = getWarningsRunTests('
 val a = 1
 if (a == 1) true else false
 ')
-    val warningsRunTests = getWarningsRunTests(parse)
-    assertEquals(1, warningsRunTests.size())
+    assert warnings.size == 1
 }
  
 xtest testFirstImport {
-    val parse = parse('
+    assertValidSyntax('
 import java.util.ArrayList
 import java.util.LinkedHashMap
 val a = new ArrayList<String>')
-    assertValidationPassed(parse)
 }
 
 xtest testCodeNotRunOnly1Warning {
-    val parse = parse('
+    val warnings = getWarningsRunTests('
 val a = 1
 if (a == 1) true else {if (a != 1) true else false}')
-    val warningsRunTests = getWarningsRunTests(parse)
-    assertEquals(1, warningsRunTests.size())
+    assert warnings.size == 1
 }
 
 xtest testCodeNotRunParamFalse {
-    val parse = parse('
+    val warnings = getWarningsRunTests('
 markUnexecuted: false
 val a = 1
 if (a == 1) true else {if (a != 1) true else false}')
-    val warningsRunTests = getWarningsRunTests(parse)
-    assertEquals(0, warningsRunTests.size())
+	assert warnings.size == 0
 }
 
 xtest testCodeNotRunParamTrue {
-    val parse = parse('
+    val warningsRunTests = getWarningsRunTests('
 markUnexecuted: true
 val a = 1
 if (a == 1) true else {if (a != 1) true else false}')
-    val warningsRunTests = getWarningsRunTests(parse)
-    assertEquals(1, warningsRunTests.size())
+    assert warningsRunTests.size == 1
 }
 
+def getParameterizedType(Class<?> clazz, Notifier context, Class<?> arg1) {
+	typeRefs.getTypeForName(clazz, context, typeRefs.getTypeForName(arg1, context))
+}
  
 xtest testGetClass {
     val parse = parse('System::class')
     assertValidationPassed(parse)
     assertEvaluatesTo(System::class, parse)
-    val typeForName = typeRefs.getTypeForName(Class::class, parse,
-            typeRefs.getTypeForName(System::class, parse))
+    val typeForName = getParameterizedType(Class::class, parse, System::class)
     assertReturnType(typeForName, parse)
 }
 
@@ -96,8 +99,7 @@ xtest testGetClassImported {
     val parse = parse('import helpers.SUT; SUT::class')
     assertValidationPassed(parse)
     assertEvaluatesTo(SUT::class, parse)
-    val typeForName = typeRefs.getTypeForName(Class::class, parse,
-            typeRefs.getTypeForName(SUT::class, parse))
+    val typeForName = getParameterizedType(Class::class, parse, SUT::class)
     assertReturnType(typeForName, parse)
 }
 
@@ -106,71 +108,58 @@ xtest testGetClassNotImported {
     val parse = parse('helpers::SUT::class')
     assertValidationPassed(parse)
     assertEvaluatesTo(SUT::class, parse)
-    val typeForName = typeRefs.getTypeForName(Class::class, parse,
-            typeRefs.getTypeForName(SUT::class, parse))
+    val typeForName = getParameterizedType(Class::class, parse, SUT::class)
     assertReturnType(typeForName, parse)
 }
 
 
 xtest testGetPrivateSubMember {
-    val parse = parse('
+    assertIsValidAndEvaluatesTo(1, '
 import helpers.SubPrivateMembers
 val a = new SubPrivateMembers()
 a.i')
-    assertValidationPassed(parse)
-    assertEvaluatesTo(1, parse)
 }
 
 
 xtest testGetPrivateSubMethod {
-    val parse = parse('
+    assertIsValidAndEvaluatesTo(2, '
 import helpers.SubPrivateMembers
 val a = new SubPrivateMembers()
 a.setC(2)
 a.i')
-    assertValidationPassed(parse)
-    assertEvaluatesTo(2, parse)
 }
 
 
 xtest testGetPrivateSuperMember {
-    val parse = parse('
+    assertIsValidAndEvaluatesTo(0, '
 import helpers.*
 val a = new SubPrivateMembers()
 (a as PrivateMembers).i')
-    assertValidationPassed(parse)
-    assertEvaluatesTo(0, parse)
 }
 
 
 xtest testGetPrivateSuperMethod {
-    val parse = parse('
+    assertIsValidAndEvaluatesTo(1, '
 import helpers.*
 val a = new SubPrivateMembers()
 (a as PrivateMembers).setC(2)
 a.getC()')
-    assertValidationPassed(parse)
-    assertEvaluatesTo(1, parse)
 }
 
 
 xtest exceptionInClosure {
-    val parse = parse('
+    assertValidSyntax('
 val a = [String s|throw new Exception]
 a.apply("c")')
-    assertValidationPassed(parse)
 }
 
 
 xtest testBug1 {
-    val result = Xtest::parse('
-assert 1 == 1', injector)
-    assertEquals("Boolean", typeProvider.getCommonReturnType(result, true).simpleName) 
+	assertIsValidAndTypeConformsTo("assert 1 == 1", Boolean::class)
 } 
 
 xtest safeTypeComputation {
-	val parse = parse('val a = ?assert 1 == \n?assert 1 == 2')
-	runValidation(parse)
+	runValidation(parse('val a = ?assert 1 == \n?assert 1 == 2'))
 }
 
 xtest "exception was thrown" {
@@ -189,6 +178,7 @@ get(1)'
     runValidation(body)
     typeProvider.getCommonReturnType(body, true)
 }
+
 xtest "bug" {
 	assertTestPasses("assert 1 == 1; println(1)") 
 	assertTestPasses("assert 1/0 throws Exception; println(1)") 

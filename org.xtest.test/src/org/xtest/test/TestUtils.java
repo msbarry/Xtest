@@ -258,6 +258,10 @@ public class TestUtils {
         return result;
     }
 
+    public static List<Issue> getWarningsRunTests(String string) throws Exception {
+        return getWarningsRunTests(parse(string));
+    }
+
     public static Object invokeXbaseExpression(Body expression) throws Exception {
         return interpreter.evaluate(expression).getResult();
     }
