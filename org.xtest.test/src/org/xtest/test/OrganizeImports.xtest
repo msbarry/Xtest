@@ -8,14 +8,14 @@ import org.^xtest.Xtest
 
 import static org.^xtest.test.TestUtils.*
 
-val helper = [String input|{
+def static organizeImports(String input) {
     val result = Xtest::parse(input, injector)
 	val with = organizeImports.getOrganizedImportSection(result.eResource as XtextResource)
 	val region = organizeImports.computeRegion(result.eResource as XtextResource)
 	input.substring(0,region.getOffset)+with+input.substring(region.getOffset+region.getLength)
-}]
+}
 
-xtest noImports {
+xtest "no imports" {
 	val input = '
 runWhileEditing: true
 xsuite test {
@@ -29,7 +29,7 @@ xsuite test {
 	xtest case {
 		assert 1 == 1 
 	}
-}',helper.apply(input))
+}',organizeImports(input))
 }
  
 xtest splatToSingle {
@@ -41,7 +41,7 @@ assert new ArrayList<String>() != null
 import java.util.ArrayList
 
 assert new ArrayList<String>() != null
-',helper.apply(input))
+',organizeImports(input))
 }
 
 xtest sameLine {
@@ -54,7 +54,7 @@ runWhileEditing: true
 import java.util.ArrayList
 
 assert new ArrayList<String>() != null
-',helper.apply(input))
+',organizeImports(input))
 }
 
 xtest javaLangNotImported {
@@ -65,7 +65,7 @@ import java.util.*; assert new String() != null
 	assertEqualsNormalizeLinebreak('
 runWhileEditing: true
 assert new String() != null
-',helper.apply(input))
+',organizeImports(input))
 }
 
 xtest lineBreakAtBeginning {
@@ -79,7 +79,7 @@ runWhileEditing: true
 import java.util.ArrayList
 
 assert new ArrayList<String>() != null
-',helper.apply(input))
+',organizeImports(input))
 }
 
 
@@ -92,7 +92,7 @@ val a = new SUT'
 '/* File-specific parameters */
 import helpers.SUT
 
-val a = new SUT',helper.apply(input))
+val a = new SUT',organizeImports(input))
 } 
 
 xtest escapedStaticImport {
@@ -102,7 +102,7 @@ val a = interpreter'
 	assertEqualsNormalizeLinebreak(
 'import static org.^xtest.test.TestUtils.*
 
-val a = interpreter',helper.apply(input))
+val a = interpreter',organizeImports(input))
 }
 
 
@@ -110,5 +110,5 @@ xtest empty {
 	val input = 
 ''
 	assertEqualsNormalizeLinebreak(
-'',helper.apply(input))
+'',organizeImports(input))
 } 
