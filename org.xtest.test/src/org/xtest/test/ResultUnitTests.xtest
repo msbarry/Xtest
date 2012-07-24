@@ -7,55 +7,48 @@ import org.^xtest.results.XTestState
 def static shouldBeFailing(XTestResult result) { assert result.getState() == XTestState::FAIL }
 def static shouldBePassing(XTestResult result) { assert result.getState() == XTestState::PASS }
 def static shouldBePending(XTestResult result) { assert result.getState() == XTestState::NOT_RUN }
+def static newResult { new XTestResult(null) }
 
 xtest test2CasesInSuiteFailPass {
-    val suite = new XTestResult(null)
-    val test = suite.subTest("test", null)
-    val xtest2 = suite.subTest("test2", null)
-    test.fail()
-    xtest2.pass()
-    test.shouldBeFailing
-    xtest2.shouldBePassing
-    suite.shouldBeFailing
+	(newResult => [
+		(subTest("test", null) => [fail]).shouldBeFailing;
+		(subTest("test2", null) => [pass]).shouldBePassing
+	]).shouldBeFailing
 }
 
-xtest test2CasesInSuitePassFail {
-    val suite = new XTestResult(null)
-    val test = suite.subTest("test", null)
-    val xtest2 = suite.subTest("test2", null)
-    test.pass()
-    xtest2.fail()
-    test.shouldBePassing
-    xtest2.shouldBeFailing
-    suite.shouldBeFailing
+xtest test2CasesInSuitePassFail { 
+	(newResult => [
+		(subTest("test", null) => [pass]).shouldBePassing;
+		(subTest("test2", null) => [fail]).shouldBeFailing
+	]).shouldBeFailing
 }
 
 xtest testEmptySuiteFail {
-    val suite = new XTestResult(null)
-    suite.fail()
-    suite.shouldBeFailing
+	(newResult=>[fail]).shouldBeFailing
 }
 
 xtest testEmptySuitePass {
-    val suite = new XTestResult(null)
-    suite.pass()
-    suite.shouldBePassing
+	(newResult=>[pass]).shouldBePassing
 }
 
 xtest testEmptySuiteResult {
-    val suite = new XTestResult(null)
-    suite.shouldBePending
-    assert suite.getName() == null
-    assert suite.getQualifiedName() == ""
-    assert suite.getSubTests.size() == 0
+	newResult => [
+		it.shouldBePending
+		assert getName() == null 
+	    assert getQualifiedName() == ""
+	    assert getSubTests.size() == 0
+	]
 }
 
 xtest testSyntaxError {
-    val suite = new XTestResult(null)
-    suite.addSyntaxError("Syntax Error")
-    suite.shouldBeFailing
-    assert suite.getErrorMessages().toString() == Lists::newArrayList("Syntax Error").toString()
+	newResult => [
+		addSyntaxError("Syntax Error")
+		it.shouldBeFailing
+		assert getErrorMessages() == newArrayList("Syntax Error")
+	]
 }
+
+// left off here
 
 xtest xsuiteInSuite {
     val parent = new XTestResult(null)
