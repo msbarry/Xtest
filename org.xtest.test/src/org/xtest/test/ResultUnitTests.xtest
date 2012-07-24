@@ -1,39 +1,42 @@
 runWhileEditing: false
 import static XTestState.*
-import com.google.common.collect.Lists
 import org.^xtest.results.XTestResult
 import org.^xtest.results.XTestState
 
-def static shouldBeFailing(XTestResult result) { assert result.getState() == XTestState::FAIL }
-def static shouldBePassing(XTestResult result) { assert result.getState() == XTestState::PASS }
-def static shouldBePending(XTestResult result) { assert result.getState() == XTestState::NOT_RUN }
-def static newResult { new XTestResult(null) }
+val TEST_NAME_1 = "an anonymous test name"
+val TEST_NAME_1_WITH_LINEBREAKS = "an anonymous te\nst name"
+val TEST_NAME_2 = "a second anonymous test name"
 
 xtest test2CasesInSuiteFailPass {
-	(newResult => [
-		(subTest("test", null) => [fail]).shouldBeFailing;
-		(subTest("test2", null) => [pass]).shouldBePassing
-	]).shouldBeFailing
+	initResult[
+		subTest(TEST_NAME_1, null).fail
+		subTest(TEST_NAME_2, null).pass
+	].shouldFailAnd[
+		it.findTest(TEST_NAME_1).shouldFail
+		it.findTest(TEST_NAME_2).shouldPass
+	]
 }
 
-xtest test2CasesInSuitePassFail { 
-	(newResult => [
-		(subTest("test", null) => [pass]).shouldBePassing;
-		(subTest("test2", null) => [fail]).shouldBeFailing
-	]).shouldBeFailing
+xtest test2CasesInSuitePassFail {
+	initResult[
+		subTest(TEST_NAME_1, null).pass
+		subTest(TEST_NAME_2, null).fail
+	].shouldFailAnd[
+		it.findTest(TEST_NAME_1).shouldPass
+		it.findTest(TEST_NAME_2).shouldFail
+	]
 }
 
 xtest testEmptySuiteFail {
-	(newResult=>[fail]).shouldBeFailing
+	initResult[fail].shouldFail
 }
 
 xtest testEmptySuitePass {
-	(newResult=>[pass]).shouldBePassing
+	initResult[pass].shouldPass
 }
 
 xtest testEmptySuiteResult {
-	newResult => [
-		it.shouldBePending
+	newResult.shouldBePendingAnd[
 		assert getName() == null 
 	    assert getQualifiedName() == ""
 	    assert getSubTests.size() == 0
@@ -41,144 +44,172 @@ xtest testEmptySuiteResult {
 }
 
 xtest testSyntaxError {
-	newResult => [
+	initResult[
 		addSyntaxError("Syntax Error")
-		it.shouldBeFailing
+	].shouldFailAnd[
 		assert getErrorMessages() == newArrayList("Syntax Error")
 	]
 }
 
-// left off here
-
 xtest xsuiteInSuite {
-    val parent = new XTestResult(null)
-    val child = parent.subTest("test", null)
-    assert child.getName() == "test"
-    assert child.getQualifiedName() == "test"
-    child.shouldBePending
-    assert child.getSubTests.size == 0
-    parent.shouldBePending
-    assert parent.getSubTests.size() == 1
-}
-
-
-xtest xtestInSuite {
-    val parent = new XTestResult(null)
-    val child = parent.subTest("test", null)
-    assert child.getName() == "test"
-    assert child.getQualifiedName() == "test"
-    child.shouldBePending
-    parent.shouldBePending
-    assert parent.getSubTests.size() == 1
+	initResult[
+		subTest(TEST_NAME_1, null)
+	].shouldBePendingAnd[
+		it.findTest(TEST_NAME_1).shouldBePendingAnd[
+			assert getSubTests.empty
+			assert getName == TEST_NAME_1
+			assert qualifiedName == TEST_NAME_1
+		]
+		assert getSubTests.size == 1
+	]
 }
 
 
 xtest xtestInSuiteFail {
-    val suite = new XTestResult(null)
-    val test = suite.subTest("test", null)
-    test.fail()
-    test.shouldBeFailing
-    suite.shouldBeFailing
+	initResult[
+		subTest(TEST_NAME_1, null).fail
+	].shouldFailAnd[
+		it.findTest(TEST_NAME_1).shouldFail
+	]
 }
 
 
 xtest xtestInSuiteInSuite {
-    val parent = new XTestResult(null)
-    val child = parent.subTest("test", null)
-    val grandChild = child.subTest("test2", null)
-    assert child.getQualifiedName() == "test"
-    assert grandChild.getQualifiedName() == "test.test2"
-    child.shouldBePending
-    parent.shouldBePending
-    grandChild.shouldBePending
-    assert parent.getSubTests.size == 1
-    assert child.getSubTests.size == 1
+	initResult[
+		subTest(TEST_NAME_1, null) => [
+			subTest(TEST_NAME_2, null)
+		]
+	].shouldBePendingAnd[
+		assert getSubTests.size == 1
+		it.findTest(TEST_NAME_1).shouldBePendingAnd[
+			assert getSubTests.size == 1
+			it.findTest(TEST_NAME_2).shouldBePendingAnd[
+				assert qualifiedName == TEST_NAME_1+"."+TEST_NAME_2
+			]
+		]
+	]
 }
 
 
 xtest xtestInSuiteInSuiteFail {
-    val parent = new XTestResult(null)
-    val child = parent.subTest("test", null)
-    val grandChild = child.subTest("test2", null)
-    grandChild.fail()
-    child.shouldBeFailing
-    parent.shouldBeFailing
-    grandChild.shouldBeFailing
+	initResult[
+		subTest(TEST_NAME_1, null) => [
+			subTest(TEST_NAME_2, null).fail
+		]
+	].shouldFailAnd[
+		it.findTest(TEST_NAME_1).shouldFailAnd[
+			it.findTest(TEST_NAME_2).shouldFail
+		]
+	]
 }
 
 
 xtest xtestInSuiteInSuitePass {
-    val parent = new XTestResult(null)
-    val child = parent.subTest("test", null)
-    val grandChild = child.subTest("test2", null)
-    grandChild.pass()
-    child.shouldBePassing
-    parent.shouldBePassing
-    grandChild.shouldBePassing
+	initResult[
+		subTest(TEST_NAME_1, null) => [
+			subTest(TEST_NAME_2, null).pass
+		]
+	].shouldPassAnd[
+		it.findTest(TEST_NAME_1).shouldPassAnd[
+			it.findTest(TEST_NAME_2).shouldPass
+		]
+	]
 }
 
 
 xtest xtestInSuitePass {
-    val suite = new XTestResult(null)
-    val test = suite.subTest("test", null)
-    test.pass()
-    test.shouldBePassing
-    suite.shouldBePassing
+	initResult[
+		subTest(TEST_NAME_1, null).pass
+	].shouldPassAnd[
+		it.findTest(TEST_NAME_1).shouldPass
+	]
 }
 
 
 xtest "pass a test after failing it leaves in failing state" {
-    val suite = new XTestResult(null)
-    suite.fail()
-    suite.pass()
-    suite.shouldBeFailing
+	initResult[
+		fail
+		pass
+	].shouldFail
 }
 
 xtest "1 test" {
-	val suite = new XTestResult(null)
-	assert suite.countTests == 1
+	assert newResult.countTests == 1
 }
 
 xtest "2 tests" {
-	val suite = new XTestResult(null)
-	suite.subTest("sub", null)
-	assert suite.countTests == 2
+	initResult[
+		subTest(TEST_NAME_1, null)
+	].shouldBePendingAnd[
+		assert countTests == 2
+	]
 }
 
 xtest "no failure" {
-	val suite = new XTestResult(null)
-	assert suite.countFailures == 0
+	assert newResult.countFailures == 0
 }
 
 xtest "1 failures" {
-	val suite = new XTestResult(null)
-	suite.fail
-	assert suite.countFailures == 1
+	assert initResult[fail].countFailures == 1
 }
 
 xtest "1 failure - in subtest" {
-	val suite = new XTestResult(null)
-	suite.subTest("sub",null).fail
-	assert suite.countFailures == 1
+	val result = initResult[
+		subTest(TEST_NAME_1, null).fail
+	]
+	assert result.countFailures == 1
 }
 
 xtest "Failed parent and child" {
-	val suite = new XTestResult(null)
-	suite.subTest("sub",null).fail
-	suite.fail
-	assert suite.countFailures == 2
+	val result = initResult[
+		subTest(TEST_NAME_1, null).fail
+		fail
+	]
+	assert result.countFailures == 2
 }
 
 xtest "Pending child" {
-	val suite = new XTestResult(null)
-	val sub = suite.subTest("sub",null)
-	sub.setPending
-	assert !suite.isPending
-	assert sub.isPending
-	assert suite.countPendings == 1
+	initResult[
+		subTest(TEST_NAME_1, null).setPending
+	] => [
+		assert countPendings == 1
+		assert !isPending
+		it.findTest(TEST_NAME_1) => [
+			assert isPending
+		]
+	]
 }
 
 xtest "line break omitted from name" {
-    val test = new XTestResult(null).subTest("te\nst", null)
-	assert test.getName == "test"
+    val test = new XTestResult(null).subTest(TEST_NAME_1_WITH_LINEBREAKS, null)
+	assert test.getName == TEST_NAME_1
+}
+
+
+/*
+ * Test utilities
+ */
+def static shouldFail(XTestResult result) {assert result.getState() == XTestState::FAIL}
+def static shouldPass(XTestResult result) {assert result.getState() == XTestState::PASS}
+def static shouldBePending(XTestResult result) {assert result.getState() == XTestState::NOT_RUN}
+def static shouldFailAnd(XTestResult result, (XTestResult)=>void verifier) {
+	result.shouldFail
+	verifier.apply(result)
+}
+def static shouldPassAnd(XTestResult result, (XTestResult)=>void verifier) {
+	result.shouldPass
+	verifier.apply(result)
+}
+def static shouldBePendingAnd(XTestResult result, (XTestResult)=>void verifier) {
+	result.shouldBePending
+	verifier.apply(result)
+}
+def static newResult { new XTestResult(null) }
+def static initResult((XTestResult)=>void initializer) {
+	val result = newResult
+	initializer.apply(result)
+	return result
+}
+def static findTest(XTestResult result, String name) {
+	result.subTests.findFirst[getName == name]
 }
