@@ -24,7 +24,7 @@ import com.google.common.collect.Lists;
  * @author Michael Barry
  */
 @SuppressWarnings("restriction")
-public class XTestXBaseRegressionTests extends AbstractXbaseEvaluationTest {
+public class XbaseRegressionTests extends AbstractXbaseEvaluationTest {
     private static XbaseInterpreter interpreter = XtestInjector.injector
             .getInstance(XTestInterpreter.class);
     @SuppressWarnings("unchecked")

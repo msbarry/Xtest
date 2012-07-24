@@ -69,8 +69,8 @@ public class TestUtils {
     private static final Map<Object, URI> used = Maps.newHashMap();
 
     public static void assertEqualsNormalizeLinebreak(String expected, String actual) {
-        String expectedNormalized = expected.replace("\r\n", "\n");
-        String actualNormalized = actual.replace("\r\n", "\n");
+        String expectedNormalized = expected.replaceAll("[\r\n]\\s*", "\n");
+        String actualNormalized = actual.replaceAll("[\r\n]\\s*", "\n");
         assertEquals(expectedNormalized, actualNormalized);
     }
 

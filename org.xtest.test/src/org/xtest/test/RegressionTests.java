@@ -10,5 +10,5 @@ import org.xtest.junit.XtestJunitRunner;
 @SuppressWarnings("restriction")
 @RunWith(XtestJunitRunner.class)
 @RunsXtest("src/org/xtest/test/RegressionTests.xtest")
-public class XTestRegressionTests {
+public class RegressionTests {
 }
