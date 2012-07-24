@@ -48,3 +48,14 @@ xtest "methods" {
 		assertThrowsExceptionInSubtest('def m(int a) {xtest {assert false}; 1}; println(newArrayList(1).map[m(it)])', "m(it)")
 	}
 }
+
+xtest "jump to method and back" {
+	val script =
+	'def static newResult((boolean)=>void init) {
+		init.apply(false)
+	}
+	newResult[
+		assert it
+	]'
+	assertThrowsExceptionForExpression(script, 'assert it')
+}
