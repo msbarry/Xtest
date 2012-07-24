@@ -10,7 +10,6 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -41,7 +40,6 @@ import org.xtest.xTest.Body;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.inject.Injector;
 
 public class TestUtils {
@@ -134,22 +132,6 @@ public class TestUtils {
     public static void assertReturnType(JvmTypeReference typeForName, Body parse) throws Exception {
         JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(parse, true);
         assertTrue(typeComputer.isConformant(typeForName, commonReturnType, false));
-    }
-
-    public static void assertSetEquals(Set<?> actual, Object... expectedElements) {
-        Set<?> expected = Sets.newHashSet(expectedElements);
-        Set<?> doesntContain = Sets.difference(expected, actual);
-        Set<?> shouldntContain = Sets.difference(actual, expected);
-        if (!doesntContain.isEmpty() && !shouldntContain.isEmpty()) {
-            fail("Got " + actual + ". " + "Should not have contained " + shouldntContain
-                    + " and should have contained " + doesntContain);
-        } else if (!doesntContain.isEmpty()) {
-            fail("Got " + actual + ". Missing " + doesntContain);
-        } else if (!shouldntContain.isEmpty()) {
-            fail("Got " + actual + ". Should not have had " + shouldntContain);
-        } else {
-            // OK
-        }
     }
 
     public static void assertStackTraceEquals(StackTraceElement element, String className,
@@ -262,10 +244,6 @@ public class TestUtils {
         return getWarningsRunTests(parse(string));
     }
 
-    public static Object invokeXbaseExpression(Body expression) throws Exception {
-        return interpreter.evaluate(expression).getResult();
-    }
-
     public static Body parse(String string) throws Exception {
         return Xtest.parse(string, injector);
     }
@@ -287,13 +265,6 @@ public class TestUtils {
         URI uri = new URI(Integer.toString(i++));
         used.put(key, uri);
         return uri;
-    }
-
-    protected static Collection<XTestEvaluationException> assertEvaluatesToIgnoreExceptions(
-            Object object, Body val) {
-        XTestResult run = Xtest.run(val, injector);
-        assertEquals("evaluation result", object, run.getResultObject());
-        return run.getEvaluationException();
     }
 
     @SuppressWarnings("restriction")
