@@ -9,6 +9,7 @@ import org.xtest.validation.XTestJavaValidator;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.XTestExpression;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 /**
@@ -252,6 +253,12 @@ public class XTestResult {
         XTestResult result = new XTestResult(this, name, eObject);
         subTests.add(result);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(XTestResult.class).add("name", name).add("state", state)
+                .toString();
     }
 
     private void internalFail() {
