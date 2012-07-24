@@ -642,10 +642,9 @@ public class XTestInterpreter extends XbaseInterpreter {
         // within the top-level expression that caused the exception
         XExpression cause = callStack.firstElement();
         for (XExpression element : callStack) {
-            if (!org.eclipse.xtext.EcoreUtil2.isAncestor(cause, element)) {
-                break;
+            if (org.eclipse.xtext.EcoreUtil2.isAncestor(cause, element)) {
+                cause = element;
             }
-            cause = element;
         }
         toWrap = XtestUtil.getRootCause(toWrap);
         XTestEvaluationException toThrow = new XTestEvaluationException(toWrap, cause);
