@@ -343,7 +343,8 @@ public class XTestInterpreter extends XbaseInterpreter {
         ClassFinder classFinder = getClassFinder();
         Class<?> clazz = null;
         try {
-            clazz = classFinder.forName(declaringType.getQualifiedName());
+            clazz = declaringType == null ? null : classFinder.forName(declaringType
+                    .getQualifiedName());
         } catch (ClassNotFoundException e) {
         }
         return clazz;
