@@ -28,6 +28,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.XExpression;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.Xtest;
@@ -205,21 +206,19 @@ public class TestUtils {
         assertValidationPassed(val);
     }
 
-    public static void assertXtestPasses(String test) {
-        XTestResult result = Xtest.run(test, injector);
-        assertEquals("[]", result.getErrorMessages().toString());
-        assertTrue(result.getEvaluationException().isEmpty());
-        assertEquals(XTestState.PASS, result.getState());
-    }
-
-    public static void assertXtestPreEvalFailure(String test) throws Exception {
-        assertInvalidSyntax(test);
-    }
-
     public static void assertXtestStackTrace(StackTraceElement element, String methodName,
             int lineNumber) {
         assertStackTraceEquals(element, "Synthetic0Uri", "\"" + methodName + "\"", "Synthetic0Uri",
                 lineNumber);
+    }
+
+    public static XTestResult findTest(XTestResult result, String name) {
+        for (XTestResult res : result.getSubTests()) {
+            if (res.getName().equals(name)) {
+                return res;
+            }
+        }
+        return null;
     }
 
     public static XTestResult getResult(String input) {
@@ -252,6 +251,36 @@ public class TestUtils {
         IResourceValidator instance = injector.getInstance(IResourceValidator.class);
         Resource eResource = parse.eResource();
         instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
+    }
+
+    public static XTestResult shouldBePending(XTestResult result) {
+        assertEquals(XTestState.NOT_RUN, result.getState());
+        return result;
+    }
+
+    public static void shouldBePendingAnd(XTestResult result, Procedure1<XTestResult> verifier) {
+        shouldBePending(result);
+        verifier.apply(result);
+    }
+
+    public static XTestResult shouldFail(XTestResult result) {
+        assertEquals(XTestState.FAIL, result.getState());
+        return result;
+    }
+
+    public static void shouldFailAnd(XTestResult result, Procedure1<XTestResult> verifier) {
+        shouldFail(result);
+        verifier.apply(result);
+    }
+
+    public static XTestResult shouldPass(XTestResult result) {
+        assertEquals(XTestState.PASS, result.getState());
+        return result;
+    }
+
+    public static void shouldPassAnd(XTestResult result, Procedure1<XTestResult> verifier) {
+        shouldPass(result);
+        verifier.apply(result);
     }
 
     public static String textOf(EObject eObject) {

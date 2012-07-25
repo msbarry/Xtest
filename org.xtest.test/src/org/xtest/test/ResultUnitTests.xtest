@@ -1,7 +1,6 @@
 runWhileEditing: false
-import static XTestState.*
+import static extension org.^xtest.test.TestUtils.*
 import org.^xtest.results.XTestResult
-import org.^xtest.results.XTestState
 
 val TEST_NAME_1 = "an anonymous test name"
 val TEST_NAME_1_WITH_LINEBREAKS = "an anonymous te\nst name"
@@ -189,27 +188,9 @@ xtest "line break omitted from name" {
 /*
  * Test utilities
  */
-def static shouldFail(XTestResult result) {assert result.getState() == XTestState::FAIL}
-def static shouldPass(XTestResult result) {assert result.getState() == XTestState::PASS}
-def static shouldBePending(XTestResult result) {assert result.getState() == XTestState::NOT_RUN}
-def static shouldFailAnd(XTestResult result, (XTestResult)=>void verifier) {
-	result.shouldFail
-	verifier.apply(result)
-}
-def static shouldPassAnd(XTestResult result, (XTestResult)=>void verifier) {
-	result.shouldPass
-	verifier.apply(result)
-}
-def static shouldBePendingAnd(XTestResult result, (XTestResult)=>void verifier) {
-	result.shouldBePending
-	verifier.apply(result)
-}
 def static newResult { new XTestResult(null) }
 def static initResult((XTestResult)=>void initializer) {
 	val result = newResult
 	initializer.apply(result)
 	return result
-}
-def static findTest(XTestResult result, String name) {
-	result.subTests.findFirst[getName == name]
 }
