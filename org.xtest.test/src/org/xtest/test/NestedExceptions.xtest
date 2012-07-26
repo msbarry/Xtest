@@ -1,0 +1,61 @@
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: false
+
+import static org.junit.Assert.*
+import static org.^xtest.test.TestUtils.*
+
+xtest "closures" {
+	xtest "assert in closure" {	
+		assertThrowsExceptionForExpression('[|assert false].apply', "assert false")
+	}
+	xtest "exception in closure" { 
+		assertThrowsExceptionForExpression('[|1/0].apply', "1/0")
+	}
+	xtest "exception in closure" { 
+		assertThrowsExceptionForExpression('val a = [|1/0]; a.apply', "a.apply")
+	}
+	
+	xtest "exception in test defined in closure" {
+		assertThrowsExceptionInSubtest('val a = [|xtest {1/0}]; a.apply', "a.apply")
+	}
+	xtest "assert failed in test defined in closure" { 
+		assertThrowsExceptionInSubtest('val a = [|xtest {assert false}]; a.apply', "a.apply")
+	}
+	xtest "assert failed in test defined in closure" { 
+		assertThrowsExceptionInSubtest('val a = [|xtest {assert false}; 1]; println(newArrayList(1).map[a.apply])', "a.apply")
+	}
+}
+
+
+xtest "methods" {
+	xtest "assert in method" {	
+		assertThrowsExceptionForExpression('def m {assert false}; m', "m")
+	}
+	xtest "exception in method" { 
+		assertThrowsExceptionForExpression('def m {1/0}; m', "m")
+	}
+	
+	xtest "exception in test defined in method" {
+		assertThrowsExceptionInSubtest('def m {xtest {1/0}}; m', "m")
+	}
+	xtest "assert failed in test defined in method" { 
+		assertThrowsExceptionInSubtest('def m {xtest {assert false}}; m', "m")
+	}
+	xtest "assert failed in test defined in method" { 
+		assertThrowsExceptionInSubtest('def m(int a) {xtest {assert false}; 1}; println(newArrayList(1).map[m(it)])', "m(it)")
+	}
+}
+
+xtest "jump to method and back" {
+	val script =
+	'def static newResult((boolean)=>void init) {
+		init.apply(false)
+	}
+	newResult[
+		assert it
+	]'
+	assertThrowsExceptionForExpression(script, 'assert it')
+}

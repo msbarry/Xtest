@@ -3,37 +3,60 @@ grammar org.xtest.XTest with org.eclipse.xtext.xbase.Xbase
 
 generate xTest "http://www.xtest.org/"
 	
+import "http://www.eclipse.org/xtend"
 import "http://www.eclipse.org/xtext/xbase/Xbase"
 import "http://www.eclipse.org/xtext/common/JavaVMTypes"
 
 // Top-level expression
 Body returns XBlockExpression:
 	{Body}
-	(imports+=Import)*
+	(fileparam+=FileParam ';'?)*
+	(imports+=Import ';'?)*
 	(expressions+=XExpressionInsideBlock ';'?)*;
 
-Import: 'import' (static?='static' staticImport = [JvmType|QualifiedName] '.' '*' |
-                  typeImport = [JvmType|QualifiedName] |
-	              importedNamespace = QualifiedNamespaceWithWildcard);
+// From Xtend 2.3
+Import returns XtendImport: 
+	'import' (
+		(static?='static' extension?='extension'? importedType=[JvmType|QualifiedName] '.' '*') 
+		| importedType=[JvmType|QualifiedName] 
+		| importedNamespace=QualifiedNamespaceWithWildcard)
+;
 	              
 QualifiedNamespaceWithWildcard: QualifiedName '.' '*';
 
+FileParam:
+	// Currently, only boolean literals are supported
+	=>feature=[JvmEnumerationLiteral] ':' value=XBooleanLiteral;
+
 
 UniqueName:
-	name=ID (identifier=XParenthesizedExpression)?
+	{UniqueName} (name=(STRING|ID))? (identifier=XParenthesizedExpression)?
 ;
 
-XTestSuite returns XExpression:
-	{XTestSuite}
-	'xsuite' name=UniqueName (expression=XBlockExpression);
-XTestCase returns XExpression:
-	{XTestCase}
-	'xtest' name=UniqueName (expression=XBlockExpression);
+XTestExpression returns XExpression:
+	{XTestExpression}
+	('xsuite'|'xtest') name=UniqueName (expression=XBlockExpression);
 	
 XAssertExpression returns XExpression:
 	{XAssertExpression}
 	'assert' actual=XExpression (=>'throws' throws=JvmTypeReference)?
 ;
+
+// Methods
+Parameter returns XtendParameter:
+	parameterType=JvmTypeReference varArg?='...'? name=ValidID;
+	
+XMethodDef returns XtendFunction:
+	{XMethodDef}
+	('def' & (static?='static')?)
+	('<' typeParameters+=JvmTypeParameter (',' typeParameters+=JvmTypeParameter)* '>')?
+	 (returnType=JvmTypeReference)?
+	 name=ValidID 
+	 ('(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')')?
+	 expression=XBlockExpression;
+	 
+XMethodDefExpression returns XExpression:
+	{XMethodDefExpression} method = XMethodDef;
 
 // Hook our newly defined expressions into XBase as new kinds of expressions
 XPrimaryExpression returns XExpression:
@@ -52,9 +75,9 @@ XPrimaryExpression returns XExpression:
 	XTryCatchFinallyExpression |
 	XParenthesizedExpression |
 	// Add new expressions
-	XTestSuite |
-	XTestCase |
-	XAssertExpression;
+	XTestExpression |
+	XAssertExpression |
+	XMethodDefExpression;
 
 // Add static member setting support to Xbase
 StaticEquals:':=';

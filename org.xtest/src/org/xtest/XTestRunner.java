@@ -1,24 +1,25 @@
 package org.xtest;
 
-import java.util.List;
+import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.junit.util.ParseHelper;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.CheckType;
-import org.eclipse.xtext.validation.IResourceValidator;
-import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.xbase.XExpression;
 import org.eclipse.xtext.xbase.interpreter.IEvaluationContext;
+import org.eclipse.xtext.xbase.interpreter.IEvaluationResult;
 import org.eclipse.xtext.xbase.interpreter.impl.InterpreterCanceledException;
 import org.xtest.interpreter.XTestInterpreter;
-import org.xtest.results.XTestState;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.interpreter.XtestEvaluationResult;
+import org.xtest.results.XTestResult;
 import org.xtest.xTest.Body;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
@@ -35,60 +36,43 @@ public class XTestRunner {
      */
     public static final CheckMode CHECK_BUT_DONT_RUN = new DontRunCheck();
 
-    /**
-     * Links a string into an xtest object model
-     * 
-     * @param string
-     *            String containing the xtest script to run
-     * @param injector
-     *            The Guice injector to use
-     * @return The linked xtest object model
-     * @throws Exception
-     *             if an error occurs parsing the string
-     */
-    public static Body parse(String string, Injector injector) throws Exception {
-        Body parse = (Body) injector.getInstance(ParseHelper.class).parse(string);
-        return parse;
-    }
-
-    /**
-     * Runs a xtest script contained inside a string
-     * 
-     * @param string
-     *            string containing the xtest script to run
-     * @param injector
-     *            The Guice injector to use
-     * @return The xtest suite results
-     */
-    public static XTestSuiteResult run(String string, Injector injector) {
-        XTestSuiteResult result;
-        try {
-            Body parse = parse(string, injector);
-            result = new XTestSuiteResult(parse);
-            List<Issue> validate = injector.getInstance(IResourceValidator.class).validate(
-                    parse.eResource(), CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
-            for (Issue issue : validate) {
-                if (issue.getSeverity() == Severity.ERROR) {
-                    result.addSyntaxError(issue.getLineNumber() + ": " + issue.getMessage());
-                }
-            }
-            if (result.getState() != XTestState.FAIL) {
-                result = injector.getInstance(XTestRunner.class).run(parse,
-                        CancelIndicator.NullImpl);
-            }
-        } catch (Exception e) {
-            result = new XTestSuiteResult(null);
-            result.fail();
-        }
-
-        return result;
-    }
-
     @Inject
     private Provider<IEvaluationContext> contextProvider;
 
+    private Set<XExpression> executed = Sets.newHashSet();
+
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
+
+    /**
+     * Returns the list of executed expressions
+     * 
+     * @param main
+     *            The main body of the xtest file
+     * @return The list of executed expressions
+     */
+    public Set<XExpression> getUnexecutedExpressions(Body main) {
+        Set<XExpression> unexecuted = Sets.newHashSet();
+        // Only mark unexecuted from list of expressions, otherwise will mark file properties as
+        // unexecuted
+        EList<XExpression> expressions = main.getExpressions();
+        for (XExpression expression : expressions) {
+            TreeIterator<EObject> eAllContents = expression.eAllContents();
+            while (eAllContents.hasNext()) {
+                EObject next = eAllContents.next();
+                if (next instanceof XExpression && !executed.contains(next)) {
+                    unexecuted.add((XExpression) next);
+                }
+            }
+        }
+        // remove contained EObjects, only mark warning on outer container
+        Set<EObject> toRemove = Sets.newHashSet();
+        for (XExpression expression : unexecuted) {
+            toRemove.addAll(expression.eContents());
+        }
+        unexecuted.removeAll(toRemove);
+        return unexecuted;
+    }
 
     /**
      * Interprets an already linked xtest object model
@@ -97,24 +81,43 @@ public class XTestRunner {
      *            The linked xtest object model
      * @param monitor
      *            The progress monitor to tell if canceled
-     * @return The xtest suite result
+     * @return The test result
      */
-    public XTestSuiteResult run(Body main, CancelIndicator monitor) {
-        XTestSuiteResult result;
-        result = new XTestSuiteResult(main);
+    public XTestResult run(Body main, RunType weight, CancelIndicator monitor) {
         XTestInterpreter interpreter = getInterpreter(main.eResource());
-        boolean failed = false;
         try {
-            interpreter.evaluate(main, contextProvider.get(), monitor);
-        } catch (InterpreterCanceledException e) {
-        } catch (Throwable e) {
-            failed = true;
+            IEvaluationResult resultObject = null;
+            boolean failed = false;
+            try {
+                resultObject = interpreter.evaluate(main, contextProvider.get(), monitor);
+            } catch (InterpreterCanceledException e) {
+            } catch (Throwable e) {
+                failed = true;
+            }
+            XTestResult result = new XTestResult(main);
+            if (resultObject instanceof XtestEvaluationResult) {
+                XtestEvaluationResult evalResult = (XtestEvaluationResult) resultObject;
+                result = evalResult.getXtestResult();
+                executed = evalResult.getExpressions();
+            }
+            if (failed) {
+                result.fail();
+            }
+            result.setResultObject(resultObject.getResult());
+            return result;
+        } finally {
+            cleanupInterpreter(interpreter);
         }
-        result = interpreter.getTestResult();
-        if (failed) {
-            result.fail();
-        }
-        return result;
+    }
+
+    /**
+     * Perform cleanup on interpreter after a test run has finished
+     * 
+     * @param interpreter
+     *            The interpreter to clean up
+     */
+    protected void cleanupInterpreter(XTestInterpreter interpreter) {
+
     }
 
     /**
@@ -130,7 +133,7 @@ public class XTestRunner {
     }
 
     /**
-     * CheckMode for validating the xtest script only without running the test cases
+     * CheckMode for validating the xtest script only without running the tests
      */
     public static class DontRunCheck extends CheckMode {
         CheckMode mode = CheckMode.FAST_ONLY;

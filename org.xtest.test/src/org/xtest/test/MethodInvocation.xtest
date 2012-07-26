@@ -1,0 +1,140 @@
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: false
+ 
+import static org.junit.Assert.*
+import static extension org.^xtest.test.TestUtils.*
+import static org.^xtest.XTestRunner.*
+
+xtest "method def returns null" { assertIsValidAndEvaluatesTo(null, "def method {1}") }
+xtest "no-arg" {
+	xtest "no body" {assertIsValidAndEvaluatesTo(null, "def method {}; method") }
+	xtest "implicit return" {assertIsValidAndEvaluatesTo(1, "def method {1}; method") }
+	xtest "explicit return" {assertIsValidAndEvaluatesTo(1, "def method {return 1}; method") }
+	xtest "local method sees outer context" {assertIsValidAndEvaluatesTo(1, "val i = 1; def method {i}; method") }
+	xtest "static method defined before use" {assertIsValidAndEvaluatesTo(1, "def static method {1}; method") }
+	xtest "static method calls other static method" {assertIsValidAndEvaluatesTo(1, "def static method2 {method1}; def static method1 {1}; method2") }
+	xtest "local method calls other local method" {assertIsValidAndEvaluatesTo(1, "def method1 {1}; def method2 {method1}; method2") }
+	xtest "local method calls static method" {assertIsValidAndEvaluatesTo(1, "def method2 {method1}; def static method1 {1}; method2") }
+}
+xtest "1-arg method" { assertIsValidAndEvaluatesTo(1, "def method(int i) {i}; method(1)") }
+xtest "2-arg method" { assertIsValidAndEvaluatesTo("a1", "def method(String i, int j) {i+j}; method('a', 1)")}
+xtest "var arg method" { assertIsValidAndEvaluatesTo(1, "def method(int... i) {i.head}; method(1,2,3)")}
+xtest "var arg method" { assertIsValidAndEvaluatesTo(1, "def method(int... i) {1}; method()")}
+xtest "recursive local method" { assertIsValidAndEvaluatesTo(4, "def r(int i) {if (i <= 0) return 0 else return 1+r(i-1)}; r(4)") }
+xtest "recursive static method" { assertIsValidAndEvaluatesTo(4, "def static r(int i) {if (i <= 0) return 0 else return 1+r(i-1)}; r(4)") }
+xtest "local type parameter" { assertIsValidAndEvaluatesTo(4, "def <T> meth(T i) {i}; meth(4)") }
+xtest "static type parameter" { assertIsValidAndEvaluatesTo(4, "def static <T> meth(T i) {i}; meth(4)") }
+xtest "operator overloading" {
+	xtest {assertIsValidAndEvaluatesTo(2, "def operator_plus(String a, String b) {a.length+b.length}; 'a'+'b'")}
+	xtest {assertIsValidAndEvaluatesTo(2, "def static operator_plus(String a, String b) {a.length+b.length}; 'a'+'b'")}
+	xtest {assertIsValidAndEvaluatesTo(2, "def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1+1")}
+	xtest {assertIsValidAndEvaluatesTo(2l, "def <T extends Number> operator_plus(T a, T b) {a.intValue+b.intValue}; 1L+1L")}
+}
+xtest "nested methods" {
+	xtest "nested method type inference" {
+		val script =
+	'def <T> get(T i) {
+		def <U> get2(U j) {
+			j
+		}
+		get2(i)
+	}
+	
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+	
+	xtest "nested method type inference - uses type paremeter from grandparent" {
+		val script =
+	'def <T> get(T i) {
+		def get2(T j) {
+			j
+		}
+		get2(i)
+	}
+	
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+	
+	xtest "nested method type inference - uses var arg type paremeter from grandparent" {
+		val script =
+	'def <K> get(K... i) {
+		def get2(K... j) {
+			j.head
+		}
+		get2(i)
+	}
+	
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+	
+	xtest "nested method type inference - uses var arg type paremeter from grandparent #2" {
+		val script =
+	'def static <T> first(T... is) {is.get(0)}
+	
+	def <T> get(T... i) {
+		def get2(T... j) {
+			first(j)
+		}
+		get2(i)
+	} 
+	
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+	
+	xtest "nested method type inference - uses var arg type paremeter from grandparent #3" {
+		val script =
+	'def <T> get(T... i) {
+		def get2(T... j) { j.get(0) }
+		get2(i)
+	} 
+	get(1)'
+		assertIsValidAndEvaluatesTo(1, script)
+	}
+}
+
+xtest "interpreter can handle type parameters" {
+	xtest "cast to type argument" {
+		assertIsValidAndEvaluatesTo(null, "def <T> cast(Object in) {in as T}; cast(null)")
+	}
+	xtest "cast to type argument" { 
+		assertIsValidAndEvaluatesTo(1, "def <T extends Number> cast(Object in) {(in as T).intValue}; cast(1)")
+	}
+	
+	xtest "switch expression type guard" {
+		val scriptTrue =
+		'def <T> tryswitch(T a) {
+			switch (a) {
+				T: true
+				default: false
+			}
+		}
+		tryswitch(1)'
+		assertIsValidAndEvaluatesTo(true, scriptTrue)
+	}
+	xtest "catch exception type" {
+		assertIsValidAndEvaluatesTo(true, "def <T extends Exception> cast() {try {val b = 1/0} catch (T b) {return true} return false}; cast()")
+		assertIsValidAndEvaluatesTo(false, "def <T extends IllegalArgumentException> cast() {try {val b = 1/0} catch (T b) {return true} return false}; cast()")
+	}
+	xtest "throws T" {
+		assertIsValidAndEvaluatesTo(true, "def <T extends Exception> cast(Object b) {assert 1/0 throws T}; cast(1)")
+	}
+	xtest "instanceof true" {
+		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {b instanceof T}; cast(1, 1)")
+	}
+	xtest "instanceof false" {
+		assertIsValidAndEvaluatesTo(true, "def <T> cast(T a, Object b) {b instanceof T}; cast('a', 1)")
+	}
+	xtest "instanceof wildcard upper bound" {
+		assertIsValidAndEvaluatesTo(true, "def <T extends Number> cast(Object b) {b instanceof T}; cast(1)")
+	}
+	xtest "instanceof wildcard upper bound" {
+		assertIsValidAndEvaluatesTo(false, "def <T extends Number> cast(Object b) {b instanceof T}; cast('1')")
+	}
+}

@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
-
  */
 package org.xtest.xTest;
 
@@ -10,6 +6,8 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
+import org.eclipse.xtend.core.xtend.XtendPackage;
 
 import org.eclipse.xtext.xbase.XbasePackage;
 
@@ -63,59 +61,41 @@ public interface XTestPackage extends EPackage
 	XTestPackage eINSTANCE = org.xtest.xTest.impl.XTestPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.xtest.xTest.impl.ImportImpl <em>Import</em>}' class.
+	 * The meta object id for the '{@link org.xtest.xTest.impl.FileParamImpl <em>File Param</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.xtest.xTest.impl.ImportImpl
-	 * @see org.xtest.xTest.impl.XTestPackageImpl#getImport()
+	 * @see org.xtest.xTest.impl.FileParamImpl
+	 * @see org.xtest.xTest.impl.XTestPackageImpl#getFileParam()
 	 * @generated
 	 */
-	int IMPORT = 0;
+	int FILE_PARAM = 0;
 
 	/**
-	 * The feature id for the '<em><b>Static</b></em>' attribute.
+	 * The feature id for the '<em><b>Feature</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT__STATIC = 0;
+	int FILE_PARAM__FEATURE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Static Import</b></em>' reference.
+	 * The feature id for the '<em><b>Value</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT__STATIC_IMPORT = 1;
+	int FILE_PARAM__VALUE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Type Import</b></em>' reference.
+	 * The number of structural features of the '<em>File Param</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT__TYPE_IMPORT = 2;
-
-	/**
-	 * The feature id for the '<em><b>Imported Namespace</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMPORT__IMPORTED_NAMESPACE = 3;
-
-	/**
-	 * The number of structural features of the '<em>Import</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int IMPORT_FEATURE_COUNT = 4;
+	int FILE_PARAM_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.xtest.xTest.impl.UniqueNameImpl <em>Unique Name</em>}' class.
@@ -174,13 +154,22 @@ public interface XTestPackage extends EPackage
 	int BODY__EXPRESSIONS = XbasePackage.XBLOCK_EXPRESSION__EXPRESSIONS;
 
 	/**
+	 * The feature id for the '<em><b>Fileparam</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BODY__FILEPARAM = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Imports</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BODY__IMPORTS = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 0;
+	int BODY__IMPORTS = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Body</em>' class.
@@ -189,54 +178,17 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int BODY_FEATURE_COUNT = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 1;
+	int BODY_FEATURE_COUNT = XbasePackage.XBLOCK_EXPRESSION_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.xtest.xTest.impl.XTestSuiteImpl <em>Suite</em>}' class.
+	 * The meta object id for the '{@link org.xtest.xTest.impl.XTestExpressionImpl <em>Expression</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.xtest.xTest.impl.XTestSuiteImpl
-	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestSuite()
+	 * @see org.xtest.xTest.impl.XTestExpressionImpl
+	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestExpression()
 	 * @generated
 	 */
-	int XTEST_SUITE = 3;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XTEST_SUITE__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XTEST_SUITE__EXPRESSION = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Suite</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int XTEST_SUITE_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
-
-	/**
-	 * The meta object id for the '{@link org.xtest.xTest.impl.XTestCaseImpl <em>Case</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.xtest.xTest.impl.XTestCaseImpl
-	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestCase()
-	 * @generated
-	 */
-	int XTEST_CASE = 4;
+	int XTEST_EXPRESSION = 3;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' containment reference.
@@ -245,7 +197,7 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XTEST_CASE__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+	int XTEST_EXPRESSION__NAME = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -254,16 +206,16 @@ public interface XTestPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int XTEST_CASE__EXPRESSION = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
+	int XTEST_EXPRESSION__EXPRESSION = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the '<em>Case</em>' class.
+	 * The number of structural features of the '<em>Expression</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int XTEST_CASE_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
+	int XTEST_EXPRESSION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.xtest.xTest.impl.XAssertExpressionImpl <em>XAssert Expression</em>}' class.
@@ -273,7 +225,7 @@ public interface XTestPackage extends EPackage
 	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXAssertExpression()
 	 * @generated
 	 */
-	int XASSERT_EXPRESSION = 5;
+	int XASSERT_EXPRESSION = 4;
 
 	/**
 	 * The feature id for the '<em><b>Actual</b></em>' containment reference.
@@ -302,60 +254,202 @@ public interface XTestPackage extends EPackage
 	 */
 	int XASSERT_EXPRESSION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 2;
 
-
 	/**
-	 * Returns the meta object for class '{@link org.xtest.xTest.Import <em>Import</em>}'.
+	 * The meta object id for the '{@link org.xtest.xTest.impl.XMethodDefImpl <em>XMethod Def</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Import</em>'.
-	 * @see org.xtest.xTest.Import
+	 * @see org.xtest.xTest.impl.XMethodDefImpl
+	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXMethodDef()
 	 * @generated
 	 */
-	EClass getImport();
+	int XMETHOD_DEF = 5;
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.xtest.xTest.Import#isStatic <em>Static</em>}'.
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Static</em>'.
-	 * @see org.xtest.xTest.Import#isStatic()
-	 * @see #getImport()
 	 * @generated
+	 * @ordered
 	 */
-	EAttribute getImport_Static();
+	int XMETHOD_DEF__ANNOTATIONS = XtendPackage.XTEND_FUNCTION__ANNOTATIONS;
 
 	/**
-	 * Returns the meta object for the reference '{@link org.xtest.xTest.Import#getStaticImport <em>Static Import</em>}'.
+	 * The feature id for the '<em><b>Annotation Info</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Static Import</em>'.
-	 * @see org.xtest.xTest.Import#getStaticImport()
-	 * @see #getImport()
 	 * @generated
+	 * @ordered
 	 */
-	EReference getImport_StaticImport();
+	int XMETHOD_DEF__ANNOTATION_INFO = XtendPackage.XTEND_FUNCTION__ANNOTATION_INFO;
 
 	/**
-	 * Returns the meta object for the reference '{@link org.xtest.xTest.Import#getTypeImport <em>Type Import</em>}'.
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Type Import</em>'.
-	 * @see org.xtest.xTest.Import#getTypeImport()
-	 * @see #getImport()
 	 * @generated
+	 * @ordered
 	 */
-	EReference getImport_TypeImport();
+	int XMETHOD_DEF__NAME = XtendPackage.XTEND_FUNCTION__NAME;
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.xtest.xTest.Import#getImportedNamespace <em>Imported Namespace</em>}'.
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Imported Namespace</em>'.
-	 * @see org.xtest.xTest.Import#getImportedNamespace()
-	 * @see #getImport()
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__EXPRESSION = XtendPackage.XTEND_FUNCTION__EXPRESSION;
+
+	/**
+	 * The feature id for the '<em><b>Return Type</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__RETURN_TYPE = XtendPackage.XTEND_FUNCTION__RETURN_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__PARAMETERS = XtendPackage.XTEND_FUNCTION__PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Override</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__OVERRIDE = XtendPackage.XTEND_FUNCTION__OVERRIDE;
+
+	/**
+	 * The feature id for the '<em><b>Dispatch</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__DISPATCH = XtendPackage.XTEND_FUNCTION__DISPATCH;
+
+	/**
+	 * The feature id for the '<em><b>Create Extension Info</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__CREATE_EXTENSION_INFO = XtendPackage.XTEND_FUNCTION__CREATE_EXTENSION_INFO;
+
+	/**
+	 * The feature id for the '<em><b>Type Parameters</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__TYPE_PARAMETERS = XtendPackage.XTEND_FUNCTION__TYPE_PARAMETERS;
+
+	/**
+	 * The feature id for the '<em><b>Visibility</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__VISIBILITY = XtendPackage.XTEND_FUNCTION__VISIBILITY;
+
+	/**
+	 * The feature id for the '<em><b>Static</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__STATIC = XtendPackage.XTEND_FUNCTION__STATIC;
+
+	/**
+	 * The feature id for the '<em><b>Exceptions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF__EXCEPTIONS = XtendPackage.XTEND_FUNCTION__EXCEPTIONS;
+
+	/**
+	 * The number of structural features of the '<em>XMethod Def</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF_FEATURE_COUNT = XtendPackage.XTEND_FUNCTION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.xtest.xTest.impl.XMethodDefExpressionImpl <em>XMethod Def Expression</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.xtest.xTest.impl.XMethodDefExpressionImpl
+	 * @see org.xtest.xTest.impl.XTestPackageImpl#getXMethodDefExpression()
 	 * @generated
 	 */
-	EAttribute getImport_ImportedNamespace();
+	int XMETHOD_DEF_EXPRESSION = 6;
+
+	/**
+	 * The feature id for the '<em><b>Method</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF_EXPRESSION__METHOD = XbasePackage.XEXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>XMethod Def Expression</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int XMETHOD_DEF_EXPRESSION_FEATURE_COUNT = XbasePackage.XEXPRESSION_FEATURE_COUNT + 1;
+
+
+	/**
+	 * Returns the meta object for class '{@link org.xtest.xTest.FileParam <em>File Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>File Param</em>'.
+	 * @see org.xtest.xTest.FileParam
+	 * @generated
+	 */
+	EClass getFileParam();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.xtest.xTest.FileParam#getFeature <em>Feature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Feature</em>'.
+	 * @see org.xtest.xTest.FileParam#getFeature()
+	 * @see #getFileParam()
+	 * @generated
+	 */
+	EReference getFileParam_Feature();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.FileParam#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Value</em>'.
+	 * @see org.xtest.xTest.FileParam#getValue()
+	 * @see #getFileParam()
+	 * @generated
+	 */
+	EReference getFileParam_Value();
 
 	/**
 	 * Returns the meta object for class '{@link org.xtest.xTest.UniqueName <em>Unique Name</em>}'.
@@ -400,6 +494,17 @@ public interface XTestPackage extends EPackage
 	EClass getBody();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.xtest.xTest.Body#getFileparam <em>Fileparam</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Fileparam</em>'.
+	 * @see org.xtest.xTest.Body#getFileparam()
+	 * @see #getBody()
+	 * @generated
+	 */
+	EReference getBody_Fileparam();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.xtest.xTest.Body#getImports <em>Imports</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -411,68 +516,36 @@ public interface XTestPackage extends EPackage
 	EReference getBody_Imports();
 
 	/**
-	 * Returns the meta object for class '{@link org.xtest.xTest.XTestSuite <em>Suite</em>}'.
+	 * Returns the meta object for class '{@link org.xtest.xTest.XTestExpression <em>Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Suite</em>'.
-	 * @see org.xtest.xTest.XTestSuite
+	 * @return the meta object for class '<em>Expression</em>'.
+	 * @see org.xtest.xTest.XTestExpression
 	 * @generated
 	 */
-	EClass getXTestSuite();
+	EClass getXTestExpression();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestSuite#getName <em>Name</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestExpression#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Name</em>'.
-	 * @see org.xtest.xTest.XTestSuite#getName()
-	 * @see #getXTestSuite()
+	 * @see org.xtest.xTest.XTestExpression#getName()
+	 * @see #getXTestExpression()
 	 * @generated
 	 */
-	EReference getXTestSuite_Name();
+	EReference getXTestExpression_Name();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestSuite#getExpression <em>Expression</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestExpression#getExpression <em>Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference '<em>Expression</em>'.
-	 * @see org.xtest.xTest.XTestSuite#getExpression()
-	 * @see #getXTestSuite()
+	 * @see org.xtest.xTest.XTestExpression#getExpression()
+	 * @see #getXTestExpression()
 	 * @generated
 	 */
-	EReference getXTestSuite_Expression();
-
-	/**
-	 * Returns the meta object for class '{@link org.xtest.xTest.XTestCase <em>Case</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Case</em>'.
-	 * @see org.xtest.xTest.XTestCase
-	 * @generated
-	 */
-	EClass getXTestCase();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestCase#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Name</em>'.
-	 * @see org.xtest.xTest.XTestCase#getName()
-	 * @see #getXTestCase()
-	 * @generated
-	 */
-	EReference getXTestCase_Name();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XTestCase#getExpression <em>Expression</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Expression</em>'.
-	 * @see org.xtest.xTest.XTestCase#getExpression()
-	 * @see #getXTestCase()
-	 * @generated
-	 */
-	EReference getXTestCase_Expression();
+	EReference getXTestExpression_Expression();
 
 	/**
 	 * Returns the meta object for class '{@link org.xtest.xTest.XAssertExpression <em>XAssert Expression</em>}'.
@@ -507,6 +580,37 @@ public interface XTestPackage extends EPackage
 	EReference getXAssertExpression_Throws();
 
 	/**
+	 * Returns the meta object for class '{@link org.xtest.xTest.XMethodDef <em>XMethod Def</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>XMethod Def</em>'.
+	 * @see org.xtest.xTest.XMethodDef
+	 * @generated
+	 */
+	EClass getXMethodDef();
+
+	/**
+	 * Returns the meta object for class '{@link org.xtest.xTest.XMethodDefExpression <em>XMethod Def Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>XMethod Def Expression</em>'.
+	 * @see org.xtest.xTest.XMethodDefExpression
+	 * @generated
+	 */
+	EClass getXMethodDefExpression();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.xtest.xTest.XMethodDefExpression#getMethod <em>Method</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Method</em>'.
+	 * @see org.xtest.xTest.XMethodDefExpression#getMethod()
+	 * @see #getXMethodDefExpression()
+	 * @generated
+	 */
+	EReference getXMethodDefExpression_Method();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -530,46 +634,30 @@ public interface XTestPackage extends EPackage
 	interface Literals
 	{
 		/**
-		 * The meta object literal for the '{@link org.xtest.xTest.impl.ImportImpl <em>Import</em>}' class.
+		 * The meta object literal for the '{@link org.xtest.xTest.impl.FileParamImpl <em>File Param</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.xtest.xTest.impl.ImportImpl
-		 * @see org.xtest.xTest.impl.XTestPackageImpl#getImport()
+		 * @see org.xtest.xTest.impl.FileParamImpl
+		 * @see org.xtest.xTest.impl.XTestPackageImpl#getFileParam()
 		 * @generated
 		 */
-		EClass IMPORT = eINSTANCE.getImport();
+		EClass FILE_PARAM = eINSTANCE.getFileParam();
 
 		/**
-		 * The meta object literal for the '<em><b>Static</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Feature</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute IMPORT__STATIC = eINSTANCE.getImport_Static();
+		EReference FILE_PARAM__FEATURE = eINSTANCE.getFileParam_Feature();
 
 		/**
-		 * The meta object literal for the '<em><b>Static Import</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Value</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference IMPORT__STATIC_IMPORT = eINSTANCE.getImport_StaticImport();
-
-		/**
-		 * The meta object literal for the '<em><b>Type Import</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference IMPORT__TYPE_IMPORT = eINSTANCE.getImport_TypeImport();
-
-		/**
-		 * The meta object literal for the '<em><b>Imported Namespace</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute IMPORT__IMPORTED_NAMESPACE = eINSTANCE.getImport_ImportedNamespace();
+		EReference FILE_PARAM__VALUE = eINSTANCE.getFileParam_Value();
 
 		/**
 		 * The meta object literal for the '{@link org.xtest.xTest.impl.UniqueNameImpl <em>Unique Name</em>}' class.
@@ -608,6 +696,14 @@ public interface XTestPackage extends EPackage
 		EClass BODY = eINSTANCE.getBody();
 
 		/**
+		 * The meta object literal for the '<em><b>Fileparam</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference BODY__FILEPARAM = eINSTANCE.getBody_Fileparam();
+
+		/**
 		 * The meta object literal for the '<em><b>Imports</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -616,14 +712,14 @@ public interface XTestPackage extends EPackage
 		EReference BODY__IMPORTS = eINSTANCE.getBody_Imports();
 
 		/**
-		 * The meta object literal for the '{@link org.xtest.xTest.impl.XTestSuiteImpl <em>Suite</em>}' class.
+		 * The meta object literal for the '{@link org.xtest.xTest.impl.XTestExpressionImpl <em>Expression</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.xtest.xTest.impl.XTestSuiteImpl
-		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestSuite()
+		 * @see org.xtest.xTest.impl.XTestExpressionImpl
+		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestExpression()
 		 * @generated
 		 */
-		EClass XTEST_SUITE = eINSTANCE.getXTestSuite();
+		EClass XTEST_EXPRESSION = eINSTANCE.getXTestExpression();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' containment reference feature.
@@ -631,7 +727,7 @@ public interface XTestPackage extends EPackage
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference XTEST_SUITE__NAME = eINSTANCE.getXTestSuite_Name();
+		EReference XTEST_EXPRESSION__NAME = eINSTANCE.getXTestExpression_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
@@ -639,33 +735,7 @@ public interface XTestPackage extends EPackage
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference XTEST_SUITE__EXPRESSION = eINSTANCE.getXTestSuite_Expression();
-
-		/**
-		 * The meta object literal for the '{@link org.xtest.xTest.impl.XTestCaseImpl <em>Case</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.xtest.xTest.impl.XTestCaseImpl
-		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXTestCase()
-		 * @generated
-		 */
-		EClass XTEST_CASE = eINSTANCE.getXTestCase();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference XTEST_CASE__NAME = eINSTANCE.getXTestCase_Name();
-
-		/**
-		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference XTEST_CASE__EXPRESSION = eINSTANCE.getXTestCase_Expression();
+		EReference XTEST_EXPRESSION__EXPRESSION = eINSTANCE.getXTestExpression_Expression();
 
 		/**
 		 * The meta object literal for the '{@link org.xtest.xTest.impl.XAssertExpressionImpl <em>XAssert Expression</em>}' class.
@@ -692,6 +762,34 @@ public interface XTestPackage extends EPackage
 		 * @generated
 		 */
 		EReference XASSERT_EXPRESSION__THROWS = eINSTANCE.getXAssertExpression_Throws();
+
+		/**
+		 * The meta object literal for the '{@link org.xtest.xTest.impl.XMethodDefImpl <em>XMethod Def</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.xtest.xTest.impl.XMethodDefImpl
+		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXMethodDef()
+		 * @generated
+		 */
+		EClass XMETHOD_DEF = eINSTANCE.getXMethodDef();
+
+		/**
+		 * The meta object literal for the '{@link org.xtest.xTest.impl.XMethodDefExpressionImpl <em>XMethod Def Expression</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.xtest.xTest.impl.XMethodDefExpressionImpl
+		 * @see org.xtest.xTest.impl.XTestPackageImpl#getXMethodDefExpression()
+		 * @generated
+		 */
+		EClass XMETHOD_DEF_EXPRESSION = eINSTANCE.getXMethodDefExpression();
+
+		/**
+		 * The meta object literal for the '<em><b>Method</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference XMETHOD_DEF_EXPRESSION__METHOD = eINSTANCE.getXMethodDefExpression_Method();
 
 	}
 

@@ -27,18 +27,8 @@ public class XtestContentAssistFragment extends JavaBasedContentAssistFragment {
     public void generate(Grammar grammar, XpandExecutionContext ctx) {
         if (dontOverrideMethods) {
             Grammar grammar2 = EcoreUtil2.clone(grammar);
-            List<AbstractRule> toRemove = Lists.newArrayList();
 
-            for (Grammar other : grammar2.getUsedGrammars()) {
-                for (AbstractRule rule : other.getRules()) {
-                    for (AbstractRule rule2 : grammar2.getRules()) {
-                        if (rule2.getName().equals(rule.getName())) {
-                            toRemove.add(rule2);
-                            logger.info("Skipping content assist generation for " + rule.getName());
-                        }
-                    }
-                }
-            }
+            List<AbstractRule> toRemove = gatherRulesToRemove(grammar2, grammar2.getUsedGrammars());
             grammar2.getRules().removeAll(toRemove);
             grammar = grammar2;
         }
@@ -70,5 +60,21 @@ public class XtestContentAssistFragment extends JavaBasedContentAssistFragment {
     @Override
     protected String getTemplate() {
         return JavaBasedContentAssistFragment.class.getName().replaceAll("\\.", "::");
+    }
+
+    private List<AbstractRule> gatherRulesToRemove(Grammar grammar2, List<Grammar> used) {
+        List<AbstractRule> result = Lists.newArrayList();
+        for (Grammar other : used) {
+            result.addAll(gatherRulesToRemove(grammar2, other.getUsedGrammars()));
+            for (AbstractRule rule : other.getRules()) {
+                for (AbstractRule rule2 : grammar2.getRules()) {
+                    if (rule2.getName().equals(rule.getName())) {
+                        result.add(rule2);
+                        logger.info("Skipping content assist generation for " + rule.getName());
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

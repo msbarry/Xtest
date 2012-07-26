@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
-
  */
 package org.xtest.xTest;
 
@@ -27,13 +23,13 @@ public interface XTestFactory extends EFactory
 	XTestFactory eINSTANCE = org.xtest.xTest.impl.XTestFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Import</em>'.
+	 * Returns a new object of class '<em>File Param</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Import</em>'.
+	 * @return a new object of class '<em>File Param</em>'.
 	 * @generated
 	 */
-	Import createImport();
+	FileParam createFileParam();
 
 	/**
 	 * Returns a new object of class '<em>Unique Name</em>'.
@@ -54,22 +50,13 @@ public interface XTestFactory extends EFactory
 	Body createBody();
 
 	/**
-	 * Returns a new object of class '<em>Suite</em>'.
+	 * Returns a new object of class '<em>Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Suite</em>'.
+	 * @return a new object of class '<em>Expression</em>'.
 	 * @generated
 	 */
-	XTestSuite createXTestSuite();
-
-	/**
-	 * Returns a new object of class '<em>Case</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Case</em>'.
-	 * @generated
-	 */
-	XTestCase createXTestCase();
+	XTestExpression createXTestExpression();
 
 	/**
 	 * Returns a new object of class '<em>XAssert Expression</em>'.
@@ -79,6 +66,24 @@ public interface XTestFactory extends EFactory
 	 * @generated
 	 */
 	XAssertExpression createXAssertExpression();
+
+	/**
+	 * Returns a new object of class '<em>XMethod Def</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XMethod Def</em>'.
+	 * @generated
+	 */
+	XMethodDef createXMethodDef();
+
+	/**
+	 * Returns a new object of class '<em>XMethod Def Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>XMethod Def Expression</em>'.
+	 * @generated
+	 */
+	XMethodDefExpression createXMethodDefExpression();
 
 	/**
 	 * Returns the package supported by this factory.

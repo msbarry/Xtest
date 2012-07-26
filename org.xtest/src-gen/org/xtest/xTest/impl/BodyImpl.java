@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
-
  */
 package org.xtest.xTest.impl;
 
@@ -18,10 +14,12 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.xtend.core.xtend.XtendImport;
+
 import org.eclipse.xtext.xbase.impl.XBlockExpressionImpl;
 
 import org.xtest.xTest.Body;
-import org.xtest.xTest.Import;
+import org.xtest.xTest.FileParam;
 import org.xtest.xTest.XTestPackage;
 
 /**
@@ -31,6 +29,7 @@ import org.xtest.xTest.XTestPackage;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link org.xtest.xTest.impl.BodyImpl#getFileparam <em>Fileparam</em>}</li>
  *   <li>{@link org.xtest.xTest.impl.BodyImpl#getImports <em>Imports</em>}</li>
  * </ul>
  * </p>
@@ -40,6 +39,16 @@ import org.xtest.xTest.XTestPackage;
 public class BodyImpl extends XBlockExpressionImpl implements Body
 {
 	/**
+	 * The cached value of the '{@link #getFileparam() <em>Fileparam</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFileparam()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<FileParam> fileparam;
+
+	/**
 	 * The cached value of the '{@link #getImports() <em>Imports</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -47,7 +56,7 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Import> imports;
+	protected EList<XtendImport> imports;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -75,11 +84,25 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Import> getImports()
+	public EList<FileParam> getFileparam()
+	{
+		if (fileparam == null)
+		{
+			fileparam = new EObjectContainmentEList<FileParam>(FileParam.class, this, XTestPackage.BODY__FILEPARAM);
+		}
+		return fileparam;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<XtendImport> getImports()
 	{
 		if (imports == null)
 		{
-			imports = new EObjectContainmentEList<Import>(Import.class, this, XTestPackage.BODY__IMPORTS);
+			imports = new EObjectContainmentEList<XtendImport>(XtendImport.class, this, XTestPackage.BODY__IMPORTS);
 		}
 		return imports;
 	}
@@ -94,6 +117,8 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				return ((InternalEList<?>)getFileparam()).basicRemove(otherEnd, msgs);
 			case XTestPackage.BODY__IMPORTS:
 				return ((InternalEList<?>)getImports()).basicRemove(otherEnd, msgs);
 		}
@@ -110,6 +135,8 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				return getFileparam();
 			case XTestPackage.BODY__IMPORTS:
 				return getImports();
 		}
@@ -127,9 +154,13 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				getFileparam().clear();
+				getFileparam().addAll((Collection<? extends FileParam>)newValue);
+				return;
 			case XTestPackage.BODY__IMPORTS:
 				getImports().clear();
-				getImports().addAll((Collection<? extends Import>)newValue);
+				getImports().addAll((Collection<? extends XtendImport>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -145,6 +176,9 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				getFileparam().clear();
+				return;
 			case XTestPackage.BODY__IMPORTS:
 				getImports().clear();
 				return;
@@ -162,6 +196,8 @@ public class BodyImpl extends XBlockExpressionImpl implements Body
 	{
 		switch (featureID)
 		{
+			case XTestPackage.BODY__FILEPARAM:
+				return fileparam != null && !fileparam.isEmpty();
 			case XTestPackage.BODY__IMPORTS:
 				return imports != null && !imports.isEmpty();
 		}

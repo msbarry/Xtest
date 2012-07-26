@@ -1,0 +1,238 @@
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: false
+ 
+import static org.junit.Assert.*
+import static extension org.^xtest.test.TestUtils.*
+
+xtest "no arg, no body" {
+	xtest { assertValidSyntax('def function {}') }
+	xtest { assertValidSyntax('def function {}; def function {}') }
+	xtest { assertValidSyntax('def static function {}') }
+	xtest { assertValidSyntax('static def function {}') }
+	xtest { assertValidSyntax('def static function(String s) {}; def static function(int i) {}') }
+	
+	xtest { assertInvalidSyntax('def {}') }
+	xtest { assertInvalidSyntax('def function') }
+	xtest { assertInvalidSyntax('def static function {}; def static function {}') }
+}
+ 
+xtest "no arg, with body" {
+	xtest { assertValidSyntax('def function {return 0}') }
+	xtest { assertValidSyntax('def function {0}') }
+	
+	xtest "static does not inherit outer var scope" {
+		assertValidSyntax('val i = 1; def function {i}')
+		assertInvalidSyntax('val i = 1; def static function {i}')
+	}
+	
+	xtest "static does not inherit outer method scope" {
+		assertValidSyntax('def static meth {}; def static function {meth()}')
+		assertInvalidSyntax('def meth {}; def static function {meth()}')
+	}
+	
+	xtest { assertInvalidSyntax('def {return 0}') }
+}
+
+xtest "args" {
+	xtest { assertValidSyntax('def function() {}') }
+	xtest { assertValidSyntax('def function(int... i) {}') }
+	xtest { assertValidSyntax('def function(int i) {}') }
+	xtest { assertValidSyntax('def function(int i) {i+1}') } 
+	xtest { assertValidSyntax('def function(int i, String a) {}') }
+	xtest { assertValidSyntax('def function(String a) {a.toUpperCase}') }
+	xtest { assertValidSyntax  ('def function(java.util.List<String> a) {a.map[it.toUpperCase]}') }
+	
+	xtest { assertInvalidSyntax('def function(int i) {j+1}') }
+	xtest { assertInvalidSyntax('def function(int a) {a.toUpperCase}') }
+	xtest { assertInvalidSyntax('def function(int i, String a)') }
+	xtest { assertInvalidSyntax('def function(void i) {}') }
+	
+	xtest "duplicate variable name" {
+		 assertValidSyntax  ('def function(int i, String j) {}') 
+		 assertInvalidSyntax('def function(int i, String i) {}') 
+	}
+	
+	xtest "duplicate variable name static" {
+		 assertValidSyntax  ('def static function(int i, String j) {}') 
+		 assertInvalidSyntax('def static function(int i, String i) {}') 
+	}
+
+	xtest "can only shadow 'it' keyword" {
+		 assertValidSyntax('def function(int a) {}') 
+		 assertValidSyntax("def function(int it) {}") 
+		 assertInvalidSyntax("def function(int this) {}") 
+		 assertInvalidSyntax("def function(int super) {}") 
+	}
+
+	xtest "var name conflicts with outside var name non-static" {
+		 assertValidSyntax('val i = 1; def function(int a) {}')
+		 assertInvalidSyntax('val i = 1; def function(int i) {}') 
+	}
+
+	xtest "var name conflicts with outside var name static" {
+		 assertValidSyntax('val i = 1; def static function(int a) {}')
+		 assertValidSyntax('val i = 1; def static function(int i) {}') 
+	}
+	
+	xtest "inside var name conflicts with param name" {
+		 assertValidSyntax('def function(int a) {val i = 1; return i}')
+		 assertInvalidSyntax('def function(int i) {val i = 1; return i}') 
+	}
+	
+	xtest "insde var conflicts with outside var" {
+		 assertInvalidSyntax('def function(int i, String i)') 
+	}
+}
+
+xtest "return type" {
+	xtest { assertValidSyntax('def Integer function() {0}') }
+	
+	xtest { assertValidSyntax('def String function() {return "a"}') }
+	
+	xtest { assertInvalidSyntax('def String function()') }
+	
+	xtest "return type doesnt match" { 
+		assertValidSyntax('def int function() {return 1}')
+		assertInvalidSyntax('def String function() {return 1}')
+	}
+	
+	xtest "inferred return type doesnt match" { 
+		assertValidSyntax('def int function() {1}')
+		assertInvalidSyntax('def String function() {1}')
+	}
+}
+
+xtest "type parameter" {
+	xtest { assertValidSyntax('def <T> T function(T input) {}') }
+	xtest { assertValidSyntax('def <T extends Number> T function(T input) {1 as T}') }
+	xtest { assertValidSyntax('def <T extends Comparable<? super String>> T function(T input) {return null as T}') }
+	xtest { assertValidSyntax('def <T extends String> function(T input) {}') }
+	xtest { assertValidSyntax('def <T extends String, U extends Integer> function(T input, U input2) {}') }
+	xtest { assertValidSyntax('def <T> T method(T t) {}') }
+	xtest { assertValidSyntax('def <T> method(T t) {}') }
+	xtest { assertValidSyntax('def <T> T function(T... input) {input.head}') }
+	
+	xtest { assertInvalidSyntax('def <T> T function(T input)') }
+	xtest { assertInvalidSyntax('def <T> T function(U input) {}') }
+	xtest { assertInvalidSyntax('def <T> U function(T input) {}') }
+	xtest { assertInvalidSyntax('def <T extends String, T extends Integer> function(T input, T input2) {}') }
+	
+	xtest "use type parameter" {
+		assertValidSyntax('def <T> method(T t) {val T i = t}')
+		assertInvalidSyntax('def <T> method(T t) {val U i = t}')
+	}
+	
+	xtest "nested method uses type parameter NOT OK for non-static" {
+		assertValidSyntax('def <T> method(T t) {def T nestedMethod(T t2) {}}')
+		assertInvalidSyntax('def <T> method(T t) {def U nestedMethod(U t2) {}}')
+	}
+	
+	xtest "nested method with conflicting type parameter is allowed, like java" {
+		assertValidSyntax('def <T> method(T t) {def <U> U nestedMethod(U u) {}}')
+		assertValidSyntax('def <T> method(T t) {def <T> T nestedMethod(T u) {}}')
+	}
+	
+	xtest "type parameter only available inside method def" {
+		assertValidSyntax('def <T> method(T t) {}')
+		assertValidSyntax('def <T> method(T t) {}; def <T> method2(T t) {}')
+		xtest { assertInvalidSyntax('def <T> method(T t) {}; val T a = null') }
+		xtest { assertInvalidSyntax('def static <T> method(T t) {}; val T a = null') }
+		xtest { assertInvalidSyntax('val T a = null\ndef <T> method(T t) {}') }
+	}
+	 
+	xtest "type parameter valid inside nested method for non-static only" { 
+		assertValidSyntax('def <T> method(T t) {def <U> nestedMethod(U u) {null as T}}')
+		assertInvalidSyntax('def static <T> method(T t) {def static <U> nestedMethod(U u) {null as T}}')
+	}
+}
+
+xtest "varargs" { 
+	xtest { assertValidSyntax  ('def function(int[] a) {}') } 
+	xtest { assertValidSyntax  ('def function(int[] a, String b) {}') }
+	xtest { assertValidSyntax  ('def function(int a, String[] b) {}') }
+	xtest { assertValidSyntax  ('def function(int i, String... a) {}') }
+	xtest { assertInvalidSyntax('def function(int... i, String a) {}') }
+	
+	xtest { assertValidSyntax  ('def function(String... a) {a.map[it.toUpperCase]}') } 
+	xtest { assertInvalidSyntax('def function(String a) {a.map[it.toUpperCase]}') }
+	xtest { assertValidSyntax  ('def function(String[] a) {a.map[it.toUpperCase]}') } 
+}
+
+xtest "use static method" {
+	xtest "static valid after"  {  assertValidSyntax ('def static function(int i) {i}; function(1)') }
+	xtest "static valid before" {  assertValidSyntax ('function(1); def static function(int i) {i}') }
+	
+	xtest "static valid inside" {  assertValidSyntax ('def static function(int i) {function(1)}') }
+	xtest "use var-args w/ 0" {  assertValidSyntax ('def static function(int... i) {i}; function()') }
+	xtest "use var-args w/ 1" {  assertValidSyntax ('def static function(int... i) {i}; function(1)') }
+	xtest "use var-args w/ multiple" {  assertValidSyntax ('def static function(int... i) {i}; function(1, 2, 3)') }
+	xtest "non var-args w/ multiple invalid" {  assertInvalidSyntax ('def static function(int i) {i}; function(1, 2, 3)') }
+	
+	xtest "static without parens" { assertValidSyntax ('def static function() {}; function') }
+	xtest "static operator overloading" {
+		assertInvalidSyntax ('def static nop(String a, String b) {}; "a"-"b"')
+		assertValidSyntax ('def static operator_minus(String a, String b) {}; "a"-"b"')
+	}
+	xtest "curried static" { assertValidSyntax ('def static function((String)=>Integer arg) {arg.apply("a")}; function[it.length]') }
+	xtest "sugared static" { assertValidSyntax ('def static getC {1}; val d = c') }
+	xtest "static extension" { assertValidSyntax ('def static extn(int i) {1+1}; 1.extn') }
+	xtest "static extension on wrong type" { assertInvalidSyntax ('def static extn(String i) {1+1}; 1.extn') }
+	xtest "static sugared extension" { assertValidSyntax ('def static setC(int i, int a) {1+1}; 1.c = 2') }
+	xtest "static sugared extension on wrong type" { assertInvalidSyntax ('def static setC(String i, int a) {1+1}; 1.c = 2') }
+}
+
+xtest "use non-static method" {
+	xtest "non-static valid after"  {  assertValidSyntax ('def function() {}; function()') }
+	xtest "non-static valid inside"  {  assertValidSyntax ('def function() {function()}') }
+	xtest "non-static invalid before"  {  assertInvalidSyntax ('function(); def function() {}') }
+	xtest "2 non-statics valid inside1"  {  assertValidSyntax ('def function() {def function2(){}; function()}') }
+	xtest "2 non-statics valid inside2"  {  assertValidSyntax ('def function() {def function2(){}; function2()}') }
+	xtest "2 non-statics valid inside3"  {  assertValidSyntax ('def function() {def function2(){function2()}}') }
+	xtest "2 non-statics valid inside4"  {  assertValidSyntax ('def function() {def function2(){function()}}') }
+	
+	xtest "use var-args w/ 0" {  assertValidSyntax ('def function(int... i) {}; function()') }
+	xtest "use var-args w/ 1" {  assertValidSyntax ('def function(int... i) {}; function(1)') }
+	xtest "use var-args w/ 2" {  assertValidSyntax ('def function(int... i) {}; function(1,2)') }
+	xtest "non var-args w/ 1" {  assertValidSyntax ('def function(int i) {}; function(1)') }
+	xtest "non var-args w/ multiple invalid" {  assertInvalidSyntax ('def function(int i) {}; function(1, 2, 3)') }
+	
+	xtest "non-static without parens" { assertValidSyntax ('def function() {}; function') }
+	xtest "non-static overload method" {
+		assertInvalidSyntax ('def nop(String a, String b) {}; "a"-"b"')
+		assertValidSyntax ('def operator_minus(String a, String b) {}; "a"-"b"')
+	}
+	
+	xtest "curried non-static" { assertValidSyntax ('def function((String)=>Integer arg) {arg.apply("a")}; function[it.length]') }
+	xtest "sugared non-static" { assertValidSyntax ('def getC {1}; val d = c') }
+	xtest "non-static extension" { assertValidSyntax ('def extn(int i) {1+1}; 1.extn') }
+	xtest "non-static extension on wrong type" { assertInvalidSyntax ('def extn(String i) {1+1}; 1.extn') }
+	xtest "non-static sugared extension" { assertValidSyntax ('def setC(int i, int a) {1+1}; 1.c = 2') }
+	xtest "non-static sugared extension on wrong type" { assertInvalidSyntax ('def setC(String i, int a) {1+1}; 1.c = 2') }
+} 
+
+xtest "local method naming conflicts" {
+	xtest "reassign function OK" { assertValidSyntax('def function() {}; def function() {}')}
+	xtest "reassign static function OK" { assertValidSyntax('def static function() {}; def function() {}')}
+	xtest "overload local variable NOT OK" { 
+		assertValidSyntax('val b = 1; def a() {}')
+		assertInvalidSyntax('val a = 1; def a() {}')
+	}
+	xtest "overload local method with variable inside NOT OK" { 
+		assertValidSyntax('def a() {val b = 1}')
+		assertInvalidSyntax('def a() {val a = 1}')
+	}
+	xtest "overload local method with variable outside NOT OK" { 
+		assertValidSyntax('def a() {}; val b = 1')
+		assertInvalidSyntax('def a() {}; val a = 1')
+	}
+	xtest "overload static method with variable OK" { 
+		assertValidSyntax('def static a() {}; val a = 1')
+	}
+	xtest "Can only use val from local method" { 
+		assertValidSyntax  ('val b = 1; def a() {b};')
+		assertInvalidSyntax('var b = 1; def a() {b};')
+	}
+}

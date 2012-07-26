@@ -2,8 +2,11 @@ package org.xtest.ui.runner;
 
 import static com.google.common.collect.Sets.newHashSet;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -21,15 +24,23 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.xtest.RunType;
 import org.xtest.XTestRunner;
 import org.xtest.interpreter.XTestInterpreter;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.results.XTestResult;
+import org.xtest.runner.external.DependencyAcceptor;
+import org.xtest.runner.util.ClasspathUtils;
+import org.xtest.ui.mediator.ValidationStartedEvent;
+import org.xtest.ui.resource.XtestDependencyAcceptingResource;
 import org.xtest.xTest.Body;
 import org.xtest.xTest.impl.BodyImplCustom;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -44,39 +55,21 @@ public class UiXTestRunner extends XTestRunner {
      * Time to wait between checking the caller's cancel indicator.
      */
     private static final long DELAY_BETWEEN_CHECKS = 10;
+    @Inject
+    private EventBus eventBus;
 
     @Inject
     private Provider<XTestInterpreter> interpreterProvider;
 
     @Override
-    public XTestSuiteResult run(final Body main, CancelIndicator monitor) {
-        final ArrayBlockingQueue<XTestSuiteResult> resultQueue = new ArrayBlockingQueue<XTestSuiteResult>(
-                1);
-
-        String name = "Running " + ((BodyImplCustom) main).getFileName();
-
-        // result.set(super.run(main, monitor));
-        // Kick off a new job to run the test
-        Job job = new TestRunnerJob(name, resultQueue, main);
-        job.schedule();
-        XTestSuiteResult jobResult = null;
-
-        // TODO should be able to specify a maximum allowed time for tests to run and cancel after
-        // that
-        while (jobResult == null) {
-            try {
-                jobResult = resultQueue.poll(DELAY_BETWEEN_CHECKS, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            if (monitor.isCanceled()) {
-                job.cancel();
-                break;
-            }
+    public XTestResult run(final Body main, RunType weight, CancelIndicator monitor) {
+        eventBus.post(new ValidationStartedEvent(main.eResource().getURI()));
+        XTestResult result;
+        if (weight == RunType.LIGHTWEIGHT) {
+            result = runInSeparateThread(main, weight, monitor);
+        } else {
+            result = runInThisThread(main, weight, monitor);
         }
-        XTestSuiteResult result = jobResult == null ? new XTestSuiteResult(main) : jobResult;
-
-        ((BodyImplCustom) main).setResult(result);
 
         return result;
     }
@@ -89,7 +82,9 @@ public class UiXTestRunner extends XTestRunner {
         // in order to use the classloader of the java project in the running
         // instance of eclipse rather than the classloader of this class itself
         XTestInterpreter interpreter = interpreterProvider.get();
-        if (resource instanceof XtextResource) {
+        if (resource instanceof XtestDependencyAcceptingResource) {
+            XtestDependencyAcceptingResource xtestResource = (XtestDependencyAcceptingResource) resource;
+            Optional<DependencyAcceptor> acceptor = xtestResource.getAcceptor();
             ResourceSet set = resource.getResourceSet();
             ClassLoader cl = getClass().getClassLoader();
             if (set instanceof XtextResourceSet) {
@@ -97,53 +92,76 @@ public class UiXTestRunner extends XTestRunner {
                 if (context instanceof IJavaProject) {
                     try {
                         final IJavaProject jp = (IJavaProject) context;
-                        IClasspathEntry[] classpath = jp.getResolvedClasspath(true);
+
+                        ArrayList<IClasspathEntry> classpath = Lists.newArrayList(jp
+                                .getResolvedClasspath(true));
+                        Set<IPath> visited = Sets.newHashSet();
                         final IWorkspaceRoot root = jp.getProject().getWorkspace().getRoot();
                         Set<URL> urls = newHashSet();
-                        for (int i = 0; i < classpath.length; i++) {
-                            final IClasspathEntry entry = classpath[i];
-                            if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-                                IPath outputLocation = entry.getOutputLocation();
-                                if (outputLocation == null) {
-                                    outputLocation = jp.getOutputLocation();
-                                }
-                                IFolder folder = root.getFolder(outputLocation);
-                                if (folder.exists()) {
-                                    urls.add(new URL(folder.getRawLocationURI().toASCIIString()
-                                            + "/"));
-                                }
-                            } else if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-                                IPath outputLocation = entry.getOutputLocation();
-                                if (outputLocation == null) {
-                                    // Modified from getContainerForLocation to getProject because
-                                    // on my setup, getContainerForLocation was returning null. Also
-                                    // added null checks for safety
-                                    IProject project = jp.getProject().getWorkspace().getRoot()
-                                            .getProject(entry.getPath().toString());
-                                    if (project == null) {
-                                        project = (IProject) jp.getProject().getWorkspace()
-                                                .getRoot().getContainerForLocation(entry.getPath());
+                        for (int i = 0; i < classpath.size(); i++) {
+                            final IClasspathEntry entry = classpath.get(i);
+                            // Avoid re-visiting entries in case there is a circular project
+                            // dependency
+                            if (!visited.contains(entry.getPath())) {
+                                visited.add(entry.getPath());
+                                if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+                                    IPath outputLocation = entry.getOutputLocation();
+                                    if (outputLocation == null) {
+                                        outputLocation = jp.getOutputLocation();
                                     }
-                                    if (project != null) {
-                                        IJavaProject javaProject = JavaCore.create(project);
-                                        outputLocation = javaProject.getOutputLocation();
-                                    }
-                                }
-                                // Added null check for safety
-                                if (outputLocation != null) {
                                     IFolder folder = root.getFolder(outputLocation);
                                     if (folder.exists()) {
                                         urls.add(new URL(folder.getRawLocationURI().toASCIIString()
                                                 + "/"));
                                     }
+                                } else if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
+                                    IPath outputLocation = entry.getOutputLocation();
+                                    IProject project = jp.getProject().getWorkspace().getRoot()
+                                            .getProject(entry.getPath().toString());
+                                    if (outputLocation == null) {
+                                        // Modified from getContainerForLocation to getProject
+                                        // because
+                                        // on my setup, getContainerForLocation was returning null.
+                                        // Also
+                                        // added null checks for safety
+                                        if (project == null) {
+                                            project = (IProject) jp.getProject().getWorkspace()
+                                                    .getRoot()
+                                                    .getContainerForLocation(entry.getPath());
+                                        }
+                                        if (project != null) {
+                                            IJavaProject javaProject = JavaCore.create(project);
+                                            if (javaProject.exists()) {
+                                                outputLocation = javaProject.getOutputLocation();
+                                            }
+                                        }
+                                    }
+                                    // Added null check for safety
+                                    if (outputLocation != null) {
+                                        IFolder folder = root.getFolder(outputLocation);
+                                        if (folder.exists()) {
+                                            urls.add(new URL(folder.getRawLocationURI()
+                                                    .toASCIIString() + "/"));
+                                        }
+                                    }
+                                    if (project != null) {
+                                        IClasspathEntry[] resolvedClasspath = JavaCore.create(
+                                                project).getResolvedClasspath(true);
+                                        classpath.addAll(Lists.newArrayList(resolvedClasspath));
+                                    }
+                                } else {
+                                    IPath path = entry.getPath();
+                                    path = ClasspathUtils.normalizePath(root, path);
+                                    urls.add(path.toFile().toURI().toURL());
                                 }
-                            } else {
-                                // Change "toURL" to "toURI.toURL" since toURI is deprecated (does
-                                // not properly escape character sequences)
-                                urls.add(entry.getPath().toFile().toURI().toURL());
                             }
                         }
-                        cl = new URLClassLoader(urls.toArray(new URL[urls.size()]));
+                        URL[] array = urls.toArray(new URL[urls.size()]);
+                        if (acceptor.isPresent()) {
+                            cl = new RecordingClassLoader(array, acceptor.get());
+                        } else {
+                            cl = new URLClassLoader(array);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -152,6 +170,37 @@ public class UiXTestRunner extends XTestRunner {
             interpreter.setClassLoader(cl);
         }
         return interpreter;
+    }
+
+    private XTestResult runInSeparateThread(final Body main, RunType weight, CancelIndicator monitor) {
+        XTestResult result;
+        String name = "Running " + ((BodyImplCustom) main).getFileName();
+        ArrayBlockingQueue<XTestResult> resultQueue = new ArrayBlockingQueue<XTestResult>(1);
+        TestRunnerJob job = new TestRunnerJob(name, resultQueue, main);
+        job.schedule();
+        XTestResult jobResult = UiXTestRunner.super.run(main, weight, monitor);
+
+        // TODO should be able to specify a maximum allowed time for tests to run and cancel
+        // after
+        // that
+        while (jobResult == null) {
+            try {
+                jobResult = resultQueue.poll(DELAY_BETWEEN_CHECKS, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            if (monitor.isCanceled()) {
+                job.cancel();
+                break;
+            }
+        }
+        result = jobResult == null ? new XTestResult(main) : jobResult;
+        return result;
+    }
+
+    private XTestResult runInThisThread(final Body main, RunType weight, CancelIndicator monitor) {
+        XTestResult result = UiXTestRunner.super.run(main, weight, monitor);
+        return result;
     }
 
     /**
@@ -172,6 +221,30 @@ public class UiXTestRunner extends XTestRunner {
         }
     }
 
+    private static class RecordingClassLoader extends URLClassLoader {
+        private final DependencyAcceptor acceptor;
+
+        public RecordingClassLoader(URL[] array, DependencyAcceptor acceptor) {
+            super(array);
+            this.acceptor = acceptor;
+        }
+
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            Class<?> loadClass = super.findClass(name);
+            String path = name.replace('.', '/').concat(".class");
+            URL res = findResource(path);
+            if (res != null) {
+                try {
+                    URI uri = res.toURI();
+                    acceptor.accept(uri);
+                } catch (URISyntaxException e) {
+                }
+            }
+            return loadClass;
+        }
+    }
+
     /**
      * Test runner job
      * 
@@ -179,9 +252,9 @@ public class UiXTestRunner extends XTestRunner {
      */
     private class TestRunnerJob extends Job {
         private final Body main;
-        private final ArrayBlockingQueue<XTestSuiteResult> result;
+        private final ArrayBlockingQueue<XTestResult> result;
 
-        private TestRunnerJob(String name, ArrayBlockingQueue<XTestSuiteResult> result, Body main) {
+        private TestRunnerJob(String name, ArrayBlockingQueue<XTestResult> result, Body main) {
             super(name);
             this.result = result;
             this.main = main;
@@ -195,9 +268,13 @@ public class UiXTestRunner extends XTestRunner {
 
         @Override
         protected IStatus run(final IProgressMonitor arg0) {
-            CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
-            XTestSuiteResult run = UiXTestRunner.super.run(main, indicator);
-            result.offer(run);
+            XTestResult xtestResult = new XTestResult(main);
+            try {
+                CancelIndicator indicator = new ProgressMonitorCancelIndicator(arg0);
+                xtestResult = UiXTestRunner.super.run(main, RunType.LIGHTWEIGHT, indicator);
+            } finally {
+                result.offer(xtestResult);
+            }
             return Status.OK_STATUS;
         }
     }

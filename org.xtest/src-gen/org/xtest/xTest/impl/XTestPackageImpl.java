@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
-
  */
 package org.xtest.xTest.impl;
 
@@ -13,18 +9,21 @@ import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import org.eclipse.xtend.core.xtend.XtendPackage;
+
 import org.eclipse.xtext.common.types.TypesPackage;
 
 import org.eclipse.xtext.xbase.XbasePackage;
 
 import org.xtest.xTest.Body;
-import org.xtest.xTest.Import;
+import org.xtest.xTest.FileParam;
 import org.xtest.xTest.UniqueName;
 import org.xtest.xTest.XAssertExpression;
-import org.xtest.xTest.XTestCase;
+import org.xtest.xTest.XMethodDef;
+import org.xtest.xTest.XMethodDefExpression;
+import org.xtest.xTest.XTestExpression;
 import org.xtest.xTest.XTestFactory;
 import org.xtest.xTest.XTestPackage;
-import org.xtest.xTest.XTestSuite;
 
 /**
  * <!-- begin-user-doc -->
@@ -39,7 +38,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass importEClass = null;
+	private EClass fileParamEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -60,14 +59,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass xTestSuiteEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass xTestCaseEClass = null;
+	private EClass xTestExpressionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -75,6 +67,20 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * @generated
 	 */
 	private EClass xAssertExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass xMethodDefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass xMethodDefExpressionEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -125,7 +131,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		isInited = true;
 
 		// Initialize simple dependencies
-		XbasePackage.eINSTANCE.eClass();
+		XtendPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theXTestPackage.createPackageContents();
@@ -147,9 +153,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getImport()
+	public EClass getFileParam()
 	{
-		return importEClass;
+		return fileParamEClass;
 	}
 
 	/**
@@ -157,9 +163,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getImport_Static()
+	public EReference getFileParam_Feature()
 	{
-		return (EAttribute)importEClass.getEStructuralFeatures().get(0);
+		return (EReference)fileParamEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -167,29 +173,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getImport_StaticImport()
+	public EReference getFileParam_Value()
 	{
-		return (EReference)importEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getImport_TypeImport()
-	{
-		return (EReference)importEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getImport_ImportedNamespace()
-	{
-		return (EAttribute)importEClass.getEStructuralFeatures().get(3);
+		return (EReference)fileParamEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -237,7 +223,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getBody_Imports()
+	public EReference getBody_Fileparam()
 	{
 		return (EReference)bodyEClass.getEStructuralFeatures().get(0);
 	}
@@ -247,9 +233,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getXTestSuite()
+	public EReference getBody_Imports()
 	{
-		return xTestSuiteEClass;
+		return (EReference)bodyEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -257,9 +243,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getXTestSuite_Name()
+	public EClass getXTestExpression()
 	{
-		return (EReference)xTestSuiteEClass.getEStructuralFeatures().get(0);
+		return xTestExpressionEClass;
 	}
 
 	/**
@@ -267,9 +253,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getXTestSuite_Expression()
+	public EReference getXTestExpression_Name()
 	{
-		return (EReference)xTestSuiteEClass.getEStructuralFeatures().get(1);
+		return (EReference)xTestExpressionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -277,29 +263,9 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getXTestCase()
+	public EReference getXTestExpression_Expression()
 	{
-		return xTestCaseEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getXTestCase_Name()
-	{
-		return (EReference)xTestCaseEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getXTestCase_Expression()
-	{
-		return (EReference)xTestCaseEClass.getEStructuralFeatures().get(1);
+		return (EReference)xTestExpressionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -337,6 +303,36 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getXMethodDef()
+	{
+		return xMethodDefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getXMethodDefExpression()
+	{
+		return xMethodDefExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getXMethodDefExpression_Method()
+	{
+		return (EReference)xMethodDefExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public XTestFactory getXTestFactory()
 	{
 		return (XTestFactory)getEFactoryInstance();
@@ -362,30 +358,30 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		isCreated = true;
 
 		// Create classes and their features
-		importEClass = createEClass(IMPORT);
-		createEAttribute(importEClass, IMPORT__STATIC);
-		createEReference(importEClass, IMPORT__STATIC_IMPORT);
-		createEReference(importEClass, IMPORT__TYPE_IMPORT);
-		createEAttribute(importEClass, IMPORT__IMPORTED_NAMESPACE);
+		fileParamEClass = createEClass(FILE_PARAM);
+		createEReference(fileParamEClass, FILE_PARAM__FEATURE);
+		createEReference(fileParamEClass, FILE_PARAM__VALUE);
 
 		uniqueNameEClass = createEClass(UNIQUE_NAME);
 		createEAttribute(uniqueNameEClass, UNIQUE_NAME__NAME);
 		createEReference(uniqueNameEClass, UNIQUE_NAME__IDENTIFIER);
 
 		bodyEClass = createEClass(BODY);
+		createEReference(bodyEClass, BODY__FILEPARAM);
 		createEReference(bodyEClass, BODY__IMPORTS);
 
-		xTestSuiteEClass = createEClass(XTEST_SUITE);
-		createEReference(xTestSuiteEClass, XTEST_SUITE__NAME);
-		createEReference(xTestSuiteEClass, XTEST_SUITE__EXPRESSION);
-
-		xTestCaseEClass = createEClass(XTEST_CASE);
-		createEReference(xTestCaseEClass, XTEST_CASE__NAME);
-		createEReference(xTestCaseEClass, XTEST_CASE__EXPRESSION);
+		xTestExpressionEClass = createEClass(XTEST_EXPRESSION);
+		createEReference(xTestExpressionEClass, XTEST_EXPRESSION__NAME);
+		createEReference(xTestExpressionEClass, XTEST_EXPRESSION__EXPRESSION);
 
 		xAssertExpressionEClass = createEClass(XASSERT_EXPRESSION);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__ACTUAL);
 		createEReference(xAssertExpressionEClass, XASSERT_EXPRESSION__THROWS);
+
+		xMethodDefEClass = createEClass(XMETHOD_DEF);
+
+		xMethodDefExpressionEClass = createEClass(XMETHOD_DEF_EXPRESSION);
+		createEReference(xMethodDefExpressionEClass, XMETHOD_DEF_EXPRESSION__METHOD);
 	}
 
 	/**
@@ -415,6 +411,7 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 		// Obtain other dependent packages
 		TypesPackage theTypesPackage = (TypesPackage)EPackage.Registry.INSTANCE.getEPackage(TypesPackage.eNS_URI);
 		XbasePackage theXbasePackage = (XbasePackage)EPackage.Registry.INSTANCE.getEPackage(XbasePackage.eNS_URI);
+		XtendPackage theXtendPackage = (XtendPackage)EPackage.Registry.INSTANCE.getEPackage(XtendPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -422,35 +419,36 @@ public class XTestPackageImpl extends EPackageImpl implements XTestPackage
 
 		// Add supertypes to classes
 		bodyEClass.getESuperTypes().add(theXbasePackage.getXBlockExpression());
-		xTestSuiteEClass.getESuperTypes().add(theXbasePackage.getXExpression());
-		xTestCaseEClass.getESuperTypes().add(theXbasePackage.getXExpression());
+		xTestExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 		xAssertExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
+		xMethodDefEClass.getESuperTypes().add(theXtendPackage.getXtendFunction());
+		xMethodDefExpressionEClass.getESuperTypes().add(theXbasePackage.getXExpression());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getImport_Static(), ecorePackage.getEBoolean(), "static", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getImport_StaticImport(), theTypesPackage.getJvmType(), null, "staticImport", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getImport_TypeImport(), theTypesPackage.getJvmType(), null, "typeImport", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getImport_ImportedNamespace(), ecorePackage.getEString(), "importedNamespace", null, 0, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(fileParamEClass, FileParam.class, "FileParam", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getFileParam_Feature(), theTypesPackage.getJvmEnumerationLiteral(), null, "feature", null, 0, 1, FileParam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFileParam_Value(), theXbasePackage.getXExpression(), null, "value", null, 0, 1, FileParam.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(uniqueNameEClass, UniqueName.class, "UniqueName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getUniqueName_Name(), ecorePackage.getEString(), "name", null, 0, 1, UniqueName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getUniqueName_Identifier(), theXbasePackage.getXExpression(), null, "identifier", null, 0, 1, UniqueName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(bodyEClass, Body.class, "Body", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBody_Imports(), this.getImport(), null, "imports", null, 0, -1, Body.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBody_Fileparam(), this.getFileParam(), null, "fileparam", null, 0, -1, Body.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getBody_Imports(), theXtendPackage.getXtendImport(), null, "imports", null, 0, -1, Body.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(xTestSuiteEClass, XTestSuite.class, "XTestSuite", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getXTestSuite_Name(), this.getUniqueName(), null, "name", null, 0, 1, XTestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getXTestSuite_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestSuite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(xTestCaseEClass, XTestCase.class, "XTestCase", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getXTestCase_Name(), this.getUniqueName(), null, "name", null, 0, 1, XTestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getXTestCase_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestCase.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(xTestExpressionEClass, XTestExpression.class, "XTestExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getXTestExpression_Name(), this.getUniqueName(), null, "name", null, 0, 1, XTestExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getXTestExpression_Expression(), theXbasePackage.getXExpression(), null, "expression", null, 0, 1, XTestExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(xAssertExpressionEClass, XAssertExpression.class, "XAssertExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getXAssertExpression_Actual(), theXbasePackage.getXExpression(), null, "actual", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getXAssertExpression_Throws(), theTypesPackage.getJvmTypeReference(), null, "throws", null, 0, 1, XAssertExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(xMethodDefEClass, XMethodDef.class, "XMethodDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(xMethodDefExpressionEClass, XMethodDefExpression.class, "XMethodDefExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getXMethodDefExpression_Method(), theXtendPackage.getXtendFunction(), null, "method", null, 0, 1, XMethodDefExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

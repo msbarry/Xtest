@@ -12,6 +12,7 @@
             icon="icons/tsuite.gif"
             extensions="xtest"
             id="org.xtest.XTest"
+            matchingStrategy="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.editor.JavaEditorInputMatcher"
             name="XTest Editor">
         </editor>
     </extension>
@@ -53,8 +54,17 @@
         <page
             class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.xtest.XTest"
-            name="XTest">
+            name="Xtest">
             <keywordReference id="org.xtest.ui.keyword_XTest"/>
+        </page>
+        <page
+              category="org.xtest.XTest"
+              class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+              id="org.xtest.XTest.refactoring"
+              name="Refactoring">
+           <keywordReference
+                 id="org.xtest.ui.keyword_XTest">
+           </keywordReference>
         </page>
         <page
             category="org.xtest.XTest"
@@ -151,6 +161,28 @@
         </resourceServiceProvider>
     </extension>
 
+<!-- marker definitions for org.xtest.XTest -->
+    <extension
+            id="xtest.check.fast"
+            name="XTest Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.fast"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="xtest.check.normal"
+            name="XTest Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.normal"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="xtest.check.expensive"
+            name="XTest Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.expensive"/>
+        <persistent value="true"/>
+    </extension>
 
 
    <extension
@@ -159,16 +191,6 @@
             class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
       </participant>
    </extension>
-   <extension
-            point="org.eclipse.ui.preferencePages">
-        <page
-            category="org.xtest.XTest"
-            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-            id="org.xtest.XTest.compiler.preferencePage"
-            name="Compiler">
-            <keywordReference id="org.xtest.ui.keyword_XTest"/>
-        </page>
-    </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
@@ -217,13 +239,34 @@
 			</command>
 		</menuContribution>
 	</extension>
-   <!-- quickfix marker resolution generator -->
-   <extension
-         point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator
-            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
-      </markerResolutionGenerator>
-   </extension>
+    <!-- quickfix marker resolution generator for org.xtest.XTest -->
+    <extension
+            point="org.eclipse.ui.ide.markerResolution">
+        <markerResolutionGenerator
+            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.xtest.ui.xtest.check.fast">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.xtest.ui.xtest.check.normal">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.xtest.ui.xtest.check.expensive">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+    </extension>
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
@@ -249,15 +292,6 @@
          </command>
       </menuContribution>
    </extension>
-   <extension point="org.eclipse.ui.preferencePages">
-	    <page
-	        category="org.xtest.XTest"
-	        class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-	        id="org.xtest.XTest.refactoring"
-	        name="Refactoring">
-	        <keywordReference id="org.xtest.ui.keyword_XTest"/>
-	    </page>
-	</extension>
 
 <!-- Type Hierarchy  -->
 	<extension
@@ -303,6 +337,62 @@
 			</command>
 		</menuContribution>
 	</extension>
+	<!-- Call Hierachy -->
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler 
+			class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.xbase.ui.hierarchy.OpenCallHierachyHandler"
+			commandId="org.eclipse.xtext.xbase.ui.hierarchy.OpenCallHierarchy">
+			<activeWhen>
+				<reference
+					definitionId="org.xtest.XTest.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.xtext.xbase.ui.hierarchy.OpenCallHierarchy"
+				style="push"
+				tooltip="Open Call Hierarchy">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.xtest.XTest.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.xtext.builder.smap.StratumBreakpointAdapterFactory"
+         adaptableType="org.eclipse.xtext.ui.editor.XtextEditor">
+         <adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
+      </factory> 
+   </extension>
+   <extension point="org.eclipse.ui.editorActions">
+      <editorContribution targetID="org.xtest.XTest" 
+                          id="org.xtest.XTest.ide.rulerActions">
+	     <action
+	             label="Not Used"
+	             class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+	             style="push"
+	             actionID="RulerDoubleClick"
+	             id="org.xtest.XTest.doubleClickBreakpointAction"/>
+	  </editorContribution>
+   </extension>
+   <extension point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+         targetID="example.rulerContextMenuId"
+         id="org.xtest.XTest.ide.RulerPopupActions">
+         <action
+            label="Toggle Breakpoint"
+            class="org.xtest.ui.XTestExecutableExtensionFactory:org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+            menubarPath="additions"
+            id="org.xtest.XTest.ide.rulerContextMenu.toggleBreakpointAction">
+         </action>
+      </viewerContribution>
+   </extension>
 
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.xtest.XTest.compare.contentViewers"
@@ -375,4 +465,25 @@
 	      </description> 
 	    </decorator> 
 	</extension>
+	
+	<!-- Xtest libraries-->
+    <extension point="org.eclipse.jdt.core.classpathContainerInitializer">            
+   		<classpathContainerInitializer                                          
+			id="org.xtest.XTEST_CONTAINER"                                                        
+			class="org.xtest.ui.buildpath.XtestContainerInitializer"/>                           
+	</extension>
+	<extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            name="Xtest Libraries"
+            class="org.xtest.ui.buildpath.XtestContainerWizardPage"
+            id="org.xtest.XTEST_CONTAINER">
+      </classpathContainerPage>
+   </extension>
+ <extension
+       point="org.xtest.runner.testType">
+    <testType
+          class="org.xtest.ui.XTestExecutableExtensionFactory:org.xtest.ui.runner.XtestRunnerType">
+    </testType>
+ </extension>
 </plugin>

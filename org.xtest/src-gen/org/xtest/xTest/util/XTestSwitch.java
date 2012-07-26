@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
-
  */
 package org.xtest.xTest.util;
 
@@ -10,6 +6,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
+
+import org.eclipse.xtend.core.xtend.XtendAnnotationTarget;
+import org.eclipse.xtend.core.xtend.XtendFunction;
+import org.eclipse.xtend.core.xtend.XtendMember;
 
 import org.eclipse.xtext.xbase.XBlockExpression;
 import org.eclipse.xtext.xbase.XExpression;
@@ -79,10 +79,10 @@ public class XTestSwitch<T> extends Switch<T>
 	{
 		switch (classifierID)
 		{
-			case XTestPackage.IMPORT:
+			case XTestPackage.FILE_PARAM:
 			{
-				Import import_ = (Import)theEObject;
-				T result = caseImport(import_);
+				FileParam fileParam = (FileParam)theEObject;
+				T result = caseFileParam(fileParam);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -102,19 +102,11 @@ public class XTestSwitch<T> extends Switch<T>
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case XTestPackage.XTEST_SUITE:
+			case XTestPackage.XTEST_EXPRESSION:
 			{
-				XTestSuite xTestSuite = (XTestSuite)theEObject;
-				T result = caseXTestSuite(xTestSuite);
-				if (result == null) result = caseXExpression(xTestSuite);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case XTestPackage.XTEST_CASE:
-			{
-				XTestCase xTestCase = (XTestCase)theEObject;
-				T result = caseXTestCase(xTestCase);
-				if (result == null) result = caseXExpression(xTestCase);
+				XTestExpression xTestExpression = (XTestExpression)theEObject;
+				T result = caseXTestExpression(xTestExpression);
+				if (result == null) result = caseXExpression(xTestExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -126,22 +118,40 @@ public class XTestSwitch<T> extends Switch<T>
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case XTestPackage.XMETHOD_DEF:
+			{
+				XMethodDef xMethodDef = (XMethodDef)theEObject;
+				T result = caseXMethodDef(xMethodDef);
+				if (result == null) result = caseXtendFunction(xMethodDef);
+				if (result == null) result = caseXtendMember(xMethodDef);
+				if (result == null) result = caseXtendAnnotationTarget(xMethodDef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case XTestPackage.XMETHOD_DEF_EXPRESSION:
+			{
+				XMethodDefExpression xMethodDefExpression = (XMethodDefExpression)theEObject;
+				T result = caseXMethodDefExpression(xMethodDefExpression);
+				if (result == null) result = caseXExpression(xMethodDefExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Import</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>File Param</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Import</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>File Param</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseImport(Import object)
+	public T caseFileParam(FileParam object)
 	{
 		return null;
 	}
@@ -179,33 +189,17 @@ public class XTestSwitch<T> extends Switch<T>
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Suite</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Suite</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Expression</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseXTestSuite(XTestSuite object)
-	{
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Case</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Case</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseXTestCase(XTestCase object)
+	public T caseXTestExpression(XTestExpression object)
 	{
 		return null;
 	}
@@ -222,6 +216,38 @@ public class XTestSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	public T caseXAssertExpression(XAssertExpression object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>XMethod Def</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>XMethod Def</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXMethodDef(XMethodDef object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>XMethod Def Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>XMethod Def Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXMethodDefExpression(XMethodDefExpression object)
 	{
 		return null;
 	}
@@ -254,6 +280,54 @@ public class XTestSwitch<T> extends Switch<T>
 	 * @generated
 	 */
 	public T caseXBlockExpression(XBlockExpression object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Annotation Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Annotation Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXtendAnnotationTarget(XtendAnnotationTarget object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Member</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Member</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXtendMember(XtendMember object)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Function</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Function</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseXtendFunction(XtendFunction object)
 	{
 		return null;
 	}

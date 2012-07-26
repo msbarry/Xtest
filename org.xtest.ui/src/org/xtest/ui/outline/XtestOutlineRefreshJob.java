@@ -1,5 +1,7 @@
 package org.xtest.ui.outline;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -42,6 +44,8 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
     @Override
     protected IOutlineNode refreshOutlineModel(IProgressMonitor monitor,
             OutlineTreeState formerState, OutlineTreeState newState) {
+        // TODO run while edit - refresh on annotation change
+        // TODO run on save - refresh on new result
         IOutlineNode refreshOutlineModel = super
                 .refreshOutlineModel(monitor, formerState, newState);
         if (!monitor.isCanceled()) {
@@ -54,13 +58,17 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
     protected void restoreChildrenSelectionAndExpansion(IOutlineNode parent, Resource resource,
             OutlineTreeState formerState, OutlineTreeState newState) {
         super.restoreChildrenSelectionAndExpansion(parent, resource, formerState, newState);
-        for (IOutlineNode child : parent.getChildren()) {
+        List<IOutlineNode> children = parent.getChildren();
+        for (IOutlineNode child : children) {
             if (child instanceof XTestEObjectNode && ((XTestEObjectNode) child).getFailed()) {
                 // Show failed nodes
-                newState.getExpandedNodes().add(child);
-            } else {
-                // Attempt to hide passed nodes?
-                // newState.getExpandedNodes().remove(child);
+                newState.addExpandedNode(parent);
+            } else if (containsUsingComparer(formerState.getExpandedNodes(), child)) {
+                newState.addExpandedNode(child);
+            }
+            restoreChildrenSelectionAndExpansion(child, resource, formerState, newState);
+            if (containsUsingComparer(formerState.getSelectedNodes(), child)) {
+                newState.addSelectedNode(child);
             }
         }
     }
@@ -68,7 +76,7 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
     @Override
     protected IStatus run(IProgressMonitor monitor) {
         IStatus status = org.eclipse.core.runtime.Status.OK_STATUS;
-        if (outlinePage != null) {
+        if (outlinePage != null && outlinePage.getTreeViewer() != null) {
             status = super.run(monitor);
         }
         return status;

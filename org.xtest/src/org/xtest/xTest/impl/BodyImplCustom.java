@@ -4,13 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.diagnostics.Severity;
-import org.xtest.results.XTestSuiteResult;
+import org.xtest.XtestUtil;
 import org.xtest.xTest.Body;
-
-import com.google.common.collect.HashMultimap;
 
 /**
  * Custom implementation of {@link Body}
@@ -18,9 +14,6 @@ import com.google.common.collect.HashMultimap;
  * @author Michael Barry
  */
 public class BodyImplCustom extends BodyImpl {
-
-    private HashMultimap<Severity, EObject> issues = HashMultimap.create();
-    private XTestSuiteResult result;
 
     /**
      * Returns the file name of this test
@@ -41,40 +34,20 @@ public class BodyImplCustom extends BodyImpl {
     }
 
     /**
-     * Returns the list of validation issues
+     * Returns the inferred type name from the xtest file.
      * 
-     * @return The list of validation issues
+     * @return The inferred type name from the xtest file.
      */
-    public HashMultimap<Severity, EObject> getIssues() {
-        return issues;
-    }
-
-    /**
-     * Returns the validation result
-     * 
-     * @return The validation result
-     */
-    public XTestSuiteResult getResult() {
+    public String getTypeName() {
+        String result = getFileName();
+        if (result != null) {
+            result = result.replaceFirst(".xtest$", "").trim();
+            result = XtestUtil.toUpperCamel(result);
+        }
+        if (result.isEmpty()) {
+            result = "Xtest";
+        }
         return result;
     }
 
-    /**
-     * Sets the list of validation issues
-     * 
-     * @param hashMultimap
-     *            The list of validation issues
-     */
-    public void setIssues(HashMultimap<Severity, EObject> hashMultimap) {
-        this.issues = hashMultimap;
-    }
-
-    /**
-     * Sets the valiation result
-     * 
-     * @param result
-     *            The validation result
-     */
-    public void setResult(XTestSuiteResult result) {
-        this.result = result;
-    }
 }

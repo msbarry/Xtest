@@ -1,0 +1,22 @@
+import org.^xtest.XtestUtil
+import static junit.framework.Assert.*
+
+xtest toUpperCamel {
+	def testToUpperCamel(String to, String from) {
+		xtest (to+"->"+from) {
+			assertEquals("output",to,XtestUtil::toUpperCamel(from))
+		}
+	}
+	testToUpperCamel("",null)
+	testToUpperCamel("","")
+	testToUpperCamel("Abc","abc")
+	testToUpperCamel("A","a")
+	testToUpperCamel("AbC","ab c")
+	testToUpperCamel("ThisIsASentence","This is a sentence")
+	testToUpperCamel("SentenceWithACRONYM","Sentence with ACRONYM")
+	testToUpperCamel("ABCDE","A\nB\nCDE")
+	testToUpperCamel("ABCDE","A-B-CDE")
+	testToUpperCamel("","-------")
+	testToUpperCamel("A","999a")
+	testToUpperCamel("AbcAbc","AbcAbc")
+}

@@ -1,0 +1,54 @@
+runWhileEditing: false
+runOnSave: false
+
+import org.^xtest.Xtest
+
+import static org.junit.Assert.*
+import static extension org.^xtest.test.TestUtils.*
+import static org.hamcrest.CoreMatchers.*
+ 
+xtest "top-level assert" {
+    val result = Xtest::run('assert false', injector);
+    val exception = result.evaluationException.head
+    val stackTrace = exception.getCause.getStackTrace
+    assertEquals(1, stackTrace.size)
+    stackTrace.head.assertXtestStackTrace("assert false", 1)
+}
+
+xtest "top-level exception, second line" {
+    val result = Xtest::run('
+1/0', injector);
+    val exception = result.evaluationException.head
+    val stackTrace = exception.getCause.getStackTrace
+    assertEquals(1, stackTrace.size)
+    stackTrace.head.assertXtestStackTrace("1/0", 2)
+}
+
+xtest "assert in inline closure" { 
+    val result = Xtest::run('[|assert false].apply', injector);
+    val exception = result.evaluationException.head
+    val stackTrace = exception.getCause.getStackTrace
+    assertEquals(3, stackTrace.size)
+    xtest {stackTrace.get(0).assertXtestStackTrace("assert false", 1)}
+    xtest {stackTrace.get(1).assertProxyStackTrace}
+    xtest {stackTrace.get(2).assertXtestStackTrace("[|assert false].apply", 1)}
+}
+
+xtest "nested exception in inline closure" { 
+    val result = Xtest::run('{{{[|{{1/0}}].apply}}}', injector);
+    val exception = result.evaluationException.head
+    val stackTrace = exception.getCause.getStackTrace
+    assertEquals(3, stackTrace.size)
+    xtest {stackTrace.get(0).assertXtestStackTrace("1/0", 1)}
+    xtest {stackTrace.get(1).assertProxyStackTrace}
+    xtest {stackTrace.get(2).assertXtestStackTrace("[|{{1/0}}].apply", 1)}
+}
+
+xtest "assert with comment before shouldn't include comment" { 
+    val result = Xtest::run('// comment
+assert false', injector);
+    val exception = result.evaluationException.head
+    val stackTrace = exception.getCause.getStackTrace
+    assertEquals(1, stackTrace.size)
+    stackTrace.get(0).assertXtestStackTrace("assert false", 2)
+}

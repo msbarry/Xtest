@@ -14,7 +14,8 @@ Workflow {
     bean = StandaloneSetup {
         scanClassPath = true
         platformUri = "${runtimeProject}/.."
-        registerGeneratedEPackage = "org.eclipse.xtext.xbase.XbasePackage"
+        registerGeneratedEPackage = "org.eclipse.xtend.core.xtend.XtendPackage"
+		registerGenModelFile = "platform:/resource/org.eclipse.xtend.core/model/Xtend.genmodel"
         registerGenModelFile = "platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel"
     }
 
@@ -78,6 +79,7 @@ Workflow {
     }
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
 		srcPath = "platform:/resource/org.xtest/src"
+		srcPath = "platform:/resource/org.eclipse.xtext.common.types/src"
 		genModel = "platform:/resource/org.xtest/src-gen/org/xtest/XTest.genmodel"
 	}
 }

@@ -1,8 +1,4 @@
 /**
- * <copyright>
- * </copyright>
- *
-
  */
 package org.xtest.xTest.impl;
 
@@ -68,12 +64,13 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	{
 		switch (eClass.getClassifierID())
 		{
-			case XTestPackage.IMPORT: return createImport();
+			case XTestPackage.FILE_PARAM: return createFileParam();
 			case XTestPackage.UNIQUE_NAME: return createUniqueName();
 			case XTestPackage.BODY: return createBody();
-			case XTestPackage.XTEST_SUITE: return createXTestSuite();
-			case XTestPackage.XTEST_CASE: return createXTestCase();
+			case XTestPackage.XTEST_EXPRESSION: return createXTestExpression();
 			case XTestPackage.XASSERT_EXPRESSION: return createXAssertExpression();
+			case XTestPackage.XMETHOD_DEF: return createXMethodDef();
+			case XTestPackage.XMETHOD_DEF_EXPRESSION: return createXMethodDefExpression();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -84,10 +81,10 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Import createImport()
+	public FileParam createFileParam()
 	{
-		ImportImpl import_ = new ImportImpl();
-		return import_;
+		FileParamImpl fileParam = new FileParamImpl();
+		return fileParam;
 	}
 
 	/**
@@ -117,21 +114,10 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public XTestSuite createXTestSuite()
+	public XTestExpression createXTestExpression()
 	{
-		XTestSuiteImpl xTestSuite = new XTestSuiteImpl();
-		return xTestSuite;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public XTestCase createXTestCase()
-	{
-		XTestCaseImpl xTestCase = new XTestCaseImpl();
-		return xTestCase;
+		XTestExpressionImpl xTestExpression = new XTestExpressionImpl();
+		return xTestExpression;
 	}
 
 	/**
@@ -143,6 +129,28 @@ public class XTestFactoryImpl extends EFactoryImpl implements XTestFactory
 	{
 		XAssertExpressionImpl xAssertExpression = new XAssertExpressionImpl();
 		return xAssertExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XMethodDef createXMethodDef()
+	{
+		XMethodDefImpl xMethodDef = new XMethodDefImpl();
+		return xMethodDef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public XMethodDefExpression createXMethodDefExpression()
+	{
+		XMethodDefExpressionImpl xMethodDefExpression = new XMethodDefExpressionImpl();
+		return xMethodDefExpression;
 	}
 
 	/**

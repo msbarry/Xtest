@@ -1,3 +1,4 @@
 .metadata
 org.xtest*/bin
-*.jar
+org.xtest*/*.jar
+org.xtest*/*/*.jar
