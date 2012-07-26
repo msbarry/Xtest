@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
+import org.eclipse.xtext.validation.CheckMode;
 import org.xtest.results.XTestResult;
 import org.xtest.ui.mediator.ValidationFinishedEvent;
 import org.xtest.ui.mediator.XtestResultsCache;
@@ -57,7 +58,8 @@ public class XtestDiagnostician extends CancelableDiagnostician {
                     resource.setResult(xtestResult);
                 }
             } finally {
-                eventBus.post(new ValidationFinishedEvent(uri, xtestResult));
+                eventBus.post(new ValidationFinishedEvent(uri, xtestResult, CheckMode
+                        .getCheckMode(context)));
             }
         } else {
             validate = super.validate(eClass, eObject, diagnostics, context);

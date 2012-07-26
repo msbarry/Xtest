@@ -1,8 +1,6 @@
 package org.xtest.ui.editor;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
@@ -10,6 +8,7 @@ import org.eclipse.xtext.ui.editor.validation.ValidationJob;
 import org.eclipse.xtext.validation.CheckMode;
 import org.xtest.preferences.PerFilePreferenceProvider;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 /**
@@ -20,6 +19,8 @@ import com.google.inject.Inject;
 public class XtestDocumentProvider extends XtextDocumentProvider {
     @Inject
     private IssueResolutionProvider issueResolutionProvider;
+    @Inject
+    private EventBus notifier;
     @Inject
     private PerFilePreferenceProvider prefProvider;
     @Inject
@@ -36,18 +37,9 @@ public class XtestDocumentProvider extends XtextDocumentProvider {
             // Custom validation job to notify the annotation issue processor when an annotation
             // change comes from a reconcile
             ValidationJob job = new ValidationJob(resourceValidator, doc, annotationIssueProcessor,
-                    CheckMode.FAST_ONLY) {
-                @Override
-                protected IStatus run(IProgressMonitor monitor) {
-                    annotationIssueProcessor.fromValidate(true);
-                    try {
-                        IStatus run = super.run(monitor);
-                        return run;
-                    } finally {
-                        annotationIssueProcessor.fromValidate(false);
-                    }
-                }
-            };
+                    CheckMode.FAST_ONLY);
+            notifier.register(annotationIssueProcessor);
+            ((XtestDocument) doc).unregisterOnDispose(annotationIssueProcessor);
             doc.setValidationJob(job);
         }
         return info;
