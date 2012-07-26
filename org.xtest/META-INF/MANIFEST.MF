@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.xtext.generator;resolution:=optional,
  org.eclipse.xtend.core;bundle-version="[2.3.0,2.4.0)",
  org.junit4;resolution:=optional
 Import-Package: org.apache.commons.logging,
- org.apache.log4j;version="1.2.15",
+ org.apache.log4j,
  org.eclipse.xtext.junit.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.xtest,

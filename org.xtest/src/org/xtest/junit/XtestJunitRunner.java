@@ -12,14 +12,18 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.validation.Issue;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import org.xtest.XTestRunner;
 import org.xtest.XTestStandaloneSetup;
+import org.xtest.Xtest;
 import org.xtest.results.XTestResult;
+import org.xtest.results.XTestState;
+import org.xtest.xTest.Body;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -104,11 +108,9 @@ public class XtestJunitRunner extends Runner {
     }
 
     private Throwable exceptionForSyntaxErrors(List<String> errorMessages) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder("Validation errors occurred before running test:");
         for (String message : errorMessages) {
-            if (builder.length() > 0) {
-                builder.append("\n");
-            }
+            builder.append('\n');
             builder.append(message);
         }
         Throwable result = new SyntaxError(builder.toString());
@@ -161,7 +163,7 @@ public class XtestJunitRunner extends Runner {
                 if (file != null) {
                     String fileDependedOn = readFile(file);
                     try {
-                        XTestRunner.parse(fileDependedOn, URI.createURI(file), set, injector);
+                        Xtest.parse(fileDependedOn, URI.createURI(file), set, injector);
                     } catch (Exception e) {
                     }
                 }
@@ -200,7 +202,22 @@ public class XtestJunitRunner extends Runner {
 
         // profiling stats
         long start = System.nanoTime();
-        XTestResult run = XTestRunner.run(fileBeingRun, URI.createURI(file), set, injector);
+        XTestResult run = null;
+        try {
+            Body parse = Xtest.parse(fileBeingRun, URI.createURI(file), set, injector);
+            run = new XTestResult(parse);
+            List<Issue> validate = Xtest.validate(parse, injector);
+            for (Issue issue : validate) {
+                if (issue.getSeverity() == Severity.ERROR) {
+                    run.addSyntaxError(issue.getLineNumber() + ": " + issue.getMessage());
+                }
+            }
+            if (run.getState() != XTestState.FAIL) {
+                run = Xtest.run(parse, injector);
+            }
+        } catch (Exception e) {
+        }
+
         long end = System.nanoTime();
         double d = (end - start) / (double) TimeUnit.NANOSECONDS.convert(1, TimeUnit.SECONDS);
         cumulative += d;

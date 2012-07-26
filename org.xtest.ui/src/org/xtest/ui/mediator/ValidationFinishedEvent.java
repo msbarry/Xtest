@@ -1,6 +1,7 @@
 package org.xtest.ui.mediator;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.validation.CheckMode;
 import org.xtest.results.XTestResult;
 
 /**
@@ -9,6 +10,7 @@ import org.xtest.results.XTestResult;
  * @author Michael Barry
  */
 public class ValidationFinishedEvent {
+    private final CheckMode checkMode;
     private final XTestResult result;
     private final URI uri;
 
@@ -19,10 +21,22 @@ public class ValidationFinishedEvent {
      *            URI of the Xtest file
      * @param result
      *            The validation result, or null if the test was not run
+     * @param checkMode
+     *            The type of validation that was performed
      */
-    public ValidationFinishedEvent(URI uri, XTestResult result) {
+    public ValidationFinishedEvent(URI uri, XTestResult result, CheckMode checkMode) {
         this.uri = uri;
         this.result = result;
+        this.checkMode = checkMode;
+    }
+
+    /**
+     * Returns the check mode of this validation
+     * 
+     * @return The check mode of this validation
+     */
+    public CheckMode getCheckMode() {
+        return checkMode;
     }
 
     /**

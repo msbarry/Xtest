@@ -6,6 +6,7 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ITemplateProposalProvider;
+import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineRefreshJob;
@@ -20,6 +21,7 @@ import org.xtest.preferences.DefaultPreferenceProvider;
 import org.xtest.ui.contentassist.XtestImportingTypesProposalProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider;
 import org.xtest.ui.editor.UIDefaultPreferenceProvider.Initializer;
+import org.xtest.ui.editor.XtestDocument;
 import org.xtest.ui.editor.XtestDocumentProvider;
 import org.xtest.ui.editor.XtestEditorErrorTickUpdater;
 import org.xtest.ui.editor.XtestPreferencePage;
@@ -146,6 +148,16 @@ public class XTestUiModule extends org.xtest.ui.AbstractXTestUiModule {
      */
     public Class<? extends XTestRunner> bindXTestRunner() {
         return UiXTestRunner.class;
+    }
+
+    /**
+     * Bind {@link XtextDocument} to a custom implementation that allows objects to ask to be
+     * unregistered from the event bus when the document is disposed.
+     * 
+     * @return {@link XtestDocument}
+     */
+    public Class<? extends XtextDocument> bindXtextDocument() {
+        return XtestDocument.class;
     }
 
     /**

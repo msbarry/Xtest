@@ -141,13 +141,15 @@ public class AssertionMessageBuilder {
         builder.append(text);
         builder.append("\" was ");
         if (!skipped) {
-            builder.append("<");
             if (object != null) {
                 builder.append(object.getClass().getSimpleName());
-                builder.append(": ");
+                builder.append(" <");
+                builder.append(XtestUtil.trimIfNecessary(object.toString(), 40));
+                builder.append('>');
+            } else {
+                builder.append("<null>");
             }
-            builder.append(toString(object));
-            builder.append(">\n");
+            builder.append('\n');
         } else {
             builder.append("skipped\n");
         }
@@ -156,18 +158,6 @@ public class AssertionMessageBuilder {
 
     private String getTrimmedText(XExpression actual) {
         return XtestUtil.getText(actual, 60);
-    }
-
-    private String toString(Object object) {
-        String result;
-        if (object == null) {
-            result = "null";
-        } else if (object instanceof String) {
-            result = "\"" + object + "\"";
-        } else {
-            result = object.toString();
-        }
-        return XtestUtil.trimIfNecessary(result, 40);
     }
 
     /**

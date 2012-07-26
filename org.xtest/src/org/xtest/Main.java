@@ -43,7 +43,7 @@ public class Main {
                 in.close();
 
                 System.out.println("Tests from " + arg + ":");
-                XTestResult run = XTestRunner.run(builder.toString(), injector);
+                XTestResult run = Xtest.run(builder.toString(), injector);
                 printTest("", run, true);
             } catch (Exception e) {
                 System.err.println("Error: " + e.getMessage());

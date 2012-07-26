@@ -24,6 +24,10 @@ public class Activator extends AbstractUIPlugin {
      * The plug-in ID
      */
     public static final String PLUGIN_ID = "org.xtest.runner"; //$NON-NLS-1$
+    /**
+     * ID for boolean preference to install visual Xtest runner at startup
+     */
+    public static final String SHOW_XTEST_RUNNER = "org.xtest.runner.showUI";
 
     /**
      * The shared instance
@@ -81,6 +85,7 @@ public class Activator extends AbstractUIPlugin {
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
+        getPreferenceStore().setDefault(SHOW_XTEST_RUNNER, true);
         XtestRunnerModule xtestRunnerMudule = new XtestRunnerModule();
         injector = Guice.createInjector(xtestRunnerMudule);
         plugin = this;

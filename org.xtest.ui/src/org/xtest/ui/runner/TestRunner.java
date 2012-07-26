@@ -87,6 +87,9 @@ public class TestRunner extends DefaultResourceUIValidatorExtension {
                         && file.findMaxProblemSeverity(null, true, 0) == IMarker.SEVERITY_ERROR) {
                     result = TestResult.syntaxFailure();
                 }
+            } else {
+                // Clear expensive markers when run-on-save disabled
+                deleteMarkers(file, CheckMode.EXPENSIVE_ONLY, subMonitor);
             }
         } catch (CoreException e) {
         }

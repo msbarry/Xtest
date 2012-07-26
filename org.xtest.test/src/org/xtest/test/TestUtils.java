@@ -31,6 +31,7 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.XExpression;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
+import org.xtest.Xtest;
 import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
@@ -74,7 +75,7 @@ public class TestUtils {
     }
 
     public static void assertEvaluatesTo(Object object, Body val) {
-        XTestResult run = XTestRunner.run(val, injector);
+        XTestResult run = Xtest.run(val, injector);
         Collection<XTestEvaluationException> exceptions = run.getEvaluationException();
         assertTrue(exceptions.toString(), exceptions.isEmpty());
         assertEquals("evaluation result", object, run.getResultObject());
@@ -161,14 +162,14 @@ public class TestUtils {
 
     public static void assertTestPasses(String val) throws Exception {
         assertValidSyntax(val);
-        XTestResult run = XTestRunner.run(val, injector);
+        XTestResult run = Xtest.run(val, injector);
         Collection<XTestEvaluationException> exceptions = run.getEvaluationException();
         assertTrue(exceptions.toString(), exceptions.isEmpty());
         assertTrue("test passes", run.getState() == XTestState.PASS);
     }
 
     public static void assertThrowsExceptionForExpression(String script, String exceptionMessage) {
-        XTestResult run = XTestRunner.run(script, injector);
+        XTestResult run = Xtest.run(script, injector);
         assertEquals("number of exceptions thrown", 1, run.getEvaluationException().size());
         XExpression expression = Iterables.getFirst(run.getEvaluationException(), null)
                 .getExpression();
@@ -176,7 +177,7 @@ public class TestUtils {
     }
 
     public static void assertThrowsExceptionInSubtest(String script, String exceptionMessage) {
-        XTestResult run = XTestRunner.run(script, injector);
+        XTestResult run = Xtest.run(script, injector);
         assertEquals("number of top-level exceptions thrown", 0, run.getEvaluationException()
                 .size());
         assertEquals("number of sub-tests", 1, run.getSubTests().size());
@@ -223,7 +224,7 @@ public class TestUtils {
     }
 
     public static void assertXtestPasses(String test) {
-        XTestResult result = XTestRunner.run(test, injector);
+        XTestResult result = Xtest.run(test, injector);
         assertEquals("[]", result.getErrorMessages().toString());
         assertTrue(result.getEvaluationException().isEmpty());
         assertEquals(XTestState.PASS, result.getState());
@@ -240,7 +241,7 @@ public class TestUtils {
     }
 
     public static XTestResult getResult(String input) {
-        return XTestRunner.run(input, injector);
+        return Xtest.run(input, injector);
     }
 
     public static List<Issue> getWarningsRunTests(Body parse) throws Exception {
@@ -262,7 +263,7 @@ public class TestUtils {
     }
 
     public static Body parse(String string) throws Exception {
-        return XTestRunner.parse(string, injector);
+        return Xtest.parse(string, injector);
     }
 
     public static void runValidation(Body parse) throws Exception {
@@ -286,7 +287,7 @@ public class TestUtils {
 
     protected static Collection<XTestEvaluationException> assertEvaluatesToIgnoreExceptions(
             Object object, Body val) {
-        XTestResult run = XTestRunner.run(val, injector);
+        XTestResult run = Xtest.run(val, injector);
         assertEquals("evaluation result", object, run.getResultObject());
         return run.getEvaluationException();
     }

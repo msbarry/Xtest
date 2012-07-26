@@ -6,6 +6,7 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.Callable;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -189,9 +190,11 @@ public class XtestUtil {
     }
 
     private static BodyImplCustom getBody(XExpression expression) {
-        Iterable<BodyImplCustom> filter = Iterables.filter(expression.eResource().getContents(),
-                BodyImplCustom.class);
-        return Iterables.getFirst(filter, null);
+        EObject object = expression;
+        while (object.eContainer() != null) {
+            object = object.eContainer();
+        }
+        return (BodyImplCustom) object;
     }
 
     private static String getNodeWithoutComments(ICompositeNode node) {

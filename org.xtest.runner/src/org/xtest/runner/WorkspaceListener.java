@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -13,7 +14,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.JavaCore;
-import org.slf4j.LoggerFactory;
 import org.xtest.runner.events.Events;
 import org.xtest.runner.external.ContinuousTestRunner;
 
@@ -25,7 +25,7 @@ import com.google.inject.Inject;
  * @author Michael Barry
  */
 public class WorkspaceListener implements IResourceChangeListener, IElementChangedListener {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WorkspaceListener.class);
+    private static final Logger logger = Logger.getLogger(WorkspaceListener.class);
     @Inject
     private Events events;
     @Inject
@@ -80,19 +80,21 @@ public class WorkspaceListener implements IResourceChangeListener, IElementChang
         long start = System.nanoTime();
         for (IProject project : projects) {
             Set<RunnableTest> tests = testProvider.getTestsIn(project);
-            logger.info("Cleaning test in {}: {}", project.getName(), tests);
+            if (logger.isInfoEnabled()) {
+                logger.info("Cleaning test in " + project.getName() + ": " + tests);
+            }
             for (RunnableTest test : tests) {
                 test.clean();
             }
         }
         long end = System.nanoTime();
-        logger.debug("Clean took {} ms",
-                TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS));
+        logger.debug("Clean took "
+                + TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) + " ms");
     }
 
     private void handleDeltas(long start, Set<IFile> deltas) {
         if (!deltas.isEmpty()) {
-            logger.debug("---> Changes: {}", deltas);
+            logger.debug("---> Changes: " + deltas);
             Collection<RunnableTest> toRun = testProvider.getTestsFromDeltas(deltas);
             if (toRun != null && !toRun.isEmpty()) {
                 ContinuousTestRunner.scheduleAll(toRun);
@@ -101,8 +103,8 @@ public class WorkspaceListener implements IResourceChangeListener, IElementChang
             }
             long end = System.nanoTime();
             // TODO if test selection starts taking a long time, push it into the worker thread
-            logger.debug("---> Test selection took {} ms",
-                    TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS));
+            logger.debug("---> Test selection took "
+                    + TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS) + " ms");
         }
     }
 

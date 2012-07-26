@@ -1,14 +1,14 @@
 runWhileEditing: false
-runOnSave: false
+runOnSave: true
 import static org.^xtest.test.TestUtils.*
 import static org.junit.Assert.*
-import org.^xtest.XTestRunner
+import org.^xtest.Xtest
 
 // Utility methods
 
 def static assertFailsTo(String input, String... expectedMessage) {
 	assertValidSyntax(input)
-	val result = XTestRunner::run(input, injector)
+	val result = Xtest::run(input, injector)
 	assertEquals("number of exceptions", 1, result.evaluationException.size)
 	val compiledExpected = expectedMessage.fold("", [prev,next|prev+next+"\n"])
 	assertEquals(compiledExpected.trim, result.evaluationException.head.cause.message.trim)
@@ -16,7 +16,7 @@ def static assertFailsTo(String input, String... expectedMessage) {
 def static preamble {"Assertion failed"}
 def static value(String expr, Object actual) {
 	if (actual==null) "   \""+expr+"\" was <null>"
-	else "   \""+expr+"\" was <"+actual.getClass.simpleName+": "+actual+">"
+	else "   \""+expr+"\" was "+actual.getClass.simpleName+" <"+actual+">"
 }
 def static skipped(String expr) {"   \""+expr+"\" was skipped"}
 def static messageForNoException(Class<? extends Exception> e) {
@@ -144,9 +144,9 @@ xtest "handles string" {
 		'val Object a = "s"; assert switch (a) {String: a == "z"\nInteger: a == 1}',
 		preamble,
 		value('switch (a) {String: a == "z" Integer: a == 1}', false),
-		value('a', '"s"'),
+		value('a', 's'),
 		value('a == "z"', false),
-		value('a', '"s"')
+		value('a', 's')
 	)
 }
 

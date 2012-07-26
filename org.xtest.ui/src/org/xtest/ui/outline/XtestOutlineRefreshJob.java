@@ -76,7 +76,7 @@ public class XtestOutlineRefreshJob extends OutlineRefreshJob {
     @Override
     protected IStatus run(IProgressMonitor monitor) {
         IStatus status = org.eclipse.core.runtime.Status.OK_STATUS;
-        if (outlinePage != null) {
+        if (outlinePage != null && outlinePage.getTreeViewer() != null) {
             status = super.run(monitor);
         }
         return status;

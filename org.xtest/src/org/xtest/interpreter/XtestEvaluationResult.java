@@ -37,7 +37,7 @@ public class XtestEvaluationResult implements IEvaluationResult {
 
     @Override
     public Throwable getException() {
-        return other.getException();
+        return other == null ? null : other.getException();
     }
 
     /**
@@ -51,7 +51,7 @@ public class XtestEvaluationResult implements IEvaluationResult {
 
     @Override
     public Object getResult() {
-        return other.getResult();
+        return other == null ? null : other.getResult();
     }
 
     /**
