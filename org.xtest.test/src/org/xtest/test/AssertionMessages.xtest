@@ -1,66 +1,39 @@
 runWhileEditing: false
 runOnSave: true
-import static org.^xtest.test.TestUtils.*
-import static org.junit.Assert.*
 import org.^xtest.Xtest
-
-// Utility methods
-
-def static assertFailsTo(String input, String... expectedMessage) {
-	assertValidSyntax(input)
-	val result = Xtest::run(input, injector)
-	assertEquals("number of exceptions", 1, result.evaluationException.size)
-	val compiledExpected = expectedMessage.fold("", [prev,next|prev+next+"\n"])
-	assertEquals(compiledExpected.trim, result.evaluationException.head.cause.message.trim)
-}
-def static preamble {"Assertion failed"}
-def static value(String expr, Object actual) {
-	if (actual==null) "   \""+expr+"\" was <null>"
-	else "   \""+expr+"\" was "+actual.getClass.simpleName+" <"+actual+">"
-}
-def static skipped(String expr) {"   \""+expr+"\" was skipped"}
-def static messageForNoException(Class<? extends Exception> e) {
-	"Expected <"+e.getName+"> but no exception was thrown"
-}
-def static messageForWrongException(Class<?> expected, Class<?> actual) {
-	"Expected <"+expected.getName+"> but threw <"+actual.getName+"> instead"
-}
-
-// Tests
+import static org.^xtest.test.TestUtils.*
+import static org.^xtest.test.XtestInjector.*
 
 xtest "exceptions" {	
-	xtest {
-		assertFailsTo("assert null throws IllegalArgumentException", 
+	xtest "not thrown" {
+		"assert null throws IllegalArgumentException".assertFailsTo( 
 			messageForNoException(IllegalArgumentException::class)
 		)
 	}
 	
-	xtest {
-		assertFailsTo("assert 1/0 throws IllegalArgumentException", 
+	xtest "wrong type" {
+		"assert 1/0 throws IllegalArgumentException".assertFailsTo( 
 			messageForWrongException(IllegalArgumentException::class, ArithmeticException::class)
 		)
 	}
 }
 
 xtest "simple equals" {
-	assertFailsTo(
-		"assert 1 == 2",
+	"assert 1 == 2".assertFailsTo(
 		preamble,
 		value("1 == 2", false)
 	)
 }
 
 xtest "enclosed in parenthesis" {
-	assertFailsTo(
-		"assert ((1 == 2))",
+	"assert ((1 == 2))".assertFailsTo(
 		preamble,
 		value("1 == 2", false)
 	)
 }
 
 xtest "not operator" {
-	assertFailsTo(
-		"assert !(1 == 1)",
+	"assert !(1 == 1)".assertFailsTo(
 		preamble,
 		value("!(1 == 1)", false),
 		value("1 == 1", true)
@@ -68,8 +41,7 @@ xtest "not operator" {
 }
 
 xtest "resolves variables" {
-	assertFailsTo(
-		"val a = 1; val b = 2; assert a == b",
+	"val a = 1; val b = 2; assert a == b".assertFailsTo(
 		preamble,
 		value("a == b", false),
 		value("a", 1),
@@ -78,8 +50,7 @@ xtest "resolves variables" {
 }
 
 xtest "or operator" {
-	assertFailsTo(
-		"assert 1 == 2 || 2 == 3",
+	"assert 1 == 2 || 2 == 3".assertFailsTo(
 		preamble,
 		value("1 == 2 || 2 == 3", false),
 		value("1 == 2", false),
@@ -88,8 +59,7 @@ xtest "or operator" {
 }
 
 xtest "short circuit and operator" {
-	assertFailsTo(
-		"assert 1 == 2 && 2 == 3",
+	"assert 1 == 2 && 2 == 3".assertFailsTo(
 		preamble,
 		value("1 == 2 && 2 == 3", false),
 		value("1 == 2", false),
@@ -98,32 +68,28 @@ xtest "short circuit and operator" {
 }
 
 xtest "line break" {
-	assertFailsTo(
-		"assert 1\n==\n2",
+	"assert 1\n==\n2".assertFailsTo(
 		preamble,
 		value("1 == 2", false)
 	)
 }
 
 xtest "block expression" {
-	assertFailsTo(
-		"assert {1 == 2}",
+	"assert {1 == 2}".assertFailsTo(
 		preamble,
 		value("1 == 2", false)
 	)
 }
 
 xtest "if expression" {
-	assertFailsTo(
-		"assert {if (true) false else true}",
+	"assert {if (true) false else true}".assertFailsTo(
 		preamble,
 		value("if (true) false else true", false)
 	)
 }
 
 xtest "closure skipped" {
-	assertFailsTo(
-		"assert newArrayList(true).map[!it].head",
+	"assert newArrayList(true).map[!it].head".assertFailsTo(
 		preamble,
 		value("newArrayList(true).map[!it].head", false),
 		value("newArrayList(true).map[!it]", newArrayList(true).map[!it]),
@@ -132,16 +98,14 @@ xtest "closure skipped" {
 }
 
 xtest "handles null" {
-	assertFailsTo(
-		"assert if (true) null else null",
+	"assert if (true) null else null".assertFailsTo(
 		preamble,
 		value("if (true) null else null", null)
 	)
 }
 
 xtest "handles string" {
-	assertFailsTo(
-		'val Object a = "s"; assert switch (a) {String: a == "z"\nInteger: a == 1}',
+	'val Object a = "s"; assert switch (a) {String: a == "z"\nInteger: a == 1}'.assertFailsTo(
 		preamble,
 		value('switch (a) {String: a == "z" Integer: a == 1}', false),
 		value('a', 's'),
@@ -151,9 +115,36 @@ xtest "handles string" {
 }
 
 xtest "ignores for" {
-	assertFailsTo(
-		'assert for (i : 1..10) println(i)',
+	'assert for (i : 1..10) println(i)'.assertFailsTo(
 		preamble,
 		value('for (i : 1..10) println(i)', null)
 	)
+}
+
+
+// Utility methods
+
+def static assertFailsTo(String input, String... expectedMessage) {
+	assertValidSyntax(input)
+	val result = Xtest::run(input, injector)
+	assert result.evaluationException.size == 1
+	val compiledExpected = expectedMessage.fold("", [prev,next|prev+next+"\n"])
+	assert result.evaluationException.head.cause.message.trim == compiledExpected.trim
+}
+
+def static preamble {"Assertion failed"}
+
+def static value(String expr, Object actual) {
+	if (actual==null) "   \""+expr+"\" was <null>"
+	else "   \""+expr+"\" was "+actual.getClass.simpleName+" <"+actual+">"
+}
+
+def static skipped(String expr) {"   \""+expr+"\" was skipped"}
+
+def static messageForNoException(Class<? extends Exception> e) {
+	"Expected <"+e.getName+"> but no exception was thrown"
+}
+
+def static messageForWrongException(Class<?> expected, Class<?> actual) {
+	"Expected <"+expected.getName+"> but threw <"+actual.getName+"> instead"
 }

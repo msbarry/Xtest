@@ -10,7 +10,6 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,6 +28,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.XExpression;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.xtest.XTestEvaluationException;
 import org.xtest.XTestRunner;
 import org.xtest.Xtest;
@@ -41,7 +41,6 @@ import org.xtest.xTest.Body;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.inject.Injector;
 
 public class TestUtils {
@@ -69,8 +68,8 @@ public class TestUtils {
     private static final Map<Object, URI> used = Maps.newHashMap();
 
     public static void assertEqualsNormalizeLinebreak(String expected, String actual) {
-        String expectedNormalized = expected.replace("\r\n", "\n");
-        String actualNormalized = actual.replace("\r\n", "\n");
+        String expectedNormalized = expected.replaceAll("[\r\n]\\s*", "\n");
+        String actualNormalized = actual.replaceAll("[\r\n]\\s*", "\n");
         assertEquals(expectedNormalized, actualNormalized);
     }
 
@@ -134,22 +133,6 @@ public class TestUtils {
     public static void assertReturnType(JvmTypeReference typeForName, Body parse) throws Exception {
         JvmTypeReference commonReturnType = typeProvider.getCommonReturnType(parse, true);
         assertTrue(typeComputer.isConformant(typeForName, commonReturnType, false));
-    }
-
-    public static void assertSetEquals(Set<?> actual, Object... expectedElements) {
-        Set<?> expected = Sets.newHashSet(expectedElements);
-        Set<?> doesntContain = Sets.difference(expected, actual);
-        Set<?> shouldntContain = Sets.difference(actual, expected);
-        if (!doesntContain.isEmpty() && !shouldntContain.isEmpty()) {
-            fail("Got " + actual + ". " + "Should not have contained " + shouldntContain
-                    + " and should have contained " + doesntContain);
-        } else if (!doesntContain.isEmpty()) {
-            fail("Got " + actual + ". Missing " + doesntContain);
-        } else if (!shouldntContain.isEmpty()) {
-            fail("Got " + actual + ". Should not have had " + shouldntContain);
-        } else {
-            // OK
-        }
     }
 
     public static void assertStackTraceEquals(StackTraceElement element, String className,
@@ -223,21 +206,19 @@ public class TestUtils {
         assertValidationPassed(val);
     }
 
-    public static void assertXtestPasses(String test) {
-        XTestResult result = Xtest.run(test, injector);
-        assertEquals("[]", result.getErrorMessages().toString());
-        assertTrue(result.getEvaluationException().isEmpty());
-        assertEquals(XTestState.PASS, result.getState());
-    }
-
-    public static void assertXtestPreEvalFailure(String test) throws Exception {
-        assertInvalidSyntax(test);
-    }
-
     public static void assertXtestStackTrace(StackTraceElement element, String methodName,
             int lineNumber) {
         assertStackTraceEquals(element, "Synthetic0Uri", "\"" + methodName + "\"", "Synthetic0Uri",
                 lineNumber);
+    }
+
+    public static XTestResult findTest(XTestResult result, String name) {
+        for (XTestResult res : result.getSubTests()) {
+            if (res.getName().equals(name)) {
+                return res;
+            }
+        }
+        return null;
     }
 
     public static XTestResult getResult(String input) {
@@ -258,8 +239,8 @@ public class TestUtils {
         return result;
     }
 
-    public static Object invokeXbaseExpression(Body expression) throws Exception {
-        return interpreter.evaluate(expression).getResult();
+    public static List<Issue> getWarningsRunTests(String string) throws Exception {
+        return getWarningsRunTests(parse(string));
     }
 
     public static Body parse(String string) throws Exception {
@@ -270,6 +251,36 @@ public class TestUtils {
         IResourceValidator instance = injector.getInstance(IResourceValidator.class);
         Resource eResource = parse.eResource();
         instance.validate(eResource, XTestRunner.CHECK_BUT_DONT_RUN, CancelIndicator.NullImpl);
+    }
+
+    public static XTestResult shouldBePending(XTestResult result) {
+        assertEquals(XTestState.NOT_RUN, result.getState());
+        return result;
+    }
+
+    public static void shouldBePendingAnd(XTestResult result, Procedure1<XTestResult> verifier) {
+        shouldBePending(result);
+        verifier.apply(result);
+    }
+
+    public static XTestResult shouldFail(XTestResult result) {
+        assertEquals(XTestState.FAIL, result.getState());
+        return result;
+    }
+
+    public static void shouldFailAnd(XTestResult result, Procedure1<XTestResult> verifier) {
+        shouldFail(result);
+        verifier.apply(result);
+    }
+
+    public static XTestResult shouldPass(XTestResult result) {
+        assertEquals(XTestState.PASS, result.getState());
+        return result;
+    }
+
+    public static void shouldPassAnd(XTestResult result, Procedure1<XTestResult> verifier) {
+        shouldPass(result);
+        verifier.apply(result);
     }
 
     public static String textOf(EObject eObject) {
@@ -283,13 +294,6 @@ public class TestUtils {
         URI uri = new URI(Integer.toString(i++));
         used.put(key, uri);
         return uri;
-    }
-
-    protected static Collection<XTestEvaluationException> assertEvaluatesToIgnoreExceptions(
-            Object object, Body val) {
-        XTestResult run = Xtest.run(val, injector);
-        assertEquals("evaluation result", object, run.getResultObject());
-        return run.getEvaluationException();
     }
 
     @SuppressWarnings("restriction")

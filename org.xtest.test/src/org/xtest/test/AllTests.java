@@ -11,7 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.xtest.junit.XtestJunitRunner;
 
 @RunWith(Suite.class)
-@SuiteClasses({ AllXtestFiles.class, XTestXBaseRegressionTests.class })
+@SuiteClasses({ AllXtestFiles.class, XbaseRegressionTests.class })
 public class AllTests {
     private static long start;
 

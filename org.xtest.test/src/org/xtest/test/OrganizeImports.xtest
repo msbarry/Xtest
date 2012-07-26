@@ -8,107 +8,106 @@ import org.^xtest.Xtest
 
 import static org.^xtest.test.TestUtils.*
 
-val helper = [String input|{
+def static organizeImports(String input) {
     val result = Xtest::parse(input, injector)
 	val with = organizeImports.getOrganizedImportSection(result.eResource as XtextResource)
 	val region = organizeImports.computeRegion(result.eResource as XtextResource)
 	input.substring(0,region.getOffset)+with+input.substring(region.getOffset+region.getLength)
-}]
-
-xtest noImports {
-	val input = '
-runWhileEditing: true
-xsuite test {
-	xtest case {
-		assert 1 == 1 
-	}
-}'
-	assertEqualsNormalizeLinebreak('
-runWhileEditing: true
-xsuite test {
-	xtest case {
-		assert 1 == 1 
-	}
-}',helper.apply(input))
-}
- 
-xtest splatToSingle {
-	val input = '
-import java.util.*
-assert new ArrayList<String>() != null
-'
-	assertEqualsNormalizeLinebreak('
-import java.util.ArrayList
-
-assert new ArrayList<String>() != null
-',helper.apply(input))
 }
 
-xtest sameLine {
-	val input = '
-runWhileEditing: true
-import java.util.*; assert new ArrayList<String>() != null
-'
-	assertEqualsNormalizeLinebreak('
-runWhileEditing: true
-import java.util.ArrayList
-
-assert new ArrayList<String>() != null
-',helper.apply(input))
+def static shouldBecome(String input, String output) {
+	assertEqualsNormalizeLinebreak(output,organizeImports(input))
 }
-
-xtest javaLangNotImported {
-	val input = '
-runWhileEditing: true
-import java.util.*; assert new String() != null
-'
-	assertEqualsNormalizeLinebreak('
-runWhileEditing: true
-assert new String() != null
-',helper.apply(input))
-}
-
-xtest lineBreakAtBeginning {
-	val input = '
-/* comment */
-runWhileEditing: true; \rimport java.util.*; assert new ArrayList<String>() != null
-'
-	assertEqualsNormalizeLinebreak('
-/* comment */
-runWhileEditing: true
-import java.util.ArrayList
-
-assert new ArrayList<String>() != null
-',helper.apply(input))
-}
-
-
-xtest lineBreakAtBeginning2 {
-	val input = 
-'/* File-specific parameters */
-import helpers.*
-val a = new SUT'
-	assertEqualsNormalizeLinebreak(
-'/* File-specific parameters */
-import helpers.SUT
-
-val a = new SUT',helper.apply(input))
-} 
-
-xtest escapedStaticImport {
-	val input = 
-'import static org.^xtest.test.TestUtils.*
-val a = interpreter'
-	assertEqualsNormalizeLinebreak(
-'import static org.^xtest.test.TestUtils.*
-
-val a = interpreter',helper.apply(input))
-}
-
 
 xtest empty {
-	val input = 
-''
-	assertEqualsNormalizeLinebreak(
-'',helper.apply(input))
+	''.shouldBecome('')
 } 
+
+xtest "no imports" {
+	'runWhileEditing: true
+	xsuite test {
+		xtest case {
+			assert 1 == 1 
+		}
+	}'.
+
+	shouldBecome
+
+	('runWhileEditing: true
+	xsuite test {
+		xtest case {
+			assert 1 == 1 
+		}
+	}')
+}
+ 
+xtest "splat to single" {
+	'import java.util.*
+	assert new ArrayList<String>() != null'.
+
+	shouldBecome
+
+	('import java.util.ArrayList
+
+	assert new ArrayList<String>() != null')
+}
+
+xtest "same line" {
+	'runWhileEditing: true
+	import java.util.*; assert new ArrayList<String>() != null'.
+
+	shouldBecome
+
+	('runWhileEditing: true
+	import java.util.ArrayList
+	
+	assert new ArrayList<String>() != null')
+}
+
+xtest "java.lang not imported" {
+	'runWhileEditing: true
+	import java.util.*; assert new String() != null'.
+
+	shouldBecome
+
+	('runWhileEditing: true
+	assert new String() != null')
+}
+
+xtest "line breaks inserted" {
+	'/* comment */
+	runWhileEditing: true; \rimport java.util.*; assert new ArrayList<String>() != null'.
+
+	shouldBecome
+
+	('/* comment */
+	runWhileEditing: true
+	import java.util.ArrayList
+	
+	assert new ArrayList<String>() != null')
+}
+
+
+xtest "line breaks inserted #2" {
+	'/* File-specific parameters */
+	import helpers.*
+	val a = new SUT'.
+
+	shouldBecome
+
+	('/* File-specific parameters */
+	import helpers.SUT
+	
+	val a = new SUT')
+} 
+
+xtest "escaped static import" {
+	'import static org.^xtest.test.TestUtils.*
+	val a = interpreter'.
+
+	shouldBecome
+
+	('import static org.^xtest.test.TestUtils.*
+
+	val a = interpreter')
+}

@@ -161,6 +161,10 @@ def static check(StatusBarController controller, String desc, double _cr, boolea
 	}
 }
 
+/*
+ * Test utilities
+ */
+
 def static fileForURI(URI uri) {
 	val mockfile = mock(IFile::class)
 	when(mockfile.locationURI).thenReturn(uri)

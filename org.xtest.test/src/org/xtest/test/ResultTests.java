@@ -9,6 +9,6 @@ import org.xtest.junit.XtestJunitRunner;
  */
 @RunWith(XtestJunitRunner.class)
 @RunsXtest("src/org/xtest/test/ResultUnitTests.xtest")
-public class XTestResultUnitTests {
+public class ResultTests {
 
 }

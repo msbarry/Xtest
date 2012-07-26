@@ -8,7 +8,6 @@ import org.xtest.junit.XtestJunitRunner;
  * @author Michael Barry
  */
 @RunWith(XtestJunitRunner.class)
-@RunsXtest("src/org/xtest/test/OrganizeImports.xtest")
-public class XtestOrganizeImportsTest {
-
+@RunsXtest("src/org/xtest/test/RunnerTests.xtest")
+public class RunnerTests {
 }
