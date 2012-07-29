@@ -7,7 +7,7 @@ public class ClasspathUtils {
 
     public static IPath normalizePath(final IWorkspaceRoot root, IPath path) {
         if (root.exists(path)) {
-            path = root.getLocation().append(path);
+            path = root.getFile(path).getRawLocation();
         }
         return path;
     }
