@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.xtest"
+      id="org.xtest.feature"
       label="Xtest"
       version="0.2.0.qualifier"
       provider-name="Michael Barry">
@@ -33,7 +33,6 @@ The Apache attribution GUAVA-NOTICE.txt file is included with
 the Content in accordance with 4d of the Apache License, Version
 2.0.
    </copyright>
-
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
       Eclipse Foundation Software User Agreement
