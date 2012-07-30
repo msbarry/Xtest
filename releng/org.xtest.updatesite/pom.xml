@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <!-- Default properties - dev release -->
+  <properties> 
+    <output-dir>develop</output-dir>
+    <append-site>false</append-site>
+  </properties> 
+  
+  <!-- Profile-specific properties -->
+  <profiles> 
+   <profile> 
+      <id>release</id> 
+      <properties> 
+        <output-dir>release</output-dir>
+        <append-site>true</append-site>
+      </properties> 
+   </profile> 
+  </profiles> 
+
+  <parent>
+    <relativePath>../../pom.xml</relativePath>
+    <groupId>org.xtest</groupId>
+    <artifactId>xtest</artifactId>
+    <version>0.2.0-SNAPSHOT</version>
+  </parent>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho.extras</groupId>
+        <artifactId>tycho-p2-extras-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>mirror</goal>
+            </goals>
+          </execution>
+        </executions>
+        
+        <configuration>
+          <source>
+            <!-- source repositories to mirror from -->
+            <repository>
+              <url>${project.baseUri}/target/repository</url>
+              <layout>p2</layout>
+            </repository>
+          </source>
+          <publishArtifacts>true</publishArtifacts>
+          <!-- The destination directory to mirror to. -->
+          <destination>${project.build.directory}/../../../../Xtest-gh-pages/updates/${output-dir}/</destination>
+          <!-- whether to append to the target repository content -->
+          <append>${append-site}</append>
+          <!-- mirror artifacts and metadata -->
+          <mirrorMetadataOnly>false</mirrorMetadataOnly>
+          <!-- whether to compress the content.xml/artifacts.xml -->
+          <compress>true</compress>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <artifactId>org.xtest.updatesite</artifactId>
+  <packaging>eclipse-repository</packaging>
+  <name>Xtest Update Site</name>
+</project> 
