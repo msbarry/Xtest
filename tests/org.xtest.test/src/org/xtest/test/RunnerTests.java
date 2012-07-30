@@ -8,6 +8,6 @@ import org.xtest.junit.XtestJunitRunner;
  * @author Michael Barry
  */
 @RunWith(XtestJunitRunner.class)
-@RunsXtest("src/org/xtest/test/RunnerTests.xtest")
+@RunsXtest(injector = XtestInjector.class, value = "src/org/xtest/test/RunnerTests.xtest")
 public class RunnerTests {
 }

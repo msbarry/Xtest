@@ -17,6 +17,13 @@ import java.lang.annotation.Target;
 public @interface RunsXtest {
 
     /**
+     * Guice {@link InjectorProvider} to use
+     * 
+     * @return The injector provider to use
+     */
+    Class<? extends InjectorProvider> injector() default InjectorProvider.class;
+
+    /**
      * Returns the name of the file to run
      * 
      * @return name of the file to run

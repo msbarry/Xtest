@@ -7,8 +7,7 @@ import org.xtest.junit.XtestJunitRunner;
 /**
  * @author Michael Barry
  */
-@SuppressWarnings("restriction")
 @RunWith(XtestJunitRunner.class)
-@RunsXtest("src/org/xtest/test/RegressionTests.xtest")
+@RunsXtest(injector = XtestInjector.class, value = "src/org/xtest/test/RegressionTests.xtest")
 public class RegressionTests {
 }

@@ -19,7 +19,6 @@ import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import org.xtest.XTestStandaloneSetup;
 import org.xtest.Xtest;
 import org.xtest.results.XTestResult;
 import org.xtest.results.XTestState;
@@ -36,8 +35,6 @@ import com.google.inject.Injector;
  */
 public class XtestJunitRunner extends Runner {
     private static double cumulative = 0.0;
-    private static Injector injector = new XTestStandaloneSetup()
-            .createInjectorAndDoEMFRegistration();
 
     /**
      * Returns the cumulative time spent running xtest files throughout the lifetime of this class
@@ -50,11 +47,12 @@ public class XtestJunitRunner extends Runner {
 
     private final Class<?> clazz;
     private final String file;
+    private final Injector injector;
+
     private final Set<String> names = Sets.newHashSet();
-
     private Throwable preEvalException = null;
-    private XTestResult run;
 
+    private XTestResult run;
     private Description top;
 
     /**
@@ -65,6 +63,7 @@ public class XtestJunitRunner extends Runner {
      */
     public XtestJunitRunner(Class<?> clazz) {
         file = getXtestFile(clazz);
+        injector = getInjector(clazz);
         this.clazz = clazz;
     }
 
@@ -115,6 +114,24 @@ public class XtestJunitRunner extends Runner {
         }
         Throwable result = new SyntaxError(builder.toString());
         return result;
+    }
+
+    private Injector getInjector(Class<?> clazz) {
+        RunsXtest annotation = clazz.getAnnotation(RunsXtest.class);
+        Injector injector = null;
+        if (annotation != null) {
+            Class<? extends InjectorProvider> injectorClass = annotation.injector();
+            InjectorProvider newInstance;
+            try {
+                newInstance = injectorClass.newInstance();
+                injector = newInstance.getInjector();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return injector;
     }
 
     private Set<Class<?>> getRunnerDependencies(Class<?> xtestRunner) {
