@@ -3,21 +3,21 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <!-- Default properties - dev release -->
-  <properties> 
+  <properties>
     <output-dir>develop</output-dir>
     <append-site>false</append-site>
-  </properties> 
-  
+  </properties>
+
   <!-- Profile-specific properties -->
-  <profiles> 
-   <profile> 
-      <id>release</id> 
-      <properties> 
+  <profiles>
+    <profile>
+      <id>release</id>
+      <properties>
         <output-dir>release</output-dir>
         <append-site>true</append-site>
-      </properties> 
-   </profile> 
-  </profiles> 
+      </properties>
+    </profile>
+  </profiles>
 
   <parent>
     <relativePath>../../pom.xml</relativePath>
@@ -27,6 +27,38 @@
   </parent>
   <build>
     <plugins>
+      <!-- Tack referenced repositories on to the end of the repository xml -->
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <version>1.5.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <file>target/repository/content.xml</file>
+          <replacements>
+            <replacement>
+              <token>
+                <![CDATA[</repository>]]>
+              </token>
+              <value>
+              <![CDATA[
+  <references size='2'>
+    <repository uri='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' url='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' type='0' options='1'/>
+    <repository uri='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' url='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' type='1' options='1'/>
+  </references>
+</repository>]]>
+                </value>
+              </replacement>
+            </replacements>
+          </configuration>
+        </plugin>
       <plugin>
         <groupId>org.eclipse.tycho.extras</groupId>
         <artifactId>tycho-p2-extras-plugin</artifactId>
@@ -39,7 +71,7 @@
             </goals>
           </execution>
         </executions>
-        
+
         <configuration>
           <source>
             <!-- source repositories to mirror from -->
@@ -56,7 +88,7 @@
           <!-- mirror artifacts and metadata -->
           <mirrorMetadataOnly>false</mirrorMetadataOnly>
           <!-- whether to compress the content.xml/artifacts.xml -->
-          <compress>true</compress>
+          <compress>false</compress>
         </configuration>
       </plugin>
     </plugins>
@@ -65,4 +97,4 @@
   <artifactId>org.xtest.updatesite</artifactId>
   <packaging>eclipse-repository</packaging>
   <name>Xtest Update Site</name>
-</project> 
+</project>
