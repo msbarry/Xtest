@@ -6,6 +6,7 @@
   <properties>
     <output-dir>develop</output-dir>
     <append-site>false</append-site>
+    <updates>${project.build.directory}/../../../../Xtest-gh-pages/updates</updates>
   </properties>
 
   <!-- Profile-specific properties -->
@@ -54,11 +55,13 @@
     <repository uri='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' url='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' type='1' options='1'/>
   </references>
 </repository>]]>
-                </value>
-              </replacement>
-            </replacements>
-          </configuration>
-        </plugin>
+              </value>
+            </replacement>
+          </replacements>
+        </configuration>
+      </plugin>
+      
+      <!-- Merge generated repository into gh-pages repository -->
       <plugin>
         <groupId>org.eclipse.tycho.extras</groupId>
         <artifactId>tycho-p2-extras-plugin</artifactId>
@@ -82,7 +85,7 @@
           </source>
           <publishArtifacts>true</publishArtifacts>
           <!-- The destination directory to mirror to. -->
-          <destination>${project.build.directory}/../../../../Xtest-gh-pages/updates/${output-dir}/</destination>
+          <destination>${updates}/${output-dir}/</destination>
           <!-- whether to append to the target repository content -->
           <append>${append-site}</append>
           <!-- mirror artifacts and metadata -->
@@ -90,6 +93,27 @@
           <!-- whether to compress the content.xml/artifacts.xml -->
           <compress>false</compress>
         </configuration>
+      </plugin>
+
+      <!-- Just use ant to generate zip files and checksums -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <configuration>
+              <target>
+                <zip destfile="${updates}/${output-dir}.zip" basedir="${updates}/${output-dir}"/>
+                <checksum forceOverwrite="yes" pattern="{0} *{1}" algorithm="SHA" fileext=".sha" file="${updates}/${output-dir}.zip"/>
+                <checksum forceOverwrite="yes" pattern="{0} *{1}" fileext=".md5" file="${updates}/${output-dir}.zip"/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
