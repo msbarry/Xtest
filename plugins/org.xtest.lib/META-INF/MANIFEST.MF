@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.xtest.lib
 Bundle-SymbolicName: org.xtest.lib
-Bundle-Version: 0.2.0.qualifier
+Bundle-Version: 0.2.1.qualifier
 Bundle-Vendor: Michael Barry
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: com.google.guava;visibility:=reexport,

@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.xtest
 Bundle-Vendor: Michael Barry
-Bundle-Version: 0.2.0.qualifier
+Bundle-Version: 0.2.1.qualifier
 Bundle-SymbolicName: org.xtest;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.generator;resolution:=optional,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
  org.eclipse.xtext.xbase.junit;bundle-version="[2.3.0,2.4.0)",
- org.xtest.lib;bundle-version="0.2.0",
+ org.xtest.lib;bundle-version="0.2.1",
  org.eclipse.xtend.core;bundle-version="[2.3.0,2.4.0)",
  org.junit4;resolution:=optional
 Import-Package: org.apache.commons.logging,

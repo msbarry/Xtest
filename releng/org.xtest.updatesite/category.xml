@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.xtest.feature_0.2.0.qualifier.jar" id="org.xtest.feature" version="0.2.0.qualifier">
+   <feature url="features/org.xtest.feature_0.2.1.qualifier.jar" id="org.xtest.feature" version="0.2.1.qualifier">
       <category name="Xtest"/>
    </feature>
    <category-def name="Xtest" label="Xtest">

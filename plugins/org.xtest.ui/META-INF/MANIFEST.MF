@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.xtest.ui
 Bundle-Vendor: Michael Barry
-Bundle-Version: 0.2.0.qualifier
+Bundle-Version: 0.2.1.qualifier
 Bundle-SymbolicName: org.xtest.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.xtest;visibility:=reexport,
@@ -17,9 +17,9 @@ Require-Bundle: org.xtest;visibility:=reexport,
  org.eclipse.xtext.xbase.lib;bundle-version="[2.3.0,2.4.0)",
  org.eclipse.jdt.core;bundle-version="3.5.0";resolution:=optional,
  org.eclipse.jdt.ui;bundle-version="3.5.0";resolution:=optional,
- org.xtest.lib;bundle-version="0.2.0",
+ org.xtest.lib;bundle-version="0.2.1",
  org.eclipse.xtend.ide;bundle-version="[2.3.0,2.4.0)",
- org.xtest.runner;bundle-version="0.2.0"
+ org.xtest.runner;bundle-version="0.2.1"
 Import-Package: org.apache.commons.logging,
  org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
