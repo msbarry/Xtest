@@ -26,7 +26,13 @@
       <layout>p2</layout>
       <url>http://download.eclipse.org/releases/juno</url>
     </repository>
+    <repository>
+      <id>eclipse</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases</url>
+    </repository>
   </repositories>
+
 
   <build>
     <plugins>

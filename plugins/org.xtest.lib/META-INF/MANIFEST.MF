@@ -6,5 +6,5 @@ Bundle-Version: 0.2.1.qualifier
 Bundle-Vendor: Michael Barry
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: com.google.guava;visibility:=reexport,
- org.eclipse.xtext.xbase.lib;visibility:=reexport
+ org.eclipse.xtext.xbase.lib;bundle-version="[2.3.1,2.3.2)";visibility:=reexport
 Export-Package: org.xtest.preferences
