@@ -60,6 +60,30 @@ public class XbaseRegressionTests extends AbstractXbaseEvaluationTest {
 
     @Override
     @Test
+    public void testAssignment_18() throws Exception {
+        // had to change becuase private members are accessible
+        assertEvaluatesTo("1", "{" + "  var it = new testdata.Properties1()" + "  prop2 = '1'"
+                + "  prop2" + "}");
+    }
+
+    @Override
+    @Test
+    public void testAssignment_20() throws Exception {
+        // had to change becuase private members are accessible
+        assertEvaluatesTo("1", "{" + "  var it = new testdata.Properties1()" + "  prop2 = '1'"
+                + "  prop2" + "}");
+    }
+
+    @Override
+    @Test
+    public void testAssignment_22() throws Exception {
+        // had to change becuase private members are accessible
+        assertEvaluatesTo(null, "{" + "  var it = new testdata.Properties1()" + "  prop2 = '1'"
+                + "  null" + "}");
+    }
+
+    @Override
+    @Test
     public void testMapConstruction_01() throws Exception {
         // Had to override because private members are now visible. If that feature is limited in
         // the future, remove this override to run original xbase test

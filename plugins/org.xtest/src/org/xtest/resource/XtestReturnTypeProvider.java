@@ -1,7 +1,7 @@
 package org.xtest.resource;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtend.core.resource.XtendResource;
+import org.eclipse.xtend.core.typing.ReturnTypeProvider;
 import org.eclipse.xtend.core.xtend.XtendFunction;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.common.types.JvmOperation;
@@ -16,12 +16,12 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
- * Custom Xtest resource that resolves method return types declared in xtest files
+ * Custom Return Type Provider that resolves method return types declared in xtest files
  * 
  * @author Michael Barry
  */
 @SuppressWarnings("restriction")
-public class XtestResource extends XtendResource {
+public class XtestReturnTypeProvider extends ReturnTypeProvider {
 
     @Inject
     private XtestJvmModelAssociator associations;
@@ -30,7 +30,7 @@ public class XtestResource extends XtendResource {
     private XTestTypeProvider typeProvider;
 
     @Override
-    protected JvmTypeReference computeReturnType(XtendFunction function) {
+    public JvmTypeReference computeReturnType(XtendFunction function) {
 
         // Copied from XtendResource.computeReturnType...
 

@@ -3,7 +3,9 @@ package org.xtest;
 import org.eclipse.xtend.core.formatting.OrganizeImports;
 import org.eclipse.xtend.core.formatting.OrganizeImports.ReferenceAcceptor;
 import org.eclipse.xtend.core.jvmmodel.IXtendJvmAssociations;
+import org.eclipse.xtend.core.resource.XtendResource;
 import org.eclipse.xtend.core.scoping.StaticallyImportedFeaturesProvider;
+import org.eclipse.xtend.core.typing.ReturnTypeProvider;
 import org.eclipse.xtext.common.types.util.LazyTypeArgumentContext;
 import org.eclipse.xtext.common.types.util.VisibilityService;
 import org.eclipse.xtext.generator.IGenerator;
@@ -24,7 +26,7 @@ import org.xtest.interpreter.XTestInterpreter;
 import org.xtest.jvmmodel.XTestJvmModelInferrer;
 import org.xtest.jvmmodel.XtestJvmModelAssociator;
 import org.xtest.linking.XtestFeatureCallChecker;
-import org.xtest.resource.XtestResource;
+import org.xtest.resource.XtestReturnTypeProvider;
 import org.xtest.scoping.XTestScopeProvider;
 import org.xtest.scoping.XtestFeatureCallMapping;
 import org.xtest.scoping.XtestImportedNamespaceScopeProvider;
@@ -124,6 +126,16 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     }
 
     /**
+     * Bind the {@link ReturnTypeProvider} to an implementation that provides return types for
+     * custom operations
+     * 
+     * @return {@link XtestReturnTypeProvider}
+     */
+    public Class<? extends ReturnTypeProvider> bindReturnTypeProvider() {
+        return XtestReturnTypeProvider.class;
+    }
+
+    /**
      * Bind {@link StaticImplicitMethodsFeatureForTypeProvider} to custom implementation that
      * contributes static imports as implicit static methods
      * 
@@ -183,10 +195,10 @@ public class XTestRuntimeModule extends org.xtest.AbstractXTestRuntimeModule {
     /**
      * Bind the Xtext Resource to an implementation that infers return types for custom operations
      * 
-     * @return {@link XtestResource}
+     * @return {@link XtendResource}
      */
     @Override
     public Class<? extends XtextResource> bindXtextResource() {
-        return XtestResource.class;
+        return XtendResource.class;
     }
 }
