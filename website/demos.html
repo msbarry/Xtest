@@ -1,0 +1,175 @@
+---
+layout: default
+title: Demos
+categories:
+  - title: Language Features
+    subsections:
+      - title: Original
+        anchor: orig
+        text: <img src="img/helloWorldFail_editor.png"/>
+      - title: A
+        anchor: a
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest">
+          val a = 1
+          val b = 2
+          assert a == b
+          </pre>
+          <pre class="nocode exception1">
+          <img src="ico/error_obj.gif"/>Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre>
+      - title: A1
+        anchor: a1
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest">
+          val a = 1
+          val b = 2
+          assert a == b
+
+          <pre class="nocode exception1">
+          <img src="ico/error_obj.gif"/>Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre></pre>
+      - title: B
+        anchor: b
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest">
+          val a = 1
+          val b = 2
+          assert a == b
+          </pre>
+          <pre class="nocode exception2">
+          <img src="ico/error_obj.gif"/>Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre>
+      - title: B1
+        anchor: b1
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest">
+          val a = 1
+          val b = 2
+          assert a == b
+
+          <pre class="nocode exception2">
+          <img src="ico/error_obj.gif"/>Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre></pre>
+      - title: C
+        anchor: c
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest">
+          val a = 1
+          val b = 2
+          assert a == b
+          </pre>
+          <pre class="nocode exception3">
+          <img src="ico/error_obj.gif"/>Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre>
+      - title: C1
+        anchor: c1
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest">
+          val a = 1
+          val b = 2
+          assert a == b
+
+          <pre class="nocode exception3">
+          <img src="ico/error_obj.gif"/>Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre></pre>
+      - title: D
+        anchor: d
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest">
+          val a = 1
+          val b = 2
+          assert a == b
+          </pre>
+          <pre class="nocode exception4">
+          Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre>
+      - title: D2
+        anchor: d2
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest">
+          val a = 1
+          val b = 2
+          assert a == b
+          <pre class="nocode exception4">
+          Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre></pre>
+      - title: Mixed
+        anchor: mixed
+        text: |
+          <p>An explanation of the following snippet:</p>
+          <pre class="prettyprint lang-xtest top-excep">
+          val a = 1
+          val b = 2
+          assert a == b
+          </pre>
+          <pre class="nocode exception5">
+          <img src="ico/error_obj.gif"/>Assertion failed
+             "a == b" was Boolean &lt;false&gt;
+             "a" was Integer &lt;1&gt;
+             "b" was Integer &lt;2&gt;
+          </pre>
+
+---
+<div class="documentation container">
+  <div class="row">
+    <div class="span3 nav-sidebar">
+      <ul class="nav nav-list">
+        {% for item in page.categories %}
+          <li class="nav-header">{{ item.title }}</li>
+          {% for subsection in item.subsections %}
+            <li><a href="#{{ subsection.anchor }}">{{ subsection.title }}</a></li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="span8 offset3">
+      <header class="jumbotron subhead" class="overview">
+        <h1>Demos</h1>
+      </header>
+      {% for item in page.categories %}
+        <div class="doc-sec">
+          {% for subsection in item.subsections %}
+            <section id="{{ subsection.anchor }}">
+              <h1>{{ subsection.title }}</h1>
+              <hr>
+              {{ subsection.text }}
+            </section>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

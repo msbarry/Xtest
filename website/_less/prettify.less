@@ -1,0 +1,91 @@
+/* Pretty printing styles. Used with prettify.js. */
+
+/* SPAN elements with the classes below are added by prettyprint. */
+
+.com { color: #3F7F5F; }   /* comment */
+.lit { color: #7D7D7D; } /* literal */
+.pun { color: #555; }    /* punctuation */
+.opn { color: black; }   /* open */
+.clo { color: blue; }    /* close */
+.fun { color: #dc322f; } /* function name */
+.str { color: #2A00FF; } /* string */
+.atv { color: #D14; }    /* attribute value */
+.kwd { color: #7F0055; font-weight:bold;} /* keyword */
+.typ { color: #48484c; }    /* type name */
+.atn { color: teal; }    /* attribute name */
+.dec { color: teal; }    /* declaration */
+.var { color: teal; }    /* variable */
+.pln, .nocode { color: #48484c; } /* plaintext */
+
+/* Use higher contrast and text-weight for printable form. */
+@media print, projection {
+  .pln, .type, .nocode { color: #000; }
+  .lit { color: #195f91; }
+}
+
+ol.linenums {
+  margin: 0 0 0 33px; /* IE indents via margin-left */
+  li {
+    padding-left: 12px;
+    color: #bebec5;
+    line-height: 18px;
+    text-shadow: 0 1px 0 #fff;
+  }
+}
+.prettyprint.linenums {
+  -webkit-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+     -moz-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+          box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+}
+
+code.prettyprint {
+  margin: 0px;
+  padding: 0px;
+  border: none;
+  background: inherit;
+}
+
+pre.prettyprint {
+  background: darken(white, 3.5%);
+}
+
+.codeandexception pre.prettyprint {
+  margin-bottom: 5px;
+}
+
+.squiggle {
+  background-repeat:repeat-x;
+  background-position:left bottom;
+}
+.squiggle-err {
+  .squiggle;
+  background-image:url("../img/err_squiggle.gif");
+}
+
+.squiggle-warn {
+  .squiggle;
+  background-image:url("../img/warn_squiggle.gif");
+}
+
+.warn_squiggle {
+
+}
+
+.exception {
+  background: lighten(#FFFFE1, 3%);
+  .box-shadow(3px 3px 3px #888);
+  border-radius: 0px;
+  margin-left: 45px;
+  margin-top: 0px;
+  margin-bottom: 18px;
+  padding-top:3px;
+  padding-bottom:3px;
+  border: 1px solid #ccc;
+  display:inline-block;
+  clear:both;
+  img {
+    display: inline;
+    margin: 0px;
+    padding: 0px;
+  }
+}

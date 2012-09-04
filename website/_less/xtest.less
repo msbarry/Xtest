@@ -1,0 +1,200 @@
+.watch-fork {
+  padding-top: 8px;
+}
+
+#landing-page {
+  .jumbotron {
+    background: #1A1E1C;
+  }
+  #xtest-title {
+    vertical-align:text-bottom;
+    height: 100%;
+    display: block;
+  }
+  #xtest-image {
+    margin-top: 30px;
+    display: block;
+  }
+  .carousel {
+    .box-shadow(0px 0px 200px 3px #808580);
+    &, img { border-radius: 9px }
+    max-width: 450px;
+    display: block;
+    background: inherit;
+    border: none;
+    .carousel-control {
+      margin-top: 0px;
+      .opacity(15);
+    }
+
+    // Hover state
+    &:hover {
+      .carousel-control {
+        color: @white;
+        text-decoration: none;
+        .opacity(60);
+      }
+    }
+  }
+  .features {
+    text-align: center;
+    img {
+      border: 1px @grayLighter solid;
+      padding: 2px;
+      border-radius: 10px;
+      .box-shadow(3px 3px 3px #ccc);
+    }
+    feature-box {
+      border: 1px @grayLight solid;
+    }
+  }
+  .bs-docs-social {
+    margin-bottom: 50px;
+  }
+}
+
+.documentation {
+  #overview {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    h1 { font-size: 60px; }
+  }
+  .section-marker {
+    margin-top:-40px;
+    padding-top:40px;
+  }
+  h2 {
+    color: lighten(black, 35%);
+    font-size: 22px;
+    margin-top: 22px;
+  }
+  h3 {
+    color: lighten(black, 35%);
+    font-size: 18px;
+    margin-top: 18px;
+  }
+  p {
+    margin-bottom: 10px;
+  }
+  hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  .doc-sec {
+    padding-bottom: 60px;
+  }
+  section {
+    padding-top: 60px;
+    margin-top: -30px;
+  }
+  .nav-sidebar {
+    @media (min-width: 768px) {
+      margin-top: 30px;
+      position: fixed;
+    }
+    @media (max-width: 767px) {
+      visibility: hidden;
+      height: 0px;
+    }
+    .nav-list {
+      padding-left: 0px;
+      li {
+        line-height: 15px;
+      }
+      li.nav-header {
+        line-height: 18px;
+      }
+    }
+  }
+  img {
+    max-width: 100%;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 5px;
+    margin-right: 0px;
+  }
+  .carousel {
+    .item {
+      center {
+        img {
+          margin-top: 0px;
+        }
+        display: block;
+        p {
+          height: 20pt;
+        }
+      }
+    }
+  }
+  .doc-image img, .carousel {
+    background: inherit;
+    padding: 5px;
+    border: 1px @grayLighter solid;
+    border-radius: 5px;
+    .box-shadow(3px 3px 3px #ccc);
+  }
+}
+.carousel.carousel-fade {
+  .item {
+    .transition(opacity 0.01s ease);
+  }
+  .active.left, .active.right {
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    filter: alpha(opacity=0);
+  }
+  .next, .prev {
+    left: 0;
+    z-index: 1;
+  }
+  .carousel-control {
+    z-index: 3;
+  }
+}
+.carousel.carousel-fade.fade-slow {
+  .item {
+    .transition(opacity 0.5s ease);
+  }
+}
+a.site-hash{
+  font-size: 11px;
+  color: @textColor;
+}
+.changelog {
+  .documentation;
+  #oldVersions {
+    .row { margin: 8px }
+  }
+  h2 {
+    margin-top: 40px;
+  }
+}
+.download {
+  .documentation;
+  .jumbotron-install {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    .row {
+      margin: 10px;
+    }
+  }
+  .pull-right {
+    float: right;
+  }
+  .update-table {
+    th, td {
+      border-top: none;
+    }
+  }
+  .site-hash, .btn {
+    .transition(opacity 0.1s ease-in 0);
+    opacity: 0;
+  }
+  tr:hover {
+    .site-hash, .btn {
+      opacity: 1;
+    }
+  }
+}
