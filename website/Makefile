@@ -11,6 +11,16 @@ bootstrap:
 	rm -rf _bootstrap
 	mv twitter-bootstrap* _bootstrap
 
+GHPAGES=../../Xtest-gh-pages
+
+gh-pages: xtest
+	rm -rf ${GHPAGES}/*.html
+	for f in img ico css js; \
+	do \
+		rm -rf ${GHPAGES}/$$f ; \
+	done
+	cp -r _site/* ${GHPAGES}/
+
 watch:
 	echo "Watching input files..."; \
 	watchr -e "watch('^(?!_site)') { system 'make' }"
