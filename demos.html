@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Demos</title>
+    <meta name="description" content="Xtest - A unit-testing domain specific language for Java">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Michael Barry">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.min.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+  </head>
+
+  <body data-spy="scroll" data-target=".subnav" data-offset="50" class="xtest" onload="prettyPrint()">
+
+
+
+      <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button"class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="./index.html">Xtest</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="">
+                <a href="./documentation.html">Documentation</a>
+              </li>
+              <li class="">
+                <a href="./download.html">Download</a>
+              </li>
+            </ul>
+            <ul class="nav pull-right watch-fork">
+              <li>
+                <iframe src="http://ghbtns.com/github-btn.html?user=msbarry&repo=Xtest&type=fork" allowtransparency="true" frameborder="0" scrolling="0" width="53px" height="20px"></iframe>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="documentation container">
+  <div class="row">
+    <div class="span3 nav-sidebar">
+      <ul class="nav nav-list">
+        
+          <li class="nav-header">Language Features</li>
+          
+            <li><a href="#orig">Original</a></li>
+          
+            <li><a href="#a">A</a></li>
+          
+            <li><a href="#a1">A1</a></li>
+          
+            <li><a href="#b">B</a></li>
+          
+            <li><a href="#b1">B1</a></li>
+          
+            <li><a href="#c">C</a></li>
+          
+            <li><a href="#c1">C1</a></li>
+          
+            <li><a href="#d">D</a></li>
+          
+            <li><a href="#d2">D2</a></li>
+          
+            <li><a href="#mixed">Mixed</a></li>
+          
+        
+      </ul>
+    </div>
+    <div class="span8 offset3">
+      <header class="jumbotron subhead" class="overview">
+        <h1>Demos</h1>
+      </header>
+      
+        <div class="doc-sec">
+          
+            <section id="orig">
+              <h1>Original</h1>
+              <hr>
+              <img src="img/helloWorldFail_editor.png"/>
+            </section>
+          
+            <section id="a">
+              <h1>A</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest">
+val a = 1
+val b = 2
+assert a == b
+</pre>
+<pre class="nocode exception1">
+<img src="ico/error_obj.gif"/>Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre>
+
+            </section>
+          
+            <section id="a1">
+              <h1>A1</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest">
+val a = 1
+val b = 2
+assert a == b
+
+<pre class="nocode exception1">
+<img src="ico/error_obj.gif"/>Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre></pre>
+
+            </section>
+          
+            <section id="b">
+              <h1>B</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest">
+val a = 1
+val b = 2
+assert a == b
+</pre>
+<pre class="nocode exception2">
+<img src="ico/error_obj.gif"/>Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre>
+
+            </section>
+          
+            <section id="b1">
+              <h1>B1</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest">
+val a = 1
+val b = 2
+assert a == b
+
+<pre class="nocode exception2">
+<img src="ico/error_obj.gif"/>Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre></pre>
+
+            </section>
+          
+            <section id="c">
+              <h1>C</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest">
+val a = 1
+val b = 2
+assert a == b
+</pre>
+<pre class="nocode exception3">
+<img src="ico/error_obj.gif"/>Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre>
+
+            </section>
+          
+            <section id="c1">
+              <h1>C1</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest">
+val a = 1
+val b = 2
+assert a == b
+
+<pre class="nocode exception3">
+<img src="ico/error_obj.gif"/>Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre></pre>
+
+            </section>
+          
+            <section id="d">
+              <h1>D</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest">
+val a = 1
+val b = 2
+assert a == b
+</pre>
+<pre class="nocode exception4">
+Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre>
+
+            </section>
+          
+            <section id="d2">
+              <h1>D2</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest">
+val a = 1
+val b = 2
+assert a == b
+<pre class="nocode exception4">
+Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre></pre>
+
+            </section>
+          
+            <section id="mixed">
+              <h1>Mixed</h1>
+              <hr>
+              <p>An explanation of the following snippet:</p>
+<pre class="prettyprint lang-xtest top-excep">
+val a = 1
+val b = 2
+assert a == b
+</pre>
+<pre class="nocode exception5">
+<img src="ico/error_obj.gif"/>Assertion failed
+   "a == b" was Boolean &lt;false&gt;
+   "a" was Integer &lt;1&gt;
+   "b" was Integer &lt;2&gt;
+</pre>
+
+            </section>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="container">
+      <hr>
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        Developed by <a href="mailto:msb5014@gmail.com">Michael Barry</a>.
+        Code licensed under the <a target="_blank" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License v1.0</a>.<br>
+        Based on <a href="http://www.eclipse.org/Xtext/index.html">Xtext</a>. Kindly supported by <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit</a>.<br>
+        Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+      </footer>
+    </div>
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/prettify.js"></script>
+    <script type="text/javascript" src="js/lang-xtest.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('.carousel').each(function(){
+          $(this).carousel({
+            interval: false
+          });
+        });
+      })
+    </script>
+  </body>
+</html>

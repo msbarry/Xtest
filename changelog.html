@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Changelog</title>
+    <meta name="description" content="Xtest - A unit-testing domain specific language for Java">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Michael Barry">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/docs.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.min.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+  </head>
+
+  <body data-spy="scroll" data-target=".subnav" data-offset="50" class="xtest" onload="prettyPrint()">
+
+
+
+      <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button"class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="./index.html">Xtest</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="">
+                <a href="./documentation.html">Documentation</a>
+              </li>
+              <li class="">
+                <a href="./download.html">Download</a>
+              </li>
+            </ul>
+            <ul class="nav pull-right watch-fork">
+              <li>
+                <iframe src="http://ghbtns.com/github-btn.html?user=msbarry&repo=Xtest&type=fork" allowtransparency="true" frameborder="0" scrolling="0" width="53px" height="20px"></iframe>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container changelog">
+  <div class="offset2 span8">
+    <header id="overview">
+      <h1>Changelog</h1>
+    </header>
+
+    <h2>0.2.1 (TBD)</h2>
+    <hr>
+    <p><strong>Changes</strong></p>
+    <ul>
+      <li>Upgrade to Xtext 2.3.1 (tightened version dependencies to require exactly 2.3.1)
+      <li>Convert build process to use Maven/Tycho
+      <li>Update site now references Xtext so you don't need to add it manually
+      <li>Restructured plugins into folders
+      <li>New website
+    </ul>
+
+
+    <h2>0.2.0 (July 25, 2012)</h2>
+    <hr>
+    <p><strong>Changes</strong></p>
+    <ul>
+      <li>Upgraded to Xtext 2.3.0
+      <li>Numerous bug fixes
+      <li>Added JUnit runner for Xtest files
+      <li>Fixed performance bottlenecks found using <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit</a>
+    </ul>
+    <p><strong>Language</strong></p>
+    <ul>
+      <li>Mark unexecuted expressions as warnings
+      <li>Reusable methods declared using the <code class="prettyprint lang-xtest">def</code> keyword
+      <li>More detailed assertion failure messages
+      <li>Filter invocation and internal Xtest elements out of stack traces
+    </ul>
+    <p><strong>Eclipse IDE</strong></p>
+    <ul>
+      <li>Global and per-file runner configuration parameters
+      <li>"Add Xtest libraries" shortcut
+      <li>"Organize Imports" shortcut
+      <li>Run tests on save in separate job after build completes
+      <li>Run tests using recording class loader to track dependencies and only run tests affected by changes on save
+      <li>Added Xtest status bar
+    </ul>
+
+
+    <h2>0.1.1 (April 4, 2012)</h2>
+    <hr>
+    <p><strong>Changes</strong></p>
+    <ul>
+      <li>Removed unneccessarily specific dependencies to fix installation issues
+      <li>Back-ported Xtest for older installations of Xtext, available from separate update sites:
+      <div id="oldVersions">
+        <div class="row">
+          <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.2</code>
+          <a class="btn btn-mini" href="updates/for-xtext-2.2.zip"><i class="icon-download"></i>zip</a>
+          <a class="site-hash" href="updates/for-xtext-2.2.zip.sha">sha</a>
+          <a class="site-hash" href="updates/for-xtext-2.2.zip.md5">md5</a>
+        </div>
+        <div class="row">
+          <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.1</code>
+          <a class="btn btn-mini" href="updates/for-xtext-2.1.zip"><i class="icon-download"></i>zip</a>
+          <a class="site-hash" href="updates/for-xtext-2.1.zip.sha">sha</a>
+          <a class="site-hash" href="updates/for-xtext-2.1.zip.md5">md5</a>
+        </div>
+        <div class="row">
+          <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.0</code>
+          <a class="btn btn-mini" href="updates/for-xtext-2.0.zip"><i class="icon-download"></i>zip</a>
+          <a class="site-hash" href="updates/for-xtext-2.0.zip.sha">sha</a>
+          <a class="site-hash" href="updates/for-xtext-2.0.zip.md5">md5</a>
+        </div>
+      </div>
+    </ul>
+
+
+    <h2>0.1.0 (March 19, 2012)</h2>
+    <hr>
+    <p><strong>Initial release</strong></p>
+    <p><strong>Language</strong></p>
+    <ul>
+      <li>Support for test cases, test suites, and assertions
+      <li><code class="lang-xtest prettyprint">Type::class</code> equivalent to <code class="lang-java prettyprint">Type.class</code> in Java
+      <li><code class="lang-xtest prettyprint">:=</code> static assignment operator
+      <li>Private members of Java classes are accessible
+      <li>Import/import static support like Java
+    </ul>
+    <p><strong>Eclipse IDE</strong></p>
+    <ul>
+      <li>Editor support and test-failure highlighting
+      <li>Outline view shows test result structure
+      <li>Navigator displays passing/failing state of Xtest files and their containers
+      <li>New Xtest File wizard
+    </ul>
+  </div>
+</div>
+
+
+
+    <div class="container">
+      <hr>
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        Developed by <a href="mailto:msb5014@gmail.com">Michael Barry</a>.
+        Code licensed under the <a target="_blank" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License v1.0</a>.<br>
+        Based on <a href="http://www.eclipse.org/Xtext/index.html">Xtext</a>. Kindly supported by <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit</a>.<br>
+        Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+      </footer>
+    </div>
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/prettify.js"></script>
+    <script type="text/javascript" src="js/lang-xtest.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('.carousel').each(function(){
+          $(this).carousel({
+            interval: false
+          });
+        });
+      })
+    </script>
+  </body>
+</html>
