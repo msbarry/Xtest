@@ -164,7 +164,7 @@
   Then in the wizard that pops up give the file a name (the .xtest extension will be added automatically) and change the target folder and package if necessary.
 </p>
 <div class="doc-image">
-  <img src="img/new_wizard.png"/>
+  <img src="img/new_wizard.png" alt="New Xtest file wizard"/>
 </div>
 <p>
   Click <strong>Finish</strong> and answer <strong>Yes</strong> when you are prompted to add the Xtext nature to your project.
@@ -187,46 +187,36 @@ xtest test {
 <div id="basicSuccessCarousel" class="carousel slide carousel-fade well">
   <div class="carousel-inner">
     <div class="item active">
-      <center>
-        <div class="cimage"><img src="img/helloWorld.png"/></div>
-        <p>
-          The editing environment with one passing test
-        </p>
-      </center>
+      <div class="cimage"><img src="img/helloWorld.png" alt="Eclipse with one passing Xtest file"/></div>
+      <p>
+        The editing environment with one passing test
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/helloWorld_packageExplorer.png"/></div>
-        <p>
-          The package explorer displays a green check mark for the Xtest file and all of its containers
-        </p>
-      </center>
+      <div class="cimage"><img src="img/helloWorld_packageExplorer.png" alt="Package explorer with a passing Xtest file"/></div>
+      <p>
+        The package explorer displays a green check mark for the Xtest file and all of its containers
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/helloWorld_editor.png"/></div>
-        <p>
-          The editor has all of the same features you expect from the Java editor like syntax highlighting and autocomplete.
-          It shows no errors and displays the same green check mark in the icon of its tab
-        </p>
-      </center>
+      <div class="cimage"><img src="img/helloWorld_editor.png" alt="Eclipse editor with no Xtest errors"/></div>
+      <p>
+        The editor has all of the same features you expect from the Java editor like syntax highlighting and autocomplete.
+        It shows no errors and displays the same green check mark in the icon of its tab
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/helloWorld_outline.png"/></div>
-        <p>
-          The outline view displays the test result outline and the passing or failing state of all the tests in the file
-        </p>
-      </center>
+      <div class="cimage"><img src="img/helloWorld_outline.png" alt="Eclipse outline view with all passing tests"/></div>
+      <p>
+        The outline view displays the test result outline and the passing or failing state of all the tests in the file
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/helloWorld_statusBar.png"/></div>
-        <p>
-          The Xtest status bar is green when all tests are passing and red when any test is failing.
-          "0F/2" means "0 tests are failing out of 2 total tests" (HelloWorld.xtest is one test, and "test" is the other)
-        </p>
-      </center>
+      <div class="cimage"><img src="img/helloWorld_statusBar.png" alt="Status bar with 0 failures and 2 total test cases"/></div>
+      <p>
+        The Xtest status bar is green when all tests are passing and red when any test is failing.
+        "0F/2" means "0 tests are failing out of 2 total tests" (HelloWorld.xtest is one test, and "test" is the other)
+      </p>
     </div>
   </div>
   <a class="carousel-control left" href="#basicSuccessCarousel" data-slide="prev">&lsaquo;</a>
@@ -247,7 +237,7 @@ xtest test {
 <p> Mouse-over that expression and you will see the stack trace of the the exception that was thrown when your assertion failed.
 </p>
 <div class="doc-image">
-  <img src="img/helloWorldFail_editor.png"/>
+  <img src="img/helloWorldFail_editor.png" alt="Eclipse editor with a failing test"/>
 </div>
 <p>
   Save the file to commit your changes to disk.  The <a href="#runner">Xtest runner</a> listens to all file modifications, selects which tests
@@ -258,26 +248,26 @@ xtest test {
   When it is first scheduled, the Xtest status bar backs up to 0% complete.
 <p>
 <div class="doc-image">
-  <img src="img/helloWorld_schedule.png"/>
+  <img src="img/helloWorld_schedule.png" alt="Status bar backs up to 0% complete"/>
 </div>
 <p>
   Then after the test completes, it returns to 100% complete but turns red because there is now a failure and reads "1F/2" because
   one test is now contains a failure.
 </p>
 <div class="doc-image">
-  <img src="img/helloWorldFail_statusBar.png"/>
+  <img src="img/helloWorldFail_statusBar.png" alt="Status bar with 1 failing test out of 2 total tests"/>
 </div>
 <p>
   Now all parts of Eclipse have updated to show that the test is failing.
 </p>
 <div class="doc-image">
-  <img src="img/helloWorldFail.png"/>
+  <img src="img/helloWorldFail.png" alt="Eclipse with all views indicating a failing test"/>
 </div>
 <p>
   Here is a taste of what the Eclipse editor can look like in a more complex situation:
 </p>
 <div class="doc-image">
-  <img src="img/complexTests.png"/>
+  <img src="img/complexTests.png" alt="More complex tests in Eclipse with all views showing failures"/>
 </div>
 
             </section>
@@ -347,7 +337,7 @@ val b = 2
 <span class="squiggle-err">assert a == b</span>
 </pre>
 <pre class="exception nocode">
-<img src="ico/error_obj.gif"/>Assertion failed
+<img src="ico/error_obj.gif" alt="Error!"/>Assertion failed
    "a == b" was Boolean &lt;false&gt;
    "a" was Integer &lt;1&gt;
    "b" was Integer &lt;2&gt;
@@ -359,7 +349,7 @@ val b = 2
 <span class="squiggle-err">assert 1 &lt; 2 && "abc".startsWith("d") || (3+5) &gt; 10</span>
 </pre>
 <pre class="exception nocode">
-<img src="ico/error_obj.gif"/>Assertion failed
+<img src="ico/error_obj.gif" alt="Error!"/>Assertion failed
    "1 &lt; 2 && "abc".startsWith("d") || (3+5) &gt; 10" was Boolean &lt;false&gt;
    "1 &lt; 2 && "abc".startsWith("d")" was Boolean &lt;false&gt;
    "1 &lt; 2" was Boolean &lt;true&gt;
@@ -388,7 +378,7 @@ val i = 0;
 val num = <span class="squiggle-err">1/i</span>
 </pre>
 <pre class="exception">
-<img src="ico/error_obj.gif"/>java.lang.ArithmeticException: / by zero
+<img src="ico/error_obj.gif" alt="Error!"/>java.lang.ArithmeticException: / by zero
 Exceptions."1/i"(Exceptions:2)
 </pre>
 </div>
@@ -407,7 +397,7 @@ val expected = "abc123"
 <span class="squiggle-err">assertEquals("strings", expected, actual)</span>
 </pre>
 <pre class="exception">
-<img src="ico/error_obj.gif"/>org.junit.ComparisonFailure: strings expected:&lt;abc[123]&gt; but was:&lt;abc[]&gt;
+<img src="ico/error_obj.gif" alt="Error!"/>org.junit.ComparisonFailure: strings expected:&lt;abc[123]&gt; but was:&lt;abc[]&gt;
 org.junit.Assert.assertEquals(Assert.java:125)
 Exceptions."assertEquals("strings", expected, actual)"(Exceptions:5)
 </pre>
@@ -421,7 +411,7 @@ import static org.hamcrest.CoreMatchers.*
 <span class="squiggle-err">assertThat("abc", is(not(instanceOf(String::class))))</span>
 </pre>
 <pre class="exception">
-<img src="ico/error_obj.gif"/>java.lang.AssertionError:
+<img src="ico/error_obj.gif" alt="Error!"/>java.lang.AssertionError:
 Expected: is not an instance of java.lang.String
      got: "abc"
 
@@ -442,7 +432,7 @@ mockList.add(1)
 <span class="squiggle-err">mockList.add("a")</span>
 </pre>
 <pre class="exception">
-<img src="ico/error_obj.gif"/>java.lang.AssertionError
+<img src="ico/error_obj.gif" alt="Error!"/>java.lang.AssertionError
 Exceptions."mockList.add("a")"(Exceptions:7)
 </pre>
 </div>
@@ -460,7 +450,7 @@ Exceptions."mockList.add("a")"(Exceptions:7)
 </p>
 <p>
   Each file starts off with one implicit file-level test case.
-</p
+</p>
 <p>
   The keyword <code class="prettyprint lang-xtest">xtest</code> is used
   instead of "test" in order to prevent naming collisions with java packages and variables named "test"
@@ -489,7 +479,7 @@ xtest ("test " + num) {}  // Named "test 2"
 <h2>Example: Nested Test Cases</h2>
 <p>Test cases can be nested to any depth, which is convenient for grouping test cases into suites:</p>
 <div class="doc-image">
-  <img src="img/testCase_nested.png"/>
+  <img src="img/testCase_nested.png" alt="Eclipse outline view with a nested test case"/>
 </div>
 <h2>Example: Test Case in For Loop</h2>
 <p>
@@ -498,7 +488,7 @@ xtest ("test " + num) {}  // Named "test 2"
   test input and custom assertion methods.
 </p>
 <div class="doc-image">
-  <img src="img/testCase_loop.png"/>
+  <img src="img/testCase_loop.png" alt="Eclipse outline view with a test case inside a loop"/>
 </div>
 
             </section>
@@ -801,8 +791,8 @@ def &lt;T&gt; shouldBe(T actual, Matcher&lt;T&gt; matcher) {
   <a href="http://download.eclipse.org/modeling/tmf/xtext/javadoc/2.3/org/eclipse/xtext/xbase/lib/IntegerExtensions.html">IntegerExtensions</a>.
 </p>
 <pre class="prettyprint linenums lang-xtest">
-assert 1 > 0
-assert 3 <= 3
+assert 1 &gt; 0
+assert 3 &lt;= 3
 assert 2**3 == 8
 </pre>
 <p>
@@ -875,7 +865,7 @@ def int naughtyRecursiveMethod(int arg) {
 <span class="squiggle-err">naughtyRecursiveMethod(3)</span>
 </pre>
 <pre class="exception nocode">
-<img src="ico/error_obj.gif"/>java.lang.ArithmeticException: / by zero
+<img src="ico/error_obj.gif" alt="Error!"/>java.lang.ArithmeticException: / by zero
 StackTraces."1 / num"(StackTraces:1)
 StackTraces."reciprocal(arg)"(StackTraces:3)
 StackTraces."naughtyRecursiveMethod(arg-1)"(StackTraces:3)
@@ -895,7 +885,7 @@ val list = newArrayList(1, 2, 3, 0, 4)
 list.sort[a, b|reciprocal(a).compareTo(<span class="squiggle-err">reciprocal(b)</span>)]
 </pre>
 <pre class="exception nocode">
-<img src="ico/error_obj.gif"/>java.lang.ArithmeticException: / by zero
+<img src="ico/error_obj.gif" alt="Error!"/>java.lang.ArithmeticException: / by zero
 StackTraces."1 / num"(StackTraces:1)
 StackTraces."reciprocal(b)"(StackTraces:3)
 $Proxy211.compare(Unknown Source)
@@ -1211,7 +1201,7 @@ switch inputInt {
 switch obj {
   String: obj.toUpperCase
   Integer: obj.doubleValue
-  List<?> case obj.isEmpty: "a list"
+  List&lt;?&gt; case obj.isEmpty: "a list"
 }
 </pre>
 <p>
@@ -1275,7 +1265,7 @@ tree => [
   // ...
 ]
 </pre>
-<div id="lambda" class="section-marker"/>
+<div id="lambda" class="section-marker"></div>
 <h3>Lambda Expressions</h3>
 <p>Xbase supports lambda expressions using brackets as a more readable alternative to anonymous classes in Java.</p>
 <p>
@@ -1376,20 +1366,20 @@ assert input?.get(0) == null
   in the resulting wizard and click <strong>Next</strong>.
 </p>
 <div class="doc-image">
-  <img src="img/junit_newpluginwizard.png"/>
+  <img src="img/junit_newpluginwizard.png" alt="New plugin project wizard"/>
 </div>
 <p>
   Give your project a name, in this case "myproject.test" and click <strong>Next</strong>.
 </p>
 <div class="doc-image">
-  <img src="img/junit_newpluginwizard2.png"/>
+  <img src="img/junit_newpluginwizard2.png" alt="Second page of plugin project wizard"/>
 </div>
 <p>
   Deselect "This plug-in will make contributions to the UI" and
   "Generate an Activator..." check boxes and click <strong>Finish</strong>.
 </p>
 <div class="doc-image">
-  <img src="img/junit_newpluginwizard3.png"/>
+  <img src="img/junit_newpluginwizard3.png" alt="Third page of plugin project wizard"/>
 </div>
 <p>
   Open META-INF/MANIFEST.MF and under the <strong>Dependencies</strong> tab, add the following plugin dependencies:
@@ -1406,7 +1396,7 @@ assert input?.get(0) == null
   <li>org.eclipse.xtext.junit.util
 </ul>
 <div class="doc-image">
-  <img src="img/junit_dependencies.png"/>
+  <img src="img/junit_dependencies.png" alt="Adding package and plugin dependencies to manifest.mf file"/>
 </div>
 <p>
   Right click on the project and select <strong>New</strong> -> <strong>Other...</strong>, and choose
@@ -1442,7 +1432,7 @@ public class RunDemo {
   The output should look something like this, very similar to the outline view.
 </p>
 <div class="doc-image">
-  <img src="img/junit_output.png"/>
+  <img src="img/junit_output.png" alt="JUnit view with Xtest file output"/>
 </div>
 <p>
   A future version of Xtest should allow you to add an Xtest standalone dependency to any Maven project so that you don't need to create
@@ -1509,40 +1499,32 @@ public class RunDemo {
   of running Xtest files.  It has a "run" button that you can click to run all tests:
 </p>
 <div id="statusBarCarousel" class="carousel slide carousel-fade well">
-  <center><h4>Click the "Run" Button</h4><br></center>
+  <h4>Click the "Run" Button</h4><br>
   <div class="carousel-inner">
     <div class="item active">
-      <center>
-        <div class="cimage"><img src="img/vrunner_passing.png"/></div>
-        <p>
-          When all tests are passing, the status bar is green and indicates the number of failing and total tests.<br>
-          You can select the "Run" button to run all tests...
-        </p>
-      </center>
+      <div class="cimage"><img src="img/vrunner_passing.png" alt="Package explorer and status bar with all tests passing"/></div>
+      <p>
+        When all tests are passing, the status bar is green and indicates the number of failing and total tests.<br>
+        You can select the "Run" button to run all tests...
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/vrunner_manualstart.png"/></div>
-        <p>
-          The runner backs all the way up to 0% as tests are scheduled...
-        </p>
-      </center>
+      <div class="cimage"><img src="img/vrunner_manualstart.png" alt="Package explorer and status bar with all tests pending"/></div>
+      <p>
+        The runner backs all the way up to 0% as tests are scheduled...
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/vrunner_manualmidway.png"/></div>
-        <p>
-          It displays progress as tests complete...
-        </p>
-      </center>
+      <div class="cimage"><img src="img/vrunner_manualmidway.png" alt="Package explorer and status bar with half the tests completed and passing"/></div>
+      <p>
+        It displays progress as tests complete...
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/vrunner_passing.png"/></div>
-        <p>
-          And it returns the 100% passing when all test are done.
-        </p>
-      </center>
+      <div class="cimage"><img src="img/vrunner_passing.png" alt="Package explorer and status bar with all tests completed and passing"/></div>
+      <p>
+        And it returns the 100% passing when all test are done.
+      </p>
     </div>
   </div>
   <a class="carousel-control left" href="#statusBarCarousel" data-slide="prev">&lsaquo;</a>
@@ -1552,32 +1534,26 @@ public class RunDemo {
   And it also displays progress when saving a file triggers running a subset of all of the tests:
 </p>
 <div id="failureCarousel" class="carousel slide carousel-fade well">
-  <center><h4>Save a change that breaks half of the tests</h4><br></center>
+  <h4>Save a change that breaks half of the tests</h4><br>
   <div class="carousel-inner">
     <div class="item active">
-      <center>
-        <div class="cimage"><img src="img/vrunner_passing.png"/></div>
-        <p>
-          When you break a file that impacts half the tests and save it...
-        </p>
-      </center>
+      <div class="cimage"><img src="img/vrunner_passing.png" alt="Package explorer and status bar with all tests passing"/></div>
+      <p>
+        When you break a file that impacts half the tests and save it...
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/vrunner_manualmidway.png"/></div>
-        <p>
-          The runner backs up halfway when half of the tests are scheduled...
-        </p>
-      </center>
+      <div class="cimage"><img src="img/vrunner_manualmidway.png" alt="Package explorer and status bar with half the tests pending"/></div>
+      <p>
+        The runner backs up halfway when half of the tests are scheduled...
+      </p>
     </div>
     <div class="item">
-      <center>
-        <div class="cimage"><img src="img/vrunner_failing.png"/></div>
-        <p>
-          Then runs all tests, returning to 100% complete.  The new number of failures
-          is shown in the status bar text.
-        </p>
-      </center>
+      <div class="cimage"><img src="img/vrunner_failing.png" alt="Package explorer and status bar with all tests complete and 5/10 failing"/></div>
+      <p>
+        Then runs all tests, returning to 100% complete.  The new number of failures
+        is shown in the status bar text.
+      </p>
     </div>
   </div>
   <a class="carousel-control left" href="#failureCarousel" data-slide="prev">&lsaquo;</a>
@@ -1619,7 +1595,9 @@ public class RunDemo {
   override the global setting.
 </p>
 <p>The global settings are available under <strong>Window</strong> -> Preferences.  Search for Xtest in the window that pops up</p>
-<img src="img/xtest_settings.png"/>
+<div class="doc-image">
+  <img src="img/xtest_settings.png" alt="Eclipse settings under Window->Preferences->Xtest"/>
+</div>
 <p>To edit the same settings in a file, insert any combination of the following at the very top of the file:</p>
 <pre class="prettyprint lang-xtest linenums">
 runWhileEditing: true
