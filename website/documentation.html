@@ -68,46 +68,36 @@ categories:
           <div id="basicSuccessCarousel" class="carousel slide carousel-fade well">
             <div class="carousel-inner">
               <div class="item active">
-                <center>
-                  <div class="cimage"><img src="img/helloWorld.png"/></div>
-                  <p>
-                    The editing environment with one passing test
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/helloWorld.png"/></div>
+                <p>
+                  The editing environment with one passing test
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/helloWorld_packageExplorer.png"/></div>
-                  <p>
-                    The package explorer displays a green check mark for the Xtest file and all of its containers
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/helloWorld_packageExplorer.png"/></div>
+                <p>
+                  The package explorer displays a green check mark for the Xtest file and all of its containers
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/helloWorld_editor.png"/></div>
-                  <p>
-                    The editor has all of the same features you expect from the Java editor like syntax highlighting and autocomplete.
-                    It shows no errors and displays the same green check mark in the icon of its tab
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/helloWorld_editor.png"/></div>
+                <p>
+                  The editor has all of the same features you expect from the Java editor like syntax highlighting and autocomplete.
+                  It shows no errors and displays the same green check mark in the icon of its tab
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/helloWorld_outline.png"/></div>
-                  <p>
-                    The outline view displays the test result outline and the passing or failing state of all the tests in the file
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/helloWorld_outline.png"/></div>
+                <p>
+                  The outline view displays the test result outline and the passing or failing state of all the tests in the file
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/helloWorld_statusBar.png"/></div>
-                  <p>
-                    The Xtest status bar is green when all tests are passing and red when any test is failing.
-                    "0F/2" means "0 tests are failing out of 2 total tests" (HelloWorld.xtest is one test, and "test" is the other)
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/helloWorld_statusBar.png"/></div>
+                <p>
+                  The Xtest status bar is green when all tests are passing and red when any test is failing.
+                  "0F/2" means "0 tests are failing out of 2 total tests" (HelloWorld.xtest is one test, and "test" is the other)
+                </p>
               </div>
             </div>
             <a class="carousel-control left" href="#basicSuccessCarousel" data-slide="prev">&lsaquo;</a>
@@ -1060,7 +1050,7 @@ categories:
           switch obj {
             String: obj.toUpperCase
             Integer: obj.doubleValue
-            List<?> case obj.isEmpty: "a list"
+            List&lt;?&gt; case obj.isEmpty: "a list"
           }
           </pre>
           <p>
@@ -1350,40 +1340,32 @@ categories:
             of running Xtest files.  It has a "run" button that you can click to run all tests:
           </p>
           <div id="statusBarCarousel" class="carousel slide carousel-fade well">
-            <center><h4>Click the "Run" Button</h4><br></center>
+            <h4>Click the "Run" Button</h4><br>
             <div class="carousel-inner">
               <div class="item active">
-                <center>
-                  <div class="cimage"><img src="img/vrunner_passing.png"/></div>
-                  <p>
-                    When all tests are passing, the status bar is green and indicates the number of failing and total tests.<br>
-                    You can select the "Run" button to run all tests...
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/vrunner_passing.png"/></div>
+                <p>
+                  When all tests are passing, the status bar is green and indicates the number of failing and total tests.<br>
+                  You can select the "Run" button to run all tests...
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/vrunner_manualstart.png"/></div>
-                  <p>
-                    The runner backs all the way up to 0% as tests are scheduled...
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/vrunner_manualstart.png"/></div>
+                <p>
+                  The runner backs all the way up to 0% as tests are scheduled...
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/vrunner_manualmidway.png"/></div>
-                  <p>
-                    It displays progress as tests complete...
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/vrunner_manualmidway.png"/></div>
+                <p>
+                  It displays progress as tests complete...
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/vrunner_passing.png"/></div>
-                  <p>
-                    And it returns the 100% passing when all test are done.
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/vrunner_passing.png"/></div>
+                <p>
+                  And it returns the 100% passing when all test are done.
+                </p>
               </div>
             </div>
             <a class="carousel-control left" href="#statusBarCarousel" data-slide="prev">&lsaquo;</a>
@@ -1393,32 +1375,26 @@ categories:
             And it also displays progress when saving a file triggers running a subset of all of the tests:
           </p>
           <div id="failureCarousel" class="carousel slide carousel-fade well">
-            <center><h4>Save a change that breaks half of the tests</h4><br></center>
+            <h4>Save a change that breaks half of the tests</h4><br>
             <div class="carousel-inner">
               <div class="item active">
-                <center>
-                  <div class="cimage"><img src="img/vrunner_passing.png"/></div>
-                  <p>
-                    When you break a file that impacts half the tests and save it...
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/vrunner_passing.png"/></div>
+                <p>
+                  When you break a file that impacts half the tests and save it...
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/vrunner_manualmidway.png"/></div>
-                  <p>
-                    The runner backs up halfway when half of the tests are scheduled...
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/vrunner_manualmidway.png"/></div>
+                <p>
+                  The runner backs up halfway when half of the tests are scheduled...
+                </p>
               </div>
               <div class="item">
-                <center>
-                  <div class="cimage"><img src="img/vrunner_failing.png"/></div>
-                  <p>
-                    Then runs all tests, returning to 100% complete.  The new number of failures
-                    is shown in the status bar text.
-                  </p>
-                </center>
+                <div class="cimage"><img src="img/vrunner_failing.png"/></div>
+                <p>
+                  Then runs all tests, returning to 100% complete.  The new number of failures
+                  is shown in the status bar text.
+                </p>
               </div>
             </div>
             <a class="carousel-control left" href="#failureCarousel" data-slide="prev">&lsaquo;</a>
