@@ -3,6 +3,9 @@ xtest:
 	recess --compile ./_less/custom-bootstrap.less > ./_site/css/bootstrap.css
 	recess --compile ./_less/_bootstrap/responsive.less > ./_site/css/bootstrap-responsive.css
 
+clean:
+	rm -rf _site/*
+
 bootstrap:
 	wget -O latest_bootstrap.tar.gz https://github.com/twitter/bootstrap/tarball/master
 	tar -xvzf latest_bootstrap.tar.gz
