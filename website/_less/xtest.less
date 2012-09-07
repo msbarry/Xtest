@@ -22,14 +22,12 @@
   display: block;
 }
 
+  
 // Demo slidewhow
 #mainCarousel {
   margin-left: auto;
   margin-right: auto;
   .box-shadow(0px 0px 200px 3px #808580);
-  @media (max-width: 1199px) {
-    .box-shadow(0px 0px 100px 0px #808580);
-  }
   &, img { border-radius: 9px }
   max-width: 450px;
   display: block;
@@ -68,14 +66,8 @@
 
 // Table-of-contents
 .nav-sidebar {
-  @media (min-width: 768px) {
-    margin-top: 30px;
-    position: fixed;
-  }
-  @media (max-width: 767px) {
-    visibility: hidden;
-    height: 0px;
-  }
+  margin-top: 30px;
+  position: fixed;
   .nav-list {
     padding-left: 0px;
     li {
@@ -250,4 +242,22 @@
 // Make all code blocks the same font size as their surroundingsyy
 code {
   font-size: inherit;
+}
+
+// Responsive styling
+// ---------------------------
+
+// Anything smaller than a large desktop screen
+@media (max-width: 1199px) {
+  #mainCarousel {
+    .box-shadow(0px 0px 100px 0px #808580);
+  }
+}
+
+// Anything tablet-sized or smaller
+@media (max-width: 767px) {
+  .nav-sidebar {
+    visibility: hidden;
+    height: 0px;
+  }
 }
