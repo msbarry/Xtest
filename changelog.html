@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
   </head>
 
-  <body data-spy="scroll" data-target=".subnav" data-offset="50" class="xtest" onload="prettyPrint()">
+  <body data-spy="scroll" data-target=".subnav" data-offset="50" onload="prettyPrint()">
 
 
 
@@ -57,12 +57,15 @@
         </div>
       </div>
     </div>
-    <div class="container changelog">
+    <div class="container informational changelog">
   <div class="offset2 span8">
     <header id="overview">
       <h1>Changelog</h1>
     </header>
 
+    
+    <!-- 0.2.1
+        ================================================== -->
     <h2>0.2.1 (TBD)</h2>
     <hr>
     <p><strong>Changes</strong></p>
@@ -75,6 +78,9 @@
     </ul>
 
 
+    
+    <!-- 0.2.0
+        ================================================== -->
     <h2>0.2.0 (July 25, 2012)</h2>
     <hr>
     <p><strong>Changes</strong></p>
@@ -102,35 +108,53 @@
     </ul>
 
 
+    
+    <!-- 0.1.1
+        ================================================== -->
     <h2>0.1.1 (April 4, 2012)</h2>
     <hr>
     <p><strong>Changes</strong></p>
     <ul>
       <li>Removed unneccessarily specific dependencies to fix installation issues
       <li>Back-ported Xtest for older installations of Xtext, available from separate update sites:
-      <div id="oldVersions">
-        <div class="row">
-          <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.2</code>
-          <a class="btn btn-mini" href="updates/for-xtext-2.2.zip"><i class="icon-download"></i>zip</a>
-          <a class="site-hash" href="updates/for-xtext-2.2.zip.sha">sha</a>
-          <a class="site-hash" href="updates/for-xtext-2.2.zip.md5">md5</a>
-        </div>
-        <div class="row">
-          <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.1</code>
-          <a class="btn btn-mini" href="updates/for-xtext-2.1.zip"><i class="icon-download"></i>zip</a>
-          <a class="site-hash" href="updates/for-xtext-2.1.zip.sha">sha</a>
-          <a class="site-hash" href="updates/for-xtext-2.1.zip.md5">md5</a>
-        </div>
-        <div class="row">
-          <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.0</code>
-          <a class="btn btn-mini" href="updates/for-xtext-2.0.zip"><i class="icon-download"></i>zip</a>
-          <a class="site-hash" href="updates/for-xtext-2.0.zip.sha">sha</a>
-          <a class="site-hash" href="updates/for-xtext-2.0.zip.md5">md5</a>
-        </div>
-      </div>
+      <table class="table">
+        <tr>
+          <td>
+            <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.2</code>
+            <div class="site-hash">
+              <a class="btn btn-mini" href="updates/for-xtext-2.2.zip"><i class="icon-download"></i>zip</a>
+              <a href="updates/for-xtext-2.2.zip.sha">sha</a>
+              <a href="updates/for-xtext-2.2.zip.md5">md5</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.1</code>
+            <div class="site-hash">
+              <a class="btn btn-mini" href="updates/for-xtext-2.1.zip"><i class="icon-download"></i>zip</a>
+              <a href="updates/for-xtext-2.1.zip.sha">sha</a>
+              <a href="updates/for-xtext-2.1.zip.md5">md5</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.0</code>
+            <div class="site-hash">
+              <a class="btn btn-mini" href="updates/for-xtext-2.0.zip"><i class="icon-download"></i>zip</a>
+              <a href="updates/for-xtext-2.0.zip.sha">sha</a>
+              <a href="updates/for-xtext-2.0.zip.md5">md5</a>
+            </div>
+          </td>
+        </tr>
+      </table>
     </ul>
 
 
+    
+    <!-- 0.1.0
+        ================================================== -->
     <h2>0.1.0 (March 20, 2012)</h2>
     <hr>
     <p><strong>Initial release</strong></p>
@@ -154,16 +178,18 @@
 
 
 
-    <div class="container">
-      <hr>
-      <footer>
+    <!-- Footer
+    ================================================== -->
+    <footer class="footer">
+      <div class="container">
         <p class="pull-right"><a href="#">Back to top</a></p>
         Developed by <a href="mailto:msb5014@gmail.com">Michael Barry</a>.
         Code licensed under the <a target="_blank" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License v1.0</a>.<br>
         Based on <a href="http://www.eclipse.org/Xtext/index.html">Xtext</a>. Kindly supported by <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit</a>.<br>
+        Website built with <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a>. 
         Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
-      </footer>
-    </div>
+      </div>
+    </footer>
 
 
 
@@ -174,6 +200,8 @@
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/prettify.js"></script>
     <script type="text/javascript" src="js/lang-xtest.js"></script>
+    
+    <!-- Disable auto-play on carousels -->
     <script type="text/javascript">
       $(document).ready(function() {
         $('.carousel').each(function(){

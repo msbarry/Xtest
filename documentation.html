@@ -24,7 +24,7 @@
     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
   </head>
 
-  <body data-spy="scroll" data-target=".subnav" data-offset="50" class="xtest" onload="prettyPrint()">
+  <body data-spy="scroll" data-target=".subnav" data-offset="50" onload="prettyPrint()">
 
 
 
@@ -57,7 +57,7 @@
         </div>
       </div>
     </div>
-    <div class="documentation container">
+    <div class="container informational documentation">
   <div class="row">
     <div class="span3 nav-sidebar">
       <ul class="nav nav-list">
@@ -112,8 +112,12 @@
         <h1>Documentation</h1>
       </header>
       
+        <!-- Getting Started
+            ================================================== -->
         <div class="doc-sec">
           
+          <!-- Introduction
+              ================================================== -->
             <section id="intro">
               <h1>Introduction</h1>
               <hr>
@@ -134,6 +138,8 @@
 
             </section>
           
+          <!-- Installation
+              ================================================== -->
             <section id="install">
               <h1>Installation</h1>
               <hr>
@@ -148,6 +154,8 @@
 
             </section>
           
+          <!-- Creating an Xtest file
+              ================================================== -->
             <section id="createfile">
               <h1>Creating an Xtest file</h1>
               <hr>
@@ -178,6 +186,8 @@ xtest test {
 
             </section>
           
+          <!-- The Editing Environment
+              ================================================== -->
             <section id="idesupport">
               <h1>The Editing Environment</h1>
               <hr>
@@ -274,8 +284,12 @@ xtest test {
           
         </div>
       
+        <!-- Language Features
+            ================================================== -->
         <div class="doc-sec">
           
+          <!-- Assertions
+              ================================================== -->
             <section id="asserts">
               <h1>Assertions</h1>
               <hr>
@@ -361,6 +375,8 @@ val b = 2
 
             </section>
           
+          <!-- Exception Handling
+              ================================================== -->
             <section id="exceptions">
               <h1>Exception Handling</h1>
               <hr>
@@ -439,6 +455,8 @@ Exceptions."mockList.add("a")"(Exceptions:7)
 
             </section>
           
+          <!-- Test Cases
+              ================================================== -->
             <section id="testcase">
               <h1>Test Cases</h1>
               <hr>
@@ -493,6 +511,8 @@ xtest ("test " + num) {}  // Named "test 2"
 
             </section>
           
+          <!-- Methods
+              ================================================== -->
             <section id="methods">
               <h1>Methods</h1>
               <hr>
@@ -687,6 +707,8 @@ testCheckAmountConversion(9.1bd, "Nine and 10/100 dollars")
 
             </section>
           
+          <!-- Extension Methods
+              ================================================== -->
             <section id="extension">
               <h1>Extension Methods</h1>
               <hr>
@@ -769,6 +791,8 @@ def &lt;T&gt; shouldBe(T actual, Matcher&lt;T&gt; matcher) {
 
             </section>
           
+          <!-- Operator Overloading
+              ================================================== -->
             <section id="overload">
               <h1>Operator Overloading</h1>
               <hr>
@@ -848,6 +872,8 @@ assert "aBcDEF" == "abcdef"
 
             </section>
           
+          <!-- Stack Traces
+              ================================================== -->
             <section id="stackTraces">
               <h1>Stack Traces</h1>
               <hr>
@@ -898,6 +924,8 @@ StackTraces."list.sort[a, b|reciprocal(a).compareTo(reciprocal(b))]"(StackTraces
 
             </section>
           
+          <!-- Private Member Access
+              ================================================== -->
             <section id="private">
               <h1>Private Member Access</h1>
               <hr>
@@ -952,6 +980,8 @@ assert Counter::increment == Integer::MAX_VALUE
 
             </section>
           
+          <!-- Unexecuted Test Code
+              ================================================== -->
             <section id="unexecuted">
               <h1>Unexecuted Test Code</h1>
               <hr>
@@ -983,6 +1013,8 @@ xtest "list contains key players" {
 
             </section>
           
+          <!-- Xbase Features
+              ================================================== -->
             <section id="xbase">
               <h1>Xbase Features</h1>
               <hr>
@@ -1352,8 +1384,12 @@ assert input?.get(0) == null
           
         </div>
       
+        <!-- Other Topics
+            ================================================== -->
         <div class="doc-sec">
           
+          <!-- Linking Xtest into JUnit
+              ================================================== -->
             <section id="xtestJunit">
               <h1>Linking Xtest into JUnit</h1>
               <hr>
@@ -1441,6 +1477,8 @@ public class RunDemo {
 
             </section>
           
+          <!-- Anatomy of the Test Runner
+              ================================================== -->
             <section id="runner">
               <h1>Anatomy of the Test Runner</h1>
               <hr>
@@ -1498,7 +1536,7 @@ public class RunDemo {
   Xtest 0.2 introduces a visual status bar that quickly displays the progress and current passing/failing state
   of running Xtest files.  It has a "run" button that you can click to run all tests:
 </p>
-<div id="statusBarCarousel" class="carousel slide carousel-fade well">
+<div id="statusBarCarousel" class="carousel-narrow carousel slide carousel-fade well">
   <h4>Click the "Run" Button</h4><br>
   <div class="carousel-inner">
     <div class="item active">
@@ -1533,7 +1571,7 @@ public class RunDemo {
 <p>
   And it also displays progress when saving a file triggers running a subset of all of the tests:
 </p>
-<div id="failureCarousel" class="carousel slide carousel-fade well">
+<div id="failureCarousel" class="carousel-narrow carousel slide carousel-fade well">
   <h4>Save a change that breaks half of the tests</h4><br>
   <div class="carousel-inner">
     <div class="item active">
@@ -1587,6 +1625,8 @@ public class RunDemo {
 
             </section>
           
+          <!-- Configuration
+              ================================================== -->
             <section id="options">
               <h1>Configuration</h1>
               <hr>
@@ -1617,16 +1657,18 @@ markUnexecuted: true
 
 
 
-    <div class="container">
-      <hr>
-      <footer>
+    <!-- Footer
+    ================================================== -->
+    <footer class="footer">
+      <div class="container">
         <p class="pull-right"><a href="#">Back to top</a></p>
         Developed by <a href="mailto:msb5014@gmail.com">Michael Barry</a>.
         Code licensed under the <a target="_blank" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License v1.0</a>.<br>
         Based on <a href="http://www.eclipse.org/Xtext/index.html">Xtext</a>. Kindly supported by <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit</a>.<br>
+        Website built with <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a>. 
         Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
-      </footer>
-    </div>
+      </div>
+    </footer>
 
 
 
@@ -1637,6 +1679,8 @@ markUnexecuted: true
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/prettify.js"></script>
     <script type="text/javascript" src="js/lang-xtest.js"></script>
+    
+    <!-- Disable auto-play on carousels -->
     <script type="text/javascript">
       $(document).ready(function() {
         $('.carousel').each(function(){
