@@ -5,7 +5,7 @@
       version="0.2.1.qualifier"
       provider-name="Michael Barry">
 
-   <description url="https://msbarry.github.com/Xtest">
+   <description url="http://msbarry.github.com/Xtest">
       Unit testing domain-specific language for Java.
    </description>
 
