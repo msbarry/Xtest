@@ -243,13 +243,14 @@ hr.soften {
   color: #5a5a5a;
 }
 .marketing h1 {
-  margin: 10px 0 10px;
+  margin: 10px 0;
   font-size: 50px;
   font-weight: 200;
   line-height: 1;
   letter-spacing: -1px;
 }
 .marketing h2 {
+  font-size: 25px;
   font-weight: 200;
   margin-bottom: 0px;
 }
@@ -967,7 +968,7 @@ form.bs-docs-example {
 
   /* Marketing on home */
   .marketing h1 {
-    font-size: 40px;
+    font-size: 30px;
   }
 
 }
