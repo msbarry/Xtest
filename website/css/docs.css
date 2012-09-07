@@ -76,17 +76,7 @@ hr.soften {
   color: #fff;
   text-align: center;
   text-shadow: 0 1px 3px rgba(0,0,0,.4), 0 0 30px rgba(0,0,0,.075);
-  background: rgb(17, 17, 17); /* Old browsers */
-  background: -moz-linear-gradient(90deg,  rgb(17, 17, 17) 0%, rgb(63, 63 ,63) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgb(17, 17, 17)), color-stop(100%,rgb(63, 63 ,63))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(90deg,  rgb(17, 17, 17) 0%,rgb(63, 63 ,63) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(90deg,  rgb(17, 17, 17) 0%,rgb(63, 63 ,63) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(90deg,  rgb(17, 17, 17) 0%,rgb(63, 63 ,63) 100%); /* IE10+ */
-  background: linear-gradient(90deg,  rgb(17, 17, 17) 0%,rgb(63, 63 ,63) 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(17, 17, 17)', endColorstr='rgb(63, 63 ,63)',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-  -webkit-box-shadow: inset 0 3px 7px rgba(0,0,0,.2), inset 0 -3px 7px rgba(0,0,0,.2);
-     -moz-box-shadow: inset 0 3px 7px rgba(0,0,0,.2), inset 0 -3px 7px rgba(0,0,0,.2);
-          box-shadow: inset 0 3px 7px rgba(0,0,0,.2), inset 0 -3px 7px rgba(0,0,0,.2);
+  background: #1A1E1C;
 }
 .jumbotron h1 {
   font-size: 80px;
@@ -204,6 +194,7 @@ hr.soften {
 
 /* Social proof buttons from GitHub & Twitter */
 .bs-docs-social {
+  margin-bottom: 50px;
   padding: 15px 0;
   text-align: center;
   background-color: #f5f5f5;
@@ -284,7 +275,7 @@ hr.soften {
 -------------------------------------------------- */
 
 .footer {
-  padding: 70px 0;
+  padding: 20px 0;
   margin-top: 70px;
   border-top: 1px solid #e5e5e5;
   background-color: #f5f5f5;

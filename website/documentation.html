@@ -1339,7 +1339,7 @@ categories:
             Xtest 0.2 introduces a visual status bar that quickly displays the progress and current passing/failing state
             of running Xtest files.  It has a "run" button that you can click to run all tests:
           </p>
-          <div id="statusBarCarousel" class="carousel slide carousel-fade well">
+          <div id="statusBarCarousel" class="carousel-narrow carousel slide carousel-fade well">
             <h4>Click the "Run" Button</h4><br>
             <div class="carousel-inner">
               <div class="item active">
@@ -1374,7 +1374,7 @@ categories:
           <p>
             And it also displays progress when saving a file triggers running a subset of all of the tests:
           </p>
-          <div id="failureCarousel" class="carousel slide carousel-fade well">
+          <div id="failureCarousel" class="carousel-narrow carousel slide carousel-fade well">
             <h4>Save a change that breaks half of the tests</h4><br>
             <div class="carousel-inner">
               <div class="item active">
@@ -1445,7 +1445,7 @@ categories:
           // rest of file ...
           </pre>
 ---
-<div class="documentation container">
+<div class="container informational documentation">
   <div class="row">
     <div class="span3 nav-sidebar">
       <ul class="nav nav-list">
@@ -1462,8 +1462,12 @@ categories:
         <h1>Documentation</h1>
       </header>
       {% for item in page.categories %}
+        <!-- {{ item.title }}
+            ================================================== -->
         <div class="doc-sec">
           {% for subsection in item.subsections %}
+          <!-- {{ subsection.title }}
+              ================================================== -->
             <section id="{{ subsection.anchor }}">
               <h1>{{ subsection.title }}</h1>
               <hr>

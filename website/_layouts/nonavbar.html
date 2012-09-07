@@ -24,22 +24,24 @@
     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
   </head>
 
-  <body data-spy="scroll" data-target=".subnav" data-offset="50" class="xtest" onload="prettyPrint()">
+  <body data-spy="scroll" data-target=".subnav" data-offset="50" onload="prettyPrint()">
 
 
 
     {{content}}
 
-    <div class="container">
-      <hr>
-      <footer>
+    <!-- Footer
+    ================================================== -->
+    <footer class="footer">
+      <div class="container">
         <p class="pull-right"><a href="#">Back to top</a></p>
         Developed by <a href="mailto:msb5014@gmail.com">Michael Barry</a>.
         Code licensed under the <a target="_blank" href="http://www.eclipse.org/legal/epl-v10.html">Eclipse Public License v1.0</a>.<br>
         Based on <a href="http://www.eclipse.org/Xtext/index.html">Xtext</a>. Kindly supported by <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit</a>.<br>
+        Website built with <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a>. 
         Icons from <a href="http://glyphicons.com">Glyphicons Free</a>, licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
-      </footer>
-    </div>
+      </div>
+    </footer>
 
 
 
@@ -50,6 +52,8 @@
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/prettify.js"></script>
     <script type="text/javascript" src="js/lang-xtest.js"></script>
+    
+    <!-- Disable auto-play on carousels -->
     <script type="text/javascript">
       $(document).ready(function() {
         $('.carousel').each(function(){

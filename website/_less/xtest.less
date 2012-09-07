@@ -1,67 +1,96 @@
+// Navbar
+// ---------------------------
+
 .watch-fork {
   padding-top: 8px;
 }
 
-#landing-page {
-  .jumbotron {
-    background: #1A1E1C;
-  }
-  #xtest-title {
-    vertical-align:text-bottom;
-    height: 100%;
-    display: block;
-  }
-  #xtest-image {
-    margin-top: 30px;
-    display: block;
-  }
-  .carousel {
-    margin-left: auto;
-    margin-right: auto;
-    .box-shadow(0px 0px 200px 3px #808580);
-    @media (max-width: 1199px) {
-      .box-shadow(0px 0px 100px 0px #808580);
-    }
-    &, img { border-radius: 9px }
-    max-width: 450px;
-    display: block;
-    background: inherit;
-    border: none;
-    .carousel-control {
-      margin-top: 0px;
-      .opacity(15);
-    }
+// Landing Page
+// ---------------------------
 
-    // Hover state
-    &:hover {
-      .carousel-control {
-        color: @white;
-        text-decoration: none;
-        .opacity(60);
-      }
-    }
-  }
+// Jumbotron
+.xtest-title {
+  vertical-align:text-bottom;
+  height: 100%;
+  display: block;
   .btn small {
     font-size: 60%;
   }
-  .features {
-    text-align: center;
-    img {
-      border: 1px @grayLighter solid;
-      padding: 2px;
-      border-radius: 10px;
-      .box-shadow(3px 3px 3px #ccc);
-    }
-    feature-box {
-      border: 1px @grayLight solid;
-    }
+}
+.xtest-image {
+  margin-top: 30px;
+  display: block;
+}
+
+// Demo slidewhow
+#mainCarousel {
+  margin-left: auto;
+  margin-right: auto;
+  .box-shadow(0px 0px 200px 3px #808580);
+  @media (max-width: 1199px) {
+    .box-shadow(0px 0px 100px 0px #808580);
   }
-  .bs-docs-social {
-    margin-bottom: 50px;
+  &, img { border-radius: 9px }
+  max-width: 450px;
+  display: block;
+  background: inherit;
+  border: none;
+  .carousel-control {
+    margin-top: 0px;
+    .opacity(15);
+  }
+
+  // Hover state
+  &:hover {
+    .carousel-control {
+      color: @white;
+      text-decoration: none;
+      .opacity(60);
+    }
   }
 }
 
-.documentation {
+// Features
+.features {
+  text-align: center;
+  img {
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px @grayLighter solid;
+    padding: 2px;
+    border-radius: 10px;
+    .box-shadow(3px 3px 3px #ccc);
+  }
+}
+
+// Documentation Page
+// ---------------------------
+
+// Table-of-contents
+.nav-sidebar {
+  @media (min-width: 768px) {
+    margin-top: 30px;
+    position: fixed;
+  }
+  @media (max-width: 767px) {
+    visibility: hidden;
+    height: 0px;
+  }
+  .nav-list {
+    padding-left: 0px;
+    li {
+      line-height: 15px;
+    }
+    li.nav-header {
+      line-height: 18px;
+    }
+  }
+}
+
+// Documentation Page
+// Provides base styling for download/changelog pages too
+// ---------------------------
+.informational {
   #overview {
     margin-top: 40px;
     margin-bottom: 40px;
@@ -95,25 +124,6 @@
     padding-top: 60px;
     margin-top: -30px;
   }
-  .nav-sidebar {
-    @media (min-width: 768px) {
-      margin-top: 30px;
-      position: fixed;
-    }
-    @media (max-width: 767px) {
-      visibility: hidden;
-      height: 0px;
-    }
-    .nav-list {
-      padding-left: 0px;
-      li {
-        line-height: 15px;
-      }
-      li.nav-header {
-        line-height: 18px;
-      }
-    }
-  }
   img {
     max-width: 100%;
     display: block;
@@ -122,7 +132,10 @@
     margin-left: 5px;
     margin-right: 0px;
   }
+  
+  // Slideshows used in documentation
   .carousel {
+    padding-top: 5px;
     text-align: center;
     img {
       margin-left: auto;
@@ -133,14 +146,81 @@
       height: 20pt;
     }
   }
+  
+  // Slideshow and image common styling
   .doc-image img, .carousel {
     background: inherit;
-    padding: 5px;
+    padding: 0px;
     border: 1px @grayLighter solid;
     border-radius: 5px;
     .box-shadow(3px 3px 3px #ccc);
   }
+  
+  .carousel-narrow {
+    max-width: 400px;
+    p {
+      height: 40pt;
+    }
+  }
 }
+
+
+// Download page
+// ---------------------------
+.download {
+  .pull-right {
+    float: right;
+  }
+  .update-table {
+    th, td {
+      border-top: none;
+    }
+  }
+  tr:hover {
+    .site-hash {
+      opacity: 1;
+    }
+  }
+}
+
+.site-hash {
+  display: inline;
+  color: @textColor;
+  .transition(opacity 0.1s ease-in 0);
+  opacity: 0;
+  .btn { 
+    text-shadow: none;
+  }
+  a {
+    font-size: 11px;
+    color: @textColor;
+  }
+  a:hover {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+// Changelog
+// ---------------------------
+
+.changelog {
+  // inherit download page styling
+  .download
+  tr, td {
+    border: none;
+  }
+  .site-hash {
+    // nothing fancy for the changelog page
+    opacity: 1;
+  }
+  h2 { margin-top: 40px }
+}
+
+// Miscellaneous global tweaks
+// ---------------------------
+
+// Fast carousels - replace, don't slide
 .carousel.carousel-fade {
   .item {
     .transition(opacity 0.01s ease);
@@ -159,48 +239,15 @@
     z-index: 3;
   }
 }
+
+// Slow carousels - fade from one image to the next in half a second
 .carousel.carousel-fade.fade-slow {
   .item {
     .transition(opacity 0.5s ease);
   }
 }
-a.site-hash{
-  font-size: 11px;
-  color: @textColor;
-}
-.changelog {
-  .documentation;
-  #oldVersions {
-    .row { margin: 8px }
-  }
-  h2 {
-    margin-top: 40px;
-  }
-}
-.download {
-  .documentation;
-  .jumbotron-install {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    .row {
-      margin: 10px;
-    }
-  }
-  .pull-right {
-    float: right;
-  }
-  .update-table {
-    th, td {
-      border-top: none;
-    }
-  }
-  .site-hash, .btn {
-    .transition(opacity 0.1s ease-in 0);
-    opacity: 0;
-  }
-  tr:hover {
-    .site-hash, .btn {
-      opacity: 1;
-    }
-  }
+
+// Make all code blocks the same font size as their surroundingsyy
+code {
+  font-size: inherit;
 }

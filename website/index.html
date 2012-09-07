@@ -2,111 +2,117 @@
 layout: default
 title: Xtest
 ---
-<div id="landing-page">
-  <div class="jumbotron masthead">
-    <div class="container">
-      <div class="row-fluid">
-        <div id="xtest-title" class="span6">
-          <h1>Xtest</h1>
-          <p>A unit testing domain-specific language for Java.</p>
-          <p class="download-info">
-            <a href="download.html" class="btn btn-large btn-primary">Download <small>(v0.2.1)</small></a>
-            <a href="documentation.html" class="btn btn-large btn-primary">Documentation</a>
-          </p>
-        </div>
-        <div id="xtest-image" class="span6">
-          <div id="mainCarousel" class="carousel slide carousel-fade fade-slow">
-            <div class="carousel-inner">
-              <a href="#mainCarousel" data-slide="next">
-                <div class="item active">
-                  <div class="cimage"><img src="img/maindemo_a.png" alt="Eclipse with Xtest file testing simple multiply method"/></div>
-                </div>
-                <div class="item">
-                  <div class="cimage"><img src="img/maindemo_b.png" alt="Eclipse shows an error with Xtest testing a multiply method with bug"/></div>
-                </div>
-                <div class="item">
-                  <div class="cimage"><img src="img/maindemo_c.png" alt="Eclipse displays a popup with details on the error when you hover over it"/></div>
-                </div>
-              </a>
-            </div>
-            <a class="carousel-control right" href="#mainCarousel" data-slide="next">&rsaquo;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="bs-docs-social">
-    <div class="container marketing">
-      <h1>What is Xtest?</h1>
-      <div class="row">
-        <div class="span8 offset2">
-          <p class="marketing-byline">
-            Xtest is a scripting language tailored to testing Java code.  It ships as an Eclipse plugin that lets you write
-            .xtest files anywhere in your workspace in which test failures are highlighted just like compile errors.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- Jumbotron
+================================================== -->
+<div class="jumbotron masthead">
   <div class="container">
-    <div class="marketing">
-      <h1>Features</h1>
-      <div class="features">
-        <div class="row">
-          <div class="span4 feature-box">
-            <img src="img/thumb_syntax.png" alt="Example of a nested test case and test case in for loop">
-            <h2>Simple, flexible syntax</h2>
-            <p>
-              Xtest has a simple syntax that eliminates Java boilerplate and lets you start writing tests immediately.
-              The syntax is very similar to Java, but with additional expressions that make unit testing concepts part
-              of the language.
-            </p>
+    <div class="row-fluid">
+      <div class="xtest-title span6">
+        <h1>Xtest</h1>
+        <p>A unit testing domain-specific language for Java.</p>
+        <p class="download-info">
+          <a href="download.html" class="btn btn-large btn-primary">Download <small>(v0.2.1)</small></a>
+          <a href="documentation.html" class="btn btn-large btn-primary">Documentation</a>
+        </p>
+      </div>
+      <div class="xtest-image span6">
+        <div id="mainCarousel" class="carousel slide carousel-fade fade-slow">
+          <div class="carousel-inner">
+            <a href="#mainCarousel" data-slide="next">
+              <div class="item active">
+                <div class="cimage"><img src="img/maindemo_a.png" alt="Eclipse with Xtest file testing simple multiply method"/></div>
+              </div>
+              <div class="item">
+                <div class="cimage"><img src="img/maindemo_b.png" alt="Eclipse shows an error with Xtest testing a multiply method with bug"/></div>
+              </div>
+              <div class="item">
+                <div class="cimage"><img src="img/maindemo_c.png" alt="Eclipse displays a popup with details on the error when you hover over it"/></div>
+              </div>
+            </a>
           </div>
-          <div class="span4 feature-box">
-            <img src="img/thumb_ide.png" alt="Example of Eclipse tooltip with failed assertion details">
-            <h2>IDE integration</h2>
-            <p>
-              Xtest is implemented using <a href="http://www.eclipse.org/Xtext/">Xtext</a> and thus enjoys full
-              Eclipse IDE integration including syntax and error highlighting, hyperlinking, auto-complete, etc. so that using
-              it feels no different than Java.
-            </p>
-          </div>
-          <div class="span4 feature-box">
-            <img src="img/thumb_autoexec.png" alt="Eclipse package explorer showing passing and failing xtest file">
-            <h2>Automatic test execution</h2>
-            <p>
-              Xtest files sit in your Eclipse workspace in a passing or failing state and are run automatically by
-              Eclipse any time a dependency changes to immediately notify you when a test has been broken.
-            </p>
-          </div>
+          <a class="carousel-control right" href="#mainCarousel" data-slide="next">&rsaquo;</a>
         </div>
-        <div class="row">
-          <div class="span4 feature-box">
-            <img src="img/thumb_xbase.png" alt="Example using map-reduce Xbase extension methods in an Xtest method">
-            <h2>Xbase goodies</h2>
-            <p>
-              Xtest is based on <a href="http://www.eclipse.org/Xtext/documentation.html#xbaseLanguageRef_Introduction">Xbase</a>
-              which makes it feel just like Java, with a few nice additions including extended type inference, custom overloaded
-              operators, closures, enhanced switch expressions, and sugared getter/setter syntax to name a few.
-            </p>
-          </div>
-          <div class="span4 feature-box">
-            <img src="img/thumb_junit.png" alt="JUnit runner invoking an Xtest file">
-            <h2>JUnit integration</h2>
-            <p>
-              Xtest scripts can invoke and be invoked by JUnit tests.  Xtest can be used to alert you when your existing
-              JUnit test are failing or can be linked into your existing Junit test suite.
-            </p>
-          </div>
-          <div class="span4 feature-box">
-            <img src="img/thumb_private.png" alt="Eclipse displaying autocomplete suggestions for private and protected members of a Java class">
-            <h2>Private member access</h2>
-            <p>
-              Xtest allows you to access and modify private members of Java classes. Think of a tool for testing a
-              circuit board that can probe voltages at internal nodes and insert erroneous states to see how the
-              circuitry will respond - that is what Xtest allows you to do to Java code without changing your API.
-            </p>
-          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- "What is Xtest" below Jumbotron
+================================================== -->
+<div class="bs-docs-social">
+  <div class="container marketing">
+    <h1>What is Xtest?</h1>
+    <div class="row">
+      <div class="span8 offset2">
+        <p class="marketing-byline">
+          Xtest is a scripting language tailored to testing Java code.  It ships as an Eclipse plugin that lets you write
+          .xtest files anywhere in your workspace in which test failures are highlighted just like compile errors.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features
+================================================== -->
+<div class="container">
+  <div class="marketing">
+    <h1>Features</h1>
+    <div class="features">
+      <div class="row">
+        <div class="span4 feature-box">
+          <img src="img/thumb_syntax.png" alt="Example of a nested test case and test case in for loop">
+          <h2>Simple, flexible syntax</h2>
+          <p>
+            Xtest has a simple syntax that eliminates Java boilerplate and lets you start writing tests immediately.
+            The syntax is very similar to Java, but with additional expressions that make unit testing concepts part
+            of the language.
+          </p>
+        </div>
+        <div class="span4 feature-box">
+          <img src="img/thumb_ide.png" alt="Example of Eclipse tooltip with failed assertion details">
+          <h2>IDE integration</h2>
+          <p>
+            Xtest is implemented using <a href="http://www.eclipse.org/Xtext/">Xtext</a> and thus enjoys full
+            Eclipse IDE integration including syntax and error highlighting, hyperlinking, auto-complete, etc. so that using
+            it feels no different than Java.
+          </p>
+        </div>
+        <div class="span4 feature-box">
+          <img src="img/thumb_autoexec.png" alt="Eclipse package explorer showing passing and failing xtest file">
+          <h2>Automatic test execution</h2>
+          <p>
+            Xtest files sit in your Eclipse workspace in a passing or failing state and are run automatically by
+            Eclipse any time a dependency changes to immediately notify you when a test has been broken.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4 feature-box">
+          <img src="img/thumb_xbase.png" alt="Example using map-reduce Xbase extension methods in an Xtest method">
+          <h2>Xbase goodies</h2>
+          <p>
+            Xtest is based on <a href="http://www.eclipse.org/Xtext/documentation.html#xbaseLanguageRef_Introduction">Xbase</a>
+            which makes it feel just like Java, with a few nice additions including extended type inference, custom overloaded
+            operators, closures, enhanced switch expressions, and sugared getter/setter syntax to name a few.
+          </p>
+        </div>
+        <div class="span4 feature-box">
+          <img src="img/thumb_junit.png" alt="JUnit runner invoking an Xtest file">
+          <h2>JUnit integration</h2>
+          <p>
+            Xtest scripts can invoke and be invoked by JUnit tests.  Xtest can be used to alert you when your existing
+            JUnit test are failing or can be linked into your existing Junit test suite.
+          </p>
+        </div>
+        <div class="span4 feature-box">
+          <img src="img/thumb_private.png" alt="Eclipse displaying autocomplete suggestions for private and protected members of a Java class">
+          <h2>Private member access</h2>
+          <p>
+            Xtest allows you to access and modify private members of Java classes. Think of a tool for testing a
+            circuit board that can probe voltages at internal nodes and insert erroneous states to see how the
+            circuitry will respond - that is what Xtest allows you to do to Java code without changing your API.
+          </p>
         </div>
       </div>
     </div>
