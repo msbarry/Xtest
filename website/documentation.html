@@ -8,8 +8,8 @@ categories:
         anchor: intro
         text: |
           <p>
-            Xtest is a unit-testing domain-specific language for Java. It is very similar to Java except eliminates the
-            boilerplate and makes unit-testing concepts part of the language. Xtest also gives you access to the
+            Xtest is a unit-testing domain-specific language for Java. It is very similar to Java except eliminates
+            boilerplate not needed for testing and makes unit-testing concepts part of the language. Xtest also gives you access to the
             internal state of objects so that you don't need to change your API to test your code.
           </p>
           <p>
@@ -18,7 +18,7 @@ categories:
             files.
           </p>
           <p>
-            Keep reading to learn more.  Don't hesitate to open a <a href="https://github.com/msbarry/Xtest/issues">github issue</a>
+            Don't hesitate to open a <a href="https://github.com/msbarry/Xtest/issues">github issue</a>
             for any problems found or suggestions.
           </p>
       - title: Installation
@@ -29,8 +29,8 @@ categories:
           </p>
           <p><code>http://msbarry.github.com/Xtest/updates/release</code></p>
           <p>
-            <span class="label label-info">Note</span> If you already have Xtext installed, follow the special installation instructions on the
-            <a href="download.html#xtextInstalled">download</a> page.
+            <span class="label label-info">Note</span> If you already have Xtext installed or want to download the update site as a zip
+            file, follow the special installation instructions on the <a href="download.html#xtextInstalled">download</a> page.
           </p>
       - title: Creating an Xtest file
         anchor: createfile
@@ -42,7 +42,7 @@ categories:
             <strong>Xtest Libraries</strong> from the Add Library Wizard.
           <p>
             Now add a new Xtest file by right clicking on a folder or package and selecting <strong>New</strong> -> <strong>Other...</strong>
-            and find <strong>Xtest File</strong> under the <strong>Xtest</strong> category.
+            then <strong>Xtest File</strong> under the <strong>Xtest</strong> category.
           </p>
           <p>
             Then in the wizard that pops up give the file a name (the .xtest extension will be added automatically) and change the target folder and package if necessary.
@@ -63,7 +63,7 @@ categories:
         anchor: idesupport
         text: |
           <p>
-            After you have created a new Xtest file, Eclipse displays a number of indicators that there is a new Xtest file and it is passing.
+            After you have created a new Xtest file, Eclipse displays a number of indicators that there is a new Xtest file and it is passing:
           <p>
           <div id="basicSuccessCarousel" class="carousel slide carousel-fade well">
             <div class="carousel-inner">
@@ -113,8 +113,8 @@ categories:
           </pre>
           <p>
             By the time you finish modifying the script in the Eclipse editor, Eclipse has already run your test from
-            the live document you are editing, behind the scenes, within the main Eclipse process.  <code class="prettyprint lang-xtest">
-            assert false</code> fails the test and thus is underlined as an error.
+            the live document you are editing, behind the scenes, within the main Eclipse process.  The <code class="prettyprint lang-xtest">
+            assert false</code> expression fails the test and thus is underlined as an error.
           <p> Mouse-over that expression and you will see the stack trace of the the exception that was thrown when your assertion failed.
           </p>
           <div class="doc-image">
@@ -133,7 +133,7 @@ categories:
           </div>
           <p>
             Then after the test completes, it returns to 100% complete but turns red because there is now a failure and reads "1F/2" because
-            one test is now contains a failure.
+            one test out of two total tests is now failing.
           </p>
           <div class="doc-image">
             <img src="img/helloWorldFail_statusBar.png" alt="Status bar with 1 failing test out of 2 total tests"/>
@@ -157,8 +157,8 @@ categories:
         text: |
           <p>
             <code class="prettyprint lang-xtest">assert</code> tests that an expression evaluates to <code class="prettyprint lang-xtest">true</code>
-            or throws a particular exception.
-            A failed assertion interrupts the control flow in the interpreter and any expressions in a test case after the failed assertion are not evaluated.
+            or throws a particular exception. A failed assertion is treated as a test failure that is handled by the surrounding test case.
+            No subsequent expressions in the test case are executed, but expressions after the surrounding test case continue executing normally.
           </p>
           <h2>Assert Boolean</h2>
           <p>
@@ -172,7 +172,7 @@ categories:
           assert 3 &lt; 4
           assert "abc".startsWith("ab")
           </pre>
-          <p>And the following assertions fail</p>
+          <p>And the following assertions fail:</p>
           <pre class="prettyprint linenums lang-xtest">
           assert false   // fails
           assert 1 == 2  // fails since 1==2 evalutes to false
@@ -181,7 +181,7 @@ categories:
           <h2>Assert Throws</h2>
           <p>
             <code class="prettyprint lang-xtest">assert expression throws ExceptionType</code>
-            will pass if and only if the expression throws an exception that is type-compatible with
+            passes if and only if the expression throws an exception that is type-compatible with
             <code class="prettyprint lang-xtest">ExceptionType</code>.
           </p>
           <p>
@@ -205,7 +205,7 @@ categories:
             generates an error message by doing a depth-first traversal through the expression tree to tell you what each
             part evaluated to so that you can easily diagnose what went wrong.
           </p>
-          <p>For example when comparing two variables the value of each variable is shown:</p>
+          <p>For example when comparing two variables, the value and type of each variable is shown:</p>
           <div class="codeandexception">
           <pre class="prettyprint linenums lang-xtest">
           val a = 1
@@ -238,11 +238,11 @@ categories:
         anchor: exceptions
         text: |
           <p>
-            Xtest treats exceptions thrown as test failures.  Exceptions can be caught using
-            <code class="prettyprint lang-xtest">try catch finally</code> blocks just like in Java.  But when uncaught, exceptions thrown
-            interrupt the interpreter the same as for a failed assertion and no subsequent expressions within the surrounding
-            test case are evaluated.  In addition to catching bugs in your Java code, this also
-            means that you can use third party libraries to perform your assertions instead of the built-in assertion expression.
+            Exceptions can be caught using <code class="prettyprint lang-java">try catch finally</code> blocks as in Java, 
+            but when uncaught, the surrounding test case treats them as test failures 
+            just like failed assertions.  In addition to catching bugs in your Java code, this also
+            lets you use third party libraries to perform your assertions instead of the built-in 
+            <code class="prettyprint lang-xtest">assert</code> expression.
           </p>
           <h2>Example: Bug Catching</h2>
           <div class="codeandexception">
@@ -314,7 +314,7 @@ categories:
         text: |
           <p>
             The <code class="prettyprint lang-xtest">xtest</code> expression is used to group other expressions into test cases.
-            Failures that occur inside a test case cause it to fail, but expressions after
+            Failures that occur inside a test case cause it to fail and halt abruptly, but expressions after
             that test case continue executing normally.  Test cases can be nested inside eachother to any depth and the outline
             view in Eclipse reflects the dynamic result structure generated from evaluating all test cases.
           </p>
@@ -323,7 +323,9 @@ categories:
           </p>
           <p>
             The keyword <code class="prettyprint lang-xtest">xtest</code> is used
-            instead of "test" in order to prevent naming collisions with java packages and variables named "test"
+            instead of "test" in order to prevent naming collisions with java packages and variables named "test."
+            To use an identifier or java package named xtest, prefix it with the escape character:
+            <code class="prettyprint lang-java">^xtest</code>
           </p>
           <h2>Test Naming</h2>
           <p>
@@ -367,7 +369,7 @@ categories:
             Xtest allows you to define re-usable blocks of Xtest code in methods prefixed with the
             <code class="prettyprint lang-xtest">def</code> keyword.  For the most part, Xtest methods
             work like their Java counterparts, but there are a few exceptions as outlined below.
-            You can use methods declared in Xtest exactly the same as methods declared on Java classes.
+            You can use methods declared in Xtest exactly the same way as methods declared on Java classes.
           </p>
           <h2>Inferred Return Types and Implicit Returns</h2>
           <p>
@@ -417,7 +419,7 @@ categories:
           </p>
           <h2>Local Method Scope</h2>
           <p>
-            Methods with no modifiers are "local" and their scope captures the local variable and method scope at the declaration point,
+            Methods with no modifiers have "local" scope that captures the local variable and method context at the declaration point,
             much like JavaScript functions or <a href="#lambda">lambda expressions</a> described later:
           </p>
           <pre class="prettyprint lang-xtest linenums">
@@ -449,8 +451,8 @@ categories:
           </p>
           <h2>Static Method Scope</h2>
           <p>
-            Static methods have the <code class="prettyprint lang-xtest">static</code> keyword modifier in their declaration.
-            Static method scope does not include any local variables or methods, but they can be used anywhere in the file, before
+            Methods declared with the <code class="prettyprint lang-xtest">static</code> keyword have "static" scope that
+            does not include any local variables or methods just other static methods. They can be used anywhere in the file, before
             or after their declaration. Static methods of an Xtest file are also available to other Xtest files.
           </p>
           <p>
@@ -489,16 +491,15 @@ categories:
           </pre>
           <h2>Other Test-Specific Examples</h2>
           <p>
-            When writing unit tests it is often useful to encapsulate the API of the software being tested
-            are testing behind helper methods so that if the API changes, you only need to update your test
-            code in one place.  As a bonus, if the logic contained in these methods becomes complex it allows
-            you to write tests for them to ensure they behave properly.
+            When writing unit tests it is often useful to encapsulate the API of the software under test
+            behind helper methods so that if the API changes, test code only needs to be changed in one 
+            place.  As a bonus, if the logic contained in these methods becomes complex it allows
+            tests to be written for them to ensure they behave properly.
           </p>
           <h3>Example: Custom Creation Method</h3>
           <p>
             <a href="http://xunitpatterns.com/Creation%20Method.html">Creation methods</a> encapsulate the logic
-            needed to instantiate new objects needed for tests. Carefully
-            chosen names can make your tests more readable and also reduce the overhead of writing new tests.
+            needed to instantiate new objects needed for tests.
           </p>
           <pre class="prettyprint linenums lang-xtest">
           def newSUTWithDependency() {
@@ -512,9 +513,8 @@ categories:
           </pre>
           <h3>Example: Custom Assertion Method</h3>
           <p>
-            <code class="prettyprint lang-xtest">assert</code> expressions (or any 3rd party assertions) can be encapsulated
-            into <a href="http://xunitpatterns.com/Custom%20Assertion.html">custom assertion methods</a>
-            with carefully chosen names that make your tests easier to read and write.  Assertion
+            <code class="prettyprint lang-xtest">assert</code> expressions (or any third party assertions) can be encapsulated
+            into <a href="http://xunitpatterns.com/Custom%20Assertion.html">custom assertion methods</a>.  Assertion
             failures are handled by the test case that invokes the custom assertion method.
           </p>
           <pre class="prettyprint linenums lang-xtest">
@@ -532,9 +532,6 @@ categories:
             The test result from the encapsulated <code class="prettyprint lang-xtest">xtest</code>
             expression gets added as a child to the test case that the invocation occurs in.  If the test fails, expressions after
             the parameterized test method invocation continue executing normally.
-          </p>
-          <p>
-            This is the sweet-spot for unit testing as it makes your tests extremely easy to read, write, and maintain.
           </p>
           <pre class="prettyprint linenums lang-xtest">
           def testCheckAmountConversion(BigDecimal input, String output) {
@@ -559,7 +556,7 @@ categories:
             Instead of passing the first argument of a method inside the parentheses of a call, you can also call
             the method on the first argument parameter directly.
           </p>
-          <p>For example, the following method defined in an Xtest file</p>
+          <p>For example, the following method defined in an Xtest file:</p>
           <pre class="prettyprint linenums lang-xtest">
           def &lt;T&gt; first(Iterable&lt;T&gt; iterable) {
             return iterable.iterator().next()
@@ -567,7 +564,7 @@ categories:
           </pre>
           <p>
             Can either be called with an <code class="prettyprint lang-xtest">Iterable</code> argument, or can be called directly on an
-            <code class="prettyprint lang-xtest">Iterable</code>.
+            <code class="prettyprint lang-xtest">Iterable</code>:
           </p>
           <pre class="prettyprint linenums lang-xtest">
           first(iterable)
@@ -590,8 +587,7 @@ categories:
           </pre>
           <p>
             Any static Java method with one or more arguments can be imported and used as an extension method.
-            This can be especially useful with <a href="http://code.google.com/p/guava-libraries/">Google Guava</a>
-            utility classes:
+            For example:
           </p>
           <pre class="prettyprint linenums lang-xtest">
           import static extension com.google.common.collect.Sets.*
@@ -613,7 +609,7 @@ categories:
           <h3>Example: Hamcrest "shouldBe" Extension Method</h3>
           <p>
             Extension make a number of testing practices simpler and more readable.  For example, you can add assertion
-            methods to the type of object you are verifying so that your assertions read more like a sentence.
+            methods to the type of object you are verifying so that your assertions read more like a sentence:
           </p>
           <pre class="prettyprint linenums lang-xtest">
           def &lt;T&gt; shouldBe(T actual, Matcher&lt;T&gt; matcher) {
@@ -636,7 +632,7 @@ categories:
           <p>
             All infix and prefix operators in Xtest are implemented with methods that bind to operators based on naming convention and the
             best-match argument types. For example the method
-            <code class="prettyprint lang-xtest">operator_add(A, B)</code> implements the <code class="prettyprint lang-xtest">A += B</code>
+            <code class="prettyprint lang-xtest">operator_plus(A, B)</code> implements the <code class="prettyprint lang-xtest">A + B</code>
             infix operator and <code class="prettyprint lang-xtest">operator_equals(A, B)</code> impelements the
             <code class="prettyprint lang-xtest">A == B</code> infix operator.  A full list of operator to method name mappings can
             be found in the <a href="http://www.eclipse.org/Xtext/documentation.html#Xbase_Expressions_Operators">Xbase documentation</a>.
@@ -649,7 +645,7 @@ categories:
             <code class="prettyprint lang-xtest">&lt;=</code>,
             <code class="prettyprint lang-xtest">**</code>,
             <code class="prettyprint lang-xtest">==</code>) are implemented by static methods in
-            <a href="http://download.eclipse.org/modeling/tmf/xtext/javadoc/2.3/org/eclipse/xtext/xbase/lib/IntegerExtensions.html">IntegerExtensions</a>.
+            <a href="http://download.eclipse.org/modeling/tmf/xtext/javadoc/2.3/org/eclipse/xtext/xbase/lib/IntegerExtensions.html">IntegerExtensions</a>:
           </p>
           <pre class="prettyprint linenums lang-xtest">
           assert 1 &gt; 0
@@ -690,7 +686,7 @@ categories:
           <p>
             It is often useful to define <a href="http://xunitpatterns.com/test-specific%20equality.html">test-specific equality</a> when tests
             have a different notion of equality than production code.  It is undesirable to change the
-            <code class="prettyprint lang-java">equals()</code> method in
+            <code class="prettyprint lang-java">equals()</code> method
             as that causes test code to leak into production.  This can be accomplished as shown below by overloading the equals operator
             in Xtest.
           </p>
@@ -711,8 +707,9 @@ categories:
         text: |
           <p>
             Stack traces in Xtest look like Java stack traces, except that the Xtest stack trace elements contain the
-            text of each expression instead of the method name.  The logic for creating Xtest stack traces can be found
-            in <a href="https://github.com/msbarry/Xtest/blob/master/plugins/org.xtest/src/org/xtest/XtestUtil.java">XtestUtil</a>.
+            text of the current expression instead of the method name.
+            <a href="https://github.com/msbarry/Xtest/blob/master/plugins/org.xtest/src/org/xtest/XtestUtil.java">XtestUtil</a>
+            defines the logic for creating Xtest stack traces.
           </p>
           <div class="codeandexception">
           <pre class="prettyprint linenums lang-xtest">
@@ -759,9 +756,9 @@ categories:
           <p>
             A small tweak to
             <a href="https://github.com/msbarry/Xtest/blob/master/plugins/org.xtest/src/org/xtest/scoping/XtestVisibilityService.java">XtestVisibilityService</a>
-            allows private and protected members of Java classes and objects to be accessed and modified from within Xtest. Think of a tool for testing a
+            allows private and protected members of Java classes and objects to be accessed and modified within Xtest. Think of a tool for testing a
             circuit board that can probe voltages at internal nodes and insert erroneous states to see how the circuitry will respond.  Xtest allows you to do the
-            same without needing to change the exposed API of your Java code just for testing.
+            same without needing to change the exposed API of the Java code being tested.
           </p>
           <p>
             For example, say you had a simple counter that counts up to <code class="prettyprint lang-java">Integer.MAX_VALUE</code> implemented in Java:
@@ -914,8 +911,8 @@ categories:
           B"
           </pre>
           <p>
-            Numbers can be declared like in Java except you can also declare a BigDecimal
-            or BigInteger by appending 'bd' or 'bi' to the number - and you can use it in mathematical operations:
+            Numbers can be declared like in Java.  In addition BigDecimals and BigIntegers can also be created by appending 
+            'bd' or 'bi' to the number - and BigDecimals and BigIntegers can also be used in mathematical operations:
           </p>
           <pre class="prettyprint lang-xtest linenums">
           assert 0xff == 255
@@ -940,12 +937,12 @@ categories:
           assert emptySet().isEmpty
           assert newArrayList(1, 2, 3).size == 3
           assert newLinkedHashSet("a", "b").head == "a"
-          assert newHashMap(1->"one", 2->"two").get(1) == "one
+          assert newHashMap(1->"one", 2->"two").get(1) == "one"
           </pre>
           <p>
             The <code class="prettyprint lang-xtest">-&gt;</code> operator has be overloaded to return a
             <a href="http://download.eclipse.org/modeling/tmf/xtext/javadoc/2.3/org/eclipse/xtext/xbase/lib/Pair.html">Pair</a>
-            of the left and right side that Map creation methods take to preload key/value pairs into the map.
+            that the Map creation methods take to pre-load key/value pairs into the map.
           </p>
           <h3>Everything is an Expression, Everything is an Object</h3>
           <p>In Xbase, everything is an expression that returns an object and there are no statements.</p>
@@ -955,7 +952,7 @@ categories:
           </pre>
           <p>
             Block expressions <code class="prettyprint lang-xtest">{ ... }</code> return the value from the last expression
-            evaluated inside the block
+            evaluated inside the block:
           </p>
           <pre class="prettyprint lang-xtest linenums">
           assert {
@@ -973,11 +970,13 @@ categories:
             case "2": "Two"
           } == "Two"
           </pre>
-          <p>Java conditional functionality can be implemented with the standard if/else expression</p>
+          <p>
+            Java conditional functionality can be implemented with the standard <code class="prettyprint lang-xtest">if</code>/<code class="prettyprint lang-xtest">else</code>
+            expression:</p>
           <pre class="prettyprint lang-xtest linenums">
           val abs = if (input &lt; 0) -input else input
           </pre>
-          <p>And exception catching can be used succinctly to provide default values:</p>
+          <p>And exception catching can be used succinctly to provide default values in exceptional cases:</p>
           <pre class="prettyprint lang-xtest linenums">
           val asNum = try {
             Integer::parseInt(input)
@@ -1043,8 +1042,8 @@ categories:
           }
           </pre>
           <p>
-            The type-guard can be used instead of or in addition to the case-guard.  The type-guard not only chooses which case to execute
-            based on the type of the input, it also infers the type of the input variable as the guard type inside that case:
+            The type-guard can be used instead of or in addition to the case-guard.  The type-guard not only helps choos which case to execute
+            based on the type of the input, it also infers the type of the input variable inside that case:
           </p>
           <pre class="prettyprint lang-xtest linenums">
           switch obj {
@@ -1054,8 +1053,8 @@ categories:
           }
           </pre>
           <p>
-            Notice there are no <code class="prettyprint lang-java">break</code> statements.  Xbase switch case expressions cannot fall-through
-            and therefore <code class="prettyprint lang-java">break</code> is unneccessary.
+            Notice there are no <code class="prettyprint lang-java">break</code> statements.  Xbase <code class="prettyprint lang-java">switch</code> 
+            case expressions cannot fall-through and therefore <code class="prettyprint lang-java">break</code> is unneccessary.
           </p>
           <h3>Sugared Getters and Setters</h3>
           <p>Xbase allows you to access simple getter/setter methods as if they were declared as settable properties:</p>
@@ -1070,7 +1069,7 @@ categories:
           <h3>Implicit Receivers</h3>
           <p>
             Whenever you assign a variable to the reserved keyword <code class="prettyprint lang-xtest">it</code>, that object becomes the
-            "implicit receiver" and you can call methods on it without a receiver.
+            "implicit receiver" and methods can be called on it without a receiver.
           </p>
           <p>
             This can be especially useful for testing when you want to set up the state of an object:
@@ -1124,9 +1123,9 @@ categories:
           val lambda = [String s | s.toUpperCase]
           </pre>
           <p>
-            The type of a defined lambda expression defaults to a
-            <a href="http://www.eclipse.org/xtend/api/2.3.0/org/eclipse/xtext/xbase/lib/Functions.html">Function</a>
-            object, with special shorthand notation in Xbase and a single <code class="prettyprint lang-xtest">apply</code>
+            This defaults to a
+            <a href="http://www.eclipse.org/xtend/api/2.3.0/org/eclipse/xtext/xbase/lib/Functions.Function1.html">Function1</a>
+            object since it has one argument, with special shorthand notation in Xbase and a single <code class="prettyprint lang-xtest">apply</code>
             method:
           </p>
           <pre class="prettyprint lang-xtest linenums">
@@ -1134,7 +1133,7 @@ categories:
           assert lambda.apply("a") == "A"
           </pre>
           <p>
-            A lambda expression can also be coerced to any type that has only one method, and the argument types
+            A lambda expression can also be coerced to any type that has one declared method, and the argument types
             are inferred by the destination type:
           </p>
           <pre class="prettyprint lang-xtest linenums">
@@ -1154,7 +1153,6 @@ categories:
             Or omit the parenthesis entirely if it is the only argument:
           </p>
           <pre class="prettyprint lang-xtest linenums">
-          // sort descending
           list.sort[a,b|b.compareTo(a)]
           </pre>
           <p>
@@ -1189,9 +1187,9 @@ categories:
           [|list.add("element")].shouldChangeBy(1) [|list.size]
           </pre>
           <h3>Null-Safe Feature Calls</h3>
-          <p>Xbase allows you to use call a method using <code class="prettyprint lang-xtest">object?.method()</code> as syntactic sugar for the idiom
-          <code class="prettyprint lang-java">object == null ? null : object.method()</code> in Java.  This lets the method call to just return null instead of throwing a
-          <code class="prettyprint lang-xtest">NullPointerException</code> if the method call receiver is null:</p>
+          <p>Xbase allows you to call a method using <code class="prettyprint lang-xtest">object?.method()</code> as syntactic sugar for the idiom
+          <code class="prettyprint lang-java">object == null ? null : object.method()</code> in Java.  This lets the method call return null instead of throwing a
+          <code class="prettyprint lang-xtest">NullPointerException</code> if the receiver is null:</p>
           <pre class="prettyprint lang-xtest linenums">
           val List&lt;String&gt; input = null
           assert input?.get(0) == null
@@ -1244,7 +1242,8 @@ categories:
           </div>
           <p>
             Right click on the project and select <strong>New</strong> -> <strong>Other...</strong>, and choose
-            <strong>Xtest File</strong>.  In the wizard that pops up name the new Xtest file "Demo":
+            <strong>Xtest File</strong>.  In the wizard that pops up name the new Xtest file "Demo" and fill it
+            out with the following contents:
           </p>
           <pre class="prettyprint lang-xtest linenums">
           // Demo.xtest
@@ -1267,7 +1266,7 @@ categories:
           import org.xtest.junit.XtestJunitRunner;
 
           @RunWith(XtestJunitRunner.class)
-          @RunsXtest("src/myproject.test/Demo.xtest")
+          @RunsXtest("src/myproject/test/Demo.xtest")
           public class RunDemo {
           }
           </pre>
@@ -1280,7 +1279,8 @@ categories:
           </div>
           <p>
             A future version of Xtest should allow you to add an Xtest standalone dependency to any Maven project so that you don't need to create
-            a plug-in project to run Xtest from JUnit.  That should also allow you to run Xtest outside of Eclipse.
+            a plug-in project to run Xtest from JUnit.  That will allow you to run Xtest outside of Eclipse.  Until then, creating a pluing
+            project is the simplest way to pull in the required dependencies.
           </p>
       - title: Anatomy of the Test Runner
         anchor: runner
@@ -1304,9 +1304,9 @@ categories:
           <p>
             Xtest uses <i>dynamic analysis</i> to determine which Java classes an Xtest file depends on.  When an Xtest file runs,
             it uses a fresh class loader that records all Java classes that are loaded during execution and stores that list
-            persistently.  Then when an incremental build occurs, the Xtest runner checks the Java class deltas against the
+            persistently.  Then when an incremental build occurs, the Xtest runner checks the Java class delta list against the
             dependency lists of each Xtest file and only schedules tests that loaded the changed class
-            last time they ran.  This produces a subset of the dependencies that static analysis would discover, and doesn't get tripped
+            last time they ran.  This produces a subset of the dependencies that static analysis would produce, and doesn't get tripped
             up in the presence of reflection.
           </p>
           <p>
@@ -1326,13 +1326,13 @@ categories:
           <p>
             In addition to only running tests affected by a change, the Xtest runner also sorts the tests in the following order:
           </p>
-          <ul>
+          <ol>
             <li>Failing tests run first, sorted from fastest to slowest
             <li>Tests that have never run before run next
             <li>Passing tests run last, sorted from fastest to slowest
-          </ul>
+          </ol>
           <p>
-            This provides you with as much information on the passing/failing state of your tests as quickly as possible.
+            This provides as much information on the passing/failing state of tests as quickly as possible.
           </p>
           <h2>Visual Feedback</h2>
           <p>
@@ -1406,17 +1406,17 @@ categories:
           </p>
           <h2>Class Loader Memory Leaks</h2>
           <p>
-            Xtest helps you discover class loader memory leaks in your code.  A class loader memory leak occurs when an instance of some class of
-            a parent class loader holds onto a reference to an instance of a class loaded from a child class loader.  If the object from the
-            parent class loader can't be garbage collected, then the child class loader and all of its classes cannot be garbage collected.
+            Xtest helps you discover class loader memory leaks in your code.  A class loader memory leak occurs when an instance of some class loaded
+            from a parent class loader holds onto a reference to an instance of a class loaded from a child class loader.  If the object from the
+            parent class loader can't be garbage collected, then the child class loader and all of its classes cannot be garbage collected either.
           </p>
           <p>
             Since all test files run with a fresh class loader within the main Eclipse process, if your code contains any class loader memory leaks,
-            old instances of classes from previous test runs will pile up.  If you use the Java VisualVM program to watch the Eclipse process
-            and notice that every time you run tests, the number of classes goes up but does not go down after a forced GC, you have a leak.
+            old instances of classes from previous test runs will pile up.  If a JVM memory analyzer shows the Eclipse process's number of loaded
+            classes go up after each test run and not go down after a forced GC, you have a leak.
           </p>
           <p>
-            This is the same situation as single-process web servers.  When you redeploy a new version of code into that web server, it uses
+            This is the same situation that web servers have.  When you redeploy a new version of code into a web server, it uses
             a new class loader hoping the old class loader and all old classes will be garbage collected.  The
             <a href="http://wiki.apache.org/tomcat/MemoryLeakProtection">Tomcat Wiki</a> has a page explaining different kinds of class loader
             memory leaks and how to address them.

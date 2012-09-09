@@ -31,19 +31,6 @@ ol.linenums {
   .box-shadow(inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0);
 }
 
-/* Use higher contrast and text-weight for printable form. */
-@media print, projection {
-  .pln, .type, .nocode { color: #000; }
-  .lit { color: #195f91; }
-  .prettyprint.linenums {
-    background: white;
-    .box-shadow(none);
-  }
-  ol.linenums li {
-    text-shadow: none;
-  }
-}
-
 code.prettyprint {
   margin: 0px;
   padding: 0px;
@@ -73,10 +60,6 @@ pre.prettyprint {
   background-image:url("../img/warn_squiggle.gif");
 }
 
-.warn_squiggle {
-
-}
-
 .exception {
   background: lighten(#FFFFE1, 3%);
   .box-shadow(3px 3px 3px #888);
@@ -93,5 +76,23 @@ pre.prettyprint {
     display: inline;
     margin: 0px;
     padding: 0px;
+  }
+}
+
+/* Use higher contrast and text-weight for printable form. */
+@media print, projection {
+  .pln, .type, .nocode, .lit, ol.linenums li { color: #000; }
+  .prettyprint.linenums {
+    background: white;
+    .box-shadow(none);
+  }
+  ol.linenums li {
+    text-shadow: none;
+  }
+  .squiggle-err {
+    border-bottom: 1px solid @red;
+  }
+  .squiggle-warn {
+    border-bottom: 1px solid @yellow;
   }
 }
