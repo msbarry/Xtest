@@ -101,7 +101,7 @@
       <div class="span8 offset2">
         <p class="marketing-byline">
           Xtest is a scripting language tailored to testing Java code.  It ships as an Eclipse plugin that lets you write
-          .xtest files anywhere in your workspace in which test failures are highlighted just like compile errors.
+          .xtest files anywhere in your workspace in which test failures are highlighted just like compile errors in Java files.
         </p>
       </div>
     </div>
@@ -119,26 +119,25 @@
           <img src="img/thumb_syntax.png" alt="Example of a nested test case and test case in for loop">
           <h2>Simple, flexible syntax</h2>
           <p>
-            Xtest has a simple syntax that eliminates Java boilerplate and lets you start writing tests immediately.
-            The syntax is very similar to Java, but with additional expressions that make unit testing concepts part
-            of the language.
+            Xtest has a simple Java-like syntax that removes unneccessary boilerplate and adds expressions 
+            that make unit testing concepts part of the language.
           </p>
         </div>
         <div class="span4 feature-box">
           <img src="img/thumb_ide.png" alt="Example of Eclipse tooltip with failed assertion details">
           <h2>IDE integration</h2>
           <p>
-            Xtest is implemented using <a href="http://www.eclipse.org/Xtext/">Xtext</a> and thus enjoys full
-            Eclipse IDE integration including syntax and error highlighting, hyperlinking, auto-complete, etc. so that using
-            it feels no different than Java.
+            The <a href="http://www.eclipse.org/Xtext/">Xtext</a> framework provides full
+            Eclipse IDE integration for Xtest including syntax highlighting and auto-complete so that using
+            Xtest feels no different than Java.
           </p>
         </div>
         <div class="span4 feature-box">
           <img src="img/thumb_autoexec.png" alt="Eclipse package explorer showing passing and failing xtest file">
           <h2>Automatic test execution</h2>
           <p>
-            Xtest files sit in your Eclipse workspace in a passing or failing state and are run automatically by
-            Eclipse any time a dependency changes to immediately notify you when a test has been broken.
+            Xtest files sit in your Eclipse workspace in a passing or failing state and are only run when a dependency 
+            so you are immediately notified of failures.
           </p>
         </div>
       </div>
@@ -148,25 +147,25 @@
           <h2>Xbase goodies</h2>
           <p>
             Xtest is based on <a href="http://www.eclipse.org/Xtext/documentation.html#xbaseLanguageRef_Introduction">Xbase</a>
-            which makes it feel just like Java, with a few nice additions including extended type inference, custom overloaded
-            operators, closures, enhanced switch expressions, and sugared getter/setter syntax to name a few.
+            which provide Java integration and some <a href="documentation.html#xbase">nice additions</a>
+            like type inference, overloaded operators, and lambda expressions to name a few.
           </p>
         </div>
         <div class="span4 feature-box">
           <img src="img/thumb_junit.png" alt="JUnit runner invoking an Xtest file">
           <h2>JUnit integration</h2>
           <p>
-            Xtest scripts can invoke and be invoked by JUnit tests.  Xtest can be used to alert you when your existing
-            JUnit test are failing or can be linked into your existing Junit test suite.
+            Xtest scripts be linked into existing JUnit test suites and can also invoke existing JUnit test suites to
+            be used to alert you when they are failing.
           </p>
         </div>
         <div class="span4 feature-box">
           <img src="img/thumb_private.png" alt="Eclipse displaying autocomplete suggestions for private and protected members of a Java class">
           <h2>Private member access</h2>
           <p>
-            Xtest allows you to access and modify private members of Java classes. Think of a tool for testing a
-            circuit board that can probe voltages at internal nodes and insert erroneous states to see how the
-            circuitry will respond - that is what Xtest allows you to do to Java code without changing your API.
+            Xtest grants access to private members of Java classes. Think of a probe for testing 
+            and tweaking voltages at internal nodes of a circuit board - that is what Xtest allows for Java code 
+            without changing its API.
           </p>
         </div>
       </div>
