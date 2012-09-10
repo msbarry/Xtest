@@ -160,6 +160,20 @@ re-export of encryption software, to see if this is permitted.
 Java and all Java-based trademarks are trademarks of Oracle Corporation in the United States, other countries, or both.
    </license>
 
+   <requires>
+      <import plugin="org.eclipse.xtext.xbase.junit" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtend.core" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtext.junit" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtext.ui" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtext.ui.shared" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtext.builder" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtext.common.types.ui" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtext.xbase.ui" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtext.ui.codetemplates.ui" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtend.ide" version="2.3.1" match="equivalent"/>
+      <import plugin="org.eclipse.xtext.xbase.lib" version="2.3.1" match="equivalent"/>
+   </requires>
+
    <plugin
          id="org.xtest"
          download-size="0"
