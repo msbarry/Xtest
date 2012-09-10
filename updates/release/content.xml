@@ -46,7 +46,7 @@
       <properties size='4'>
         <property name='org.eclipse.equinox.p2.name' value='Xtest'/>
         <property name='org.eclipse.equinox.p2.description' value='Unit testing domain-specific language for Java.'/>
-        <property name='org.eclipse.equinox.p2.description.url' value='https://msbarry.github.com/Xtest'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://msbarry.github.com/Xtest'/>
         <property name='org.eclipse.equinox.p2.provider' value='Michael Barry'/>
       </properties>
       <provides size='3'>
@@ -192,7 +192,7 @@
       <properties size='5'>
         <property name='org.eclipse.equinox.p2.name' value='Xtest'/>
         <property name='org.eclipse.equinox.p2.description' value='Unit testing domain-specific language for Java.'/>
-        <property name='org.eclipse.equinox.p2.description.url' value='https://msbarry.github.com/Xtest'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://msbarry.github.com/Xtest'/>
         <property name='org.eclipse.equinox.p2.provider' value='Michael Barry'/>
         <property name='org.eclipse.equinox.p2.type.group' value='true'/>
       </properties>
