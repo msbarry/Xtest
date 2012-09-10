@@ -14,11 +14,9 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
-import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionProvider;
 import org.eclipse.xtext.ui.editor.validation.AnnotationIssueProcessor;
 import org.eclipse.xtext.ui.editor.validation.XtextAnnotation;
-import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue;
@@ -45,13 +43,13 @@ public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
     private final IAnnotationModel fAnnotationModel;
     private final PerFilePreferenceProvider fPreferences;
 
-    private final XtextDocument fXtextDocument;
+    private final XtestDocument fXtextDocument;
 
     public XtestAnnotationProcessor(IXtextDocument xtextDocument, IAnnotationModel annotationModel,
             IssueResolutionProvider issueResolutionProvider, PerFilePreferenceProvider preferences) {
         super(xtextDocument, annotationModel, issueResolutionProvider);
         fAnnotationModel = annotationModel;
-        fXtextDocument = (XtextDocument) xtextDocument;
+        fXtextDocument = (XtestDocument) xtextDocument;
         fPreferences = preferences;
         clearLiveEdits = new AtomicBoolean(false);
         clearOnSaveEdits = new AtomicBoolean(false);
@@ -135,17 +133,14 @@ public class XtestAnnotationProcessor extends AnnotationIssueProcessor {
     }
 
     private Boolean runWhileEdit() {
-        return fXtextDocument.readOnly(new IUnitOfWork<Boolean, XtextResource>() {
-            @Override
-            public Boolean exec(XtextResource resource) throws Exception {
-                Boolean result = false;
-                if (resource != null && resource.getContents().size() > 0
-                        && resource.getContents().get(0) instanceof Body) {
-                    Body body = (Body) resource.getContents().get(0);
-                    result = fPreferences.get(body, RuntimePref.RUN_WHILE_EDITING);
-                }
-                return result;
-            }
-        });
+        // Don't need to lock when accessing resource since this is called inside a write lock
+        XtextResource resource = fXtextDocument.getResource();
+        Boolean result = false;
+        if (resource != null && resource.getContents().size() > 0
+                && resource.getContents().get(0) instanceof Body) {
+            Body body = (Body) resource.getContents().get(0);
+            result = fPreferences.get(body, RuntimePref.RUN_WHILE_EDITING);
+        }
+        return result;
     }
 }

@@ -2,6 +2,7 @@ package org.xtest.ui.editor;
 
 import java.util.List;
 
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.edit.ITextEditComposer;
@@ -19,6 +20,7 @@ import com.google.inject.Inject;
 public class XtestDocument extends XtextDocument {
     @Inject
     private EventBus bus;
+    private XtextResource resource;
     private final List<Object> toUnregister = Lists.newArrayList();
 
     @Inject
@@ -32,6 +34,16 @@ public class XtestDocument extends XtextDocument {
         for (Object obj : toUnregister) {
             bus.unregister(obj);
         }
+    }
+
+    public XtextResource getResource() {
+        return resource;
+    }
+
+    @Override
+    public void setInput(XtextResource resource) {
+        this.resource = resource;
+        super.setInput(resource);
     }
 
     /**
