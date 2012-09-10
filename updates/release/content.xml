@@ -3,7 +3,6 @@
 <repository name='Update Site' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.timestamp' value='1343264947245'/>
-    <property name='p2.compressed' value='true'/>
   </properties>
   <units size='11'>
     <unit id='org.xtest.runner' version='0.2.0.201207252108'>
