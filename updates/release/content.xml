@@ -80,7 +80,7 @@
     <unit id='Xtest' version='1.0.0.03-cKuCo-773573G7C753I'>
       <properties size='3'>
         <property name='org.eclipse.equinox.p2.name' value='Xtest 0.2.0'/>
-        <property name='org.eclipse.equinox.p2.description' value='Official Xtest releases'/>
+        <property name='org.eclipse.equinox.p2.description' value='Unit testing domain-specific language for Java.'/>
         <property name='org.eclipse.equinox.p2.type.category' value='true'/>
       </properties>
       <provides size='1'>
