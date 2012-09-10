@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.xtest.runner.RunnableTest;
 import org.xtest.runner.TestsProvider;
 import org.xtest.runner.events.TestDeleted;
@@ -87,14 +86,8 @@ public class StatusBarController {
      */
     @Subscribe
     public void deleted(TestDeleted event) {
-        Collection<IFile> tests = event.getTests();
-        boolean changed = false;
-        for (IFile file : tests) {
-            URI uri = file.getLocationURI();
-            changed |= removeFromTestCounts(uri);
-            resultsForUris.remove(uri);
-        }
-        if (changed) {
+        if (!event.getTests().isEmpty()) {
+            initValues();
             notifyListeners();
         }
     }
