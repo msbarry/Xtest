@@ -1,26 +1,32 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?artifactRepository version='1.1.0'?>
-<repository name='Update Site' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
+<repository name='' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
   <properties size='2'>
-    <property name='p2.timestamp' value='1343264947243'/>
-    <property name='p2.compressed' value='true'/>
+    <property name='p2.timestamp' value='1347326695519'/>
+    <property name='publishPackFilesAsSiblings' value='true'/>
   </properties>
-  <mappings size='3'>
+  <mappings size='5'>
+    <rule filter='(&amp; (classifier=osgi.bundle) (format=packed))' output='${repoUrl}/plugins/${id}_${version}.jar.pack.gz'/>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
     <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
+    <rule filter='(&amp; (classifier=org.eclipse.update.feature) (format=packed))' output='${repoUrl}/features/${id}_${version}.jar.pack.gz'/>
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
-  <artifacts size='8'>
-    <artifact classifier='org.eclipse.update.feature' id='org.xtest' version='0.2.0.201207252108'>
-      <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='12639'/>
-      </properties>
-    </artifact>
+  <artifacts size='17'>
     <artifact classifier='org.eclipse.update.feature' id='org.xtest' version='0.1.1.201204042031'>
       <properties size='2'>
         <property name='download.contentType' value='application/zip'/>
         <property name='download.size' value='8162'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest.lib.source' version='0.2.1.201209110124'>
+      <properties size='6'>
+        <property name='artifact.size' value='2794'/>
+        <property name='download.size' value='2794'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest.lib'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
+        <property name='maven-classifier' value='sources'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.xtest' version='0.2.0.201207252108'>
@@ -29,16 +35,76 @@
         <property name='download.size' value='347021'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='org.xtest' version='0.1.1.201204042031'>
-      <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='241719'/>
+    <artifact classifier='org.eclipse.update.feature' id='org.xtest.feature' version='0.2.1.201209110124'>
+      <properties size='6'>
+        <property name='artifact.size' value='14322'/>
+        <property name='download.size' value='14322'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest.feature'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest.ui.source' version='0.2.1.201209110124'>
+      <properties size='6'>
+        <property name='artifact.size' value='232083'/>
+        <property name='download.size' value='232083'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest.ui'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
+        <property name='maven-classifier' value='sources'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.xtest.ui' version='0.1.1.201204042031'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='275529'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest.runner' version='0.2.0.201207252108'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='103313'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest.ui' version='0.2.1.201209110124'>
+      <properties size='5'>
+        <property name='artifact.size' value='358730'/>
+        <property name='download.size' value='358730'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest.ui'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest.source' version='0.2.1.201209110124'>
+      <properties size='6'>
+        <property name='artifact.size' value='212300'/>
+        <property name='download.size' value='212300'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
+        <property name='maven-classifier' value='sources'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='org.xtest' version='0.2.0.201207252108'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='12639'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest' version='0.2.1.201209110124'>
+      <properties size='5'>
+        <property name='artifact.size' value='346650'/>
+        <property name='download.size' value='346650'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest' version='0.1.1.201204042031'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='241719'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='org.xtest.lib' version='0.2.0.201207252108'>
@@ -53,10 +119,32 @@
         <property name='download.size' value='360112'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='org.xtest.runner' version='0.2.0.201207252108'>
-      <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='103313'/>
+    <artifact classifier='osgi.bundle' id='org.xtest.runner.source' version='0.2.1.201209110124'>
+      <properties size='6'>
+        <property name='artifact.size' value='75948'/>
+        <property name='download.size' value='75948'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest.runner'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
+        <property name='maven-classifier' value='sources'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest.lib' version='0.2.1.201209110124'>
+      <properties size='5'>
+        <property name='artifact.size' value='3931'/>
+        <property name='download.size' value='3931'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest.lib'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='org.xtest.runner' version='0.2.1.201209110124'>
+      <properties size='5'>
+        <property name='artifact.size' value='103289'/>
+        <property name='download.size' value='103289'/>
+        <property name='maven-groupId' value='org.xtest'/>
+        <property name='maven-artifactId' value='org.xtest.runner'/>
+        <property name='maven-version' value='0.2.1-SNAPSHOT'/>
       </properties>
     </artifact>
   </artifacts>
