@@ -57,6 +57,11 @@
 </repository>]]>
               </value>
             </replacement>
+            <!-- Make feature group ID compatible with Xtest 0.2.0 and ealier -->
+            <replacement>
+              <token>feature.feature</token>
+              <value>feature</value>
+            </replacement>
           </replacements>
         </configuration>
       </plugin>
