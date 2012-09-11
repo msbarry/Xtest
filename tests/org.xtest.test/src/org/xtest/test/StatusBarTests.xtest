@@ -1,0 +1,204 @@
+runWhileEditing: false
+import org.^xtest.runner.statusbar.StatusBarController
+import com.google.common.eventbus.EventBus
+import org.^xtest.runner.TestsProvider
+import static org.junit.Assert.*
+import static org.mockito.Mockito.*
+import static org.^xtest.runner.external.TestResult.*
+import org.^xtest.runner.statusbar.IStatusBarRepaintListener
+import org.^xtest.runner.external.TestResult
+import org.^xtest.runner.RunnableTest
+import org.^xtest.runner.events.Events
+import static org.^xtest.test.TestUtils.*
+import org.eclipse.core.resources.IFile
+import java.net.URI
+import org.eclipse.xtext.xbase.lib.Pair
+
+val uri1 = uniqueUri(1)
+val uri2 = uniqueUri(2)
+
+xtest "constructor tests" {
+	newEmptyController.check("Empty", 1.0, true, 0, 0, 0, 0, 0)
+	newControllerForTests(uri1->create(1,0,1)).check("1/1 failing", 1.0, false, 1, 0, 1, 1, 1)
+	newControllerForTests(uri1->create(0,1,1)).check("1/1 pending", 1.0, true, 0, 1, 1, 1, 1)
+	newControllerForTests(uri1->create(0,0,1), uri2->create(0,0,2)).check("0/3 failing", 1.0, true, 0, 0, 3, 2, 2)
+}
+
+xtest "listener" {
+	xtest "notify unadded should not call" {
+		val controller = newEmptyController
+		val listener = mock(IStatusBarRepaintListener::class)
+		controller.notifyListeners
+		verify(listener, times(0)).schedulePaint
+	}
+	xtest "add and notify" {
+		val controller = newEmptyController
+		val listener = mock(IStatusBarRepaintListener::class)
+		controller.addListener(listener)
+		controller.notifyListeners
+		verify(listener, times(1)).schedulePaint
+	}
+	xtest "add remove and notify should not call" {
+		val controller = newEmptyController
+		val listener = mock(IStatusBarRepaintListener::class)
+		controller.addListener(listener)
+		controller.removeListener(listener)
+		controller.notifyListeners
+		verify(listener, times(0)).schedulePaint
+	}
+}
+
+xtest "events" {
+	val testWithAll = create(1, 1, 1)
+	val testWithFailures = create(1, 0, 1)
+	val testWithSuccess = create(0, 0, 1)
+	val testWithPending = create(0, 1, 1)
+	xtest "start one test" {
+		// Initialize with 1 test
+		val controller = newControllerForTests(uri1->testWithAll)
+		val events = getEvents(controller)
+		// start that test
+		events.startTests(newArrayList(testWithAll.toRunnableTest(uri1)))
+		// assert state
+		controller => [
+			completionRatio.shouldBe(0.0, "completion ratio")
+			isPassing.shouldBe(false, "is passing")
+			failures.shouldBe(1, "failures")
+			pending.shouldBe(1, "pendings")
+			worked.shouldBe(0, "worked")
+			files.shouldBe(1, "files")
+			total.shouldBe(1, "total")
+			text.shouldBe(str(failures, pending, total), "text")
+		]
+	}
+	xtest "start and finish one test with failures" {
+		// Init w/ one test
+		val controller = newControllerForTests(uri1->testWithFailures)
+		val events = getEvents(controller)
+		// start it
+		events.startTests(newArrayList(testWithFailures.toRunnableTest(uri1)))
+		// finish it
+		events.finishTest(testWithFailures, fileForURI(uri1))
+		// assert state
+		controller.check("after failing test", 1.0, false, 1, 0, 1, 1, 1)
+	}
+	xtest "start and finish one test with success" { 
+		// Init w/ one test
+		val controller = newControllerForTests(uri1->testWithFailures)
+		val events = getEvents(controller)
+		// start it
+		events.startTests(newArrayList(testWithFailures.toRunnableTest(uri1)))
+		// finish it
+		events.finishTest(testWithSuccess, fileForURI(uri1))
+		// assert state
+		controller => [
+			completionRatio.shouldBe(1.0, "completion ratio")
+			isPassing.shouldBe(true, "is passing")
+			failures.shouldBe(0, "failures")
+			pending.shouldBe(0, "pendings")
+			worked.shouldBe(1, "worked")
+			files.shouldBe(1, "files")
+			total.shouldBe(1, "total")
+			text.shouldBe(str(failures, pending, total), "text")
+		]
+	}
+	xtest "start and finish one test with pending" {
+		// Init w/ one test
+		val controller = newControllerForTests(uri1->testWithFailures)
+		val events = getEvents(controller)
+		// start it
+		events.startTests(newArrayList(testWithFailures.toRunnableTest(uri1)))
+		// finish it
+		events.finishTest(testWithPending, fileForURI(uri1))
+		// assert state
+		controller => [
+			completionRatio.shouldBe(1.0, "completion ratio")
+			isPassing.shouldBe(true, "is passing")
+			failures.shouldBe(0, "failures")
+			pending.shouldBe(1, "pendings")
+			worked.shouldBe(1, "worked")
+			files.shouldBe(1, "files")
+			total.shouldBe(1, "total")
+			text.shouldBe(str(failures, pending, total), "text")
+		]
+	}
+	xtest "start and cancel one test" {
+		// Init w/ one test
+		val controller = newControllerForTests(uri1->testWithFailures)
+		val events = getEvents(controller)
+		// start it
+		events.startTests(newArrayList(testWithFailures.toRunnableTest(uri1)))
+		// cancel it
+		events.cancelAndSchedule(newArrayList(testWithFailures.toRunnableTest(uri1)))
+		// assert state
+		controller => [
+			completionRatio.shouldBe(0.0, "completion ratio")
+			isPassing.shouldBe(false, "is passing")
+			failures.shouldBe(1, "failures")
+			pending.shouldBe(0, "pendings")
+			worked.shouldBe(0, "worked")
+			files.shouldBe(1, "files")
+			total.shouldBe(1, "total")
+			text.shouldBe(str(failures, pending, total), "text")
+		]
+	}
+}
+
+// Test utility methods
+def static check(StatusBarController controller, String desc, double _cr, boolean _pass, 
+	      int _fail, int _pend, int _total, int _files, int _worked) {
+	xtest (desc) {
+		controller => [
+			completionRatio.shouldBe(_cr, "completion ratio")
+			isPassing.shouldBe(_pass, "is passing")
+			failures.shouldBe(_fail, "failures")
+			pending.shouldBe(_pend, "pendings")
+			worked.shouldBe(_worked, "worked")
+			files.shouldBe(_files, "files")
+			total.shouldBe(_total, "total")
+			text.shouldBe(str(_fail, _pend, _total), "text")
+		]
+	}
+}
+
+/*
+ * Test utilities
+ */
+
+def static fileForURI(URI uri) {
+	val mockfile = mock(IFile::class)
+	when(mockfile.locationURI).thenReturn(uri)
+	mockfile
+}
+
+def static toRunnableTest(TestResult result, URI uri) {
+	val themock = mock(RunnableTest::class)
+	when(themock.state).thenReturn(result)
+	val mockfile = fileForURI(uri)
+	when(themock.file).thenReturn(mockfile)
+	themock
+}
+
+def static newControllerForTests(Pair<URI, TestResult>... results) {
+	val provider = mock(TestsProvider::class)
+	when(provider.allTests).thenReturn(results.map[it.value.toRunnableTest(it.key)])
+	new StatusBarController(new EventBus, provider)
+}
+
+def static getEvents(StatusBarController controller) {
+	val events = new Events
+	events.bus = controller.notifiers
+	return events
+}
+
+def static newEmptyController {
+	newControllerForTests
+}
+
+def static shouldBe(Object obj, Object expected, String description) {
+	xtest (description+" got <"+obj+"> wanted <"+expected+">") {assertEquals(description, expected, obj)}
+}
+
+def static str(int fail, int pend, int total) {
+	fail+"F/"+total
+}

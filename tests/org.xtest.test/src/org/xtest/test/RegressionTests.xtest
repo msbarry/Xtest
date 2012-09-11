@@ -1,0 +1,185 @@
+/*
+ * Miscellaneous bugs found to prevent them from recurring
+ */
+
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: false
+
+import helpers.SUT
+
+import static org.junit.Assert.*
+import static org.^xtest.test.TestUtils.*
+import org.eclipse.emf.common.notify.Notifier
+
+xtest testBug1 {
+    val result = parse('
+xsuite test {
+	xtest case {
+		assert 1 == 1 
+		assert 2 ==
+		assert 3 == 3
+	}
+}')
+    typeProvider.getCommonReturnType(result, true) 
+} 
+
+xtest testBug2 {
+    val result = parse('
+val a = new java.util.TreeMap
+xtest test {
+	assert a.descendingMap == a
+}')
+    typeProvider.getCommonReturnType(result, true)
+}
+
+xtest bug3 {
+	val result = parse('	
+import java.util.List
+xtest mockito {
+	val mo   List::class.mock
+}')
+    runValidation(result)
+}
+
+xtest testCodeNotRun {
+    val warnings = getWarningsRunTests('
+val a = 1
+if (a == 1) true else false
+')
+    assert warnings.size == 1
+}
+ 
+xtest testFirstImport {
+    assertValidSyntax('
+import java.util.ArrayList
+import java.util.LinkedHashMap
+val a = new ArrayList<String>')
+}
+
+xtest testCodeNotRunOnly1Warning {
+    val warnings = getWarningsRunTests('
+val a = 1
+if (a == 1) true else {if (a != 1) true else false}')
+    assert warnings.size == 1
+}
+
+xtest testCodeNotRunParamFalse {
+    val warnings = getWarningsRunTests('
+markUnexecuted: false
+val a = 1
+if (a == 1) true else {if (a != 1) true else false}')
+	assert warnings.size == 0
+}
+
+xtest testCodeNotRunParamTrue {
+    val warningsRunTests = getWarningsRunTests('
+markUnexecuted: true
+val a = 1
+if (a == 1) true else {if (a != 1) true else false}')
+    assert warningsRunTests.size == 1
+}
+
+def getParameterizedType(Class<?> clazz, Notifier context, Class<?> arg1) {
+	typeRefs.getTypeForName(clazz, context, typeRefs.getTypeForName(arg1, context))
+}
+ 
+xtest testGetClass {
+    val parse = parse('System::class')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(System::class, parse)
+    val typeForName = getParameterizedType(Class::class, parse, System::class)
+    assertReturnType(typeForName, parse)
+}
+
+
+xtest testGetClassImported {
+    val parse = parse('import helpers.SUT; SUT::class')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(SUT::class, parse)
+    val typeForName = getParameterizedType(Class::class, parse, SUT::class)
+    assertReturnType(typeForName, parse)
+}
+
+
+xtest testGetClassNotImported {
+    val parse = parse('helpers::SUT::class')
+    assertValidationPassed(parse)
+    assertEvaluatesTo(SUT::class, parse)
+    val typeForName = getParameterizedType(Class::class, parse, SUT::class)
+    assertReturnType(typeForName, parse)
+}
+
+
+xtest testGetPrivateSubMember {
+    assertIsValidAndEvaluatesTo(1, '
+import helpers.SubPrivateMembers
+val a = new SubPrivateMembers()
+a.i')
+}
+
+
+xtest testGetPrivateSubMethod {
+    assertIsValidAndEvaluatesTo(2, '
+import helpers.SubPrivateMembers
+val a = new SubPrivateMembers()
+a.setC(2)
+a.i')
+}
+
+
+xtest testGetPrivateSuperMember {
+    assertIsValidAndEvaluatesTo(0, '
+import helpers.*
+val a = new SubPrivateMembers()
+(a as PrivateMembers).i')
+}
+
+
+xtest testGetPrivateSuperMethod {
+    assertIsValidAndEvaluatesTo(1, '
+import helpers.*
+val a = new SubPrivateMembers()
+(a as PrivateMembers).setC(2)
+a.getC()')
+}
+
+
+xtest exceptionInClosure {
+    assertValidSyntax('
+val a = [String s|throw new Exception]
+a.apply("c")')
+}
+
+
+xtest testBug1 {
+	assertIsValidAndTypeConformsTo("assert 1 == 1", Boolean::class)
+} 
+
+xtest safeTypeComputation {
+	runValidation(parse('val a = ?assert 1 == \n?assert 1 == 2'))
+}
+
+xtest "exception was thrown" {
+	val script=
+'def static 
+
+def <T> get(T i) {
+	def get2(T j) {
+		j
+	}
+	get2(i)
+}  
+
+get(1)'
+    val body = parse(script)
+    runValidation(body)
+    typeProvider.getCommonReturnType(body, true)
+}
+
+xtest "bug" {
+	assertTestPasses("assert 1 == 1; println(1)") 
+	assertTestPasses("assert 1/0 throws Exception; println(1)") 
+}

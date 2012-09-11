@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <!-- Default properties - dev release -->
+  <properties>
+    <output-dir>develop</output-dir>
+    <append-site>false</append-site>
+    <updates>${project.build.directory}/../../../../Xtest-gh-pages/updates</updates>
+  </properties>
+
+  <!-- Profile-specific properties -->
+  <profiles>
+    <profile>
+      <id>release</id>
+      <properties>
+        <output-dir>release</output-dir>
+        <append-site>true</append-site>
+      </properties>
+    </profile>
+  </profiles>
+
+  <parent>
+    <relativePath>../../pom.xml</relativePath>
+    <groupId>org.xtest</groupId>
+    <artifactId>xtest</artifactId>
+    <version>0.2.1-SNAPSHOT</version>
+  </parent>
+  <build>
+    <plugins>
+      <!-- Tack referenced repositories on to the end of the repository xml -->
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <version>1.5.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <file>target/repository/content.xml</file>
+          <replacements>
+            <replacement>
+              <token>
+                <![CDATA[</repository>]]>
+              </token>
+              <value>
+              <![CDATA[
+  <references size='2'>
+    <repository uri='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' url='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' type='0' options='1'/>
+    <repository uri='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' url='http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases' type='1' options='1'/>
+  </references>
+</repository>]]>
+              </value>
+            </replacement>
+            <!-- Make feature group ID compatible with Xtest 0.2.0 and ealier -->
+            <replacement>
+              <token>feature.feature</token>
+              <value>feature</value>
+            </replacement>
+          </replacements>
+        </configuration>
+      </plugin>
+      
+      <!-- Merge generated repository into gh-pages repository -->
+      <plugin>
+        <groupId>org.eclipse.tycho.extras</groupId>
+        <artifactId>tycho-p2-extras-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>mirror</goal>
+            </goals>
+          </execution>
+        </executions>
+
+        <configuration>
+          <source>
+            <!-- source repositories to mirror from -->
+            <repository>
+              <url>${project.baseUri}/target/repository</url>
+              <layout>p2</layout>
+            </repository>
+          </source>
+          <publishArtifacts>true</publishArtifacts>
+          <!-- The destination directory to mirror to. -->
+          <destination>${updates}/${output-dir}/</destination>
+          <!-- whether to append to the target repository content -->
+          <append>${append-site}</append>
+          <!-- mirror artifacts and metadata -->
+          <mirrorMetadataOnly>false</mirrorMetadataOnly>
+          <!-- whether to compress the content.xml/artifacts.xml -->
+          <compress>false</compress>
+        </configuration>
+      </plugin>
+
+      <!-- Just use ant to generate zip files and checksums -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <configuration>
+              <target>
+                <zip destfile="${updates}/${output-dir}.zip" basedir="${updates}/${output-dir}"/>
+                <checksum forceOverwrite="yes" pattern="{0} *{1}" algorithm="SHA" fileext=".sha" file="${updates}/${output-dir}.zip"/>
+                <checksum forceOverwrite="yes" pattern="{0} *{1}" fileext=".md5" file="${updates}/${output-dir}.zip"/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <artifactId>org.xtest.updatesite</artifactId>
+  <packaging>eclipse-repository</packaging>
+  <name>Xtest Update Site</name>
+</project>

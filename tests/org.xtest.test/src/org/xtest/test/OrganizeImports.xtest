@@ -1,0 +1,113 @@
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: false
+import org.eclipse.xtext.resource.XtextResource
+import org.^xtest.Xtest
+
+import static org.^xtest.test.TestUtils.*
+
+def static organizeImports(String input) {
+    val result = Xtest::parse(input, injector)
+	val with = organizeImports.getOrganizedImportSection(result.eResource as XtextResource)
+	val region = organizeImports.computeRegion(result.eResource as XtextResource)
+	input.substring(0,region.getOffset)+with+input.substring(region.getOffset+region.getLength)
+}
+
+def static shouldBecome(String input, String output) {
+	assertEqualsNormalizeLinebreak(output,organizeImports(input))
+}
+
+xtest empty {
+	''.shouldBecome('')
+} 
+
+xtest "no imports" {
+	'runWhileEditing: true
+	xsuite test {
+		xtest case {
+			assert 1 == 1 
+		}
+	}'.
+
+	shouldBecome
+
+	('runWhileEditing: true
+	xsuite test {
+		xtest case {
+			assert 1 == 1 
+		}
+	}')
+}
+ 
+xtest "splat to single" {
+	'import java.util.*
+	assert new ArrayList<String>() != null'.
+
+	shouldBecome
+
+	('import java.util.ArrayList
+
+	assert new ArrayList<String>() != null')
+}
+
+xtest "same line" {
+	'runWhileEditing: true
+	import java.util.*; assert new ArrayList<String>() != null'.
+
+	shouldBecome
+
+	('runWhileEditing: true
+	import java.util.ArrayList
+	
+	assert new ArrayList<String>() != null')
+}
+
+xtest "java.lang not imported" {
+	'runWhileEditing: true
+	import java.util.*; assert new String() != null'.
+
+	shouldBecome
+
+	('runWhileEditing: true
+	assert new String() != null')
+}
+
+xtest "line breaks inserted" {
+	'/* comment */
+	runWhileEditing: true; \rimport java.util.*; assert new ArrayList<String>() != null'.
+
+	shouldBecome
+
+	('/* comment */
+	runWhileEditing: true
+	import java.util.ArrayList
+	
+	assert new ArrayList<String>() != null')
+}
+
+
+xtest "line breaks inserted #2" {
+	'/* File-specific parameters */
+	import helpers.*
+	val a = new SUT'.
+
+	shouldBecome
+
+	('/* File-specific parameters */
+	import helpers.SUT
+	
+	val a = new SUT')
+} 
+
+xtest "escaped static import" {
+	'import static org.^xtest.test.TestUtils.*
+	val a = interpreter'.
+
+	shouldBecome
+
+	('import static org.^xtest.test.TestUtils.*
+
+	val a = interpreter')
+}

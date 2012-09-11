@@ -1,0 +1,196 @@
+runWhileEditing: false
+import static extension org.^xtest.test.TestUtils.*
+import org.^xtest.results.XTestResult
+
+val TEST_NAME_1 = "an anonymous test name"
+val TEST_NAME_1_WITH_LINEBREAKS = "an anonymous te\nst name"
+val TEST_NAME_2 = "a second anonymous test name"
+
+xtest test2CasesInSuiteFailPass {
+	initResult[
+		subTest(TEST_NAME_1, null).fail
+		subTest(TEST_NAME_2, null).pass
+	].shouldFailAnd[
+		it.findTest(TEST_NAME_1).shouldFail
+		it.findTest(TEST_NAME_2).shouldPass
+	]
+}
+
+xtest test2CasesInSuitePassFail {
+	initResult[
+		subTest(TEST_NAME_1, null).pass
+		subTest(TEST_NAME_2, null).fail
+	].shouldFailAnd[
+		it.findTest(TEST_NAME_1).shouldPass
+		it.findTest(TEST_NAME_2).shouldFail
+	]
+}
+
+xtest testEmptySuiteFail {
+	initResult[fail].shouldFail
+}
+
+xtest testEmptySuitePass {
+	initResult[pass].shouldPass
+}
+
+xtest testEmptySuiteResult {
+	newResult.shouldBePendingAnd[
+		assert getName() == null 
+	    assert getQualifiedName() == ""
+	    assert getSubTests.size() == 0
+	]
+}
+
+xtest testSyntaxError {
+	initResult[
+		addSyntaxError("Syntax Error")
+	].shouldFailAnd[
+		assert getErrorMessages() == newArrayList("Syntax Error")
+	]
+}
+
+xtest xsuiteInSuite {
+	initResult[
+		subTest(TEST_NAME_1, null)
+	].shouldBePendingAnd[
+		it.findTest(TEST_NAME_1).shouldBePendingAnd[
+			assert getSubTests.empty
+			assert getName == TEST_NAME_1
+			assert qualifiedName == TEST_NAME_1
+		]
+		assert getSubTests.size == 1
+	]
+}
+
+
+xtest xtestInSuiteFail {
+	initResult[
+		subTest(TEST_NAME_1, null).fail
+	].shouldFailAnd[
+		it.findTest(TEST_NAME_1).shouldFail
+	]
+}
+
+
+xtest xtestInSuiteInSuite {
+	initResult[
+		subTest(TEST_NAME_1, null) => [
+			subTest(TEST_NAME_2, null)
+		]
+	].shouldBePendingAnd[
+		assert getSubTests.size == 1
+		it.findTest(TEST_NAME_1).shouldBePendingAnd[
+			assert getSubTests.size == 1
+			it.findTest(TEST_NAME_2).shouldBePendingAnd[
+				assert qualifiedName == TEST_NAME_1+"."+TEST_NAME_2
+			]
+		]
+	]
+}
+
+
+xtest xtestInSuiteInSuiteFail {
+	initResult[
+		subTest(TEST_NAME_1, null) => [
+			subTest(TEST_NAME_2, null).fail
+		]
+	].shouldFailAnd[
+		it.findTest(TEST_NAME_1).shouldFailAnd[
+			it.findTest(TEST_NAME_2).shouldFail
+		]
+	]
+}
+
+
+xtest xtestInSuiteInSuitePass {
+	initResult[
+		subTest(TEST_NAME_1, null) => [
+			subTest(TEST_NAME_2, null).pass
+		]
+	].shouldPassAnd[
+		it.findTest(TEST_NAME_1).shouldPassAnd[
+			it.findTest(TEST_NAME_2).shouldPass
+		]
+	]
+}
+
+
+xtest xtestInSuitePass {
+	initResult[
+		subTest(TEST_NAME_1, null).pass
+	].shouldPassAnd[
+		it.findTest(TEST_NAME_1).shouldPass
+	]
+}
+
+
+xtest "pass a test after failing it leaves in failing state" {
+	initResult[
+		fail
+		pass
+	].shouldFail
+}
+
+xtest "1 test" {
+	assert newResult.countTests == 1
+}
+
+xtest "2 tests" {
+	initResult[
+		subTest(TEST_NAME_1, null)
+	].shouldBePendingAnd[
+		assert countTests == 2
+	]
+}
+
+xtest "no failure" {
+	assert newResult.countFailures == 0
+}
+
+xtest "1 failures" {
+	assert initResult[fail].countFailures == 1
+}
+
+xtest "1 failure - in subtest" {
+	val result = initResult[
+		subTest(TEST_NAME_1, null).fail
+	]
+	assert result.countFailures == 1
+}
+
+xtest "Failed parent and child" {
+	val result = initResult[
+		subTest(TEST_NAME_1, null).fail
+		fail
+	]
+	assert result.countFailures == 2
+}
+
+xtest "Pending child" {
+	initResult[
+		subTest(TEST_NAME_1, null).setPending
+	] => [
+		assert countPendings == 1
+		assert !isPending
+		it.findTest(TEST_NAME_1) => [
+			assert isPending
+		]
+	]
+}
+
+xtest "line break omitted from name" {
+    val test = new XTestResult(null).subTest(TEST_NAME_1_WITH_LINEBREAKS, null)
+	assert test.getName == TEST_NAME_1
+}
+
+
+/*
+ * Test utilities
+ */
+def static newResult { new XTestResult(null) }
+def static initResult((XTestResult)=>void initializer) {
+	val result = newResult
+	initializer.apply(result)
+	return result
+}

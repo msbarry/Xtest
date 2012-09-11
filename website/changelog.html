@@ -1,0 +1,123 @@
+---
+layout: default
+title: Changelog
+---
+<div class="container informational changelog">
+  <div class="offset2 span8">
+    <header id="overview">
+      <h1>Changelog</h1>
+    </header>
+
+    
+    <!-- 0.2.1
+        ================================================== -->
+    <h2>0.2.1 (September 10, 2012)</h2>
+    <hr>
+    <p><strong>Changes</strong></p>
+    <ul>
+      <li>Upgrade to Xtext 2.3.1 (tightened version dependencies to require exactly 2.3.1)
+      <li>Convert build process to use Maven/Tycho
+      <li>Update site now references Xtext so you don't need to add it manually
+      <li>Restructured plugins into folders
+      <li>New website
+      <li>Miscellaneous bug fixes
+    </ul>
+
+
+    
+    <!-- 0.2.0
+        ================================================== -->
+    <h2>0.2.0 (July 25, 2012)</h2>
+    <hr>
+    <p><strong>Changes</strong></p>
+    <ul>
+      <li>Upgraded to Xtext 2.3.0
+      <li>Numerous bug fixes
+      <li>Added JUnit runner for Xtest files
+      <li>Fixed performance bottlenecks found using <a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit</a>
+    </ul>
+    <p><strong>Language</strong></p>
+    <ul>
+      <li>Mark unexecuted expressions as warnings
+      <li>Reusable methods declared using the <code class="prettyprint lang-xtest">def</code> keyword
+      <li>More detailed assertion failure messages
+      <li>Filter invocation and internal Xtest elements out of stack traces
+    </ul>
+    <p><strong>Eclipse IDE</strong></p>
+    <ul>
+      <li>Global and per-file runner configuration parameters
+      <li>"Add Xtest libraries" shortcut
+      <li>"Organize Imports" shortcut
+      <li>Run tests on save in separate job after build completes
+      <li>Run tests using recording class loader to track dependencies and only run tests affected by changes on save
+      <li>Added Xtest status bar
+    </ul>
+
+
+    
+    <!-- 0.1.1
+        ================================================== -->
+    <h2>0.1.1 (April 4, 2012)</h2>
+    <hr>
+    <p><strong>Changes</strong></p>
+    <ul>
+      <li>Removed unneccessarily specific dependencies to fix installation issues
+      <li>Back-ported Xtest for older installations of Xtext, available from separate update sites:
+      <table class="table">
+        <tr>
+          <td>
+            <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.2</code>
+            <div class="site-hash">
+              <a class="btn btn-mini" href="updates/for-xtext-2.2.zip"><i class="icon-download"></i>zip</a>
+              <a href="updates/for-xtext-2.2.zip.sha">sha</a>
+              <a href="updates/for-xtext-2.2.zip.md5">md5</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.1</code>
+            <div class="site-hash">
+              <a class="btn btn-mini" href="updates/for-xtext-2.1.zip"><i class="icon-download"></i>zip</a>
+              <a href="updates/for-xtext-2.1.zip.sha">sha</a>
+              <a href="updates/for-xtext-2.1.zip.md5">md5</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code> http://msbarry.github.com/Xtest/updates/for-xtext-2.0</code>
+            <div class="site-hash">
+              <a class="btn btn-mini" href="updates/for-xtext-2.0.zip"><i class="icon-download"></i>zip</a>
+              <a href="updates/for-xtext-2.0.zip.sha">sha</a>
+              <a href="updates/for-xtext-2.0.zip.md5">md5</a>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </ul>
+
+
+    
+    <!-- 0.1.0
+        ================================================== -->
+    <h2>0.1.0 (March 20, 2012)</h2>
+    <hr>
+    <p><strong>Initial release</strong></p>
+    <p><strong>Language</strong></p>
+    <ul>
+      <li>Support for test cases, test suites, and assertions
+      <li><code class="lang-xtest prettyprint">Type::class</code> equivalent to <code class="lang-java prettyprint">Type.class</code> in Java
+      <li><code class="lang-xtest prettyprint">:=</code> static assignment operator
+      <li>Private members of Java classes are accessible
+      <li>Import/import static support like Java
+    </ul>
+    <p><strong>Eclipse IDE</strong></p>
+    <ul>
+      <li>Editor support and test-failure highlighting
+      <li>Outline view shows test result structure
+      <li>Navigator displays passing/failing state of Xtest files and their containers
+      <li>New Xtest File wizard
+    </ul>
+  </div>
+</div>

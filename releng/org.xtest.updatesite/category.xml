@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.xtest.feature_0.2.1.qualifier.jar" id="org.xtest.feature" version="0.2.1.qualifier">
+      <category name="Xtest 0.2.1"/>
+   </feature>
+   <category-def name="Xtest 0.2.1" label="Xtest 0.2.1">
+      <description>
+         Unit testing domain-specific language for Java.
+      </description>
+   </category-def>
+</site>

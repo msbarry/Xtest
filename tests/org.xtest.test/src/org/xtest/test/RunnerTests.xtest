@@ -1,0 +1,410 @@
+/* File-specific parameters */
+runWhileEditing: false
+// TODO - when Guice fixes memory leak, re-enable running on save
+// (http://code.google.com/p/google-guice/issues/detail?id=288)
+runOnSave: false
+import org.^xtest.results.XTestState
+
+import static org.junit.Assert.*
+import static extension org.^xtest.test.TestUtils.*
+import static org.^xtest.Xtest.*
+import org.^xtest.results.XTestResult
+
+def static shouldBeNamedAndHaveNoErrors(XTestResult result, String name) {
+    assert result.getErrorMessages.empty
+    assert result.evaluationException.empty
+    assert result.qualifiedName == name
+}
+
+def static shouldBeNamedAndHaveException(XTestResult result, String name) {
+	assert !result.evaluationException.empty
+	assert result.errorMessages.empty
+	assert result.qualifiedName == name
+}
+
+xtest testCaseInAssert {
+	run("assert {if (0 == 1) true else {xtest b {assert false}\n true}}", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldFailAnd[
+			it.shouldBeNamedAndHaveException("b")
+			assert getSubTests.size == 0
+		]
+	]
+}
+
+
+xtest testEmptyTestCase {
+	run("", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.empty
+	]
+}
+
+
+xtest testExceptionInCaseInSuiteInSuite {
+	run("xsuite suite {xtest tcase {print(1/0)}}", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldFailAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldFailAnd[
+				it.shouldBeNamedAndHaveException("suite.tcase")
+				assert getSubTests.size == 0
+			]
+		]
+	]
+}
+
+
+xtest testExtensionImport {
+    assertTestPasses("import static extension helpers.ExtensionMethods.*\nassert 1.incr == 2");
+}
+
+
+xtest testExtensionImportBad {
+    assertInvalidSyntax("import static helpers.ExtensionMethods.*\nassert 1.incr == 2");
+}
+
+
+xtest testFalseAssertInCaseInSuiteInSuite {
+	run("xsuite suite {xtest tcase {assert 0==1}}", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldFailAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldFailAnd[
+				it.shouldBeNamedAndHaveException("suite.tcase")
+				assert getSubTests.size == 0
+			]
+		]
+	]
+}
+
+
+xtest testImport_innerStaticClass_shouldPass {
+    assertTestPasses("import helpers.SUT$InnerClass\nxsuite suite {xtest tcase {assert SUT$InnerClass::innerField==1}}");
+}
+
+
+xtest testImportNonStatic {
+    assertTestPasses("import helpers.*\nxsuite suite {xtest tcase {assert SUT::getStatic==2}}");
+}
+
+
+xtest testImportStatic_innerClassMembers_shouldFail {
+    assertInvalidSyntax("import static helpers.SUT$InnerClass.nonStaticField\nxsuite suite {xtest tcase {assert nonStaticField==1}}");
+    assertInvalidSyntax("import static helpers.SUT$InnerClass.getNonStatic\nxsuite suite {xtest tcase {assert getNonStatic==1}}");
+    assertInvalidSyntax("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert getNonStatic==1}}");
+    assertInvalidSyntax("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert nonStaticField==1}}");
+}
+
+
+xtest testImportStatic_innerStaticClass_shouldFail {
+    assertInvalidSyntax("import static helpers.SUT$InnerClass\nxsuite suite {xtest tcase {assert innerField==1}}");
+}
+
+
+xtest testImportStatic_innerStaticClassWildcard {
+    assertTestPasses("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert innerField==1}}");
+    assertTestPasses("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert getStatic==1}}");
+    // Try to use nonstatic
+    assertInvalidSyntax("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert getNonStatic==1}}");
+    assertInvalidSyntax("import static helpers.SUT$InnerClass.*\nxsuite suite {xtest tcase {assert nonStaticField==1}}");
+}
+
+
+xtest testImportStatic_type_shouldfail {
+    assertInvalidSyntax(
+            "import static helpers.SUT\nxsuite suite {xtest tcase {assert getStatic==2}}");
+}
+
+
+xtest testImportStatic_wildcard_shouldPass {
+	run("import static helpers.SUT.*\nxsuite suite {xtest tcase {assert getStatic==2}}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+	]
+}
+
+
+xtest testInnerClassesRecognized {
+    assertTestPasses("import helpers.*\nxsuite suite {xtest tcase {assert SUT$InnerClass::innerField==1}}");
+}
+
+
+xtest testMalformed {
+    assertInvalidSyntax("testSui")
+}
+
+
+xtest testPrivateFieldAccessible {
+    assertTestPasses("import helpers.*\nxsuite suite {val a = new PrivateMembers()\n"
+            + "xtest tcase {a.i = 2\nassert a.i == 2}}");
+}
+
+
+xtest testPrivateInnerClassAccessible {
+    assertTestPasses("import helpers.*\nxsuite suite {val a = new PrivateMembers$Inner()\n"
+            + "xtest tcase {assert a.c == 9}}");
+}
+
+
+xtest testPrivateMethodSugared {
+    assertTestPasses("import helpers.*\nxsuite suite {val a = new PrivateMembers()\n"
+            + "xtest tcase {a.c = 2\nassert a.c == 1}}");
+}
+
+
+xtest testReturnDoesntFail {
+	run("xtest test {\nreturn 1\n}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		getSubTests.head.shouldPass.shouldBeNamedAndHaveNoErrors("test")
+	]
+}
+
+
+xtest testReturnStopsLaterTests {
+	run("xtest test {\nif (1==1)return 1\nassert 1==0\n}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		getSubTests.head.shouldPass.shouldBeNamedAndHaveNoErrors("test")
+	]
+}
+
+
+xtest testStaticMemberImportedWrite {
+    assertTestPasses("import helpers.*\nxsuite suite {StaticMembers::pub := 10\n"
+            + "xtest tcase {assert StaticMembers::pub == 10}}");
+}
+
+
+xtest testStaticMemberTypeImportedWrite {
+    assertTestPasses("import static helpers.StaticMembers.*\nxsuite suite {pub := 11\n"
+            + "xtest tcase {assert pub == 11}}");
+}
+
+
+xtest testStaticMemberWrite {
+    assertTestPasses("xsuite suite {helpers::StaticMembers::pub := 12\n"
+            + "xtest tcase {assert helpers::StaticMembers::pub == 12}}");
+}
+
+
+xtest testTestInTestPasses {
+    val result = run("xtest toplevel {xtest inside {assert 1 == 1}}",
+            injector);
+    assertTrue(result.getEvaluationException().isEmpty);
+    assertEquals(XTestState::PASS, result.getState());
+}
+
+
+xtest testThrowDivByZeroException {
+	run("xsuite suite {xtest tcase {assert 1/0 throws Exception}}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		getSubTests.head.shouldPassAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldPassAnd[
+				it.shouldBeNamedAndHaveNoErrors("suite.tcase")
+				assert getSubTests.size == 0
+			]
+		]
+	]
+}
+
+
+xtest testThrowException {
+	run("xsuite suite {xtest tcase {assert throw new InterruptedException() throws InterruptedException}}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		getSubTests.head.shouldPassAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldPassAnd[
+				it.shouldBeNamedAndHaveNoErrors("suite.tcase")
+				assert getSubTests.size == 0
+			]
+		]
+	]
+}
+
+
+xtest testThrowsWrongException {
+	run("xsuite suite {xtest tcase {assert throw new InterruptedException() throws IllegalArgumentException}}", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		getSubTests.head.shouldFailAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldFailAnd[
+				it.shouldBeNamedAndHaveException("suite.tcase")
+				assert getSubTests.size == 0
+			]
+		]
+	]
+}
+
+
+xtest testTopLevelAssert {
+	run("assert false", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveException("")
+		assert getSubTests.size == 0
+	]
+}
+
+
+xtest testTopLevelTestCaseFails {
+	run("xtest toplevel {\nassert 1!=1\n}", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldFailAnd[
+			it.shouldBeNamedAndHaveException("toplevel")
+		]
+	]
+}
+
+
+xtest testTopLevelTestCasePasses {
+	run("xtest toplevel {\nassert 1==1\n}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldPassAnd[
+			it.shouldBeNamedAndHaveNoErrors("toplevel")
+		]
+	]
+}
+
+
+xtest testTrueAssertInCaseInSuiteInSuite {
+	run("xsuite suite {xtest tcase {assert 1==1}}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldPassAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldPassAnd[
+				it.shouldBeNamedAndHaveNoErrors("suite.tcase")
+			]
+		]
+	]
+}
+
+
+xtest testWarningIsOk {
+	run("val a = 1", injector).shouldPass.shouldBeNamedAndHaveNoErrors("")
+}
+
+xtest throwExceptionBeforeTestSuite {
+	run("println(1/0); xsuite suite {xtest tcase {assert 1/0 throws Exception}}", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveException("")
+		assert getSubTests.size == 0
+	]
+}
+
+
+xtest throwExceptionInsideTestSuite {
+	run("xsuite suite {println(1/0); xtest tcase {assert 1/0 throws Exception}}", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldFailAnd[
+			it.shouldBeNamedAndHaveException("suite")
+			assert getSubTests.size == 0
+		]
+	]
+}
+
+
+xtest useSUT {
+	run("xsuite suite {xtest tcase {assert new helpers.SUT().get2 == 2}}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldPassAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldPassAnd[
+				it.shouldBeNamedAndHaveNoErrors("suite.tcase")
+				assert getSubTests.size == 0
+			]
+		]
+	]
+}
+
+
+xtest useSUTFail {
+	run("xsuite suite {xtest tcase {assert new helpers.SUT().get2 == 3}}", injector).shouldFailAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldFailAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldFailAnd[
+				it.shouldBeNamedAndHaveException("suite.tcase")
+				assert getSubTests.size == 0
+			]
+		]
+	]
+}
+
+
+xtest xsuiteInSuite {
+	run("xsuite suite {1}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldPassAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+		]
+	]
+}
+
+
+xtest xtestInSuiteInSuite {
+	run("xsuite suite {xtest tcase {1}}", injector).shouldPassAnd[
+		it.shouldBeNamedAndHaveNoErrors("")
+		assert getSubTests.size == 1
+		getSubTests.head.shouldPassAnd[
+			it.shouldBeNamedAndHaveNoErrors("suite")
+			assert getSubTests.size == 1
+			getSubTests.head.shouldPassAnd[
+				it.shouldBeNamedAndHaveNoErrors("suite.tcase")
+				assert getSubTests.size == 0
+			]
+		]
+	]
+}
+
+
+xtest allowStringDescription {
+    run('xtest "string description" {assert true}', injector).shouldPassAnd[
+    	getSubTests.head.shouldBeNamedAndHaveNoErrors("string description")
+    ]
+}
+
+
+xtest allowNoDesciption {
+    run('xtest {assert true}', injector).shouldPassAnd[
+    	getSubTests.head.shouldBeNamedAndHaveNoErrors("assert true")
+    ]
+}
+
+xtest allowNoDesciptionOnlyTakesFirstLine {
+    run('xtest {assert true\nassert true}', injector).shouldPassAnd[
+    	getSubTests.head.shouldBeNamedAndHaveNoErrors("assert true")
+    ]
+}
+
+xtest allowNoDesciptionIgnoresPrecedingWhitespace {
+    run("xtest {\n\n   assert true\nassert true}", injector).shouldPassAnd[
+    	getSubTests.head.shouldBeNamedAndHaveNoErrors("assert true")
+    ]
+}
+
+xtest "comment is ignored in test name" {
+    run("xtest {\n// comment\nassert true\nassert true}", injector).shouldPassAnd[
+    	getSubTests.head.shouldBeNamedAndHaveNoErrors("assert true")
+    ]
+}
+
+xtest allowNoDesciptionAndParenthesis {
+    run("\nxtest (1) {assert true \nassert true}", injector).shouldPassAnd[
+    	getSubTests.head.shouldBeNamedAndHaveNoErrors("1")
+    ]
+}
