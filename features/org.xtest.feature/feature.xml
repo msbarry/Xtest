@@ -3,7 +3,9 @@
       id="org.xtest.feature"
       label="Xtest"
       version="0.2.1.qualifier"
-      provider-name="Michael Barry">
+      provider-name="Michael Barry"
+      exclusive="true"
+      colocation-affinity="org.xtest">
 
    <description url="http://msbarry.github.com/Xtest">
       Unit testing domain-specific language for Java.
