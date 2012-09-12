@@ -82,8 +82,8 @@ public class StatusBar extends WorkbenchWindowControlContribution implements
             Composite composite = new Composite(parent, SWT.NONE);
             GridLayoutFactory.fillDefaults().numColumns(1).margins(3, 3).applyTo(composite);
             label = new Label(composite, SWT.BOLD);
-            label.setText("9999/9999");
-            GridDataFactory.fillDefaults().applyTo(label);
+            label.setText("9999FFF/9999");
+            GridDataFactory.fillDefaults().grab(true, true).applyTo(label);
             schedulePaint();
             return composite;
         } else {
