@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.xtest.runner.RunnableTest;
 import org.xtest.runner.TestsProvider;
@@ -30,6 +31,7 @@ import com.google.inject.Singleton;
 public class StatusBarController {
     private int failures = 0;
     private int files = 0;
+    private final AtomicBoolean initialized = new AtomicBoolean(false);
     private final List<IStatusBarRepaintListener> listeners;
     private final EventBus notifiers;
     private int pending = 0;
@@ -53,7 +55,8 @@ public class StatusBarController {
         this.notifiers = bus;
         notifiers.register(this);
         this.testProvider = provider;
-        initValues();
+        // Don't initialize now since it Guice calls this method and it could cause deadlock,
+        // instead lazy-initialize later before the first time the UI requests data
     }
 
     /**
@@ -98,6 +101,7 @@ public class StatusBarController {
      * @return The number of tests completed divided by the number of total tests
      */
     public double getCompletionRatio() {
+        lazyInit();
         return files == 0 ? 1.0 : 1.0 * worked / files;
     }
 
@@ -107,6 +111,7 @@ public class StatusBarController {
      * @return The text to display in the status bar
      */
     public String getText() {
+        lazyInit();
         return Integer.toString(failures) + "F/" + Integer.toString(total);
     }
 
@@ -116,6 +121,7 @@ public class StatusBarController {
      * @return True if there are no failures, false if there are some
      */
     public boolean isPassing() {
+        lazyInit();
         return failures == 0;
     }
 
@@ -197,6 +203,7 @@ public class StatusBarController {
     }
 
     private void initValues() {
+        initialized.set(true);
         total = 0;
         failures = 0;
         pending = 0;
@@ -204,6 +211,12 @@ public class StatusBarController {
         resultsForUris.clear();
         worked = files = allTests.size();
         addToTotals(allTests);
+    }
+
+    private void lazyInit() {
+        if (!initialized.get()) {
+            initValues();
+        }
     }
 
     private void notifyListeners() {
